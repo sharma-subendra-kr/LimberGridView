@@ -25,6 +25,7 @@ You should have received a copy of the GNU General Public License
 along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 /---------------------------------------------------------------------------------------------------/
+
 This is free software (Free as in freedom not the price).
 If you like to use this library on a non free software, you can get a commercial license. To get a commercial license contact <>.
 
