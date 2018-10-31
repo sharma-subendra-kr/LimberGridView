@@ -7,7 +7,7 @@ This software is released under version 3 of the GNU General Public License (GPL
 
 LimberGridView 0.0.0, a powerful JavaScript Libary that gives you flexible, movable, resizable(any size) and auto-arranging grids.
 
-Copyright (c) 2018, Subendra Kumar Sharma. All Rights reserved. (sharma.subendra.kr@gmail.com, sharma.subendrakr@yahoo.com)
+Copyright (c) 2018, Subendra Kumar Sharma. All Rights reserved.
 
 This file is part of LimberGridView.
 
