@@ -27,7 +27,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 /---------------------------------------------------------------------------------------------------/
 
 This is free software (Free as in freedom not the price).
-If you like to use this library on a non free software, you can get a commercial license. To get a commercial license contact <>.
+If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact <>.
 
 If you want to donate to this project so I can test on various other touch devices (this version works with touch devices but extensive testing is not done) you can contact <>.
 
