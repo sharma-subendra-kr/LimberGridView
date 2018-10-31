@@ -33,7 +33,7 @@ If you want to donate to this project so I can test on various other touch devic
 
 The is a beta release. Although this version is fairly stable and apis are standard, this is released as beta version since extensive testing is not done from my part. The stable version will be released very shortly. The stable release version number will start as 1.0.0.
 
-Improvements for the autoarranging algorithm will also be done in patches, though this doesn't affect the apis.
+Improvements for the autoarranging algorithm will also be done in patches, this doesn't affect the apis.
 
 // OFF TOPIC
 
