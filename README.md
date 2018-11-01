@@ -37,9 +37,11 @@ The is a beta release. Although this version is fairly stable and apis are stand
 
 Improvements for the autoarranging algorithm will also be done in patches, this doesn't affect the apis.
 
+If you find a bug or an error please report.
+
 // OFF TOPIC
 
-I am also looking for a job as a Software Engineer. If you want to hire me as a full stack engineer you can contact me via email <>. I have experience in C, C++, Java, Python, JavaScript, Andoird, OpenGL.
+I am looking for a job as a Software Engineer. If you want to hire me as a full stack engineer you can contact me via email <>. I have experience in C, C++, Java, Python, JavaScript, Andoird, OpenGL.
 
 // OFF TOPIC END
 
