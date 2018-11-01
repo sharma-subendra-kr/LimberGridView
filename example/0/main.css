@@ -1,0 +1,270 @@
+*{
+	box-sizing: border-box;
+}
+
+body{
+	margin: 0px;
+	height: 100%;
+
+	overflow: hidden;
+}
+
+.navBar{
+	width: 100%;
+	height: 50px;
+
+	background-color: #404040;
+	color : #f2f2f2;
+
+	padding: 10px;
+
+	font-size: 25px;
+	font-family: "Helvetica";
+
+}
+
+.limberGridControls{
+	width: 100%;
+	height: 30px;
+	display: inline-block;
+	white-space: nowrap;
+	text-align: right;
+	padding-top: 3px;
+	padding-right: 15px;
+}
+
+.toggleAddOrCutSpace{
+	width: 30px;
+	height: 25px;
+	display: inline-block;
+	padding-top: 3px;
+	text-align: center;
+	border: solid 1px #c0c0c0;
+
+	font-family: "Helvetica";
+	font-weight: 900;
+	user-select: none;
+	cursor: pointer;
+}
+
+.activateCutSpaceMode{
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.activateAddMode{
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.toggleAddOrCutSpaceButtonActive{
+	display: inline-block;
+}
+
+.addButton{
+	width: 30px;
+	height: 25px;
+	display: inline-block;
+	padding-top: 3px;
+	text-align: center;
+	border: solid 1px #c0c0c0;
+
+	font-family: "Helvetica";
+	font-weight: 900;
+	user-select: none;
+	cursor: pointer;
+}
+
+.addButtonIcon{
+}
+
+.footer{
+	width: 100%;
+	height: 20px;
+	text-align: right;
+	font-family: "Helvetica";
+	font-size: 15px;
+	padding-right: 15px;
+}
+
+
+#limberGridViewImplement{
+	width: 100%;
+	height: calc(100% - 100px);
+	overflow: hidden;
+	padding: 5px;
+}
+
+
+
+
+#limberGridViewImplement .limberGridViewContainer .limberGridView{
+	padding: 20px;
+	border: solid 1px #c0c0c0;
+	width: 100%;
+
+	background-color: #f1f3f6;
+}
+
+.limberGridView::-webkit-scrollbar{
+	width: 10px;
+	height: 0px;
+}
+
+.limberGridView::-webkit-scrollbar-track {
+    background: #f9f9f9; 
+}
+
+.limberGridView::-webkit-scrollbar-thumb {
+    background: #737373; 
+}
+
+.limberGridViewItem{
+	background-color: #f5f4f5;
+	border: solid 1px #e0e0e0;
+
+	box-shadow: 3px 3px 5px #a6a6a6;
+}
+
+/*.limberGridViewItem.limberGridViewItemEditable::before{
+	height: 40px;
+    width: 40px;
+
+    top: -20px;
+    left: -20px;
+
+}
+
+.limberGridViewItem.limberGridViewItemEditable::after{
+	height: 15px;
+    width: 15px;
+
+    border-right: solid black 5px;
+    border-bottom: solid black 5px;
+
+    top: calc(100% - 15px);
+    left: calc(100% - 15px);
+}*/
+
+
+
+
+
+
+.itemLayout{
+	width: 100%;
+	height: 25px;
+	border-bottom: solid 1px #c0c0c0;
+	font-family: "Helvetica";
+
+	padding-left: 15px;
+	padding-top: 2px;
+}
+
+.itemDropDownButton{
+	width: 25px;
+	height: 25px;
+	float: right;
+	cursor: pointer;
+
+	font-weight: 900;
+}
+
+.itemDropDown{
+	display: none;
+	width: 55px;
+	height: 50px;
+	position: absolute;
+	top: 25px;
+	right: 0px;
+
+	background-color: white;
+	border: solid 1px #c0c0c0;
+
+}
+
+.itemDropDownActive{
+	display: inline-block;
+}
+
+.itemDropDownItem{
+	width: 55px;
+	height: 25px;
+	cursor: pointer;
+	padding: 5px;
+
+	font-family: "Helvetica";
+	font-size: 13px;
+	font-weight: normal;
+
+	border-bottom: solid 1px #e0e0e0;
+}
+
+.itemDropDownItem:hover{
+	background-color: #c0c0c0;
+}
+
+.kpi{
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.kpiLeft{
+	display: inline-block;	
+	vertical-align: top;
+	position: relative;
+}
+
+.kpiRight{
+	display: inline-block;
+	vertical-align: top;
+}
+
+.kpiRightTop{
+	display: table-cell;
+    vertical-align: bottom;
+	font-family: "Helvetica";
+	text-align: center;
+}
+
+.kpiRightBottom{
+	display: block;
+	font-family: "Helvetica";
+	text-align: center;
+}
+
+.stockUp{
+	width: 0; 
+	height: 0; 
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+
+	border-bottom: 20px solid green;
+
+	top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    position: absolute;
+
+    transform: translate(0px, -20px);
+}
+
+.stockDown{
+	width: 0; 
+	height: 0; 
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+
+	border-top: 20px solid #f00;
+
+	top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    position: absolute;
+}
