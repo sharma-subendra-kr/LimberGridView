@@ -29,7 +29,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 /---------------------------------------------------------------------------------------------------/
 
 This is free software (Free as in freedom not the price).
-If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact <>.
+If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact reach.subendra.kr@gmx.com.
 
 If you want to donate to this project so I can test on various other touch devices (this version works with touch devices but extensive testing is not done) you can contact <>.
 
@@ -41,7 +41,7 @@ If you find a bug or an error please report.
 
 // OFF TOPIC
 
-I am looking for a job as a Software Engineer. If you want to hire me as a full stack engineer you can contact me via email <>. I have experience in C, C++, Java, Python, JavaScript, Andoird, OpenGL.
+I am looking for a job as a Software Engineer. If you want to hire me as a full stack engineer you can contact me via email reach.subendra.kr@gmx.com. I have experience in C, C++, Java, Python, JavaScript, Andoird, OpenGL.
 
 // OFF TOPIC END
 
