@@ -31,7 +31,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 This is free software (Free as in freedom not the price).
 If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact reach.subendra.kr@gmx.com.
 
-If you want to donate to this project so I can test on various other touch devices (this version works with touch devices but extensive testing is not done) you can contact <>.
+If you want to donate to this project so I can test on various other touch devices (this version works with touch devices but extensive testing is not done) you can contact reach.subendra.kr@gmx.com.
 
 The is a beta release. Although this version is fairly stable and apis are standard, this is released as beta version since extensive testing is not done from my part. The stable version will be released very shortly. The stable release version number will start as 1.0.0.
 
