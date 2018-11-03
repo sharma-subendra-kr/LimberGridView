@@ -28,6 +28,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 /---------------------------------------------------------------------------------------------------/
 
+There is a folder named example. You can put it in you “www” folder and run test this feature.
+
 This is free software (Free as in freedom not the price).
 If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact reach.subendra.kr@gmx.com.
 
