@@ -30,7 +30,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 For api Reference and Documentation please read the Wiki Page.
 
-There is a folder named example. You can can select the current version and run the .htm file to test this feature.
+There is a folder named example. You can can select the current version and run the .html file to test this feature.
 
 This is free software (Free as in freedom not the price).
 If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact reach.subendra.kr@gmx.com.
