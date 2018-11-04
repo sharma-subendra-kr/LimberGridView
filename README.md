@@ -28,6 +28,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 /---------------------------------------------------------------------------------------------------/
 
+For api Reference and Documentation please read the Wiki Page.
+
 There is a folder named example. You can put it in you “www” folder and run test this feature.
 
 This is free software (Free as in freedom not the price).
@@ -46,5 +48,3 @@ If you find a bug or an error please report.
 I am looking for a job as a Software Engineer. If you want to hire me as a full stack engineer you can contact me via email reach.subendra.kr@gmx.com. I have experience in C, C++, Java, Python, JavaScript, Andoird, OpenGL.
 
 // OFF TOPIC END
-
-For api Reference and Documentation please read the Wiki Page.
