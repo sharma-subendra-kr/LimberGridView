@@ -37,7 +37,9 @@ If you like to use this library on a non free software, you can get a proprietar
 
 If you want to donate to this project so I can test on various other touch devices (this version works with touch devices but extensive testing is not done) you can contact reach.subendra.kr@gmx.com.
 
-The is a beta release. Although this version is fairly stable and apis are standard, this is released as beta version since extensive testing is not done from my part. The stable version will be released very shortly. The stable release version number will start as 1.0.0.
+The is a beta release. Although this version is fairly stable (stable with algorithms) and apis are standard, this is released as beta version since extensive testing for touch devices is not done from my part. The stable version will be released very shortly. The stable release version number will start as 1.0.0.
+
+**A new auto arranging algorithm will be released shortly once it has been tested. This algorithm will be more accurate and reduces free spaces dramatically.**
 
 Improvements for the autoarranging algorithm will also be done in patches, this doesn't affect the apis.
 
