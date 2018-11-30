@@ -831,14 +831,14 @@ window.LimberGridView = (function(){
 			startingY = startingY + itemHeight + this.MARGIN;
 		}
 
-		var scrollTop = this.$limberGridView[0].scrollTop;
+		var scrollHeight = this.$limberGridView[0].scrollHeight;
 
 		var renderDetails = this.addItemsAtPositions(items, false, "addItems");
 
 		if(!this.isMobile()){
 			this.$limberGridView[0].scrollTop = scrollToPosition;
 		}else{
-			this.$limberGridView[0].scrollTop = scrollTop;
+			this.$limberGridView[0].scrollTop = scrollHeight;
 		}
 		
 		if(this.callbacks.addCompleteCallback != undefined && this.callbacks.addCompleteCallback != null){
