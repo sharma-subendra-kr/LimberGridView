@@ -1,0 +1,37 @@
+{
+  "name": "limbergridview",
+  "version": "1.0.0",
+  "description": "![](https://github.com/sharma-subendra-kr/test/raw/master/final.gif)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/webpack && ./node_modules/.bin/webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharma-subendra-kr/LimberGridView.git"
+  },
+  "author": "Subendra Kumar Sharma",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/sharma-subendra-kr/LimberGridView/issues"
+  },
+  "homepage": "https://github.com/sharma-subendra-kr/LimberGridView#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "autoprefixer-loader": "^3.2.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^2.1.1",
+    "json-loader": "^0.5.7",
+    "mini-css-extract-plugin": "^0.6.0",
+    "node-sass": "^4.13.1",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^7.3.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-notifier": "^1.8.0"
+  }
+}
