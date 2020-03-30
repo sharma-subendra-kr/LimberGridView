@@ -23,3 +23,25 @@ You should have received a copy of the GNU General Public License
 along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
+
+export const onWindowResize = function(event) {
+	console.log("onWindowResize CALL", this);
+	setTimeout(
+		this.onWindowResizeTimerCallbackFunctionVariable,
+		this.WINDOW_RESIZE_WAIT_TIME
+	);
+	window.removeEventListener("resize", this.onWindowResizeFunctionVariable);
+};
+
+export const onWindowResizeTimerCallback = function(event) {
+	this.init(this.WIDTH, false);
+	this.render();
+
+	if (this.options.reRenderOnResize != false) {
+		window.addEventListener("resize", this.onWindowResizeFunctionVariable);
+	}
+};
+
+export const onItemClick = function(event) {
+	this.callbacks.onItemClickCallback(event);
+};

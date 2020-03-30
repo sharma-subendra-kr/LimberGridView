@@ -27,6 +27,66 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 import "./index.css";
 import "./index.scss";
 
+import {
+	onWindowResize,
+	onWindowResizeTimerCallback,
+	onItemClick
+} from "./libs/eventHandlerLib/miscellaneous";
+import {
+	onLimberGridMouseDown,
+	onLimberGridTouchStart,
+	onLimberGridMouseDownCheck,
+	onLimberGridTouchStartCheck,
+	onLimberGridMouseMove,
+	onLimberGridTouchMove,
+	onLimberGridMouseUp,
+	onLimberGridTouchEnd,
+	onLimberGridTouchCancel,
+	onLimberGridTouchContextMenu,
+	onLimberGridContextMenu,
+	addItemAllowCheckTimeOut,
+	addItemAllowCheck,
+	cutSpaceAllowCheckTimeOut,
+	cutSpaceAllowCheck,
+	insertAddItemOnTouchHoldGuideStyles
+} from "./libs/eventHandlerLib/addItemAndCutSpace";
+
+import {
+	onItemMouseDown,
+	onItemTouchStart,
+	mouseDownCheck,
+	tapHoldCheck,
+	onMouseMove,
+	onTouchMove,
+	onMouseUp,
+	onTouchEnd,
+	onContextMenu,
+	onItemTouchContextMenu,
+	onTouchCancel,
+	calculateMousePosOnLimberGrid,
+	calculateTouchPosOnLimberGrid,
+	calculateTouchPosOnLimberGridItem,
+	checkNewMoveCoordinates,
+	showMoveDemo,
+	showResizeDemo,
+	revertShowMoveOrResizeDemo
+} from "./libs/eventHandlerLib/itemInteraction";
+
+import {
+	getPlainFrom4Points,
+	getCoordinates,
+	getLines,
+	arePlainsSame,
+	arePlainsIdentical,
+	isValidPlane,
+	sortPlainsByArea,
+	sortPlainsByHeight,
+	sortPlainsByDepth,
+	divideEqualNumber,
+	getMarginAtPoint,
+	getRowSequence
+} from "./libs/utils/essentials";
+
 window.LimberGridView = (function() {
 	LimberGridView.prototype.constructor = LimberGridView;
 
@@ -137,57 +197,45 @@ window.LimberGridView = (function() {
 		}
 
 		if (this.options.editable == true) {
-			this.onLimberGridMouseDownFunctionVariable = this.onLimberGridMouseDown.bind(
+			this.onLimberGridMouseDownFunctionVariable = onLimberGridMouseDown.bind(
 				this
 			);
-			this.onLimberGridMouseMoveBindedFunctionVariable = this.onLimberGridMouseMove.bind(
+			this.onLimberGridMouseMoveBindedFunctionVariable = onLimberGridMouseMove.bind(
 				this
 			);
-			this.onLimberGridMouseUpBindedFunctionVariable = this.onLimberGridMouseUp.bind(
+			this.onLimberGridMouseUpBindedFunctionVariable = onLimberGridMouseUp.bind(
 				this
 			);
-			this.onLimberGridContextMenuBindedFunctionVariable = this.onLimberGridContextMenu.bind(
-				this
-			);
-
-			this.onLimberGridTouchStartFunctionVariable = this.onLimberGridTouchStart.bind(
-				this
-			);
-			this.onLimberGridTouchMoveBindedFunctionVariable = this.onLimberGridTouchMove.bind(
-				this
-			);
-			this.onLimberGridTouchEndBindedFunctionVariable = this.onLimberGridTouchEnd.bind(
-				this
-			);
-			this.onLimberGridTouchCancelBindedFunctionVariable = this.onLimberGridTouchCancel.bind(
-				this
-			);
-			this.onLimberGridTouchContextMenuBindedFunctionVariable = this.onLimberGridTouchContextMenu.bind(
+			this.onLimberGridContextMenuBindedFunctionVariable = onLimberGridContextMenu.bind(
 				this
 			);
 
-			this.onItemMouseDownFunctionVariable = this.onItemMouseDown.bind(
+			this.onLimberGridTouchStartFunctionVariable = onLimberGridTouchStart.bind(
 				this
 			);
-			this.onMouseMoveBindedFunctionVariable = this.onMouseMove.bind(
+			this.onLimberGridTouchMoveBindedFunctionVariable = onLimberGridTouchMove.bind(
 				this
 			);
-			this.onMouseUpBindedFunctionVariable = this.onMouseUp.bind(this);
-			this.onContextMenuBindedFunctionVariable = this.onContextMenu.bind(
+			this.onLimberGridTouchEndBindedFunctionVariable = onLimberGridTouchEnd.bind(
+				this
+			);
+			this.onLimberGridTouchCancelBindedFunctionVariable = onLimberGridTouchCancel.bind(
+				this
+			);
+			this.onLimberGridTouchContextMenuBindedFunctionVariable = onLimberGridTouchContextMenu.bind(
 				this
 			);
 
-			this.onItemTouchStartFunctionVariable = this.onItemTouchStart.bind(
-				this
-			);
-			this.onTouchMoveBindedFunctionVariable = this.onTouchMove.bind(
-				this
-			);
-			this.onTouchEndBindedFunctionVariable = this.onTouchEnd.bind(this);
-			this.onTouchCancelBindedFunctionVariable = this.onTouchCancel.bind(
-				this
-			);
-			this.onItemTouchContextMenuBindedFunctionVariable = this.onItemTouchContextMenu.bind(
+			this.onItemMouseDownFunctionVariable = onItemMouseDown.bind(this);
+			this.onMouseMoveBindedFunctionVariable = onMouseMove.bind(this);
+			this.onMouseUpBindedFunctionVariable = onMouseUp.bind(this);
+			this.onContextMenuBindedFunctionVariable = onContextMenu.bind(this);
+
+			this.onItemTouchStartFunctionVariable = onItemTouchStart.bind(this);
+			this.onTouchMoveBindedFunctionVariable = onTouchMove.bind(this);
+			this.onTouchEndBindedFunctionVariable = onTouchEnd.bind(this);
+			this.onTouchCancelBindedFunctionVariable = onTouchCancel.bind(this);
+			this.onItemTouchContextMenuBindedFunctionVariable = onItemTouchContextMenu.bind(
 				this
 			);
 
@@ -228,14 +276,12 @@ window.LimberGridView = (function() {
 			this.callbacks.onItemClickCallback != undefined &&
 			this.callbacks.onItemClickCallback != null
 		) {
-			this.onItemClickFunctionVariable = this.onItemClick.bind(this);
+			this.onItemClickFunctionVariable = onItemClick.bind(this);
 		}
 
 		if (this.options.reRenderOnResize != false) {
-			this.onWindowResizeFunctionVariable = this.onWindowResize.bind(
-				this
-			);
-			this.onWindowResizeTimerCallbackFunctionVariable = this.onWindowResizeTimerCallback.bind(
+			this.onWindowResizeFunctionVariable = onWindowResize.bind(this);
+			this.onWindowResizeTimerCallbackFunctionVariable = onWindowResizeTimerCallback.bind(
 				this
 			);
 			window.addEventListener(
@@ -509,7 +555,7 @@ window.LimberGridView = (function() {
 				);
 			}
 		} else {
-			this.serializedPositionData = this.getRowSequence(true);
+			this.serializedPositionData = getRowSequence.call(this, true);
 			if (this.options.dataType == "string") {
 				var length_0 = positionData.length;
 				for (var i = 0; i < length_0; i++) {
@@ -528,7 +574,8 @@ window.LimberGridView = (function() {
 						'style = "transform : translate(' + 0 + "px, ";
 					var style_2 =
 						(this.WIDTH / this.MOBILE_ASPECT_RATIO +
-							this.getMarginAtPoint(
+							getMarginAtPoint.call(
+								this,
 								this.serializedPositionData.map[i]
 							)) *
 							this.serializedPositionData.map[i] +
@@ -583,7 +630,8 @@ window.LimberGridView = (function() {
 						0 +
 						"px, " +
 						(this.WIDTH / this.MOBILE_ASPECT_RATIO +
-							this.getMarginAtPoint(
+							getMarginAtPoint.call(
+								this,
 								this.serializedPositionData.map[i]
 							)) *
 							this.serializedPositionData.map[i] +
@@ -698,7 +746,8 @@ window.LimberGridView = (function() {
 				var style_1 = 'style = "transform : translate(' + 0 + "px, ";
 				var style_2 =
 					(this.WIDTH / this.MOBILE_ASPECT_RATIO +
-						this.getMarginAtPoint(
+						getMarginAtPoint.call(
+							this,
 							this.serializedPositionData.map[i]
 						)) *
 						this.serializedPositionData.map[i] +
@@ -859,7 +908,8 @@ window.LimberGridView = (function() {
 					0 +
 					"px, " +
 					(this.WIDTH / this.MOBILE_ASPECT_RATIO +
-						this.getMarginAtPoint(
+						getMarginAtPoint.call(
+							this,
 							this.serializedPositionData.map[items[i]]
 						)) *
 						this.serializedPositionData.map[items[i]] +
@@ -1012,7 +1062,8 @@ window.LimberGridView = (function() {
 					0 +
 					"px, " +
 					(this.WIDTH / this.MOBILE_ASPECT_RATIO +
-						this.getMarginAtPoint(
+						getMarginAtPoint.call(
+							this,
 							this.serializedPositionData.map[i]
 						)) *
 						this.serializedPositionData.map[i] +
@@ -1118,7 +1169,7 @@ window.LimberGridView = (function() {
 		itemsToRender.splice(this.positionData.length);
 
 		if (this.isMobile()) {
-			this.serializedPositionData = this.getRowSequence(true);
+			this.serializedPositionData = getRowSequence.call(this, true);
 		}
 
 		this.renderItems(itemsToRender, false, "removeItems");
@@ -1156,7 +1207,7 @@ window.LimberGridView = (function() {
 					this.positionData[i].y + this.positionData[i].height;
 			}
 		}
-		startingY = startingY + this.getMarginAtPoint(startingY);
+		startingY = startingY + getMarginAtPoint.call(this, startingY);
 
 		var items = [];
 
@@ -1167,11 +1218,12 @@ window.LimberGridView = (function() {
 		while (remainingItems != 0) {
 			var startingX = 0;
 			while (
-				remainingWidth > itemWidth + this.getMarginAtPoint(startingX) &&
+				remainingWidth >
+					itemWidth + getMarginAtPoint.call(this, startingX) &&
 				remainingItems != 0
 			) {
 				var item = {
-					x: this.getMarginAtPoint(startingX) + startingX,
+					x: getMarginAtPoint.call(this, startingX) + startingX,
 					y: startingY,
 					width: itemWidth,
 					height: itemHeight
@@ -1180,9 +1232,11 @@ window.LimberGridView = (function() {
 				remainingWidth =
 					remainingWidth -
 					itemWidth -
-					this.getMarginAtPoint(startingX);
+					getMarginAtPoint.call(this, startingX);
 				startingX =
-					startingX + this.getMarginAtPoint(startingX) + itemWidth;
+					startingX +
+					getMarginAtPoint.call(this, startingX) +
+					itemWidth;
 				remainingItems--;
 				items.push(item);
 			}
@@ -1245,7 +1299,7 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	// --------------------------- EVENT INITIALIZERS AND UNINITIALIZERS END ------------------- //
+	// --------------------------- EVENT INITIALIZERS AND UNINITIALIZERS ----------------------- //
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -1825,7 +1879,7 @@ window.LimberGridView = (function() {
 			var flag = false;
 			var length_0 = stack.length;
 			for (var i = 0; i < length_0; i++) {
-				if (context.arePlainsSame(stack[i], plane)) {
+				if (arePlainsSame(stack[i], plane)) {
 					flag = true;
 					break;
 				}
@@ -2276,7 +2330,7 @@ window.LimberGridView = (function() {
 		var freeSpaces = JSON.parse(JSON.stringify(freeSpaces));
 		var doNotMergeItems = JSON.parse(JSON.stringify(doNotMergeItems));
 
-		this.sortPlainsByArea(items);
+		sortPlainsByArea(items);
 
 		var repositionedItems = [];
 		var match = this.findMatchingSpace(items, freeSpaces);
@@ -2291,12 +2345,14 @@ window.LimberGridView = (function() {
 			var repositionedItem = {
 				x:
 					freeSpaces[match.matchingFreeSpaceIndex].x +
-					this.getMarginAtPoint(
+					getMarginAtPoint.call(
+						this,
 						freeSpaces[match.matchingFreeSpaceIndex].x
 					),
 				y:
 					freeSpaces[match.matchingFreeSpaceIndex].y +
-					this.getMarginAtPoint(
+					getMarginAtPoint.call(
+						this,
 						freeSpaces[match.matchingFreeSpaceIndex].y
 					),
 				width: tempItem.width,
@@ -2310,12 +2366,14 @@ window.LimberGridView = (function() {
 				y: freeSpaces[match.matchingFreeSpaceIndex].y,
 				width:
 					tempItem.width +
-					this.getMarginAtPoint(
+					getMarginAtPoint.call(
+						this,
 						freeSpaces[match.matchingFreeSpaceIndex].x
 					),
 				height:
 					tempItem.height +
-					this.getMarginAtPoint(
+					getMarginAtPoint.call(
+						this,
 						freeSpaces[match.matchingFreeSpaceIndex].y
 					),
 				doNotMergeFlag: true
@@ -2368,17 +2426,21 @@ window.LimberGridView = (function() {
 			var length_1 = freeSpaces.length;
 			for (var j = 0; j < length_1; j++) {
 				var tempItem = JSON.parse(JSON.stringify(items[i]));
-				if (this.getMarginAtPoint(freeSpaces[j].x) == this.MARGIN) {
+				if (
+					getMarginAtPoint.call(this, freeSpaces[j].x) == this.MARGIN
+				) {
 					tempItem.width += this.MARGIN * 1;
 				}
-				if (this.getMarginAtPoint(freeSpaces[j].y) == this.MARGIN) {
+				if (
+					getMarginAtPoint.call(this, freeSpaces[j].y) == this.MARGIN
+				) {
 					tempItem.height += this.MARGIN * 1;
 				}
 
 				var freeSpaceWidth = freeSpaces[j].width;
 				var freeSpaceHeight = freeSpaces[j].height;
 
-				if (this.arePlainsIdentical(tempItem, freeSpaces[j])) {
+				if (arePlainsIdentical(tempItem, freeSpaces[j])) {
 					matchingItemIndex = i;
 					matchingFreeSpaceIndex = j;
 					break;
@@ -2552,7 +2614,7 @@ window.LimberGridView = (function() {
 				)
 			);
 		}
-		var affectedItemsObjectDepthDescOrder = this.sortPlainsByDepth(
+		var affectedItemsObjectDepthDescOrder = sortPlainsByDepth(
 			affectedItemsObject
 		);
 		var greatestDepthAffectedItems =
@@ -2785,9 +2847,7 @@ window.LimberGridView = (function() {
 			);
 			remainingItemsObject[i].index = remainingItems[i];
 		}
-		var remainingItemsObject = this.sortPlainsByHeight(
-			remainingItemsObject
-		);
+		var remainingItemsObject = sortPlainsByHeight(remainingItemsObject);
 
 		var initializedPlane = {
 			x: 0,
@@ -2795,7 +2855,7 @@ window.LimberGridView = (function() {
 			width: this.WIDTH,
 			height:
 				remainingItemsObject[0].height +
-				this.getMarginAtPoint(startingY)
+				getMarginAtPoint.call(this, startingY)
 		};
 
 		var remainingWidth = this.WIDTH;
@@ -2806,7 +2866,7 @@ window.LimberGridView = (function() {
 				deepestY =
 					startingY +
 					remainingItemsObject[0].height +
-					this.getMarginAtPoint(startingY);
+					getMarginAtPoint.call(this, startingY);
 			}
 
 			var freeSpacesInCurrentRow = [];
@@ -2821,30 +2881,39 @@ window.LimberGridView = (function() {
 				if (
 					remainingWidth >=
 					remainingItemsObject[i].width +
-						this.getMarginAtPoint(this.WIDTH - remainingWidth)
+						getMarginAtPoint.call(this, this.WIDTH - remainingWidth)
 				) {
 					remainingItemsObject[i].x =
 						this.WIDTH -
 						remainingWidth +
-						this.getMarginAtPoint(this.WIDTH - remainingWidth);
+						getMarginAtPoint.call(
+							this,
+							this.WIDTH - remainingWidth
+						);
 					remainingItemsObject[i].y =
-						startingY + this.getMarginAtPoint(startingY);
+						startingY + getMarginAtPoint.call(this, startingY);
 					positionData[remainingItemsObject[i].index].x =
 						this.WIDTH -
 						remainingWidth +
-						this.getMarginAtPoint(this.WIDTH - remainingWidth);
+						getMarginAtPoint.call(
+							this,
+							this.WIDTH - remainingWidth
+						);
 					positionData[remainingItemsObject[i].index].y =
-						startingY + this.getMarginAtPoint(startingY);
+						startingY + getMarginAtPoint.call(this, startingY);
 
 					var occupiedSpace = {
 						x: this.WIDTH - remainingWidth,
 						y: startingY,
 						width:
 							remainingItemsObject[i].width +
-							this.getMarginAtPoint(this.WIDTH - remainingWidth),
+							getMarginAtPoint.call(
+								this,
+								this.WIDTH - remainingWidth
+							),
 						height:
 							remainingItemsObject[i].height +
-							this.getMarginAtPoint(startingY),
+							getMarginAtPoint.call(this, startingY),
 						doNotMergeFlag: true
 					};
 
@@ -2854,20 +2923,23 @@ window.LimberGridView = (function() {
 						x: this.WIDTH - remainingWidth,
 						y:
 							startingY +
-							this.getMarginAtPoint(startingY) +
+							getMarginAtPoint.call(this, startingY) +
 							remainingItemsObject[i].height,
 						width:
 							remainingItemsObject[i].width +
-							this.getMarginAtPoint(this.WIDTH - remainingWidth),
+							getMarginAtPoint.call(
+								this,
+								this.WIDTH - remainingWidth
+							),
 						height:
 							initializedPlane.y +
 							initializedPlane.height -
 							(startingY +
-								this.getMarginAtPoint(startingY) +
+								getMarginAtPoint.call(this, startingY) +
 								remainingItemsObject[i].height)
 					};
 
-					if (this.isValidPlane(freeSpace)) {
+					if (isValidPlane(freeSpace)) {
 						freeSpacesInCurrentRow.push(freeSpace);
 					}
 					fittedRemainingItems[i] = true;
@@ -2875,7 +2947,10 @@ window.LimberGridView = (function() {
 					remainingWidth =
 						remainingWidth -
 						(remainingItemsObject[i].width +
-							this.getMarginAtPoint(this.WIDTH - remainingWidth));
+							getMarginAtPoint.call(
+								this,
+								this.WIDTH - remainingWidth
+							));
 				}
 			}
 
@@ -2892,7 +2967,7 @@ window.LimberGridView = (function() {
 					width: remainingWidth,
 					height: initializedPlane.height
 				};
-				if (this.isValidPlane(freeSpace)) {
+				if (isValidPlane(freeSpace)) {
 					freeSpacesInCurrentRow.push(freeSpace);
 				}
 			}
@@ -2944,7 +3019,8 @@ window.LimberGridView = (function() {
 					width: this.WIDTH,
 					height:
 						remainingItemsObject[0].height +
-						this.getMarginAtPoint(
+						getMarginAtPoint.call(
+							this,
 							initializedPlane.y + initializedPlane.height
 						)
 				};
@@ -3021,8 +3097,8 @@ window.LimberGridView = (function() {
 	};
 
 	LimberGridView.prototype.mergePlains = function(A, B, planes = []) {
-		var aLines = this.getLines(A);
-		var bLines = this.getLines(B);
+		var aLines = getLines(A);
+		var bLines = getLines(B);
 		var oppositeLines = { 0: 2, 1: 3, 2: 0, 3: 1 };
 
 		var intersectionCount = 0;
@@ -3196,7 +3272,7 @@ window.LimberGridView = (function() {
 			var plainToCheckIfFree = null;
 			if (intersectionCount == 4) {
 				pointsToGetPlain = linePointsA.concat(linePointsB);
-				plainToCheckIfFree = this.getPlainFrom4Points(pointsToGetPlain);
+				plainToCheckIfFree = getPlainFrom4Points(pointsToGetPlain);
 			} else {
 				var length_0 = linePointsA.length;
 				for (var i = 0; i < length_0; i++) {
@@ -3224,17 +3300,15 @@ window.LimberGridView = (function() {
 							finalPointsToGetPlain.push(pointsToGetPlain[i]);
 						}
 					}
-					plainToCheckIfFree = this.getPlainFrom4Points(
+					plainToCheckIfFree = getPlainFrom4Points(
 						finalPointsToGetPlain
 					);
 				} else {
-					plainToCheckIfFree = this.getPlainFrom4Points(
-						pointsToGetPlain
-					);
+					plainToCheckIfFree = getPlainFrom4Points(pointsToGetPlain);
 				}
 			}
 
-			var plainToCheckIfFree_Lines = this.getLines(plainToCheckIfFree);
+			var plainToCheckIfFree_Lines = getLines(plainToCheckIfFree);
 
 			if (aLineId == 0 || aLineId == 2) {
 				if (aLineId == 0) {
@@ -3277,7 +3351,7 @@ window.LimberGridView = (function() {
 						indexOfIntersectingPlane = -1;
 						break;
 					}
-					var planeLine = this.getLines(planes[i]);
+					var planeLine = getLines(planes[i]);
 					if (aLineId == 0 || aLineId == 2) {
 						if (aLineId == 0) {
 							var d = Math.abs(
@@ -3385,9 +3459,7 @@ window.LimberGridView = (function() {
 
 			if (intersectionCount == 4) {
 				var pointsToGetMergedPlain = linePointsA.concat(linePointsB);
-				var mergedPlane = this.getPlainFrom4Points(
-					pointsToGetMergedPlain
-				);
+				var mergedPlane = getPlainFrom4Points(pointsToGetMergedPlain);
 			} else {
 				var pointsToGetMergedPlain = [];
 				var length_0 = linePointsA.length;
@@ -3418,11 +3490,11 @@ window.LimberGridView = (function() {
 							);
 						}
 					}
-					var mergedPlane = this.getPlainFrom4Points(
+					var mergedPlane = getPlainFrom4Points(
 						finalPointsToGetMergedPlain
 					);
 				} else {
-					var mergedPlane = this.getPlainFrom4Points(
+					var mergedPlane = getPlainFrom4Points(
 						pointsToGetMergedPlain
 					);
 				}
@@ -3430,7 +3502,7 @@ window.LimberGridView = (function() {
 		}
 
 		if (mergedPlane != false) {
-			if (this.isValidPlane(mergedPlane)) {
+			if (isValidPlane(mergedPlane)) {
 				return mergedPlane;
 			} else {
 				return false;
@@ -3461,7 +3533,7 @@ window.LimberGridView = (function() {
 							width: A.width,
 							height: B.y - A.y
 						};
-						if (this.isValidPlane(plane)) {
+						if (isValidPlane(plane)) {
 							planes.push(plane);
 						}
 						if (A.y + A.height < B.y + B.height) {
@@ -3471,7 +3543,7 @@ window.LimberGridView = (function() {
 								width: B.x - A.x,
 								height: A.y + A.height - B.y
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						} else if (A.y + A.height >= B.y + B.height) {
@@ -3481,7 +3553,7 @@ window.LimberGridView = (function() {
 								width: B.x - A.x,
 								height: B.height
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 							if (A.y + A.height > B.y + B.height) {
@@ -3491,7 +3563,7 @@ window.LimberGridView = (function() {
 									width: A.width,
 									height: A.y + A.height - (B.y + B.height)
 								};
-								if (this.isValidPlane(plane)) {
+								if (isValidPlane(plane)) {
 									planes.push(plane);
 								}
 							}
@@ -3504,7 +3576,7 @@ window.LimberGridView = (function() {
 								width: B.x - A.x,
 								height: A.height
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						} else {
@@ -3514,7 +3586,7 @@ window.LimberGridView = (function() {
 								width: B.x - A.x,
 								height: B.y + B.height - A.y
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						}
@@ -3526,7 +3598,7 @@ window.LimberGridView = (function() {
 								width: A.width,
 								height: A.y + A.height - (B.y + B.height)
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						}
@@ -3541,7 +3613,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: A.y + A.height - B.y
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						} else {
@@ -3551,7 +3623,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: B.height
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						}
@@ -3563,7 +3635,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: A.height
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						} else {
@@ -3573,7 +3645,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: B.y + B.height - A.y
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						}
@@ -3588,7 +3660,7 @@ window.LimberGridView = (function() {
 						width: A.width,
 						height: B.y - A.y
 					};
-					if (this.isValidPlane(plane)) {
+					if (isValidPlane(plane)) {
 						planes.push(plane);
 					}
 					if (A.y + A.height < B.y + B.height) {
@@ -3601,7 +3673,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: A.y + A.height - B.y
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						}
@@ -3615,7 +3687,7 @@ window.LimberGridView = (function() {
 									width: A.width,
 									height: A.y + A.height - (B.y + B.height)
 								};
-								if (this.isValidPlane(plane)) {
+								if (isValidPlane(plane)) {
 									planes.push(plane);
 								}
 							}
@@ -3626,7 +3698,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: B.height
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 
@@ -3637,7 +3709,7 @@ window.LimberGridView = (function() {
 									width: A.width,
 									height: A.y + A.height - (B.y + B.height)
 								};
-								if (this.isValidPlane(plane)) {
+								if (isValidPlane(plane)) {
 									planes.push(plane);
 								}
 							}
@@ -3654,7 +3726,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: A.height
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 						}
@@ -3668,7 +3740,7 @@ window.LimberGridView = (function() {
 									width: A.width,
 									height: A.y + A.height - (B.y + B.height)
 								};
-								if (this.isValidPlane(plane)) {
+								if (isValidPlane(plane)) {
 									planes.push(plane);
 								}
 							}
@@ -3679,7 +3751,7 @@ window.LimberGridView = (function() {
 								width: A.x + A.width - (B.x + B.width),
 								height: B.y + B.height - A.y
 							};
-							if (this.isValidPlane(plane)) {
+							if (isValidPlane(plane)) {
 								planes.push(plane);
 							}
 							if (A.y + A.height > B.y + B.height) {
@@ -3689,7 +3761,7 @@ window.LimberGridView = (function() {
 									width: A.width,
 									height: A.y + A.height - (B.y + B.height)
 								};
-								if (this.isValidPlane(plane)) {
+								if (isValidPlane(plane)) {
 									planes.push(plane);
 								}
 							}
@@ -3719,32 +3791,32 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.onWindowResize = function(event) {
-		setTimeout(
-			this.onWindowResizeTimerCallbackFunctionVariable,
-			this.WINDOW_RESIZE_WAIT_TIME
-		);
-		window.removeEventListener(
-			"resize",
-			this.onWindowResizeFunctionVariable
-		);
-	};
+	// LimberGridView.prototype.onWindowResize = function(event) {
+	// 	setTimeout(
+	// 		this.onWindowResizeTimerCallbackFunctionVariable,
+	// 		this.WINDOW_RESIZE_WAIT_TIME
+	// 	);
+	// 	window.removeEventListener(
+	// 		"resize",
+	// 		this.onWindowResizeFunctionVariable
+	// 	);
+	// };
 
-	LimberGridView.prototype.onWindowResizeTimerCallback = function(event) {
-		this.init(this.WIDTH, false);
-		this.render();
+	// LimberGridView.prototype.onWindowResizeTimerCallback = function(event) {
+	// 	this.init(this.WIDTH, false);
+	// 	this.render();
 
-		if (this.options.reRenderOnResize != false) {
-			window.addEventListener(
-				"resize",
-				this.onWindowResizeFunctionVariable
-			);
-		}
-	};
+	// 	if (this.options.reRenderOnResize != false) {
+	// 		window.addEventListener(
+	// 			"resize",
+	// 			this.onWindowResizeFunctionVariable
+	// 		);
+	// 	}
+	// };
 
-	LimberGridView.prototype.onItemClick = function(event) {
-		this.callbacks.onItemClickCallback(event);
-	};
+	// LimberGridView.prototype.onItemClick = function(event) {
+	// 	this.callbacks.onItemClickCallback(event);
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -3758,815 +3830,815 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.onLimberGridMouseDown = function(event) {
-		if (event.target.classList.contains("limberGridView")) {
-			event.stopPropagation();
-		} else {
-			return;
-		}
-
-		if (event.which != 1) {
-			return;
-		}
-
-		this.limberGridMouseDownCancel = false;
-		this.limberGridMouseDownTimerComplete = false;
-
-		clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
-		this.limberGridMouseDownCheckTimeOutVariable = setTimeout(
-			this.onLimberGridMouseDownCheck.bind(
-				this,
-				event,
-				event.offsetX,
-				event.offsetY
-			),
-			this.MOUSE_DOWN_TIME
-		);
-
-		this.$limberGridView[0].addEventListener(
-			"mousemove",
-			this.onLimberGridMouseMoveBindedFunctionVariable
-		);
-		document.addEventListener(
-			"mouseup",
-			this.onLimberGridMouseUpBindedFunctionVariable
-		);
-		document.addEventListener(
-			"contextmenu",
-			this.onLimberGridContextMenuBindedFunctionVariable
-		);
-	};
-
-	LimberGridView.prototype.onLimberGridTouchStart = function(event) {
-		if (event.target.classList.contains("limberGridView")) {
-			event.stopPropagation();
-		} else {
-			return;
-		}
-
-		this.limberGridTouchStartCancel = false;
-		this.limberGridTouchStartTimerComplete = false;
-
-		clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
-		this.limberGridTouchStartCheckTimeOutVariable = setTimeout(
-			this.onLimberGridTouchStartCheck.bind(this, event),
-			this.TOUCH_HOLD_TIME
-		);
-
-		this.$limberGridView[0].addEventListener(
-			"touchmove",
-			this.onLimberGridTouchMoveBindedFunctionVariable
-		);
-		document.addEventListener(
-			"touchend",
-			this.onLimberGridTouchEndBindedFunctionVariable
-		);
-		document.addEventListener(
-			"touchcancel",
-			this.onLimberGridTouchCancelBindedFunctionVariable
-		);
-		document.addEventListener(
-			"contextmenu",
-			this.onLimberGridTouchContextMenuBindedFunctionVariable
-		);
-		this.unInitializeItemTouchEvents();
-
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onLimberGridMouseDownCheck = function(
-		event,
-		offsetX,
-		offsetY
-	) {
-		if (this.limberGridMouseDownCancel == false) {
-			this.limberGridMouseDownTimerComplete = true;
-
-			this.$body[0].classList.add(
-				"limberGridViewBodyTagStateElementDraggingOrResizing",
-				"limberGridViewBodyTagStateElementAdding"
-			);
-			var length_0 = this.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewItems[i].classList.add(
-					"limberGridViewItemResizingState"
-				);
-			}
-
-			var length_0 = this.$limberGridViewGridPseudoItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewGridPseudoItems[i].classList.add(
-					"limberGridViewGridPseudoItemResizingState"
-				);
-			}
-
-			var scrollTop = this.$limberGridView[0].scrollTop;
-			var scrollLeft = this.$limberGridView[0].scrollLeft;
-			var x = offsetX + scrollLeft - this.PADDING_LEFT;
-			var y = offsetY + scrollTop - this.PADDING_TOP;
-
-			this.userActionData = {
-				type: "add",
-				addPositionX: x,
-				addPositionY: y
-			};
-
-			this.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
-			this.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
-			this.$limberGridViewAddItemGuide[0].style.transform =
-				"translate(" + x + "px, " + y + "px)";
-
-			if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-				this.$limberGridViewAddItemGuide[0].classList.add(
-					"limberGridViewAddItemGuideActive"
-				);
-			} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-				this.$limberGridViewAddItemGuide[0].classList.add(
-					"limberGridViewAddItemGuideActive",
-					"limberGridViewAddItemGuideCutMode"
-				);
-			}
-
-			this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-			this.$limberGridViewHeightAdjustGuide[0].classList.add(
-				"limberGridViewHeightAdjustGuideActive"
-			);
-		} else {
-			// mouseDown cancel before TimerComplete
-		}
-	};
-
-	LimberGridView.prototype.onLimberGridTouchStartCheck = function(event) {
-		if (this.limberGridTouchStartCancel == false) {
-			this.limberGridTouchStartTimerComplete = true;
-
-			this.$body[0].classList.add(
-				"limberGridViewBodyTagStateElementDraggingOrResizing",
-				"limberGridViewBodyTagStateElementAdding"
-			);
-			var length_0 = this.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewItems[i].classList.add(
-					"limberGridViewItemResizingState"
-				);
-			}
-
-			var length_0 = this.$limberGridViewGridPseudoItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewGridPseudoItems[i].classList.add(
-					"limberGridViewGridPseudoItemResizingState"
-				);
-			}
-
-			var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
-				event
-			);
-
-			var x = touchPositionOnLimberGrid.x;
-			var y = touchPositionOnLimberGrid.y;
-
-			this.userActionData = {
-				type: "add",
-				addPositionX: x,
-				addPositionY: y
-			};
-
-			var removeAddItemOnTouchHoldGuideFunction = function() {
-				this.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
-					"limberGridViewAddItemOnTouchHoldGuideActive"
-				);
-			};
-			setTimeout(removeAddItemOnTouchHoldGuideFunction.bind(this), 500);
-
-			this.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
-			this.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
-			this.$limberGridViewAddItemGuide[0].style.transform =
-				"translate(" + x + "px, " + y + "px)";
-
-			if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-				this.$limberGridViewAddItemGuide[0].classList.add(
-					"limberGridViewAddItemGuideActive"
-				);
-			} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-				this.$limberGridViewAddItemGuide[0].classList.add(
-					"limberGridViewAddItemGuideActive",
-					"limberGridViewAddItemGuideCutMode"
-				);
-			}
-
-			this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-			this.$limberGridViewHeightAdjustGuide[0].classList.add(
-				"limberGridViewHeightAdjustGuideActive"
-			);
-
-			this.insertAddItemOnTouchHoldGuideStyles(x, y);
-			this.$limberGridViewAddItemOnTouchHoldGuide[0].style.transform =
-				"translate(" + x + "px, " + y + "px)";
-			this.$limberGridViewAddItemOnTouchHoldGuide[0].classList.add(
-				"limberGridViewAddItemOnTouchHoldGuideActive"
-			);
-
-			event.preventDefault();
-		} else {
-			// touchstart cancel before TimerComplete
-		}
-	};
-
-	LimberGridView.prototype.onLimberGridMouseMove = function(event) {
-		if (this.limberGridMouseDownTimerComplete == true) {
-			if (
-				this.$limberGridViewAddItemGuide[0].classList.contains(
-					"limberGridViewAddItemGuideAddAllow"
-				) ||
-				this.$limberGridViewAddItemGuide[0].classList.contains(
-					"limberGridViewAddItemGuideAddDisallow"
-				)
-			) {
-				this.$limberGridViewAddItemGuide[0].classList.remove(
-					"limberGridViewAddItemGuideAddAllow",
-					"limberGridViewAddItemGuideAddDisallow"
-				);
-			}
-
-			var scrollTop = this.$limberGridView[0].scrollTop;
-			var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-			var x = this.userActionData.addPositionX;
-			var y = this.userActionData.addPositionY;
-
-			var newWidth = event.offsetX - x + scrollLeft - this.PADDING_LEFT;
-			var newHeight = event.offsetY - y + scrollTop - this.PADDING_TOP;
-
-			this.userActionData.newWidth = newWidth;
-			this.userActionData.newHeight = newHeight;
-
-			var yMousePosition = event.offsetY + scrollTop;
-			this.adjustHeight(yMousePosition);
-
-			if (newWidth > 0 && newHeight > 0) {
-				this.$limberGridViewAddItemGuide[0].style.width =
-					newWidth + "px";
-				this.$limberGridViewAddItemGuide[0].style.height =
-					newHeight + "px";
-			}
-
-			if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-				clearTimeout(this.addItemAllowCheckTimeOutVariable);
-				this.addItemAllowCheckTimeOutVariable = setTimeout(
-					this.addItemAllowCheckTimeOut.bind(
-						this,
-						this.userActionData.addPositionX,
-						this.userActionData.addPositionY,
-						newWidth,
-						newHeight
-					),
-					this.DEMO_WAIT_TIME
-				);
-			} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-				clearTimeout(this.cutSpaceAllowCheckTimeOutVariable);
-				this.cutSpaceAllowCheckTimeOutVariable = setTimeout(
-					this.cutSpaceAllowCheckTimeOut.bind(
-						this,
-						this.userActionData.addPositionX,
-						this.userActionData.addPositionY,
-						newWidth,
-						newHeight
-					),
-					this.DEMO_WAIT_TIME
-				);
-			}
-		} else {
-			clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
-			this.$limberGridView[0].removeEventListener(
-				"mousemove",
-				this.onLimberGridMouseMoveBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"mouseup",
-				this.onLimberGridMouseUpBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"contextmenu",
-				this.onLimberGridContextMenuBindedFunctionVariable
-			);
-		}
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onLimberGridTouchMove = function(event) {
-		if (this.limberGridTouchStartTimerComplete == true) {
-			console.log("limberGridTouchStartTimerComplete");
-			if (
-				this.$limberGridViewAddItemGuide[0].classList.contains(
-					"limberGridViewAddItemGuideAddAllow"
-				) ||
-				this.$limberGridViewAddItemGuide[0].classList.contains(
-					"limberGridViewAddItemGuideAddDisallow"
-				)
-			) {
-				this.$limberGridViewAddItemGuide[0].classList.remove(
-					"limberGridViewAddItemGuideAddAllow",
-					"limberGridViewAddItemGuideAddDisallow"
-				);
-			}
-
-			var scrollTop = this.$limberGridView[0].scrollTop;
-			var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-			var x = this.userActionData.addPositionX;
-			var y = this.userActionData.addPositionY;
-
-			var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
-				event
-			);
-
-			if (touchPositionOnLimberGrid != false) {
-				var newWidth = touchPositionOnLimberGrid.x - x;
-				var newHeight = touchPositionOnLimberGrid.y - y;
-
-				this.userActionData.newWidth = newWidth;
-				this.userActionData.newHeight = newHeight;
-
-				if (newWidth > 0 && newHeight > 0) {
-					this.$limberGridViewAddItemGuide[0].style.width =
-						newWidth + "px";
-					this.$limberGridViewAddItemGuide[0].style.height =
-						newHeight + "px";
-				}
-			}
-
-			if (touchPositionOnLimberGrid != false) {
-				var limberGridViewBoundingClientRect = this.$limberGridView[0].getBoundingClientRect();
-				var limberGridViewWidthVisibleWidth =
-					this.$limberGridView[0].offsetWidth -
-					limberGridViewBoundingClientRect.left;
-				var limberGridViewHeightVisibleHeight =
-					this.$limberGridView[0].offsetHeight -
-					limberGridViewBoundingClientRect.top;
-				var limberGridViewOnVisibleAreaX =
-					touchPositionOnLimberGrid.x +
-					this.PADDING_LEFT -
-					scrollLeft;
-				var limberGridViewOnVisibleAreaY =
-					touchPositionOnLimberGrid.y + this.PADDING_TOP - scrollTop;
-
-				var yTouchPosition = touchPositionOnLimberGrid.y;
-				this.adjustHeight(yTouchPosition);
-
-				var programScrolled = this.adjustScroll(
-					limberGridViewOnVisibleAreaY,
-					limberGridViewHeightVisibleHeight
-				);
-			}
-
-			if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-				clearTimeout(this.addItemAllowCheckTimeOutVariable);
-				if (programScrolled != true) {
-					this.addItemAllowCheckTimeOutVariable = setTimeout(
-						this.addItemAllowCheckTimeOut.bind(
-							this,
-							this.userActionData.addPositionX,
-							this.userActionData.addPositionY,
-							newWidth,
-							newHeight
-						),
-						this.DEMO_WAIT_TIME
-					);
-				}
-			} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-				clearTimeout(this.cutSpaceAllowCheckTimeOutVariable);
-				if (programScrolled != true) {
-					this.cutSpaceAllowCheckTimeOutVariable = setTimeout(
-						this.cutSpaceAllowCheckTimeOut.bind(
-							this,
-							this.userActionData.addPositionX,
-							this.userActionData.addPositionY,
-							newWidth,
-							newHeight
-						),
-						this.DEMO_WAIT_TIME
-					);
-				}
-			}
-			event.preventDefault();
-		} else {
-			clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
-			this.$limberGridView[0].removeEventListener(
-				"touchmove",
-				this.onLimberGridTouchMoveBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"touchend",
-				this.onLimberGridTouchEndBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"touchcancel",
-				this.onLimberGridTouchCancelBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"contextmenu",
-				this.onLimberGridTouchContextMenuBindedFunctionVariable
-			);
-			this.initializeItemTouchEvents();
-		}
-
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onLimberGridMouseUp = function(event) {
-		clearTimeout(this.addItemAllowCheckTimeOutVariable);
-		clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
-		var itemAddedFlag = false;
-		if (this.limberGridMouseDownTimerComplete == true) {
-			if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-				if (
-					this.addItemAllowCheck(
-						this.userActionData.addPositionX,
-						this.userActionData.addPositionY,
-						this.userActionData.newWidth,
-						this.userActionData.newHeight
-					)
-				) {
-					var item = {
-						x: this.userActionData.addPositionX,
-						y: this.userActionData.addPositionY,
-						width: this.userActionData.newWidth,
-						height: this.userActionData.newHeight
-					};
-
-					var scrollTop = this.$limberGridView[0].scrollTop;
-
-					var renderDetails = this.addItemsAtPositions(
-						[item],
-						false,
-						"addItemInteractive"
-					);
-					itemAddedFlag = true;
-
-					this.$limberGridView[0].scrollTop = scrollTop;
-				}
-			} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-				if (
-					this.cutSpaceAllowCheck(
-						this.userActionData.addPositionX,
-						this.userActionData.addPositionY,
-						this.userActionData.newWidth,
-						this.userActionData.newHeight
-					)
-				) {
-					this.shiftItemsUp(
-						this.userActionData.addPositionY,
-						this.userActionData.newHeight
-					);
-				}
-			}
-		} else {
-			this.limberGridMouseDownCancel = true;
-		}
-		this.onLimberGridContextMenu();
-		event.stopPropagation();
-
-		if (
-			this.callbacks.addCompleteCallback != undefined &&
-			this.callbacks.addCompleteCallback != null
-		) {
-			if (itemAddedFlag == true) {
-				this.callbacks.addCompleteCallback(
-					renderDetails.items,
-					item.width,
-					item.height,
-					"addItemInteractive"
-				);
-			}
-		}
-	};
-
-	LimberGridView.prototype.onLimberGridTouchEnd = function(event) {
-		clearTimeout(this.addItemAllowCheckTimeOutVariable);
-		clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
-		var itemAddedFlag = false;
-		if (this.limberGridTouchStartTimerComplete == true) {
-			if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-				if (
-					this.addItemAllowCheck(
-						this.userActionData.addPositionX,
-						this.userActionData.addPositionY,
-						this.userActionData.newWidth,
-						this.userActionData.newHeight
-					)
-				) {
-					var item = {
-						x: this.userActionData.addPositionX,
-						y: this.userActionData.addPositionY,
-						width: this.userActionData.newWidth,
-						height: this.userActionData.newHeight
-					};
-
-					var scrollTop = this.$limberGridView[0].scrollTop;
-
-					var renderDetails = this.addItemsAtPositions(
-						[item],
-						false,
-						"addItemInteractive"
-					);
-					itemAddedFlag = true;
-
-					this.$limberGridView[0].scrollTop = scrollTop;
-
-					this.limberGridTouchStartTimerComplete = false;
-				}
-			} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-				if (
-					this.cutSpaceAllowCheck(
-						this.userActionData.addPositionX,
-						this.userActionData.addPositionY,
-						this.userActionData.newWidth,
-						this.userActionData.newHeight
-					)
-				) {
-					this.shiftItemsUp(
-						this.userActionData.addPositionY,
-						this.userActionData.newHeight
-					);
-				}
-			}
-		} else {
-			this.limberGridTouchStartCancel = true;
-		}
-		this.limberGridTouchStartTimerComplete = false;
-		this.onLimberGridContextMenu();
-		this.initializeItemTouchEvents();
-
-		event.stopPropagation();
-
-		if (
-			this.callbacks.addCompleteCallback != undefined &&
-			this.callbacks.addCompleteCallback != null
-		) {
-			if (itemAddedFlag == true) {
-				this.callbacks.addCompleteCallback(
-					renderDetails.items,
-					item.width,
-					item.height,
-					"addItemInteractive"
-				);
-			}
-		}
-	};
-
-	LimberGridView.prototype.onLimberGridTouchCancel = function(event) {
-		clearTimeout(this.addItemAllowCheckTimeOutVariable);
-		clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
-		this.limberGridTouchStartCancel = false;
-		this.limberGridTouchStartTimerComplete = false;
-		this.onLimberGridContextMenu();
-		this.initializeItemTouchEvents();
-
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onLimberGridTouchContextMenu = function(event) {
-		event.preventDefault();
-	};
-
-	LimberGridView.prototype.onLimberGridContextMenu = function(event) {
-		if (event != undefined) {
-			event.preventDefault();
-			event.stopPropagation();
-		}
-
-		this.$limberGridViewAddItemGuide[0].classList.remove(
-			"limberGridViewAddItemGuideActive",
-			"limberGridViewAddItemGuideCutMode",
-			"limberGridViewAddItemGuideAddAllow",
-			"limberGridViewAddItemGuideAddDisallow"
-		);
-		this.$limberGridViewHeightAdjustGuide[0].classList.remove(
-			"limberGridViewHeightAdjustGuideActive"
-		);
-		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-
-		this.$body[0].classList.remove(
-			"limberGridViewBodyTagStateElementDraggingOrResizing",
-			"limberGridViewBodyTagStateElementAdding"
-		);
-		var length_0 = this.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
-			this.$limberGridViewItems[i].classList.remove(
-				"limberGridViewItemResizingState"
-			);
-		}
-
-		var length_0 = this.$limberGridViewGridPseudoItems.length;
-		for (var i = 0; i < length_0; i++) {
-			this.$limberGridViewGridPseudoItems[i].classList.remove(
-				"limberGridViewGridPseudoItemResizingState"
-			);
-		}
-
-		this.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
-			"limberGridViewAddItemOnTouchHoldGuideActive"
-		);
-
-		this.$limberGridView[0].removeEventListener(
-			"mousemove",
-			this.onLimberGridMouseMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"mouseup",
-			this.onLimberGridMouseUpBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onLimberGridContextMenuBindedFunctionVariable
-		);
-
-		this.$limberGridView[0].removeEventListener(
-			"touchmove",
-			this.onLimberGridTouchMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchend",
-			this.onLimberGridTouchEndBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchcancel",
-			this.onLimberGridTouchCancelBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onLimberGridTouchContextMenuBindedFunctionVariable
-		);
-	};
-
-	LimberGridView.prototype.addItemAllowCheckTimeOut = function(
-		x,
-		y,
-		width,
-		height
-	) {
-		if (this.addItemAllowCheck(x, y, width, height) == false) {
-			this.$limberGridViewAddItemGuide[0].classList.remove(
-				"limberGridViewAddItemGuideAddAllow"
-			);
-			this.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideAddDisallow"
-			);
-		} else {
-			this.$limberGridViewAddItemGuide[0].classList.remove(
-				"limberGridViewAddItemGuideAddDisallow"
-			);
-			this.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideAddAllow"
-			);
-		}
-	};
-
-	LimberGridView.prototype.addItemAllowCheck = function(x, y, width, height) {
-		var tempPlane = {
-			x: x,
-			y: y,
-			width: width,
-			height: height
-		};
-
-		if (x < 0 || y < 0) {
-			return false;
-		}
-
-		if (typeof width != "number" || typeof height != "number") {
-			return false;
-		}
-
-		if (x + width > this.WIDTH) {
-			return false;
-		}
-
-		if (width < 50 || height < 50) {
-			return false;
-		}
-
-		var length_0 = this.positionData.length;
-		for (var i = 0; i < length_0; i++) {
-			var iterItem = {
-				x:
-					this.positionData[i].x -
-					this.getMarginAtPoint(this.positionData[i].x),
-				y:
-					this.positionData[i].y -
-					this.getMarginAtPoint(this.positionData[i].y),
-				width:
-					this.positionData[i].width +
-					this.getMarginAtPoint(this.positionData[i].x) +
-					this.MARGIN,
-				height:
-					this.positionData[i].height +
-					this.getMarginAtPoint(this.positionData[i].y) +
-					this.MARGIN
-			};
-			var isInside = this.isPlaneBInsidePlaneA_TouchingIsInside(
-				iterItem,
-				tempPlane
-			);
-
-			if (isInside) {
-				return false;
-			}
-		}
-		return true;
-	};
-
-	LimberGridView.prototype.cutSpaceAllowCheckTimeOut = function(
-		x,
-		y,
-		width,
-		height
-	) {
-		if (this.cutSpaceAllowCheck(x, y, width, height) == false) {
-			this.$limberGridViewAddItemGuide[0].classList.remove(
-				"limberGridViewAddItemGuideAddAllow"
-			);
-			this.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideAddDisallow"
-			);
-		} else {
-			this.$limberGridViewAddItemGuide[0].classList.remove(
-				"limberGridViewAddItemGuideAddDisallow"
-			);
-			this.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideAddAllow"
-			);
-		}
-	};
-
-	LimberGridView.prototype.cutSpaceAllowCheck = function(
-		x,
-		y,
-		width,
-		height
-	) {
-		var tempPlane = {
-			x: 0,
-			y: y - this.MARGIN / 2,
-			width: this.WIDTH,
-			height: height + this.MARGIN / 2
-		};
-
-		if (typeof width != "number" || typeof height != "number") {
-			return false;
-		}
-
-		var length_0 = this.positionData.length;
-		for (var i = 0; i < length_0; i++) {
-			var isInside = this.isPlaneBInsidePlaneA_TouchingIsInside(
-				tempPlane,
-				this.positionData[i]
-			);
-
-			if (isInside) {
-				return false;
-			}
-		}
-		return true;
-	};
-
-	LimberGridView.prototype.insertAddItemOnTouchHoldGuideStyles = function(
-		x,
-		y
-	) {
-		var ripple = [];
-		ripple[0] = "@keyframes limberGridViewAddItemOnTouchHoldRipple {";
-		ripple[1] = "0% {";
-		ripple[2] =
-			"transform: translate(" +
-			(x - 5) +
-			"px, " +
-			(y - 5) +
-			"px) scale(0, 0);";
-		ripple[3] = "opacity: 1;";
-		ripple[4] = "}";
-		ripple[5] = "20% {";
-		ripple[6] =
-			"transform: translate(" +
-			(x - 5) +
-			"px, " +
-			(y - 5) +
-			"px) scale(25, 25);";
-		ripple[7] = "opacity: 1;";
-		ripple[8] = "}";
-		ripple[9] = "100% {";
-		ripple[10] =
-			"transform: translate(" +
-			(x - 5) +
-			"px, " +
-			(y - 5) +
-			"px) scale(50, 50);";
-		ripple[11] = "opacity: 0;";
-		ripple[12] = "}";
-		ripple[13] = "}";
-		var rippleString = ripple.join("");
-		this.$limberGridViewStyle[0].innerHTML = rippleString;
-	};
+	// LimberGridView.prototype.onLimberGridMouseDown = function(event) {
+	// 	if (event.target.classList.contains("limberGridView")) {
+	// 		event.stopPropagation();
+	// 	} else {
+	// 		return;
+	// 	}
+
+	// 	if (event.which != 1) {
+	// 		return;
+	// 	}
+
+	// 	this.limberGridMouseDownCancel = false;
+	// 	this.limberGridMouseDownTimerComplete = false;
+
+	// 	clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
+	// 	this.limberGridMouseDownCheckTimeOutVariable = setTimeout(
+	// 		this.onLimberGridMouseDownCheck.bind(
+	// 			this,
+	// 			event,
+	// 			event.offsetX,
+	// 			event.offsetY
+	// 		),
+	// 		this.MOUSE_DOWN_TIME
+	// 	);
+
+	// 	this.$limberGridView[0].addEventListener(
+	// 		"mousemove",
+	// 		this.onLimberGridMouseMoveBindedFunctionVariable
+	// 	);
+	// 	document.addEventListener(
+	// 		"mouseup",
+	// 		this.onLimberGridMouseUpBindedFunctionVariable
+	// 	);
+	// 	document.addEventListener(
+	// 		"contextmenu",
+	// 		this.onLimberGridContextMenuBindedFunctionVariable
+	// 	);
+	// };
+
+	// LimberGridView.prototype.onLimberGridTouchStart = function(event) {
+	// 	if (event.target.classList.contains("limberGridView")) {
+	// 		event.stopPropagation();
+	// 	} else {
+	// 		return;
+	// 	}
+
+	// 	this.limberGridTouchStartCancel = false;
+	// 	this.limberGridTouchStartTimerComplete = false;
+
+	// 	clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
+	// 	this.limberGridTouchStartCheckTimeOutVariable = setTimeout(
+	// 		this.onLimberGridTouchStartCheck.bind(this, event),
+	// 		this.TOUCH_HOLD_TIME
+	// 	);
+
+	// 	this.$limberGridView[0].addEventListener(
+	// 		"touchmove",
+	// 		this.onLimberGridTouchMoveBindedFunctionVariable
+	// 	);
+	// 	document.addEventListener(
+	// 		"touchend",
+	// 		this.onLimberGridTouchEndBindedFunctionVariable
+	// 	);
+	// 	document.addEventListener(
+	// 		"touchcancel",
+	// 		this.onLimberGridTouchCancelBindedFunctionVariable
+	// 	);
+	// 	document.addEventListener(
+	// 		"contextmenu",
+	// 		this.onLimberGridTouchContextMenuBindedFunctionVariable
+	// 	);
+	// 	this.unInitializeItemTouchEvents();
+
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onLimberGridMouseDownCheck = function(
+	// 	event,
+	// 	offsetX,
+	// 	offsetY
+	// ) {
+	// 	if (this.limberGridMouseDownCancel == false) {
+	// 		this.limberGridMouseDownTimerComplete = true;
+
+	// 		this.$body[0].classList.add(
+	// 			"limberGridViewBodyTagStateElementDraggingOrResizing",
+	// 			"limberGridViewBodyTagStateElementAdding"
+	// 		);
+	// 		var length_0 = this.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewItems[i].classList.add(
+	// 				"limberGridViewItemResizingState"
+	// 			);
+	// 		}
+
+	// 		var length_0 = this.$limberGridViewGridPseudoItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewGridPseudoItems[i].classList.add(
+	// 				"limberGridViewGridPseudoItemResizingState"
+	// 			);
+	// 		}
+
+	// 		var scrollTop = this.$limberGridView[0].scrollTop;
+	// 		var scrollLeft = this.$limberGridView[0].scrollLeft;
+	// 		var x = offsetX + scrollLeft - this.PADDING_LEFT;
+	// 		var y = offsetY + scrollTop - this.PADDING_TOP;
+
+	// 		this.userActionData = {
+	// 			type: "add",
+	// 			addPositionX: x,
+	// 			addPositionY: y
+	// 		};
+
+	// 		this.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
+	// 		this.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
+	// 		this.$limberGridViewAddItemGuide[0].style.transform =
+	// 			"translate(" + x + "px, " + y + "px)";
+
+	// 		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	// 			this.$limberGridViewAddItemGuide[0].classList.add(
+	// 				"limberGridViewAddItemGuideActive"
+	// 			);
+	// 		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	// 			this.$limberGridViewAddItemGuide[0].classList.add(
+	// 				"limberGridViewAddItemGuideActive",
+	// 				"limberGridViewAddItemGuideCutMode"
+	// 			);
+	// 		}
+
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	// 		this.$limberGridViewHeightAdjustGuide[0].classList.add(
+	// 			"limberGridViewHeightAdjustGuideActive"
+	// 		);
+	// 	} else {
+	// 		// mouseDown cancel before TimerComplete
+	// 	}
+	// };
+
+	// LimberGridView.prototype.onLimberGridTouchStartCheck = function(event) {
+	// 	if (this.limberGridTouchStartCancel == false) {
+	// 		this.limberGridTouchStartTimerComplete = true;
+
+	// 		this.$body[0].classList.add(
+	// 			"limberGridViewBodyTagStateElementDraggingOrResizing",
+	// 			"limberGridViewBodyTagStateElementAdding"
+	// 		);
+	// 		var length_0 = this.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewItems[i].classList.add(
+	// 				"limberGridViewItemResizingState"
+	// 			);
+	// 		}
+
+	// 		var length_0 = this.$limberGridViewGridPseudoItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewGridPseudoItems[i].classList.add(
+	// 				"limberGridViewGridPseudoItemResizingState"
+	// 			);
+	// 		}
+
+	// 		var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
+	// 			event
+	// 		);
+
+	// 		var x = touchPositionOnLimberGrid.x;
+	// 		var y = touchPositionOnLimberGrid.y;
+
+	// 		this.userActionData = {
+	// 			type: "add",
+	// 			addPositionX: x,
+	// 			addPositionY: y
+	// 		};
+
+	// 		var removeAddItemOnTouchHoldGuideFunction = function() {
+	// 			this.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
+	// 				"limberGridViewAddItemOnTouchHoldGuideActive"
+	// 			);
+	// 		};
+	// 		setTimeout(removeAddItemOnTouchHoldGuideFunction.bind(this), 500);
+
+	// 		this.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
+	// 		this.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
+	// 		this.$limberGridViewAddItemGuide[0].style.transform =
+	// 			"translate(" + x + "px, " + y + "px)";
+
+	// 		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	// 			this.$limberGridViewAddItemGuide[0].classList.add(
+	// 				"limberGridViewAddItemGuideActive"
+	// 			);
+	// 		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	// 			this.$limberGridViewAddItemGuide[0].classList.add(
+	// 				"limberGridViewAddItemGuideActive",
+	// 				"limberGridViewAddItemGuideCutMode"
+	// 			);
+	// 		}
+
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	// 		this.$limberGridViewHeightAdjustGuide[0].classList.add(
+	// 			"limberGridViewHeightAdjustGuideActive"
+	// 		);
+
+	// 		this.insertAddItemOnTouchHoldGuideStyles(x, y);
+	// 		this.$limberGridViewAddItemOnTouchHoldGuide[0].style.transform =
+	// 			"translate(" + x + "px, " + y + "px)";
+	// 		this.$limberGridViewAddItemOnTouchHoldGuide[0].classList.add(
+	// 			"limberGridViewAddItemOnTouchHoldGuideActive"
+	// 		);
+
+	// 		event.preventDefault();
+	// 	} else {
+	// 		// touchstart cancel before TimerComplete
+	// 	}
+	// };
+
+	// LimberGridView.prototype.onLimberGridMouseMove = function(event) {
+	// 	if (this.limberGridMouseDownTimerComplete == true) {
+	// 		if (
+	// 			this.$limberGridViewAddItemGuide[0].classList.contains(
+	// 				"limberGridViewAddItemGuideAddAllow"
+	// 			) ||
+	// 			this.$limberGridViewAddItemGuide[0].classList.contains(
+	// 				"limberGridViewAddItemGuideAddDisallow"
+	// 			)
+	// 		) {
+	// 			this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 				"limberGridViewAddItemGuideAddAllow",
+	// 				"limberGridViewAddItemGuideAddDisallow"
+	// 			);
+	// 		}
+
+	// 		var scrollTop = this.$limberGridView[0].scrollTop;
+	// 		var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 		var x = this.userActionData.addPositionX;
+	// 		var y = this.userActionData.addPositionY;
+
+	// 		var newWidth = event.offsetX - x + scrollLeft - this.PADDING_LEFT;
+	// 		var newHeight = event.offsetY - y + scrollTop - this.PADDING_TOP;
+
+	// 		this.userActionData.newWidth = newWidth;
+	// 		this.userActionData.newHeight = newHeight;
+
+	// 		var yMousePosition = event.offsetY + scrollTop;
+	// 		this.adjustHeight(yMousePosition);
+
+	// 		if (newWidth > 0 && newHeight > 0) {
+	// 			this.$limberGridViewAddItemGuide[0].style.width =
+	// 				newWidth + "px";
+	// 			this.$limberGridViewAddItemGuide[0].style.height =
+	// 				newHeight + "px";
+	// 		}
+
+	// 		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	// 			clearTimeout(this.addItemAllowCheckTimeOutVariable);
+	// 			this.addItemAllowCheckTimeOutVariable = setTimeout(
+	// 				this.addItemAllowCheckTimeOut.bind(
+	// 					this,
+	// 					this.userActionData.addPositionX,
+	// 					this.userActionData.addPositionY,
+	// 					newWidth,
+	// 					newHeight
+	// 				),
+	// 				this.DEMO_WAIT_TIME
+	// 			);
+	// 		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	// 			clearTimeout(this.cutSpaceAllowCheckTimeOutVariable);
+	// 			this.cutSpaceAllowCheckTimeOutVariable = setTimeout(
+	// 				this.cutSpaceAllowCheckTimeOut.bind(
+	// 					this,
+	// 					this.userActionData.addPositionX,
+	// 					this.userActionData.addPositionY,
+	// 					newWidth,
+	// 					newHeight
+	// 				),
+	// 				this.DEMO_WAIT_TIME
+	// 			);
+	// 		}
+	// 	} else {
+	// 		clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
+	// 		this.$limberGridView[0].removeEventListener(
+	// 			"mousemove",
+	// 			this.onLimberGridMouseMoveBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"mouseup",
+	// 			this.onLimberGridMouseUpBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"contextmenu",
+	// 			this.onLimberGridContextMenuBindedFunctionVariable
+	// 		);
+	// 	}
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onLimberGridTouchMove = function(event) {
+	// 	if (this.limberGridTouchStartTimerComplete == true) {
+	// 		console.log("limberGridTouchStartTimerComplete");
+	// 		if (
+	// 			this.$limberGridViewAddItemGuide[0].classList.contains(
+	// 				"limberGridViewAddItemGuideAddAllow"
+	// 			) ||
+	// 			this.$limberGridViewAddItemGuide[0].classList.contains(
+	// 				"limberGridViewAddItemGuideAddDisallow"
+	// 			)
+	// 		) {
+	// 			this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 				"limberGridViewAddItemGuideAddAllow",
+	// 				"limberGridViewAddItemGuideAddDisallow"
+	// 			);
+	// 		}
+
+	// 		var scrollTop = this.$limberGridView[0].scrollTop;
+	// 		var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 		var x = this.userActionData.addPositionX;
+	// 		var y = this.userActionData.addPositionY;
+
+	// 		var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
+	// 			event
+	// 		);
+
+	// 		if (touchPositionOnLimberGrid != false) {
+	// 			var newWidth = touchPositionOnLimberGrid.x - x;
+	// 			var newHeight = touchPositionOnLimberGrid.y - y;
+
+	// 			this.userActionData.newWidth = newWidth;
+	// 			this.userActionData.newHeight = newHeight;
+
+	// 			if (newWidth > 0 && newHeight > 0) {
+	// 				this.$limberGridViewAddItemGuide[0].style.width =
+	// 					newWidth + "px";
+	// 				this.$limberGridViewAddItemGuide[0].style.height =
+	// 					newHeight + "px";
+	// 			}
+	// 		}
+
+	// 		if (touchPositionOnLimberGrid != false) {
+	// 			var limberGridViewBoundingClientRect = this.$limberGridView[0].getBoundingClientRect();
+	// 			var limberGridViewWidthVisibleWidth =
+	// 				this.$limberGridView[0].offsetWidth -
+	// 				limberGridViewBoundingClientRect.left;
+	// 			var limberGridViewHeightVisibleHeight =
+	// 				this.$limberGridView[0].offsetHeight -
+	// 				limberGridViewBoundingClientRect.top;
+	// 			var limberGridViewOnVisibleAreaX =
+	// 				touchPositionOnLimberGrid.x +
+	// 				this.PADDING_LEFT -
+	// 				scrollLeft;
+	// 			var limberGridViewOnVisibleAreaY =
+	// 				touchPositionOnLimberGrid.y + this.PADDING_TOP - scrollTop;
+
+	// 			var yTouchPosition = touchPositionOnLimberGrid.y;
+	// 			this.adjustHeight(yTouchPosition);
+
+	// 			var programScrolled = this.adjustScroll(
+	// 				limberGridViewOnVisibleAreaY,
+	// 				limberGridViewHeightVisibleHeight
+	// 			);
+	// 		}
+
+	// 		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	// 			clearTimeout(this.addItemAllowCheckTimeOutVariable);
+	// 			if (programScrolled != true) {
+	// 				this.addItemAllowCheckTimeOutVariable = setTimeout(
+	// 					this.addItemAllowCheckTimeOut.bind(
+	// 						this,
+	// 						this.userActionData.addPositionX,
+	// 						this.userActionData.addPositionY,
+	// 						newWidth,
+	// 						newHeight
+	// 					),
+	// 					this.DEMO_WAIT_TIME
+	// 				);
+	// 			}
+	// 		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	// 			clearTimeout(this.cutSpaceAllowCheckTimeOutVariable);
+	// 			if (programScrolled != true) {
+	// 				this.cutSpaceAllowCheckTimeOutVariable = setTimeout(
+	// 					this.cutSpaceAllowCheckTimeOut.bind(
+	// 						this,
+	// 						this.userActionData.addPositionX,
+	// 						this.userActionData.addPositionY,
+	// 						newWidth,
+	// 						newHeight
+	// 					),
+	// 					this.DEMO_WAIT_TIME
+	// 				);
+	// 			}
+	// 		}
+	// 		event.preventDefault();
+	// 	} else {
+	// 		clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
+	// 		this.$limberGridView[0].removeEventListener(
+	// 			"touchmove",
+	// 			this.onLimberGridTouchMoveBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"touchend",
+	// 			this.onLimberGridTouchEndBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"touchcancel",
+	// 			this.onLimberGridTouchCancelBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"contextmenu",
+	// 			this.onLimberGridTouchContextMenuBindedFunctionVariable
+	// 		);
+	// 		this.initializeItemTouchEvents();
+	// 	}
+
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onLimberGridMouseUp = function(event) {
+	// 	clearTimeout(this.addItemAllowCheckTimeOutVariable);
+	// 	clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
+	// 	var itemAddedFlag = false;
+	// 	if (this.limberGridMouseDownTimerComplete == true) {
+	// 		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	// 			if (
+	// 				this.addItemAllowCheck(
+	// 					this.userActionData.addPositionX,
+	// 					this.userActionData.addPositionY,
+	// 					this.userActionData.newWidth,
+	// 					this.userActionData.newHeight
+	// 				)
+	// 			) {
+	// 				var item = {
+	// 					x: this.userActionData.addPositionX,
+	// 					y: this.userActionData.addPositionY,
+	// 					width: this.userActionData.newWidth,
+	// 					height: this.userActionData.newHeight
+	// 				};
+
+	// 				var scrollTop = this.$limberGridView[0].scrollTop;
+
+	// 				var renderDetails = this.addItemsAtPositions(
+	// 					[item],
+	// 					false,
+	// 					"addItemInteractive"
+	// 				);
+	// 				itemAddedFlag = true;
+
+	// 				this.$limberGridView[0].scrollTop = scrollTop;
+	// 			}
+	// 		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	// 			if (
+	// 				this.cutSpaceAllowCheck(
+	// 					this.userActionData.addPositionX,
+	// 					this.userActionData.addPositionY,
+	// 					this.userActionData.newWidth,
+	// 					this.userActionData.newHeight
+	// 				)
+	// 			) {
+	// 				this.shiftItemsUp(
+	// 					this.userActionData.addPositionY,
+	// 					this.userActionData.newHeight
+	// 				);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		this.limberGridMouseDownCancel = true;
+	// 	}
+	// 	this.onLimberGridContextMenu();
+	// 	event.stopPropagation();
+
+	// 	if (
+	// 		this.callbacks.addCompleteCallback != undefined &&
+	// 		this.callbacks.addCompleteCallback != null
+	// 	) {
+	// 		if (itemAddedFlag == true) {
+	// 			this.callbacks.addCompleteCallback(
+	// 				renderDetails.items,
+	// 				item.width,
+	// 				item.height,
+	// 				"addItemInteractive"
+	// 			);
+	// 		}
+	// 	}
+	// };
+
+	// LimberGridView.prototype.onLimberGridTouchEnd = function(event) {
+	// 	clearTimeout(this.addItemAllowCheckTimeOutVariable);
+	// 	clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
+	// 	var itemAddedFlag = false;
+	// 	if (this.limberGridTouchStartTimerComplete == true) {
+	// 		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	// 			if (
+	// 				this.addItemAllowCheck(
+	// 					this.userActionData.addPositionX,
+	// 					this.userActionData.addPositionY,
+	// 					this.userActionData.newWidth,
+	// 					this.userActionData.newHeight
+	// 				)
+	// 			) {
+	// 				var item = {
+	// 					x: this.userActionData.addPositionX,
+	// 					y: this.userActionData.addPositionY,
+	// 					width: this.userActionData.newWidth,
+	// 					height: this.userActionData.newHeight
+	// 				};
+
+	// 				var scrollTop = this.$limberGridView[0].scrollTop;
+
+	// 				var renderDetails = this.addItemsAtPositions(
+	// 					[item],
+	// 					false,
+	// 					"addItemInteractive"
+	// 				);
+	// 				itemAddedFlag = true;
+
+	// 				this.$limberGridView[0].scrollTop = scrollTop;
+
+	// 				this.limberGridTouchStartTimerComplete = false;
+	// 			}
+	// 		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	// 			if (
+	// 				this.cutSpaceAllowCheck(
+	// 					this.userActionData.addPositionX,
+	// 					this.userActionData.addPositionY,
+	// 					this.userActionData.newWidth,
+	// 					this.userActionData.newHeight
+	// 				)
+	// 			) {
+	// 				this.shiftItemsUp(
+	// 					this.userActionData.addPositionY,
+	// 					this.userActionData.newHeight
+	// 				);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		this.limberGridTouchStartCancel = true;
+	// 	}
+	// 	this.limberGridTouchStartTimerComplete = false;
+	// 	this.onLimberGridContextMenu();
+	// 	this.initializeItemTouchEvents();
+
+	// 	event.stopPropagation();
+
+	// 	if (
+	// 		this.callbacks.addCompleteCallback != undefined &&
+	// 		this.callbacks.addCompleteCallback != null
+	// 	) {
+	// 		if (itemAddedFlag == true) {
+	// 			this.callbacks.addCompleteCallback(
+	// 				renderDetails.items,
+	// 				item.width,
+	// 				item.height,
+	// 				"addItemInteractive"
+	// 			);
+	// 		}
+	// 	}
+	// };
+
+	// LimberGridView.prototype.onLimberGridTouchCancel = function(event) {
+	// 	clearTimeout(this.addItemAllowCheckTimeOutVariable);
+	// 	clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
+	// 	this.limberGridTouchStartCancel = false;
+	// 	this.limberGridTouchStartTimerComplete = false;
+	// 	this.onLimberGridContextMenu();
+	// 	this.initializeItemTouchEvents();
+
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onLimberGridTouchContextMenu = function(event) {
+	// 	event.preventDefault();
+	// };
+
+	// LimberGridView.prototype.onLimberGridContextMenu = function(event) {
+	// 	if (event != undefined) {
+	// 		event.preventDefault();
+	// 		event.stopPropagation();
+	// 	}
+
+	// 	this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 		"limberGridViewAddItemGuideActive",
+	// 		"limberGridViewAddItemGuideCutMode",
+	// 		"limberGridViewAddItemGuideAddAllow",
+	// 		"limberGridViewAddItemGuideAddDisallow"
+	// 	);
+	// 	this.$limberGridViewHeightAdjustGuide[0].classList.remove(
+	// 		"limberGridViewHeightAdjustGuideActive"
+	// 	);
+	// 	this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+
+	// 	this.$body[0].classList.remove(
+	// 		"limberGridViewBodyTagStateElementDraggingOrResizing",
+	// 		"limberGridViewBodyTagStateElementAdding"
+	// 	);
+	// 	var length_0 = this.$limberGridViewItems.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		this.$limberGridViewItems[i].classList.remove(
+	// 			"limberGridViewItemResizingState"
+	// 		);
+	// 	}
+
+	// 	var length_0 = this.$limberGridViewGridPseudoItems.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		this.$limberGridViewGridPseudoItems[i].classList.remove(
+	// 			"limberGridViewGridPseudoItemResizingState"
+	// 		);
+	// 	}
+
+	// 	this.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
+	// 		"limberGridViewAddItemOnTouchHoldGuideActive"
+	// 	);
+
+	// 	this.$limberGridView[0].removeEventListener(
+	// 		"mousemove",
+	// 		this.onLimberGridMouseMoveBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"mouseup",
+	// 		this.onLimberGridMouseUpBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onLimberGridContextMenuBindedFunctionVariable
+	// 	);
+
+	// 	this.$limberGridView[0].removeEventListener(
+	// 		"touchmove",
+	// 		this.onLimberGridTouchMoveBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"touchend",
+	// 		this.onLimberGridTouchEndBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"touchcancel",
+	// 		this.onLimberGridTouchCancelBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onLimberGridTouchContextMenuBindedFunctionVariable
+	// 	);
+	// };
+
+	// LimberGridView.prototype.addItemAllowCheckTimeOut = function(
+	// 	x,
+	// 	y,
+	// 	width,
+	// 	height
+	// ) {
+	// 	if (this.addItemAllowCheck(x, y, width, height) == false) {
+	// 		this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 			"limberGridViewAddItemGuideAddAllow"
+	// 		);
+	// 		this.$limberGridViewAddItemGuide[0].classList.add(
+	// 			"limberGridViewAddItemGuideAddDisallow"
+	// 		);
+	// 	} else {
+	// 		this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 			"limberGridViewAddItemGuideAddDisallow"
+	// 		);
+	// 		this.$limberGridViewAddItemGuide[0].classList.add(
+	// 			"limberGridViewAddItemGuideAddAllow"
+	// 		);
+	// 	}
+	// };
+
+	// LimberGridView.prototype.addItemAllowCheck = function(x, y, width, height) {
+	// 	var tempPlane = {
+	// 		x: x,
+	// 		y: y,
+	// 		width: width,
+	// 		height: height
+	// 	};
+
+	// 	if (x < 0 || y < 0) {
+	// 		return false;
+	// 	}
+
+	// 	if (typeof width != "number" || typeof height != "number") {
+	// 		return false;
+	// 	}
+
+	// 	if (x + width > this.WIDTH) {
+	// 		return false;
+	// 	}
+
+	// 	if (width < 50 || height < 50) {
+	// 		return false;
+	// 	}
+
+	// 	var length_0 = this.positionData.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		var iterItem = {
+	// 			x:
+	// 				this.positionData[i].x -
+	// 				this.getMarginAtPoint(this.positionData[i].x),
+	// 			y:
+	// 				this.positionData[i].y -
+	// 				this.getMarginAtPoint(this.positionData[i].y),
+	// 			width:
+	// 				this.positionData[i].width +
+	// 				this.getMarginAtPoint(this.positionData[i].x) +
+	// 				this.MARGIN,
+	// 			height:
+	// 				this.positionData[i].height +
+	// 				this.getMarginAtPoint(this.positionData[i].y) +
+	// 				this.MARGIN
+	// 		};
+	// 		var isInside = this.isPlaneBInsidePlaneA_TouchingIsInside(
+	// 			iterItem,
+	// 			tempPlane
+	// 		);
+
+	// 		if (isInside) {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return true;
+	// };
+
+	// LimberGridView.prototype.cutSpaceAllowCheckTimeOut = function(
+	// 	x,
+	// 	y,
+	// 	width,
+	// 	height
+	// ) {
+	// 	if (this.cutSpaceAllowCheck(x, y, width, height) == false) {
+	// 		this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 			"limberGridViewAddItemGuideAddAllow"
+	// 		);
+	// 		this.$limberGridViewAddItemGuide[0].classList.add(
+	// 			"limberGridViewAddItemGuideAddDisallow"
+	// 		);
+	// 	} else {
+	// 		this.$limberGridViewAddItemGuide[0].classList.remove(
+	// 			"limberGridViewAddItemGuideAddDisallow"
+	// 		);
+	// 		this.$limberGridViewAddItemGuide[0].classList.add(
+	// 			"limberGridViewAddItemGuideAddAllow"
+	// 		);
+	// 	}
+	// };
+
+	// LimberGridView.prototype.cutSpaceAllowCheck = function(
+	// 	x,
+	// 	y,
+	// 	width,
+	// 	height
+	// ) {
+	// 	var tempPlane = {
+	// 		x: 0,
+	// 		y: y - this.MARGIN / 2,
+	// 		width: this.WIDTH,
+	// 		height: height + this.MARGIN / 2
+	// 	};
+
+	// 	if (typeof width != "number" || typeof height != "number") {
+	// 		return false;
+	// 	}
+
+	// 	var length_0 = this.positionData.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		var isInside = this.isPlaneBInsidePlaneA_TouchingIsInside(
+	// 			tempPlane,
+	// 			this.positionData[i]
+	// 		);
+
+	// 		if (isInside) {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return true;
+	// };
+
+	// LimberGridView.prototype.insertAddItemOnTouchHoldGuideStyles = function(
+	// 	x,
+	// 	y
+	// ) {
+	// 	var ripple = [];
+	// 	ripple[0] = "@keyframes limberGridViewAddItemOnTouchHoldRipple {";
+	// 	ripple[1] = "0% {";
+	// 	ripple[2] =
+	// 		"transform: translate(" +
+	// 		(x - 5) +
+	// 		"px, " +
+	// 		(y - 5) +
+	// 		"px) scale(0, 0);";
+	// 	ripple[3] = "opacity: 1;";
+	// 	ripple[4] = "}";
+	// 	ripple[5] = "20% {";
+	// 	ripple[6] =
+	// 		"transform: translate(" +
+	// 		(x - 5) +
+	// 		"px, " +
+	// 		(y - 5) +
+	// 		"px) scale(25, 25);";
+	// 	ripple[7] = "opacity: 1;";
+	// 	ripple[8] = "}";
+	// 	ripple[9] = "100% {";
+	// 	ripple[10] =
+	// 		"transform: translate(" +
+	// 		(x - 5) +
+	// 		"px, " +
+	// 		(y - 5) +
+	// 		"px) scale(50, 50);";
+	// 	ripple[11] = "opacity: 0;";
+	// 	ripple[12] = "}";
+	// 	ripple[13] = "}";
+	// 	var rippleString = ripple.join("");
+	// 	this.$limberGridViewStyle[0].innerHTML = rippleString;
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -4580,1624 +4652,1624 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.onItemMouseDown = function(event) {
-		if (event.which != 1) {
-			return;
-		}
-
-		if (event.target.classList.contains("limberGridViewItem")) {
-			event.stopPropagation();
-		} else {
-			return;
-		}
-
-		var radius = Math.sqrt(
-			Math.pow(0 - event.offsetX, 2) + Math.pow(0 - event.offsetY, 2)
-		);
-		var resizeUIBox = {
-			x:
-				event.currentTarget.offsetWidth -
-				this.RESIZE_SQUARE_GUIDE_LENGTH,
-			y:
-				event.currentTarget.offsetHeight -
-				this.RESIZE_SQUARE_GUIDE_LENGTH,
-			width:
-				this.RESIZE_SQUARE_GUIDE_LENGTH +
-				this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
-			height:
-				this.RESIZE_SQUARE_GUIDE_LENGTH +
-				this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH
-		};
-
-		if (radius <= this.MOVE_GUIDE_RADIUS) {
-			this.userActionData = {
-				type: "move",
-				itemIndex: event.currentTarget.attributes["data-index"].value
-			};
-			this.mouseDownCancel = false;
-			this.mouseDownTimerComplete = false;
-
-			document.addEventListener(
-				"mousemove",
-				this.onMouseMoveBindedFunctionVariable
-			);
-			document.addEventListener(
-				"mouseup",
-				this.onMouseUpBindedFunctionVariable
-			);
-			document.addEventListener(
-				"contextmenu",
-				this.onContextMenuBindedFunctionVariable
-			);
-			clearTimeout(this.longPressCheck);
-			this.longPressCheck = setTimeout(
-				this.mouseDownCheck.bind(this, event),
-				this.MOUSE_DOWN_TIME
-			);
-
-			event.preventDefault();
-		} else if (
-			event.offsetX >= resizeUIBox.x &&
-			event.offsetX <= resizeUIBox.x + resizeUIBox.width &&
-			event.offsetY >= resizeUIBox.y &&
-			event.offsetY <= resizeUIBox.y + resizeUIBox.height
-		) {
-			this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-			this.$limberGridViewHeightAdjustGuide[0].classList.add(
-				"limberGridViewHeightAdjustGuideActive"
-			);
-
-			this.userActionData = {
-				type: "resize",
-				itemIndex: event.currentTarget.attributes["data-index"].value
-			};
-			this.mouseDownCancel = false;
-			this.mouseDownTimerComplete = true;
-
-			this.$limberGridView[0].addEventListener(
-				"mousemove",
-				this.onMouseMoveBindedFunctionVariable
-			);
-			document.addEventListener(
-				"mouseup",
-				this.onMouseUpBindedFunctionVariable
-			);
-			document.addEventListener(
-				"contextmenu",
-				this.onContextMenuBindedFunctionVariable
-			);
-
-			var transformStyle = this.$limberGridViewItems[
-				this.userActionData.itemIndex
-			].style.transform;
-			var i1 = transformStyle.indexOf("px");
-			var i2 = transformStyle.indexOf(",");
-			var x = Number(transformStyle.substring(10, i1));
-			var y = Number(
-				transformStyle.substring(i2 + 2, transformStyle.length - 3)
-			);
-
-			this.userActionData.itemPositionX = x;
-			this.userActionData.itemPositionY = y;
-
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].style.width =
-				this.positionData[this.userActionData.itemIndex].width + "px";
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].style.height =
-				this.positionData[this.userActionData.itemIndex].height + "px";
-
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].style.transform = "translate(" + x + "px, " + y + "px)";
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewGridPseudoItemActive");
-
-			this.$body[0].classList.add(
-				"limberGridViewBodyTagStateElementDraggingOrResizing"
-			);
-			var length_0 = this.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewItems[i].classList.add(
-					"limberGridViewItemResizingState"
-				);
-			}
-
-			var length_0 = this.$limberGridViewGridPseudoItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewGridPseudoItems[i].classList.add(
-					"limberGridViewGridPseudoItemResizingState"
-				);
-			}
-
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].classList.remove(
-				"limberGridViewGridPseudoItemResizeAllow",
-				"limberGridViewGridPseudoItemResizeDisallow"
-			);
-
-			event.preventDefault();
-		}
-	};
-
-	LimberGridView.prototype.onItemTouchStart = function(event) {
-		if (event.which != 0) {
-			return;
-		}
-
-		if (event.target.classList.contains("limberGridViewItem")) {
-			event.stopPropagation();
-		} else {
-			return;
-		}
-
-		if (event.touches.length > 1) {
-			return;
-		}
-
-		var touchPosOnLimberGridItem = this.calculateTouchPosOnLimberGridItem(
-			event
-		);
-		if (touchPosOnLimberGridItem == false) {
-			return;
-		}
-		var radius = Math.sqrt(
-			Math.pow(0 - touchPosOnLimberGridItem.x, 2) +
-				Math.pow(0 - touchPosOnLimberGridItem.y, 2)
-		);
-		var resizeUIBox = {
-			x:
-				event.currentTarget.offsetWidth -
-				this.RESIZE_SQUARE_GUIDE_LENGTH,
-			y:
-				event.currentTarget.offsetHeight -
-				this.RESIZE_SQUARE_GUIDE_LENGTH,
-			width:
-				this.RESIZE_SQUARE_GUIDE_LENGTH +
-				this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
-			height:
-				this.RESIZE_SQUARE_GUIDE_LENGTH +
-				this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH
-		};
-
-		if (radius <= this.MOVE_GUIDE_RADIUS) {
-			this.userActionData = {
-				type: "move",
-				itemIndex: event.currentTarget.attributes["data-index"].value
-			};
-			this.tapHoldCancel = false;
-			this.tapHoldTimerComplete = false;
-
-			document.addEventListener(
-				"touchmove",
-				this.onTouchMoveBindedFunctionVariable
-			);
-			document.addEventListener(
-				"touchend",
-				this.onTouchEndBindedFunctionVariable
-			);
-			this.$limberGridView[0].removeEventListener(
-				"touchstart",
-				this.onLimberGridTouchStartFunctionVariable
-			);
-
-			document.addEventListener(
-				"contextmenu",
-				this.onItemTouchContextMenuBindedFunctionVariable
-			);
-			document.addEventListener(
-				"touchcancel",
-				this.onTouchCancelBindedFunctionVariable
-			);
-
-			this.longTouchCheck = setTimeout(
-				this.tapHoldCheck.bind(this, event),
-				this.TOUCH_HOLD_TIME
-			);
-
-			event.preventDefault();
-		} else if (
-			touchPosOnLimberGridItem.x >= resizeUIBox.x &&
-			touchPosOnLimberGridItem.x <= resizeUIBox.x + resizeUIBox.width &&
-			touchPosOnLimberGridItem.y >= resizeUIBox.y &&
-			touchPosOnLimberGridItem.y <= resizeUIBox.y + resizeUIBox.height
-		) {
-			this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-			this.$limberGridViewHeightAdjustGuide[0].classList.add(
-				"limberGridViewHeightAdjustGuideActive"
-			);
-
-			this.userActionData = {
-				type: "resize",
-				itemIndex: event.currentTarget.attributes["data-index"].value
-			};
-			this.tapHoldCancel = false;
-			this.tapHoldTimerComplete = true;
-
-			this.$limberGridView[0].addEventListener(
-				"touchmove",
-				this.onTouchMoveBindedFunctionVariable
-			);
-			document.addEventListener(
-				"touchend",
-				this.onTouchEndBindedFunctionVariable
-			);
-			this.$limberGridView[0].removeEventListener(
-				"touchstart",
-				this.onLimberGridTouchStartFunctionVariable
-			);
-
-			document.addEventListener(
-				"touchcancel",
-				this.onTouchCancelBindedFunctionVariable
-			);
-
-			var transformStyle = this.$limberGridViewItems[
-				this.userActionData.itemIndex
-			].style.transform;
-			var i1 = transformStyle.indexOf("px");
-			var i2 = transformStyle.indexOf(",");
-			var x = Number(transformStyle.substring(10, i1));
-			var y = Number(
-				transformStyle.substring(i2 + 2, transformStyle.length - 3)
-			);
-
-			this.userActionData.itemPositionX = x;
-			this.userActionData.itemPositionY = y;
-
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].style.width =
-				this.positionData[this.userActionData.itemIndex].width + "px";
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].style.height =
-				this.positionData[this.userActionData.itemIndex].height + "px";
-
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].style.transform = "translate(" + x + "px, " + y + "px)";
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewGridPseudoItemActive");
-
-			this.$body[0].classList.add(
-				"limberGridViewBodyTagStateElementDraggingOrResizing"
-			);
-			var length_0 = this.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewItems[i].classList.add(
-					"limberGridViewItemResizingState"
-				);
-			}
-
-			var length_0 = this.$limberGridViewGridPseudoItems.length;
-			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewGridPseudoItems[i].classList.add(
-					"limberGridViewGridPseudoItemResizingState"
-				);
-			}
-
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].classList.remove(
-				"limberGridViewGridPseudoItemResizeAllow",
-				"limberGridViewGridPseudoItemResizeDisallow"
-			);
-
-			event.preventDefault();
-		}
-
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.mouseDownCheck = function(event) {
-		if (this.mouseDownCancel == false) {
-			this.mouseDownTimerComplete = true;
-			console.log("mouseDownTimerComplete");
-			this.$body[0].classList.add(
-				"limberGridViewBodyTagStateElementDraggingOrResizing"
-			);
-			this.$limberGridViewItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewItemDemo");
-			this.$limberGridViewBodyPseudoItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewBodyPseudoItemActive");
-			this.$limberGridViewBodyPseudoItems[
-				this.userActionData.itemIndex
-			].style.transform =
-				"translate(" +
-				event.pageX /*+ 5*/ +
-				"px, " +
-				event.pageY /*+ 5*/ +
-				"px)";
-
-			this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-			this.$limberGridViewHeightAdjustGuide[0].classList.add(
-				"limberGridViewHeightAdjustGuideActive"
-			);
-		} else {
-			console.log("mouseDown cancel before TimerComplete");
-		}
-	};
-
-	LimberGridView.prototype.tapHoldCheck = function(event) {
-		if (this.tapHoldCancel == false) {
-			this.tapHoldTimerComplete = true;
-
-			this.$body[0].classList.add(
-				"limberGridViewBodyTagStateElementDraggingOrResizing"
-			);
-			this.$limberGridViewItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewItemDemo");
-			this.$limberGridViewBodyPseudoItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewBodyPseudoItemActive");
-			this.$limberGridViewBodyPseudoItems[
-				this.userActionData.itemIndex
-			].style.transform =
-				"translate(" +
-				event.touches[0].pageX /*+ 5*/ +
-				"px, " +
-				event.touches[0].pageY /*+ 5*/ +
-				"px)";
-
-			this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-			this.$limberGridViewHeightAdjustGuide[0].classList.add(
-				"limberGridViewHeightAdjustGuideActive"
-			);
-		} else {
-			// tapHold cancel before TimerComplete
-		}
-	};
-
-	LimberGridView.prototype.onMouseMove = function(event) {
-		if (this.mouseDownTimerComplete == true) {
-			if (this.userActionData.type == "move") {
-				if (
-					this.$limberGridViewMoveGuide[0].classList.contains(
-						"limberGridViewMoveGuideActive"
-					)
-				) {
-					this.$limberGridViewMoveGuide[0].classList.remove(
-						"limberGridViewMoveGuideActive"
-					);
-				}
-
-				if (
-					this.$limberGridViewBodyPseudoItems[
-						this.userActionData.itemIndex
-					].classList.contains(
-						"limberGridViewBodyPseudoItemMoveAllow"
-					) ||
-					this.$limberGridViewBodyPseudoItems[
-						this.userActionData.itemIndex
-					].classList.contains(
-						"limberGridViewBodyPseudoItemMoveDisallow"
-					)
-				) {
-					this.$limberGridViewBodyPseudoItems[
-						this.userActionData.itemIndex
-					].classList.remove(
-						"limberGridViewBodyPseudoItemMoveAllow",
-						"limberGridViewBodyPseudoItemMoveDisallow"
-					);
-				}
-
-				this.$limberGridViewBodyPseudoItems[
-					this.userActionData.itemIndex
-				].style.transform =
-					"translate(" +
-					event.pageX /*+ 5*/ +
-					"px, " +
-					event.pageY /*+ 5*/ +
-					"px)";
-				var mousePositionOnLimberGrid = this.calculateMousePosOnLimberGrid(
-					event
-				);
-
-				if (mousePositionOnLimberGrid != false) {
-					var scrollTop = this.$limberGridView[0].scrollTop;
-					var scrollHeight = this.$limberGridView[0].scrollHeight;
-
-					var yMousePosition = mousePositionOnLimberGrid.y;
-					this.adjustHeight(yMousePosition);
-				}
-
-				clearTimeout(this.showMoveDemoTimeOutVariable);
-				this.showMoveDemoTimeOutVariable = setTimeout(
-					this.showMoveDemo.bind(
-						this,
-						this.userActionData.itemIndex,
-						mousePositionOnLimberGrid
-					),
-					this.DEMO_WAIT_TIME
-				);
-			} else {
-				var scrollTop = this.$limberGridView[0].scrollTop;
-				var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-				var x = this.userActionData.itemPositionX;
-				var y = this.userActionData.itemPositionY;
-
-				var newWidth =
-					event.offsetX - x + scrollLeft - this.PADDING_LEFT;
-				var newHeight =
-					event.offsetY - y + scrollTop - this.PADDING_TOP;
-
-				this.userActionData.newWidth = newWidth;
-				this.userActionData.newHeight = newHeight;
-
-				var yMousePosition = event.offsetY + scrollTop;
-				this.adjustHeight(yMousePosition);
-
-				if (newWidth > 0 && newHeight > 0) {
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].style.width = newWidth + "px";
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].style.height = newHeight + "px";
-				}
-
-				if (
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].classList.contains(
-						"limberGridViewGridPseudoItemResizeAllow"
-					) ||
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].classList.contains(
-						"limberGridViewGridPseudoItemResizeDisallow"
-					)
-				) {
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].classList.remove(
-						"limberGridViewGridPseudoItemResizeAllow",
-						"limberGridViewGridPseudoItemResizeDisallow"
-					);
-				}
-
-				clearTimeout(this.showResizeDemoTimeOutVariable);
-				this.showResizeDemoTimeOutVariable = setTimeout(
-					this.showResizeDemo.bind(
-						this,
-						this.userActionData.itemIndex,
-						newWidth,
-						newHeight
-					),
-					this.DEMO_WAIT_TIME
-				);
-			}
-		} else {
-			this.mouseDownCancel = true;
-			clearTimeout(this.longPressCheck);
-			document.removeEventListener(
-				"mousemove",
-				this.onMouseMoveBindedFunctionVariable
-			);
-			this.$limberGridView[0].removeEventListener(
-				"mousemove",
-				this.onMouseMoveBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"mouseup",
-				this.onMouseUpBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"contextmenu",
-				this.onContextMenuBindedFunctionVariable
-			);
-
-			// canceling mouseHold
-		}
-		event.preventDefault();
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onTouchMove = function(event) {
-		if (this.tapHoldTimerComplete == true) {
-			if (this.userActionData.type == "move") {
-				if (
-					this.$limberGridViewMoveGuide[0].classList.contains(
-						"limberGridViewMoveGuideActive"
-					)
-				) {
-					this.$limberGridViewMoveGuide[0].classList.remove(
-						"limberGridViewMoveGuideActive"
-					);
-				}
-
-				if (
-					this.$limberGridViewBodyPseudoItems[
-						this.userActionData.itemIndex
-					].classList.contains(
-						"limberGridViewBodyPseudoItemMoveAllow"
-					) ||
-					this.$limberGridViewBodyPseudoItems[
-						this.userActionData.itemIndex
-					].classList.contains(
-						"limberGridViewBodyPseudoItemMoveDisallow"
-					)
-				) {
-					this.$limberGridViewBodyPseudoItems[
-						this.userActionData.itemIndex
-					].classList.remove(
-						"limberGridViewBodyPseudoItemMoveAllow",
-						"limberGridViewBodyPseudoItemMoveDisallow"
-					);
-				}
-
-				this.$limberGridViewBodyPseudoItems[
-					this.userActionData.itemIndex
-				].style.transform =
-					"translate(" +
-					event.touches[0].pageX /*+ 5*/ +
-					"px, " +
-					event.touches[0].pageY /*+ 5*/ +
-					"px)";
-				var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
-					event
-				);
-
-				if (touchPositionOnLimberGrid != false) {
-					var scrollTop = this.$limberGridView[0].scrollTop;
-					var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-					var limberGridViewBoundingClientRect = this.$limberGridView[0].getBoundingClientRect();
-					var limberGridViewWidthVisibleWidth =
-						this.$limberGridView[0].offsetWidth -
-						limberGridViewBoundingClientRect.left;
-					var limberGridViewHeightVisibleHeight =
-						this.$limberGridView[0].offsetHeight -
-						limberGridViewBoundingClientRect.top;
-					var limberGridViewOnVisibleAreaX =
-						touchPositionOnLimberGrid.x +
-						this.PADDING_LEFT -
-						scrollLeft;
-					var limberGridViewOnVisibleAreaY =
-						touchPositionOnLimberGrid.y +
-						this.PADDING_TOP -
-						scrollTop;
-
-					var yTouchPosition = touchPositionOnLimberGrid.y;
-					this.adjustHeight(yTouchPosition);
-
-					var programScrolled = this.adjustScroll(
-						limberGridViewOnVisibleAreaY,
-						limberGridViewHeightVisibleHeight
-					);
-				}
-
-				clearTimeout(this.showMoveDemoTimeOutVariable);
-				if (programScrolled != true) {
-					this.showMoveDemoTimeOutVariable = setTimeout(
-						this.showMoveDemo.bind(
-							this,
-							this.userActionData.itemIndex,
-							touchPositionOnLimberGrid
-						),
-						this.DEMO_WAIT_TIME
-					);
-				}
-			} else {
-				var scrollTop = this.$limberGridView[0].scrollTop;
-				var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-				var x = this.userActionData.itemPositionX;
-				var y = this.userActionData.itemPositionY;
-
-				var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
-					event
-				);
-
-				if (touchPositionOnLimberGrid != false) {
-					var newWidth = touchPositionOnLimberGrid.x - x;
-					var newHeight = touchPositionOnLimberGrid.y - y;
-
-					this.userActionData.newWidth = newWidth;
-					this.userActionData.newHeight = newHeight;
-
-					if (newWidth > 0 && newHeight > 0) {
-						this.$limberGridViewGridPseudoItems[
-							this.userActionData.itemIndex
-						].style.width = newWidth + "px";
-						this.$limberGridViewGridPseudoItems[
-							this.userActionData.itemIndex
-						].style.height = newHeight + "px";
-					}
-
-					if (
-						this.$limberGridViewGridPseudoItems[
-							this.userActionData.itemIndex
-						].classList.contains(
-							"limberGridViewGridPseudoItemResizeAllow"
-						) ||
-						this.$limberGridViewGridPseudoItems[
-							this.userActionData.itemIndex
-						].classList.contains(
-							"limberGridViewGridPseudoItemResizeDisallow"
-						)
-					) {
-						this.$limberGridViewGridPseudoItems[
-							this.userActionData.itemIndex
-						].classList.remove(
-							"limberGridViewGridPseudoItemResizeAllow",
-							"limberGridViewGridPseudoItemResizeDisallow"
-						);
-					}
-				}
-
-				if (touchPositionOnLimberGrid != false) {
-					var limberGridViewBoundingClientRect = this.$limberGridView[0].getBoundingClientRect();
-					var limberGridViewWidthVisibleWidth =
-						this.$limberGridView[0].offsetWidth -
-						limberGridViewBoundingClientRect.left;
-					var limberGridViewHeightVisibleHeight =
-						this.$limberGridView[0].offsetHeight -
-						limberGridViewBoundingClientRect.top;
-					var limberGridViewOnVisibleAreaX =
-						touchPositionOnLimberGrid.x +
-						this.PADDING_LEFT -
-						scrollLeft;
-					var limberGridViewOnVisibleAreaY =
-						touchPositionOnLimberGrid.y +
-						this.PADDING_TOP -
-						scrollTop;
-
-					var yTouchPosition = touchPositionOnLimberGrid.y;
-					this.adjustHeight(yTouchPosition);
-
-					var programScrolled = this.adjustScroll(
-						limberGridViewOnVisibleAreaY,
-						limberGridViewHeightVisibleHeight
-					);
-				}
-
-				clearTimeout(this.showResizeDemoTimeOutVariable);
-				if (programScrolled != true) {
-					this.showResizeDemoTimeOutVariable = setTimeout(
-						this.showResizeDemo.bind(
-							this,
-							this.userActionData.itemIndex,
-							newWidth,
-							newHeight
-						),
-						this.DEMO_WAIT_TIME
-					);
-				}
-			}
-		} else {
-			this.tapHoldCancel = true;
-			clearTimeout(this.longTouchCheck);
-			document.removeEventListener(
-				"touchmove",
-				this.onTouchMoveBindedFunctionVariable
-			);
-			this.$limberGridView[0].removeEventListener(
-				"touchmove",
-				this.onTouchMoveBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"touchend",
-				this.onTouchEndBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"contextmenu",
-				this.onContextMenuBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"contextmenu",
-				this.onItemTouchContextMenuBindedFunctionVariable
-			);
-			document.removeEventListener(
-				"touchcancel",
-				this.onTouchCancelBindedFunctionVariable
-			);
-			this.$limberGridView[0].addEventListener(
-				"touchstart",
-				this.onLimberGridTouchStartFunctionVariable
-			);
-
-			// canceling taphold
-		}
-
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onMouseUp = function(event) {
-		clearTimeout(this.showMoveDemoTimeOutVariable);
-		clearTimeout(this.showResizeDemoTimeOutVariable);
-		var itemResizeFlag = false;
-		var itemMoveFlag = false;
-		if (this.mouseDownTimerComplete == true) {
-			if (this.userActionData.type == "move") {
-				this.$limberGridViewBodyPseudoItems[
-					this.userActionData.itemIndex
-				].classList.remove("limberGridViewBodyPseudoItemActive");
-				this.$limberGridViewBodyPseudoItems[
-					this.userActionData.itemIndex
-				].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				var mousePositionOnLimberGrid = this.calculateMousePosOnLimberGrid(
-					event
-				);
-				if (mousePositionOnLimberGrid != false) {
-					var newMoveCoordinates = this.checkNewMoveCoordinates(
-						this.userActionData.itemIndex,
-						mousePositionOnLimberGrid
-					);
-					if (newMoveCoordinates != false) {
-						var updatedCoordinates = {};
-						if (
-							newMoveCoordinates.hasOwnProperty(
-								"revisedCoordinates"
-							)
-						) {
-							this.movePlane(
-								this.userActionData.itemIndex,
-								newMoveCoordinates.revisedCoordinates.x,
-								newMoveCoordinates.revisedCoordinates.y
-							);
-							updatedCoordinates.x =
-								newMoveCoordinates.revisedCoordinates.x;
-							updatedCoordinates.y =
-								newMoveCoordinates.revisedCoordinates.y;
-							itemMoveFlag = true;
-						} else {
-							this.movePlane(
-								this.userActionData.itemIndex,
-								newMoveCoordinates.x,
-								newMoveCoordinates.y
-							);
-							updatedCoordinates.x = newMoveCoordinates.x;
-							updatedCoordinates.y = newMoveCoordinates.y;
-							itemMoveFlag = true;
-						}
-					} else {
-						this.revertShowMoveOrResizeDemo();
-					}
-				} else {
-					this.revertShowMoveOrResizeDemo();
-				}
-			} else {
-				var scrollTop = this.$limberGridView[0].scrollTop;
-				var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-				var x = this.userActionData.itemPositionX;
-				var y = this.userActionData.itemPositionY;
-
-				var newWidth = this.userActionData.newWidth;
-				var newHeight = this.userActionData.newHeight;
-
-				if (newWidth > 0 && newHeight > 0) {
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].style.width = newWidth + "px";
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].style.height = newHeight + "px";
-				}
-
-				if (
-					this.resizePlane(
-						this.userActionData.itemIndex,
-						newWidth,
-						newHeight
-					) == false
-				) {
-					this.revertShowMoveOrResizeDemo();
-					itemResizeFlag = true;
-				}
-
-				this.$limberGridViewGridPseudoItems[
-					this.userActionData.itemIndex
-				].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				this.$limberGridViewGridPseudoItems[
-					this.userActionData.itemIndex
-				].classList.remove("limberGridViewGridPseudoItemActive");
-			}
-		} else {
-			this.mouseDownCancel = true;
-			clearTimeout(this.longPressCheck);
-			// canceling mouseHold
-		}
-		document.removeEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		this.$limberGridView[0].removeEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"mouseup",
-			this.onMouseUpBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
-
-		this.$body[0].classList.remove(
-			"limberGridViewBodyTagStateElementDraggingOrResizing"
-		);
-		this.$limberGridViewMoveGuide[0].classList.remove(
-			"limberGridViewMoveGuideActive"
-		);
-
-		this.$limberGridViewHeightAdjustGuide[0].classList.remove(
-			"limberGridViewHeightAdjustGuideActive"
-		);
-
-		event.preventDefault();
-		event.stopPropagation();
-
-		//
-		if (
-			this.callbacks.moveCompleteCallback != undefined &&
-			this.callbacks.moveCompleteCallback != null
-		) {
-			if (itemMoveFlag == true) {
-				updatedCoordinates.width = this.positionData[
-					this.userActionData.itemIndex
-				].width;
-				updatedCoordinates.height = this.positionData[
-					this.userActionData.itemIndex
-				].height;
-				this.callbacks.moveCompleteCallback(
-					true,
-					this.userActionData.itemIndex,
-					updatedCoordinates
-				);
-			} else if (this.userActionData.type == "move") {
-				this.callbacks.moveCompleteCallback(
-					false,
-					this.userActionData.itemIndex,
-					event
-				);
-			}
-		}
-		if (
-			this.callbacks.resizeCompleteCallback != undefined &&
-			this.callbacks.resizeCompleteCallback != null
-		) {
-			if (itemResizeFlag == true) {
-				this.callbacks.resizeCompleteCallback(
-					this.userActionData.itemIndex,
-					{
-						x: this.positionData[this.userActionData.itemIndex].x,
-						y: this.positionData[this.userActionData.itemIndex].y,
-						height: newHeight,
-						width: newWidth
-					}
-				);
-			}
-		}
-		//
-
-		this.userActionData = null;
-	};
-
-	LimberGridView.prototype.onTouchEnd = function(event) {
-		clearTimeout(this.showMoveDemoTimeOutVariable);
-		clearTimeout(this.showResizeDemoTimeOutVariable);
-		var itemResizeFlag = false;
-		var itemMoveFlag = false;
-		if (this.tapHoldTimerComplete == true) {
-			if (this.userActionData.type == "move") {
-				this.$limberGridViewBodyPseudoItems[
-					this.userActionData.itemIndex
-				].classList.remove("limberGridViewBodyPseudoItemActive");
-				this.$limberGridViewBodyPseudoItems[
-					this.userActionData.itemIndex
-				].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
-					event
-				);
-				if (touchPositionOnLimberGrid != false) {
-					var newMoveCoordinates = this.checkNewMoveCoordinates(
-						this.userActionData.itemIndex,
-						touchPositionOnLimberGrid
-					);
-					if (newMoveCoordinates != false) {
-						var updatedCoordinates = {};
-						if (
-							newMoveCoordinates.hasOwnProperty(
-								"revisedCoordinates"
-							)
-						) {
-							this.movePlane(
-								this.userActionData.itemIndex,
-								newMoveCoordinates.revisedCoordinates.x,
-								newMoveCoordinates.revisedCoordinates.y
-							);
-							updatedCoordinates.x =
-								newMoveCoordinates.revisedCoordinates.x;
-							updatedCoordinates.y =
-								newMoveCoordinates.revisedCoordinates.y;
-							itemMoveFlag = true;
-						} else {
-							this.movePlane(
-								this.userActionData.itemIndex,
-								newMoveCoordinates.x,
-								newMoveCoordinates.y
-							);
-							updatedCoordinates.x = newMoveCoordinates.x;
-							updatedCoordinates.y = newMoveCoordinates.y;
-							itemMoveFlag = true;
-						}
-					} else {
-						this.revertShowMoveOrResizeDemo();
-					}
-				} else {
-					this.revertShowMoveOrResizeDemo();
-				}
-			} else {
-				var scrollTop = this.$limberGridView[0].scrollTop;
-				var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-				var x = this.userActionData.itemPositionX;
-				var y = this.userActionData.itemPositionY;
-
-				var newWidth = this.userActionData.newWidth;
-				var newHeight = this.userActionData.newHeight;
-
-				if (newWidth > 0 && newHeight > 0) {
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].style.width = newWidth + "px";
-					this.$limberGridViewGridPseudoItems[
-						this.userActionData.itemIndex
-					].style.height = newHeight + "px";
-				}
-
-				if (
-					this.resizePlane(
-						this.userActionData.itemIndex,
-						newWidth,
-						newHeight
-					) == false
-				) {
-					this.revertShowMoveOrResizeDemo();
-					itemResizeFlag = true;
-				}
-
-				this.$limberGridViewGridPseudoItems[
-					this.userActionData.itemIndex
-				].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				this.$limberGridViewGridPseudoItems[
-					this.userActionData.itemIndex
-				].classList.remove("limberGridViewGridPseudoItemActive");
-			}
-		} else {
-			this.tapHoldCancel = true;
-			clearTimeout(this.longTouchCheck);
-
-			// canceling taphold
-		}
-
-		document.removeEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		this.$limberGridView[0].removeEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchend",
-			this.onTouchEndBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onItemTouchContextMenuBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchcancel",
-			this.onTouchCancelBindedFunctionVariable
-		);
-		this.$limberGridView[0].addEventListener(
-			"touchstart",
-			this.onLimberGridTouchStartFunctionVariable
-		);
-
-		this.$body[0].classList.remove(
-			"limberGridViewBodyTagStateElementDraggingOrResizing"
-		);
-		this.$limberGridViewMoveGuide[0].classList.remove(
-			"limberGridViewMoveGuideActive"
-		);
-
-		this.$limberGridViewHeightAdjustGuide[0].classList.remove(
-			"limberGridViewHeightAdjustGuideActive"
-		);
-
-		event.stopPropagation();
-
-		//
-		if (
-			this.callbacks.moveCompleteCallback != undefined &&
-			this.callbacks.moveCompleteCallback != null
-		) {
-			if (itemMoveFlag == true) {
-				updatedCoordinates.width = this.positionData[
-					this.userActionData.itemIndex
-				].width;
-				updatedCoordinates.height = this.positionData[
-					this.userActionData.itemIndex
-				].height;
-				this.callbacks.moveCompleteCallback(
-					true,
-					this.userActionData.itemIndex,
-					updatedCoordinates
-				);
-			} else if (this.userActionData.type == "move") {
-				this.callbacks.moveCompleteCallback(
-					false,
-					this.userActionData.itemIndex,
-					event
-				);
-			}
-		}
-		if (
-			this.callbacks.resizeCompleteCallback != undefined &&
-			this.callbacks.resizeCompleteCallback != null
-		) {
-			if (itemResizeFlag == true) {
-				this.callbacks.resizeCompleteCallback(
-					this.userActionData.itemIndex,
-					{
-						x: this.positionData[this.userActionData.itemIndex].x,
-						y: this.positionData[this.userActionData.itemIndex].y,
-						height: newHeight,
-						width: newWidth
-					}
-				);
-			}
-		}
-		//
-
-		this.userActionData = null;
-	};
-
-	LimberGridView.prototype.onContextMenu = function(event) {
-		clearTimeout(this.showMoveDemoTimeOutVariable);
-		clearTimeout(this.showResizeDemoTimeOutVariable);
-
-		this.revertShowMoveOrResizeDemo();
-
-		this.$limberGridViewGridPseudoItems[
-			this.userActionData.itemIndex
-		].classList.remove("limberGridViewGridPseudoItemActive");
-
-		this.$limberGridViewBodyPseudoItems[
-			this.userActionData.itemIndex
-		].classList.remove("limberGridViewBodyPseudoItemActive");
-		this.$limberGridViewBodyPseudoItems[
-			this.userActionData.itemIndex
-		].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-
-		document.removeEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		this.$limberGridView[0].removeEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"mouseup",
-			this.onMouseUpBindedFunctionVariable
-		);
-
-		document.removeEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		this.$limberGridView[0].removeEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchend",
-			this.onTouchEndBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onItemTouchContextMenuBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchcancel",
-			this.onTouchCancelBindedFunctionVariable
-		);
-
-		document.removeEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
-
-		this.$body[0].classList.remove(
-			"limberGridViewBodyTagStateElementDraggingOrResizing"
-		);
-		this.$limberGridViewMoveGuide[0].classList.remove(
-			"limberGridViewMoveGuideActive"
-		);
-
-		this.$limberGridViewHeightAdjustGuide[0].classList.remove(
-			"limberGridViewHeightAdjustGuideActive"
-		);
-
-		this.userActionData = null;
-
-		event.preventDefault();
-		event.stopPropagation();
-	};
-
-	LimberGridView.prototype.onItemTouchContextMenu = function(event) {
-		event.preventDefault();
-	};
-
-	LimberGridView.prototype.onTouchCancel = function(event) {
-		this.onContextMenu();
-		this.tapHoldTimerComplete = false;
-		this.$limberGridView[0].addEventListener(
-			"touchstart",
-			this.onLimberGridTouchStartFunctionVariable
-		);
-	};
-
-	LimberGridView.prototype.calculateMousePosOnLimberGrid = function(event) {
-		var limberGridViewPosition = this.$limberGridView[0].getBoundingClientRect();
-		if (
-			event.clientX >= limberGridViewPosition.left &&
-			event.clientX <=
-				limberGridViewPosition.left + limberGridViewPosition.width &&
-			(event.clientY >= limberGridViewPosition.top &&
-				event.clientY <=
-					limberGridViewPosition.top + limberGridViewPosition.height)
-		) {
-			var scrollTop = this.$limberGridView[0].scrollTop;
-			var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-			var mouseXOnLimberGridView =
-				event.clientX -
-				limberGridViewPosition.left -
-				this.PADDING_LEFT +
-				scrollLeft;
-			var mouseYOnLimberGridView =
-				event.clientY -
-				limberGridViewPosition.top -
-				this.PADDING_TOP +
-				scrollTop;
-
-			if (mouseXOnLimberGridView < 0 || mouseYOnLimberGridView < 0) {
-				return false;
-			}
-			return { x: mouseXOnLimberGridView, y: mouseYOnLimberGridView };
-		} else {
-			// mouse pointer NOT inside limberGridView
-			return false;
-		}
-	};
-
-	LimberGridView.prototype.calculateTouchPosOnLimberGrid = function(event) {
-		var limberGridViewPosition = this.$limberGridView[0].getBoundingClientRect();
-
-		if (event.type == "touchend") {
-			var touch = {
-				clientX: event.changedTouches[0].clientX,
-				clientY: event.changedTouches[0].clientY
-			};
-		} else {
-			var touch = {
-				clientX: event.touches[0].clientX,
-				clientY: event.touches[0].clientY
-			};
-		}
-		if (
-			touch.clientX >= limberGridViewPosition.left &&
-			touch.clientX <=
-				limberGridViewPosition.left + limberGridViewPosition.width &&
-			(touch.clientY >= limberGridViewPosition.top &&
-				touch.clientY <=
-					limberGridViewPosition.top + limberGridViewPosition.height)
-		) {
-			var scrollTop = this.$limberGridView[0].scrollTop;
-			var scrollLeft = this.$limberGridView[0].scrollLeft;
-
-			var touchXOnLimberGridView =
-				touch.clientX -
-				limberGridViewPosition.left -
-				this.PADDING_LEFT +
-				scrollLeft;
-			var touchYOnLimberGridView =
-				touch.clientY -
-				limberGridViewPosition.top -
-				this.PADDING_TOP +
-				scrollTop;
-
-			if (touchXOnLimberGridView < 0 || touchYOnLimberGridView < 0) {
-				return false;
-			}
-			return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
-		} else {
-			// touch NOT inside limberGridView
-			return false;
-		}
-	};
-
-	LimberGridView.prototype.calculateTouchPosOnLimberGridItem = function(
-		event
-	) {
-		var limberGridViewItemPosition = this.$limberGridViewItems[
-			event.currentTarget.attributes["data-index"].value
-		].getBoundingClientRect();
-
-		if (
-			event.touches[0].clientX >= limberGridViewItemPosition.left &&
-			event.touches[0].clientX <=
-				limberGridViewItemPosition.left +
-					limberGridViewItemPosition.width &&
-			(event.touches[0].clientY >= limberGridViewItemPosition.top &&
-				event.touches[0].clientY <=
-					limberGridViewItemPosition.top +
-						limberGridViewItemPosition.height)
-		) {
-			var touchXOnLimberGridView =
-				event.touches[0].clientX - limberGridViewItemPosition.left;
-			var touchYOnLimberGridView =
-				event.touches[0].clientY - limberGridViewItemPosition.top;
-
-			return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
-		} else {
-			// touch NOT inside limberGridViewItem
-			return false;
-		}
-	};
-
-	LimberGridView.prototype.checkNewMoveCoordinates = function(
-		indexOfMovedItem,
-		mousePositions
-	) {
-		if (mousePositions == false) {
-			return false;
-		}
-
-		var x = mousePositions.x;
-		var y = mousePositions.y;
-		var widthOfMovedItem = this.positionData[indexOfMovedItem].width;
-		var heightOfMovedItem = this.positionData[indexOfMovedItem].height;
-
-		var isInside = false;
-		var indexOfOverlappingItem = null;
-		var length_0 = this.positionData.length;
-		for (var i = 0; i < length_0; i++) {
-			var itemTopLeft = [this.positionData[i].x, this.positionData[i].y];
-			var itemTopRight = [
-				this.positionData[i].x + this.positionData[i].width,
-				this.positionData[i].y
-			];
-			var itemBottomLeft = [
-				this.positionData[i].x,
-				this.positionData[i].y + this.positionData[i].height
-			];
-			var itemBottomRight = [
-				this.positionData[i].x + this.positionData[i].width,
-				this.positionData[i].y + this.positionData[i].height
-			];
-
-			if (
-				x >= itemTopLeft[0] &&
-				x <= itemTopRight[0] &&
-				x >= itemBottomLeft[0] &&
-				x <= itemBottomRight[0] &&
-				y >= itemTopLeft[1] &&
-				y <= itemBottomLeft[1] &&
-				y >= itemTopRight[1] &&
-				y <= itemBottomRight[1]
-			) {
-				isInside = true;
-				indexOfOverlappingItem = i;
-				break;
-			}
-
-			var lines = this.getLines(this.positionData[i]);
-
-			var topLine = lines[0];
-			var rightLine = lines[1];
-			var bottomLine = lines[2];
-			var leftLine = lines[3];
-
-			// for TOP LEFT Corner
-			if (
-				y < topLine[0][1] &&
-				x >= topLine[0][0] - this.MARGIN &&
-				x <= topLine[1][0] + this.MARGIN
-			) {
-				var diff = topLine[0][1] - y;
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-
-			if (
-				y > bottomLine[0][1] &&
-				x >= bottomLine[0][0] - this.MARGIN &&
-				x <= bottomLine[1][0] + this.MARGIN
-			) {
-				var diff = y - bottomLine[0][1];
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-
-			if (
-				x > rightLine[0][0] &&
-				y >= rightLine[0][1] - this.MARGIN &&
-				y <= rightLine[1][1] + this.MARGIN
-			) {
-				var diff = x - rightLine[0][0];
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-
-			if (
-				x < leftLine[0][0] &&
-				y >= leftLine[0][1] - this.MARGIN &&
-				y <= leftLine[1][1] + this.MARGIN
-			) {
-				var diff = leftLine[0][0] - x;
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-			// for TOP LEFT Corner END
-
-			// for TOP RIGHT Corner
-			if (
-				y > bottomLine[0][1] &&
-				x + widthOfMovedItem >= bottomLine[0][0] - this.MARGIN &&
-				x + widthOfMovedItem <= bottomLine[1][0] + this.MARGIN
-			) {
-				var diff = y - bottomLine[0][1];
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-			// for TOP RIGHT Corner END
-
-			// for BOTTOM LEFT Corner
-			if (
-				x > rightLine[0][0] &&
-				y + heightOfMovedItem >= rightLine[0][1] - this.MARGIN &&
-				y + heightOfMovedItem <= rightLine[1][1] + this.MARGIN
-			) {
-				var diff = x - rightLine[0][0];
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-			// for BOTTOM LEFT Corner END
-
-			if (
-				(y > bottomLine[0][1] &&
-					bottomLine[0][0] >= x &&
-					bottomLine[0][0] <= x + widthOfMovedItem) ||
-				(y > bottomLine[0][1] &&
-					bottomLine[1][0] >= x &&
-					bottomLine[1][0] <= x + widthOfMovedItem)
-			) {
-				var diff = y - bottomLine[0][1];
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-
-			if (
-				(x > rightLine[0][0] &&
-					rightLine[0][1] >= y &&
-					rightLine[0][1] <= y + heightOfMovedItem) ||
-				(x > rightLine[0][0] &&
-					rightLine[1][1] >= y &&
-					rightLine[1][1] <= y + heightOfMovedItem)
-			) {
-				var diff = x - rightLine[0][0];
-				if (diff <= this.MARGIN) {
-					return false;
-				}
-			}
-		}
-
-		if (indexOfOverlappingItem == null) {
-			if (
-				x +
-					this.positionData[indexOfMovedItem].width +
-					this.getMarginAtPoint(x) >
-				this.WIDTH
-			) {
-				return false;
-			} else {
-				return mousePositions;
-			}
-		} else {
-			if (
-				this.positionData[indexOfOverlappingItem].x +
-					this.positionData[indexOfMovedItem].width +
-					this.getMarginAtPoint(
-						this.positionData[indexOfOverlappingItem].x
-					) >
-				this.WIDTH
-			) {
-				return false;
-			} else {
-				return {
-					x: x,
-					y: y,
-					revisedCoordinates: {
-						x: this.positionData[indexOfOverlappingItem].x,
-						y: this.positionData[indexOfOverlappingItem].y
-					}
-				};
-			}
-		}
-	};
-
-	LimberGridView.prototype.showMoveDemo = function(index, mousePosition) {
-		if (mousePosition != false) {
-			var newMoveCoordinates = this.checkNewMoveCoordinates(
-				index,
-				mousePosition
-			);
-			if (newMoveCoordinates == false) {
-				this.$limberGridViewBodyPseudoItems[index].classList.remove(
-					"limberGridViewBodyPseudoItemMoveAllow"
-				);
-				this.$limberGridViewBodyPseudoItems[index].classList.add(
-					"limberGridViewBodyPseudoItemMoveDisallow"
-				);
-			} else {
-				if (newMoveCoordinates.hasOwnProperty("revisedCoordinates")) {
-					this.movePlaneDemo(
-						index,
-						newMoveCoordinates.revisedCoordinates.x,
-						newMoveCoordinates.revisedCoordinates.y
-					);
-					this.$limberGridViewMoveGuide[0].style.transform =
-						"translate(" +
-						newMoveCoordinates.revisedCoordinates.x +
-						"px, " +
-						newMoveCoordinates.revisedCoordinates.y +
-						"px)";
-					this.$limberGridViewMoveGuide[0].classList.add(
-						"limberGridViewMoveGuideActive"
-					);
-				} else {
-					this.movePlaneDemo(
-						index,
-						newMoveCoordinates.x,
-						newMoveCoordinates.y
-					);
-					this.$limberGridViewMoveGuide[0].style.transform =
-						"translate(" +
-						newMoveCoordinates.x +
-						"px, " +
-						newMoveCoordinates.y +
-						"px)";
-					this.$limberGridViewMoveGuide[0].classList.add(
-						"limberGridViewMoveGuideActive"
-					);
-				}
-				this.$limberGridViewBodyPseudoItems[index].classList.remove(
-					"limberGridViewBodyPseudoItemMoveDisallow"
-				);
-				this.$limberGridViewBodyPseudoItems[index].classList.add(
-					"limberGridViewBodyPseudoItemMoveAllow"
-				);
-			}
-		} else {
-			this.$limberGridViewBodyPseudoItems[index].classList.remove(
-				"limberGridViewBodyPseudoItemMoveAllow"
-			);
-			this.$limberGridViewBodyPseudoItems[index].classList.add(
-				"limberGridViewBodyPseudoItemMoveDisallow"
-			);
-		}
-	};
-
-	LimberGridView.prototype.showResizeDemo = function(index, width, height) {
-		if (this.resizePlaneDemo(index, width, height) == false) {
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewGridPseudoItemResizeDisallow");
-		} else {
-			this.$limberGridViewGridPseudoItems[
-				this.userActionData.itemIndex
-			].classList.add("limberGridViewGridPseudoItemResizeAllow");
-		}
-	};
-
-	LimberGridView.prototype.revertShowMoveOrResizeDemo = function() {
-		var length_0 = this.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
-			this.$limberGridViewItems[i].style.transform =
-				"translate(" +
-				this.positionData[i].x +
-				"px, " +
-				this.positionData[i].y +
-				"px)";
-			this.$limberGridViewItems[i].classList.remove(
-				"limberGridViewItemDemo",
-				"limberGridViewItemResizingState"
-			);
-			this.$limberGridViewGridPseudoItems[i].classList.remove(
-				"limberGridViewGridPseudoItemResizingState",
-				"limberGridViewGridPseudoItemActive"
-			);
-		}
-	};
-
-	LimberGridView.prototype.adjustHeight = function(yMouseOrTouchPosition) {
-		var scrollHeight = this.$limberGridView[0].scrollHeight;
-		if (scrollHeight - yMouseOrTouchPosition <= this.AUTO_SCROLL_POINT) {
-			this.$limberGridViewHeightAdjustGuide[0].style.height =
-				yMouseOrTouchPosition +
-				this.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
-				"px";
-		}
-	};
-
-	LimberGridView.prototype.adjustScroll = function(
-		limberGridViewOnVisibleAreaY,
-		limberGridViewHeightVisibleHeight
-	) {
-		var scrollTop = this.$limberGridView[0].scrollTop;
-		// var scrollLeft = this.$limberGridView[0].scrollLeft;
-		var programScrolled = false;
-		if (limberGridViewOnVisibleAreaY > 0) {
-			if (
-				limberGridViewHeightVisibleHeight -
-					limberGridViewOnVisibleAreaY <
-				this.AUTO_SCROLL_POINT
-			) {
-				this.$limberGridView[0].scrollTop =
-					scrollTop + this.AUTO_SCROLL_DISTANCE;
-				programScrolled = true;
-			}
-			if (
-				limberGridViewOnVisibleAreaY < this.HEIGHT / 10 &&
-				scrollTop != 0
-			) {
-				this.$limberGridView[0].scrollTop =
-					scrollTop - this.AUTO_SCROLL_DISTANCE;
-				programScrolled = true;
-			}
-		}
-
-		// if(limberGridViewOnVisibleAreaX > 0){
-		// 	if((limberGridViewWidthVisibleWidth - limberGridViewOnVisibleAreaX) < (this.WIDTH/10)){
-		// 		this.$limberGridView[0].scrollLeft = scrollLeft + 100;
-		// 		var programScrolled = true;
-		// 	}
-		// 	if((limberGridViewOnVisibleAreaX) < (this.WIDTH/10) && scrollLeft != 0){
-		// 		this.$limberGridView[0].scrollLeft = scrollLeft - 100;
-		// 		var programScrolled = true;
-		// 	}
-		// }
-		return programScrolled;
-	};
+	// LimberGridView.prototype.onItemMouseDown = function(event) {
+	// 	if (event.which != 1) {
+	// 		return;
+	// 	}
+
+	// 	if (event.target.classList.contains("limberGridViewItem")) {
+	// 		event.stopPropagation();
+	// 	} else {
+	// 		return;
+	// 	}
+
+	// 	var radius = Math.sqrt(
+	// 		Math.pow(0 - event.offsetX, 2) + Math.pow(0 - event.offsetY, 2)
+	// 	);
+	// 	var resizeUIBox = {
+	// 		x:
+	// 			event.currentTarget.offsetWidth -
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH,
+	// 		y:
+	// 			event.currentTarget.offsetHeight -
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH,
+	// 		width:
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH +
+	// 			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
+	// 		height:
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH +
+	// 			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH
+	// 	};
+
+	// 	if (radius <= this.MOVE_GUIDE_RADIUS) {
+	// 		this.userActionData = {
+	// 			type: "move",
+	// 			itemIndex: event.currentTarget.attributes["data-index"].value
+	// 		};
+	// 		this.mouseDownCancel = false;
+	// 		this.mouseDownTimerComplete = false;
+
+	// 		document.addEventListener(
+	// 			"mousemove",
+	// 			this.onMouseMoveBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"mouseup",
+	// 			this.onMouseUpBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"contextmenu",
+	// 			this.onContextMenuBindedFunctionVariable
+	// 		);
+	// 		clearTimeout(this.longPressCheck);
+	// 		this.longPressCheck = setTimeout(
+	// 			this.mouseDownCheck.bind(this, event),
+	// 			this.MOUSE_DOWN_TIME
+	// 		);
+
+	// 		event.preventDefault();
+	// 	} else if (
+	// 		event.offsetX >= resizeUIBox.x &&
+	// 		event.offsetX <= resizeUIBox.x + resizeUIBox.width &&
+	// 		event.offsetY >= resizeUIBox.y &&
+	// 		event.offsetY <= resizeUIBox.y + resizeUIBox.height
+	// 	) {
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	// 		this.$limberGridViewHeightAdjustGuide[0].classList.add(
+	// 			"limberGridViewHeightAdjustGuideActive"
+	// 		);
+
+	// 		this.userActionData = {
+	// 			type: "resize",
+	// 			itemIndex: event.currentTarget.attributes["data-index"].value
+	// 		};
+	// 		this.mouseDownCancel = false;
+	// 		this.mouseDownTimerComplete = true;
+
+	// 		this.$limberGridView[0].addEventListener(
+	// 			"mousemove",
+	// 			this.onMouseMoveBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"mouseup",
+	// 			this.onMouseUpBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"contextmenu",
+	// 			this.onContextMenuBindedFunctionVariable
+	// 		);
+
+	// 		var transformStyle = this.$limberGridViewItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.transform;
+	// 		var i1 = transformStyle.indexOf("px");
+	// 		var i2 = transformStyle.indexOf(",");
+	// 		var x = Number(transformStyle.substring(10, i1));
+	// 		var y = Number(
+	// 			transformStyle.substring(i2 + 2, transformStyle.length - 3)
+	// 		);
+
+	// 		this.userActionData.itemPositionX = x;
+	// 		this.userActionData.itemPositionY = y;
+
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.width =
+	// 			this.positionData[this.userActionData.itemIndex].width + "px";
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.height =
+	// 			this.positionData[this.userActionData.itemIndex].height + "px";
+
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.transform = "translate(" + x + "px, " + y + "px)";
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewGridPseudoItemActive");
+
+	// 		this.$body[0].classList.add(
+	// 			"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 		);
+	// 		var length_0 = this.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewItems[i].classList.add(
+	// 				"limberGridViewItemResizingState"
+	// 			);
+	// 		}
+
+	// 		var length_0 = this.$limberGridViewGridPseudoItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewGridPseudoItems[i].classList.add(
+	// 				"limberGridViewGridPseudoItemResizingState"
+	// 			);
+	// 		}
+
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.remove(
+	// 			"limberGridViewGridPseudoItemResizeAllow",
+	// 			"limberGridViewGridPseudoItemResizeDisallow"
+	// 		);
+
+	// 		event.preventDefault();
+	// 	}
+	// };
+
+	// LimberGridView.prototype.onItemTouchStart = function(event) {
+	// 	if (event.which != 0) {
+	// 		return;
+	// 	}
+
+	// 	if (event.target.classList.contains("limberGridViewItem")) {
+	// 		event.stopPropagation();
+	// 	} else {
+	// 		return;
+	// 	}
+
+	// 	if (event.touches.length > 1) {
+	// 		return;
+	// 	}
+
+	// 	var touchPosOnLimberGridItem = this.calculateTouchPosOnLimberGridItem(
+	// 		event
+	// 	);
+	// 	if (touchPosOnLimberGridItem == false) {
+	// 		return;
+	// 	}
+	// 	var radius = Math.sqrt(
+	// 		Math.pow(0 - touchPosOnLimberGridItem.x, 2) +
+	// 			Math.pow(0 - touchPosOnLimberGridItem.y, 2)
+	// 	);
+	// 	var resizeUIBox = {
+	// 		x:
+	// 			event.currentTarget.offsetWidth -
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH,
+	// 		y:
+	// 			event.currentTarget.offsetHeight -
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH,
+	// 		width:
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH +
+	// 			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
+	// 		height:
+	// 			this.RESIZE_SQUARE_GUIDE_LENGTH +
+	// 			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH
+	// 	};
+
+	// 	if (radius <= this.MOVE_GUIDE_RADIUS) {
+	// 		this.userActionData = {
+	// 			type: "move",
+	// 			itemIndex: event.currentTarget.attributes["data-index"].value
+	// 		};
+	// 		this.tapHoldCancel = false;
+	// 		this.tapHoldTimerComplete = false;
+
+	// 		document.addEventListener(
+	// 			"touchmove",
+	// 			this.onTouchMoveBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"touchend",
+	// 			this.onTouchEndBindedFunctionVariable
+	// 		);
+	// 		this.$limberGridView[0].removeEventListener(
+	// 			"touchstart",
+	// 			this.onLimberGridTouchStartFunctionVariable
+	// 		);
+
+	// 		document.addEventListener(
+	// 			"contextmenu",
+	// 			this.onItemTouchContextMenuBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"touchcancel",
+	// 			this.onTouchCancelBindedFunctionVariable
+	// 		);
+
+	// 		this.longTouchCheck = setTimeout(
+	// 			this.tapHoldCheck.bind(this, event),
+	// 			this.TOUCH_HOLD_TIME
+	// 		);
+
+	// 		event.preventDefault();
+	// 	} else if (
+	// 		touchPosOnLimberGridItem.x >= resizeUIBox.x &&
+	// 		touchPosOnLimberGridItem.x <= resizeUIBox.x + resizeUIBox.width &&
+	// 		touchPosOnLimberGridItem.y >= resizeUIBox.y &&
+	// 		touchPosOnLimberGridItem.y <= resizeUIBox.y + resizeUIBox.height
+	// 	) {
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	// 		this.$limberGridViewHeightAdjustGuide[0].classList.add(
+	// 			"limberGridViewHeightAdjustGuideActive"
+	// 		);
+
+	// 		this.userActionData = {
+	// 			type: "resize",
+	// 			itemIndex: event.currentTarget.attributes["data-index"].value
+	// 		};
+	// 		this.tapHoldCancel = false;
+	// 		this.tapHoldTimerComplete = true;
+
+	// 		this.$limberGridView[0].addEventListener(
+	// 			"touchmove",
+	// 			this.onTouchMoveBindedFunctionVariable
+	// 		);
+	// 		document.addEventListener(
+	// 			"touchend",
+	// 			this.onTouchEndBindedFunctionVariable
+	// 		);
+	// 		this.$limberGridView[0].removeEventListener(
+	// 			"touchstart",
+	// 			this.onLimberGridTouchStartFunctionVariable
+	// 		);
+
+	// 		document.addEventListener(
+	// 			"touchcancel",
+	// 			this.onTouchCancelBindedFunctionVariable
+	// 		);
+
+	// 		var transformStyle = this.$limberGridViewItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.transform;
+	// 		var i1 = transformStyle.indexOf("px");
+	// 		var i2 = transformStyle.indexOf(",");
+	// 		var x = Number(transformStyle.substring(10, i1));
+	// 		var y = Number(
+	// 			transformStyle.substring(i2 + 2, transformStyle.length - 3)
+	// 		);
+
+	// 		this.userActionData.itemPositionX = x;
+	// 		this.userActionData.itemPositionY = y;
+
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.width =
+	// 			this.positionData[this.userActionData.itemIndex].width + "px";
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.height =
+	// 			this.positionData[this.userActionData.itemIndex].height + "px";
+
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.transform = "translate(" + x + "px, " + y + "px)";
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewGridPseudoItemActive");
+
+	// 		this.$body[0].classList.add(
+	// 			"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 		);
+	// 		var length_0 = this.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewItems[i].classList.add(
+	// 				"limberGridViewItemResizingState"
+	// 			);
+	// 		}
+
+	// 		var length_0 = this.$limberGridViewGridPseudoItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			this.$limberGridViewGridPseudoItems[i].classList.add(
+	// 				"limberGridViewGridPseudoItemResizingState"
+	// 			);
+	// 		}
+
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.remove(
+	// 			"limberGridViewGridPseudoItemResizeAllow",
+	// 			"limberGridViewGridPseudoItemResizeDisallow"
+	// 		);
+
+	// 		event.preventDefault();
+	// 	}
+
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.mouseDownCheck = function(event) {
+	// 	if (this.mouseDownCancel == false) {
+	// 		this.mouseDownTimerComplete = true;
+	// 		console.log("mouseDownTimerComplete");
+	// 		this.$body[0].classList.add(
+	// 			"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 		);
+	// 		this.$limberGridViewItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewItemDemo");
+	// 		this.$limberGridViewBodyPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewBodyPseudoItemActive");
+	// 		this.$limberGridViewBodyPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.transform =
+	// 			"translate(" +
+	// 			event.pageX /*+ 5*/ +
+	// 			"px, " +
+	// 			event.pageY /*+ 5*/ +
+	// 			"px)";
+
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	// 		this.$limberGridViewHeightAdjustGuide[0].classList.add(
+	// 			"limberGridViewHeightAdjustGuideActive"
+	// 		);
+	// 	} else {
+	// 		console.log("mouseDown cancel before TimerComplete");
+	// 	}
+	// };
+
+	// LimberGridView.prototype.tapHoldCheck = function(event) {
+	// 	if (this.tapHoldCancel == false) {
+	// 		this.tapHoldTimerComplete = true;
+
+	// 		this.$body[0].classList.add(
+	// 			"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 		);
+	// 		this.$limberGridViewItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewItemDemo");
+	// 		this.$limberGridViewBodyPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewBodyPseudoItemActive");
+	// 		this.$limberGridViewBodyPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].style.transform =
+	// 			"translate(" +
+	// 			event.touches[0].pageX /*+ 5*/ +
+	// 			"px, " +
+	// 			event.touches[0].pageY /*+ 5*/ +
+	// 			"px)";
+
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	// 		this.$limberGridViewHeightAdjustGuide[0].classList.add(
+	// 			"limberGridViewHeightAdjustGuideActive"
+	// 		);
+	// 	} else {
+	// 		// tapHold cancel before TimerComplete
+	// 	}
+	// };
+
+	// LimberGridView.prototype.onMouseMove = function(event) {
+	// 	if (this.mouseDownTimerComplete == true) {
+	// 		if (this.userActionData.type == "move") {
+	// 			if (
+	// 				this.$limberGridViewMoveGuide[0].classList.contains(
+	// 					"limberGridViewMoveGuideActive"
+	// 				)
+	// 			) {
+	// 				this.$limberGridViewMoveGuide[0].classList.remove(
+	// 					"limberGridViewMoveGuideActive"
+	// 				);
+	// 			}
+
+	// 			if (
+	// 				this.$limberGridViewBodyPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.contains(
+	// 					"limberGridViewBodyPseudoItemMoveAllow"
+	// 				) ||
+	// 				this.$limberGridViewBodyPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.contains(
+	// 					"limberGridViewBodyPseudoItemMoveDisallow"
+	// 				)
+	// 			) {
+	// 				this.$limberGridViewBodyPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.remove(
+	// 					"limberGridViewBodyPseudoItemMoveAllow",
+	// 					"limberGridViewBodyPseudoItemMoveDisallow"
+	// 				);
+	// 			}
+
+	// 			this.$limberGridViewBodyPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].style.transform =
+	// 				"translate(" +
+	// 				event.pageX /*+ 5*/ +
+	// 				"px, " +
+	// 				event.pageY /*+ 5*/ +
+	// 				"px)";
+	// 			var mousePositionOnLimberGrid = this.calculateMousePosOnLimberGrid(
+	// 				event
+	// 			);
+
+	// 			if (mousePositionOnLimberGrid != false) {
+	// 				var scrollTop = this.$limberGridView[0].scrollTop;
+	// 				var scrollHeight = this.$limberGridView[0].scrollHeight;
+
+	// 				var yMousePosition = mousePositionOnLimberGrid.y;
+	// 				this.adjustHeight(yMousePosition);
+	// 			}
+
+	// 			clearTimeout(this.showMoveDemoTimeOutVariable);
+	// 			this.showMoveDemoTimeOutVariable = setTimeout(
+	// 				this.showMoveDemo.bind(
+	// 					this,
+	// 					this.userActionData.itemIndex,
+	// 					mousePositionOnLimberGrid
+	// 				),
+	// 				this.DEMO_WAIT_TIME
+	// 			);
+	// 		} else {
+	// 			var scrollTop = this.$limberGridView[0].scrollTop;
+	// 			var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 			var x = this.userActionData.itemPositionX;
+	// 			var y = this.userActionData.itemPositionY;
+
+	// 			var newWidth =
+	// 				event.offsetX - x + scrollLeft - this.PADDING_LEFT;
+	// 			var newHeight =
+	// 				event.offsetY - y + scrollTop - this.PADDING_TOP;
+
+	// 			this.userActionData.newWidth = newWidth;
+	// 			this.userActionData.newHeight = newHeight;
+
+	// 			var yMousePosition = event.offsetY + scrollTop;
+	// 			this.adjustHeight(yMousePosition);
+
+	// 			if (newWidth > 0 && newHeight > 0) {
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].style.width = newWidth + "px";
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].style.height = newHeight + "px";
+	// 			}
+
+	// 			if (
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.contains(
+	// 					"limberGridViewGridPseudoItemResizeAllow"
+	// 				) ||
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.contains(
+	// 					"limberGridViewGridPseudoItemResizeDisallow"
+	// 				)
+	// 			) {
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.remove(
+	// 					"limberGridViewGridPseudoItemResizeAllow",
+	// 					"limberGridViewGridPseudoItemResizeDisallow"
+	// 				);
+	// 			}
+
+	// 			clearTimeout(this.showResizeDemoTimeOutVariable);
+	// 			this.showResizeDemoTimeOutVariable = setTimeout(
+	// 				this.showResizeDemo.bind(
+	// 					this,
+	// 					this.userActionData.itemIndex,
+	// 					newWidth,
+	// 					newHeight
+	// 				),
+	// 				this.DEMO_WAIT_TIME
+	// 			);
+	// 		}
+	// 	} else {
+	// 		this.mouseDownCancel = true;
+	// 		clearTimeout(this.longPressCheck);
+	// 		document.removeEventListener(
+	// 			"mousemove",
+	// 			this.onMouseMoveBindedFunctionVariable
+	// 		);
+	// 		this.$limberGridView[0].removeEventListener(
+	// 			"mousemove",
+	// 			this.onMouseMoveBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"mouseup",
+	// 			this.onMouseUpBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"contextmenu",
+	// 			this.onContextMenuBindedFunctionVariable
+	// 		);
+
+	// 		// canceling mouseHold
+	// 	}
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onTouchMove = function(event) {
+	// 	if (this.tapHoldTimerComplete == true) {
+	// 		if (this.userActionData.type == "move") {
+	// 			if (
+	// 				this.$limberGridViewMoveGuide[0].classList.contains(
+	// 					"limberGridViewMoveGuideActive"
+	// 				)
+	// 			) {
+	// 				this.$limberGridViewMoveGuide[0].classList.remove(
+	// 					"limberGridViewMoveGuideActive"
+	// 				);
+	// 			}
+
+	// 			if (
+	// 				this.$limberGridViewBodyPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.contains(
+	// 					"limberGridViewBodyPseudoItemMoveAllow"
+	// 				) ||
+	// 				this.$limberGridViewBodyPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.contains(
+	// 					"limberGridViewBodyPseudoItemMoveDisallow"
+	// 				)
+	// 			) {
+	// 				this.$limberGridViewBodyPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].classList.remove(
+	// 					"limberGridViewBodyPseudoItemMoveAllow",
+	// 					"limberGridViewBodyPseudoItemMoveDisallow"
+	// 				);
+	// 			}
+
+	// 			this.$limberGridViewBodyPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].style.transform =
+	// 				"translate(" +
+	// 				event.touches[0].pageX /*+ 5*/ +
+	// 				"px, " +
+	// 				event.touches[0].pageY /*+ 5*/ +
+	// 				"px)";
+	// 			var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
+	// 				event
+	// 			);
+
+	// 			if (touchPositionOnLimberGrid != false) {
+	// 				var scrollTop = this.$limberGridView[0].scrollTop;
+	// 				var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 				var limberGridViewBoundingClientRect = this.$limberGridView[0].getBoundingClientRect();
+	// 				var limberGridViewWidthVisibleWidth =
+	// 					this.$limberGridView[0].offsetWidth -
+	// 					limberGridViewBoundingClientRect.left;
+	// 				var limberGridViewHeightVisibleHeight =
+	// 					this.$limberGridView[0].offsetHeight -
+	// 					limberGridViewBoundingClientRect.top;
+	// 				var limberGridViewOnVisibleAreaX =
+	// 					touchPositionOnLimberGrid.x +
+	// 					this.PADDING_LEFT -
+	// 					scrollLeft;
+	// 				var limberGridViewOnVisibleAreaY =
+	// 					touchPositionOnLimberGrid.y +
+	// 					this.PADDING_TOP -
+	// 					scrollTop;
+
+	// 				var yTouchPosition = touchPositionOnLimberGrid.y;
+	// 				this.adjustHeight(yTouchPosition);
+
+	// 				var programScrolled = this.adjustScroll(
+	// 					limberGridViewOnVisibleAreaY,
+	// 					limberGridViewHeightVisibleHeight
+	// 				);
+	// 			}
+
+	// 			clearTimeout(this.showMoveDemoTimeOutVariable);
+	// 			if (programScrolled != true) {
+	// 				this.showMoveDemoTimeOutVariable = setTimeout(
+	// 					this.showMoveDemo.bind(
+	// 						this,
+	// 						this.userActionData.itemIndex,
+	// 						touchPositionOnLimberGrid
+	// 					),
+	// 					this.DEMO_WAIT_TIME
+	// 				);
+	// 			}
+	// 		} else {
+	// 			var scrollTop = this.$limberGridView[0].scrollTop;
+	// 			var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 			var x = this.userActionData.itemPositionX;
+	// 			var y = this.userActionData.itemPositionY;
+
+	// 			var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
+	// 				event
+	// 			);
+
+	// 			if (touchPositionOnLimberGrid != false) {
+	// 				var newWidth = touchPositionOnLimberGrid.x - x;
+	// 				var newHeight = touchPositionOnLimberGrid.y - y;
+
+	// 				this.userActionData.newWidth = newWidth;
+	// 				this.userActionData.newHeight = newHeight;
+
+	// 				if (newWidth > 0 && newHeight > 0) {
+	// 					this.$limberGridViewGridPseudoItems[
+	// 						this.userActionData.itemIndex
+	// 					].style.width = newWidth + "px";
+	// 					this.$limberGridViewGridPseudoItems[
+	// 						this.userActionData.itemIndex
+	// 					].style.height = newHeight + "px";
+	// 				}
+
+	// 				if (
+	// 					this.$limberGridViewGridPseudoItems[
+	// 						this.userActionData.itemIndex
+	// 					].classList.contains(
+	// 						"limberGridViewGridPseudoItemResizeAllow"
+	// 					) ||
+	// 					this.$limberGridViewGridPseudoItems[
+	// 						this.userActionData.itemIndex
+	// 					].classList.contains(
+	// 						"limberGridViewGridPseudoItemResizeDisallow"
+	// 					)
+	// 				) {
+	// 					this.$limberGridViewGridPseudoItems[
+	// 						this.userActionData.itemIndex
+	// 					].classList.remove(
+	// 						"limberGridViewGridPseudoItemResizeAllow",
+	// 						"limberGridViewGridPseudoItemResizeDisallow"
+	// 					);
+	// 				}
+	// 			}
+
+	// 			if (touchPositionOnLimberGrid != false) {
+	// 				var limberGridViewBoundingClientRect = this.$limberGridView[0].getBoundingClientRect();
+	// 				var limberGridViewWidthVisibleWidth =
+	// 					this.$limberGridView[0].offsetWidth -
+	// 					limberGridViewBoundingClientRect.left;
+	// 				var limberGridViewHeightVisibleHeight =
+	// 					this.$limberGridView[0].offsetHeight -
+	// 					limberGridViewBoundingClientRect.top;
+	// 				var limberGridViewOnVisibleAreaX =
+	// 					touchPositionOnLimberGrid.x +
+	// 					this.PADDING_LEFT -
+	// 					scrollLeft;
+	// 				var limberGridViewOnVisibleAreaY =
+	// 					touchPositionOnLimberGrid.y +
+	// 					this.PADDING_TOP -
+	// 					scrollTop;
+
+	// 				var yTouchPosition = touchPositionOnLimberGrid.y;
+	// 				this.adjustHeight(yTouchPosition);
+
+	// 				var programScrolled = this.adjustScroll(
+	// 					limberGridViewOnVisibleAreaY,
+	// 					limberGridViewHeightVisibleHeight
+	// 				);
+	// 			}
+
+	// 			clearTimeout(this.showResizeDemoTimeOutVariable);
+	// 			if (programScrolled != true) {
+	// 				this.showResizeDemoTimeOutVariable = setTimeout(
+	// 					this.showResizeDemo.bind(
+	// 						this,
+	// 						this.userActionData.itemIndex,
+	// 						newWidth,
+	// 						newHeight
+	// 					),
+	// 					this.DEMO_WAIT_TIME
+	// 				);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		this.tapHoldCancel = true;
+	// 		clearTimeout(this.longTouchCheck);
+	// 		document.removeEventListener(
+	// 			"touchmove",
+	// 			this.onTouchMoveBindedFunctionVariable
+	// 		);
+	// 		this.$limberGridView[0].removeEventListener(
+	// 			"touchmove",
+	// 			this.onTouchMoveBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"touchend",
+	// 			this.onTouchEndBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"contextmenu",
+	// 			this.onContextMenuBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"contextmenu",
+	// 			this.onItemTouchContextMenuBindedFunctionVariable
+	// 		);
+	// 		document.removeEventListener(
+	// 			"touchcancel",
+	// 			this.onTouchCancelBindedFunctionVariable
+	// 		);
+	// 		this.$limberGridView[0].addEventListener(
+	// 			"touchstart",
+	// 			this.onLimberGridTouchStartFunctionVariable
+	// 		);
+
+	// 		// canceling taphold
+	// 	}
+
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onMouseUp = function(event) {
+	// 	clearTimeout(this.showMoveDemoTimeOutVariable);
+	// 	clearTimeout(this.showResizeDemoTimeOutVariable);
+	// 	var itemResizeFlag = false;
+	// 	var itemMoveFlag = false;
+	// 	if (this.mouseDownTimerComplete == true) {
+	// 		if (this.userActionData.type == "move") {
+	// 			this.$limberGridViewBodyPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].classList.remove("limberGridViewBodyPseudoItemActive");
+	// 			this.$limberGridViewBodyPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+	// 			var mousePositionOnLimberGrid = this.calculateMousePosOnLimberGrid(
+	// 				event
+	// 			);
+	// 			if (mousePositionOnLimberGrid != false) {
+	// 				var newMoveCoordinates = this.checkNewMoveCoordinates(
+	// 					this.userActionData.itemIndex,
+	// 					mousePositionOnLimberGrid
+	// 				);
+	// 				if (newMoveCoordinates != false) {
+	// 					var updatedCoordinates = {};
+	// 					if (
+	// 						newMoveCoordinates.hasOwnProperty(
+	// 							"revisedCoordinates"
+	// 						)
+	// 					) {
+	// 						this.movePlane(
+	// 							this.userActionData.itemIndex,
+	// 							newMoveCoordinates.revisedCoordinates.x,
+	// 							newMoveCoordinates.revisedCoordinates.y
+	// 						);
+	// 						updatedCoordinates.x =
+	// 							newMoveCoordinates.revisedCoordinates.x;
+	// 						updatedCoordinates.y =
+	// 							newMoveCoordinates.revisedCoordinates.y;
+	// 						itemMoveFlag = true;
+	// 					} else {
+	// 						this.movePlane(
+	// 							this.userActionData.itemIndex,
+	// 							newMoveCoordinates.x,
+	// 							newMoveCoordinates.y
+	// 						);
+	// 						updatedCoordinates.x = newMoveCoordinates.x;
+	// 						updatedCoordinates.y = newMoveCoordinates.y;
+	// 						itemMoveFlag = true;
+	// 					}
+	// 				} else {
+	// 					this.revertShowMoveOrResizeDemo();
+	// 				}
+	// 			} else {
+	// 				this.revertShowMoveOrResizeDemo();
+	// 			}
+	// 		} else {
+	// 			var scrollTop = this.$limberGridView[0].scrollTop;
+	// 			var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 			var x = this.userActionData.itemPositionX;
+	// 			var y = this.userActionData.itemPositionY;
+
+	// 			var newWidth = this.userActionData.newWidth;
+	// 			var newHeight = this.userActionData.newHeight;
+
+	// 			if (newWidth > 0 && newHeight > 0) {
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].style.width = newWidth + "px";
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].style.height = newHeight + "px";
+	// 			}
+
+	// 			if (
+	// 				this.resizePlane(
+	// 					this.userActionData.itemIndex,
+	// 					newWidth,
+	// 					newHeight
+	// 				) == false
+	// 			) {
+	// 				this.revertShowMoveOrResizeDemo();
+	// 				itemResizeFlag = true;
+	// 			}
+
+	// 			this.$limberGridViewGridPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+	// 			this.$limberGridViewGridPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].classList.remove("limberGridViewGridPseudoItemActive");
+	// 		}
+	// 	} else {
+	// 		this.mouseDownCancel = true;
+	// 		clearTimeout(this.longPressCheck);
+	// 		// canceling mouseHold
+	// 	}
+	// 	document.removeEventListener(
+	// 		"mousemove",
+	// 		this.onMouseMoveBindedFunctionVariable
+	// 	);
+	// 	this.$limberGridView[0].removeEventListener(
+	// 		"mousemove",
+	// 		this.onMouseMoveBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"mouseup",
+	// 		this.onMouseUpBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onContextMenuBindedFunctionVariable
+	// 	);
+
+	// 	this.$body[0].classList.remove(
+	// 		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 	);
+	// 	this.$limberGridViewMoveGuide[0].classList.remove(
+	// 		"limberGridViewMoveGuideActive"
+	// 	);
+
+	// 	this.$limberGridViewHeightAdjustGuide[0].classList.remove(
+	// 		"limberGridViewHeightAdjustGuideActive"
+	// 	);
+
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+
+	// 	//
+	// 	if (
+	// 		this.callbacks.moveCompleteCallback != undefined &&
+	// 		this.callbacks.moveCompleteCallback != null
+	// 	) {
+	// 		if (itemMoveFlag == true) {
+	// 			updatedCoordinates.width = this.positionData[
+	// 				this.userActionData.itemIndex
+	// 			].width;
+	// 			updatedCoordinates.height = this.positionData[
+	// 				this.userActionData.itemIndex
+	// 			].height;
+	// 			this.callbacks.moveCompleteCallback(
+	// 				true,
+	// 				this.userActionData.itemIndex,
+	// 				updatedCoordinates
+	// 			);
+	// 		} else if (this.userActionData.type == "move") {
+	// 			this.callbacks.moveCompleteCallback(
+	// 				false,
+	// 				this.userActionData.itemIndex,
+	// 				event
+	// 			);
+	// 		}
+	// 	}
+	// 	if (
+	// 		this.callbacks.resizeCompleteCallback != undefined &&
+	// 		this.callbacks.resizeCompleteCallback != null
+	// 	) {
+	// 		if (itemResizeFlag == true) {
+	// 			this.callbacks.resizeCompleteCallback(
+	// 				this.userActionData.itemIndex,
+	// 				{
+	// 					x: this.positionData[this.userActionData.itemIndex].x,
+	// 					y: this.positionData[this.userActionData.itemIndex].y,
+	// 					height: newHeight,
+	// 					width: newWidth
+	// 				}
+	// 			);
+	// 		}
+	// 	}
+	// 	//
+
+	// 	this.userActionData = null;
+	// };
+
+	// LimberGridView.prototype.onTouchEnd = function(event) {
+	// 	clearTimeout(this.showMoveDemoTimeOutVariable);
+	// 	clearTimeout(this.showResizeDemoTimeOutVariable);
+	// 	var itemResizeFlag = false;
+	// 	var itemMoveFlag = false;
+	// 	if (this.tapHoldTimerComplete == true) {
+	// 		if (this.userActionData.type == "move") {
+	// 			this.$limberGridViewBodyPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].classList.remove("limberGridViewBodyPseudoItemActive");
+	// 			this.$limberGridViewBodyPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+	// 			var touchPositionOnLimberGrid = this.calculateTouchPosOnLimberGrid(
+	// 				event
+	// 			);
+	// 			if (touchPositionOnLimberGrid != false) {
+	// 				var newMoveCoordinates = this.checkNewMoveCoordinates(
+	// 					this.userActionData.itemIndex,
+	// 					touchPositionOnLimberGrid
+	// 				);
+	// 				if (newMoveCoordinates != false) {
+	// 					var updatedCoordinates = {};
+	// 					if (
+	// 						newMoveCoordinates.hasOwnProperty(
+	// 							"revisedCoordinates"
+	// 						)
+	// 					) {
+	// 						this.movePlane(
+	// 							this.userActionData.itemIndex,
+	// 							newMoveCoordinates.revisedCoordinates.x,
+	// 							newMoveCoordinates.revisedCoordinates.y
+	// 						);
+	// 						updatedCoordinates.x =
+	// 							newMoveCoordinates.revisedCoordinates.x;
+	// 						updatedCoordinates.y =
+	// 							newMoveCoordinates.revisedCoordinates.y;
+	// 						itemMoveFlag = true;
+	// 					} else {
+	// 						this.movePlane(
+	// 							this.userActionData.itemIndex,
+	// 							newMoveCoordinates.x,
+	// 							newMoveCoordinates.y
+	// 						);
+	// 						updatedCoordinates.x = newMoveCoordinates.x;
+	// 						updatedCoordinates.y = newMoveCoordinates.y;
+	// 						itemMoveFlag = true;
+	// 					}
+	// 				} else {
+	// 					this.revertShowMoveOrResizeDemo();
+	// 				}
+	// 			} else {
+	// 				this.revertShowMoveOrResizeDemo();
+	// 			}
+	// 		} else {
+	// 			var scrollTop = this.$limberGridView[0].scrollTop;
+	// 			var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 			var x = this.userActionData.itemPositionX;
+	// 			var y = this.userActionData.itemPositionY;
+
+	// 			var newWidth = this.userActionData.newWidth;
+	// 			var newHeight = this.userActionData.newHeight;
+
+	// 			if (newWidth > 0 && newHeight > 0) {
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].style.width = newWidth + "px";
+	// 				this.$limberGridViewGridPseudoItems[
+	// 					this.userActionData.itemIndex
+	// 				].style.height = newHeight + "px";
+	// 			}
+
+	// 			if (
+	// 				this.resizePlane(
+	// 					this.userActionData.itemIndex,
+	// 					newWidth,
+	// 					newHeight
+	// 				) == false
+	// 			) {
+	// 				this.revertShowMoveOrResizeDemo();
+	// 				itemResizeFlag = true;
+	// 			}
+
+	// 			this.$limberGridViewGridPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+	// 			this.$limberGridViewGridPseudoItems[
+	// 				this.userActionData.itemIndex
+	// 			].classList.remove("limberGridViewGridPseudoItemActive");
+	// 		}
+	// 	} else {
+	// 		this.tapHoldCancel = true;
+	// 		clearTimeout(this.longTouchCheck);
+
+	// 		// canceling taphold
+	// 	}
+
+	// 	document.removeEventListener(
+	// 		"touchmove",
+	// 		this.onTouchMoveBindedFunctionVariable
+	// 	);
+	// 	this.$limberGridView[0].removeEventListener(
+	// 		"touchmove",
+	// 		this.onTouchMoveBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"touchend",
+	// 		this.onTouchEndBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onContextMenuBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onItemTouchContextMenuBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"touchcancel",
+	// 		this.onTouchCancelBindedFunctionVariable
+	// 	);
+	// 	this.$limberGridView[0].addEventListener(
+	// 		"touchstart",
+	// 		this.onLimberGridTouchStartFunctionVariable
+	// 	);
+
+	// 	this.$body[0].classList.remove(
+	// 		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 	);
+	// 	this.$limberGridViewMoveGuide[0].classList.remove(
+	// 		"limberGridViewMoveGuideActive"
+	// 	);
+
+	// 	this.$limberGridViewHeightAdjustGuide[0].classList.remove(
+	// 		"limberGridViewHeightAdjustGuideActive"
+	// 	);
+
+	// 	event.stopPropagation();
+
+	// 	//
+	// 	if (
+	// 		this.callbacks.moveCompleteCallback != undefined &&
+	// 		this.callbacks.moveCompleteCallback != null
+	// 	) {
+	// 		if (itemMoveFlag == true) {
+	// 			updatedCoordinates.width = this.positionData[
+	// 				this.userActionData.itemIndex
+	// 			].width;
+	// 			updatedCoordinates.height = this.positionData[
+	// 				this.userActionData.itemIndex
+	// 			].height;
+	// 			this.callbacks.moveCompleteCallback(
+	// 				true,
+	// 				this.userActionData.itemIndex,
+	// 				updatedCoordinates
+	// 			);
+	// 		} else if (this.userActionData.type == "move") {
+	// 			this.callbacks.moveCompleteCallback(
+	// 				false,
+	// 				this.userActionData.itemIndex,
+	// 				event
+	// 			);
+	// 		}
+	// 	}
+	// 	if (
+	// 		this.callbacks.resizeCompleteCallback != undefined &&
+	// 		this.callbacks.resizeCompleteCallback != null
+	// 	) {
+	// 		if (itemResizeFlag == true) {
+	// 			this.callbacks.resizeCompleteCallback(
+	// 				this.userActionData.itemIndex,
+	// 				{
+	// 					x: this.positionData[this.userActionData.itemIndex].x,
+	// 					y: this.positionData[this.userActionData.itemIndex].y,
+	// 					height: newHeight,
+	// 					width: newWidth
+	// 				}
+	// 			);
+	// 		}
+	// 	}
+	// 	//
+
+	// 	this.userActionData = null;
+	// };
+
+	// LimberGridView.prototype.onContextMenu = function(event) {
+	// 	clearTimeout(this.showMoveDemoTimeOutVariable);
+	// 	clearTimeout(this.showResizeDemoTimeOutVariable);
+
+	// 	this.revertShowMoveOrResizeDemo();
+
+	// 	this.$limberGridViewGridPseudoItems[
+	// 		this.userActionData.itemIndex
+	// 	].classList.remove("limberGridViewGridPseudoItemActive");
+
+	// 	this.$limberGridViewBodyPseudoItems[
+	// 		this.userActionData.itemIndex
+	// 	].classList.remove("limberGridViewBodyPseudoItemActive");
+	// 	this.$limberGridViewBodyPseudoItems[
+	// 		this.userActionData.itemIndex
+	// 	].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+
+	// 	document.removeEventListener(
+	// 		"mousemove",
+	// 		this.onMouseMoveBindedFunctionVariable
+	// 	);
+	// 	this.$limberGridView[0].removeEventListener(
+	// 		"mousemove",
+	// 		this.onMouseMoveBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"mouseup",
+	// 		this.onMouseUpBindedFunctionVariable
+	// 	);
+
+	// 	document.removeEventListener(
+	// 		"touchmove",
+	// 		this.onTouchMoveBindedFunctionVariable
+	// 	);
+	// 	this.$limberGridView[0].removeEventListener(
+	// 		"touchmove",
+	// 		this.onTouchMoveBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"touchend",
+	// 		this.onTouchEndBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onItemTouchContextMenuBindedFunctionVariable
+	// 	);
+	// 	document.removeEventListener(
+	// 		"touchcancel",
+	// 		this.onTouchCancelBindedFunctionVariable
+	// 	);
+
+	// 	document.removeEventListener(
+	// 		"contextmenu",
+	// 		this.onContextMenuBindedFunctionVariable
+	// 	);
+
+	// 	this.$body[0].classList.remove(
+	// 		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	// 	);
+	// 	this.$limberGridViewMoveGuide[0].classList.remove(
+	// 		"limberGridViewMoveGuideActive"
+	// 	);
+
+	// 	this.$limberGridViewHeightAdjustGuide[0].classList.remove(
+	// 		"limberGridViewHeightAdjustGuideActive"
+	// 	);
+
+	// 	this.userActionData = null;
+
+	// 	event.preventDefault();
+	// 	event.stopPropagation();
+	// };
+
+	// LimberGridView.prototype.onItemTouchContextMenu = function(event) {
+	// 	event.preventDefault();
+	// };
+
+	// LimberGridView.prototype.onTouchCancel = function(event) {
+	// 	this.onContextMenu();
+	// 	this.tapHoldTimerComplete = false;
+	// 	this.$limberGridView[0].addEventListener(
+	// 		"touchstart",
+	// 		this.onLimberGridTouchStartFunctionVariable
+	// 	);
+	// };
+
+	// LimberGridView.prototype.calculateMousePosOnLimberGrid = function(event) {
+	// 	var limberGridViewPosition = this.$limberGridView[0].getBoundingClientRect();
+	// 	if (
+	// 		event.clientX >= limberGridViewPosition.left &&
+	// 		event.clientX <=
+	// 			limberGridViewPosition.left + limberGridViewPosition.width &&
+	// 		(event.clientY >= limberGridViewPosition.top &&
+	// 			event.clientY <=
+	// 				limberGridViewPosition.top + limberGridViewPosition.height)
+	// 	) {
+	// 		var scrollTop = this.$limberGridView[0].scrollTop;
+	// 		var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 		var mouseXOnLimberGridView =
+	// 			event.clientX -
+	// 			limberGridViewPosition.left -
+	// 			this.PADDING_LEFT +
+	// 			scrollLeft;
+	// 		var mouseYOnLimberGridView =
+	// 			event.clientY -
+	// 			limberGridViewPosition.top -
+	// 			this.PADDING_TOP +
+	// 			scrollTop;
+
+	// 		if (mouseXOnLimberGridView < 0 || mouseYOnLimberGridView < 0) {
+	// 			return false;
+	// 		}
+	// 		return { x: mouseXOnLimberGridView, y: mouseYOnLimberGridView };
+	// 	} else {
+	// 		// mouse pointer NOT inside limberGridView
+	// 		return false;
+	// 	}
+	// };
+
+	// LimberGridView.prototype.calculateTouchPosOnLimberGrid = function(event) {
+	// 	var limberGridViewPosition = this.$limberGridView[0].getBoundingClientRect();
+
+	// 	if (event.type == "touchend") {
+	// 		var touch = {
+	// 			clientX: event.changedTouches[0].clientX,
+	// 			clientY: event.changedTouches[0].clientY
+	// 		};
+	// 	} else {
+	// 		var touch = {
+	// 			clientX: event.touches[0].clientX,
+	// 			clientY: event.touches[0].clientY
+	// 		};
+	// 	}
+	// 	if (
+	// 		touch.clientX >= limberGridViewPosition.left &&
+	// 		touch.clientX <=
+	// 			limberGridViewPosition.left + limberGridViewPosition.width &&
+	// 		(touch.clientY >= limberGridViewPosition.top &&
+	// 			touch.clientY <=
+	// 				limberGridViewPosition.top + limberGridViewPosition.height)
+	// 	) {
+	// 		var scrollTop = this.$limberGridView[0].scrollTop;
+	// 		var scrollLeft = this.$limberGridView[0].scrollLeft;
+
+	// 		var touchXOnLimberGridView =
+	// 			touch.clientX -
+	// 			limberGridViewPosition.left -
+	// 			this.PADDING_LEFT +
+	// 			scrollLeft;
+	// 		var touchYOnLimberGridView =
+	// 			touch.clientY -
+	// 			limberGridViewPosition.top -
+	// 			this.PADDING_TOP +
+	// 			scrollTop;
+
+	// 		if (touchXOnLimberGridView < 0 || touchYOnLimberGridView < 0) {
+	// 			return false;
+	// 		}
+	// 		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
+	// 	} else {
+	// 		// touch NOT inside limberGridView
+	// 		return false;
+	// 	}
+	// };
+
+	// LimberGridView.prototype.calculateTouchPosOnLimberGridItem = function(
+	// 	event
+	// ) {
+	// 	var limberGridViewItemPosition = this.$limberGridViewItems[
+	// 		event.currentTarget.attributes["data-index"].value
+	// 	].getBoundingClientRect();
+
+	// 	if (
+	// 		event.touches[0].clientX >= limberGridViewItemPosition.left &&
+	// 		event.touches[0].clientX <=
+	// 			limberGridViewItemPosition.left +
+	// 				limberGridViewItemPosition.width &&
+	// 		(event.touches[0].clientY >= limberGridViewItemPosition.top &&
+	// 			event.touches[0].clientY <=
+	// 				limberGridViewItemPosition.top +
+	// 					limberGridViewItemPosition.height)
+	// 	) {
+	// 		var touchXOnLimberGridView =
+	// 			event.touches[0].clientX - limberGridViewItemPosition.left;
+	// 		var touchYOnLimberGridView =
+	// 			event.touches[0].clientY - limberGridViewItemPosition.top;
+
+	// 		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
+	// 	} else {
+	// 		// touch NOT inside limberGridViewItem
+	// 		return false;
+	// 	}
+	// };
+
+	// LimberGridView.prototype.checkNewMoveCoordinates = function(
+	// 	indexOfMovedItem,
+	// 	mousePositions
+	// ) {
+	// 	if (mousePositions == false) {
+	// 		return false;
+	// 	}
+
+	// 	var x = mousePositions.x;
+	// 	var y = mousePositions.y;
+	// 	var widthOfMovedItem = this.positionData[indexOfMovedItem].width;
+	// 	var heightOfMovedItem = this.positionData[indexOfMovedItem].height;
+
+	// 	var isInside = false;
+	// 	var indexOfOverlappingItem = null;
+	// 	var length_0 = this.positionData.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		var itemTopLeft = [this.positionData[i].x, this.positionData[i].y];
+	// 		var itemTopRight = [
+	// 			this.positionData[i].x + this.positionData[i].width,
+	// 			this.positionData[i].y
+	// 		];
+	// 		var itemBottomLeft = [
+	// 			this.positionData[i].x,
+	// 			this.positionData[i].y + this.positionData[i].height
+	// 		];
+	// 		var itemBottomRight = [
+	// 			this.positionData[i].x + this.positionData[i].width,
+	// 			this.positionData[i].y + this.positionData[i].height
+	// 		];
+
+	// 		if (
+	// 			x >= itemTopLeft[0] &&
+	// 			x <= itemTopRight[0] &&
+	// 			x >= itemBottomLeft[0] &&
+	// 			x <= itemBottomRight[0] &&
+	// 			y >= itemTopLeft[1] &&
+	// 			y <= itemBottomLeft[1] &&
+	// 			y >= itemTopRight[1] &&
+	// 			y <= itemBottomRight[1]
+	// 		) {
+	// 			isInside = true;
+	// 			indexOfOverlappingItem = i;
+	// 			break;
+	// 		}
+
+	// 		var lines = this.getLines(this.positionData[i]);
+
+	// 		var topLine = lines[0];
+	// 		var rightLine = lines[1];
+	// 		var bottomLine = lines[2];
+	// 		var leftLine = lines[3];
+
+	// 		// for TOP LEFT Corner
+	// 		if (
+	// 			y < topLine[0][1] &&
+	// 			x >= topLine[0][0] - this.MARGIN &&
+	// 			x <= topLine[1][0] + this.MARGIN
+	// 		) {
+	// 			var diff = topLine[0][1] - y;
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+
+	// 		if (
+	// 			y > bottomLine[0][1] &&
+	// 			x >= bottomLine[0][0] - this.MARGIN &&
+	// 			x <= bottomLine[1][0] + this.MARGIN
+	// 		) {
+	// 			var diff = y - bottomLine[0][1];
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+
+	// 		if (
+	// 			x > rightLine[0][0] &&
+	// 			y >= rightLine[0][1] - this.MARGIN &&
+	// 			y <= rightLine[1][1] + this.MARGIN
+	// 		) {
+	// 			var diff = x - rightLine[0][0];
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+
+	// 		if (
+	// 			x < leftLine[0][0] &&
+	// 			y >= leftLine[0][1] - this.MARGIN &&
+	// 			y <= leftLine[1][1] + this.MARGIN
+	// 		) {
+	// 			var diff = leftLine[0][0] - x;
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+	// 		// for TOP LEFT Corner END
+
+	// 		// for TOP RIGHT Corner
+	// 		if (
+	// 			y > bottomLine[0][1] &&
+	// 			x + widthOfMovedItem >= bottomLine[0][0] - this.MARGIN &&
+	// 			x + widthOfMovedItem <= bottomLine[1][0] + this.MARGIN
+	// 		) {
+	// 			var diff = y - bottomLine[0][1];
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+	// 		// for TOP RIGHT Corner END
+
+	// 		// for BOTTOM LEFT Corner
+	// 		if (
+	// 			x > rightLine[0][0] &&
+	// 			y + heightOfMovedItem >= rightLine[0][1] - this.MARGIN &&
+	// 			y + heightOfMovedItem <= rightLine[1][1] + this.MARGIN
+	// 		) {
+	// 			var diff = x - rightLine[0][0];
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+	// 		// for BOTTOM LEFT Corner END
+
+	// 		if (
+	// 			(y > bottomLine[0][1] &&
+	// 				bottomLine[0][0] >= x &&
+	// 				bottomLine[0][0] <= x + widthOfMovedItem) ||
+	// 			(y > bottomLine[0][1] &&
+	// 				bottomLine[1][0] >= x &&
+	// 				bottomLine[1][0] <= x + widthOfMovedItem)
+	// 		) {
+	// 			var diff = y - bottomLine[0][1];
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+
+	// 		if (
+	// 			(x > rightLine[0][0] &&
+	// 				rightLine[0][1] >= y &&
+	// 				rightLine[0][1] <= y + heightOfMovedItem) ||
+	// 			(x > rightLine[0][0] &&
+	// 				rightLine[1][1] >= y &&
+	// 				rightLine[1][1] <= y + heightOfMovedItem)
+	// 		) {
+	// 			var diff = x - rightLine[0][0];
+	// 			if (diff <= this.MARGIN) {
+	// 				return false;
+	// 			}
+	// 		}
+	// 	}
+
+	// 	if (indexOfOverlappingItem == null) {
+	// 		if (
+	// 			x +
+	// 				this.positionData[indexOfMovedItem].width +
+	// 				this.getMarginAtPoint(x) >
+	// 			this.WIDTH
+	// 		) {
+	// 			return false;
+	// 		} else {
+	// 			return mousePositions;
+	// 		}
+	// 	} else {
+	// 		if (
+	// 			this.positionData[indexOfOverlappingItem].x +
+	// 				this.positionData[indexOfMovedItem].width +
+	// 				this.getMarginAtPoint(
+	// 					this.positionData[indexOfOverlappingItem].x
+	// 				) >
+	// 			this.WIDTH
+	// 		) {
+	// 			return false;
+	// 		} else {
+	// 			return {
+	// 				x: x,
+	// 				y: y,
+	// 				revisedCoordinates: {
+	// 					x: this.positionData[indexOfOverlappingItem].x,
+	// 					y: this.positionData[indexOfOverlappingItem].y
+	// 				}
+	// 			};
+	// 		}
+	// 	}
+	// };
+
+	// LimberGridView.prototype.showMoveDemo = function(index, mousePosition) {
+	// 	if (mousePosition != false) {
+	// 		var newMoveCoordinates = this.checkNewMoveCoordinates(
+	// 			index,
+	// 			mousePosition
+	// 		);
+	// 		if (newMoveCoordinates == false) {
+	// 			this.$limberGridViewBodyPseudoItems[index].classList.remove(
+	// 				"limberGridViewBodyPseudoItemMoveAllow"
+	// 			);
+	// 			this.$limberGridViewBodyPseudoItems[index].classList.add(
+	// 				"limberGridViewBodyPseudoItemMoveDisallow"
+	// 			);
+	// 		} else {
+	// 			if (newMoveCoordinates.hasOwnProperty("revisedCoordinates")) {
+	// 				this.movePlaneDemo(
+	// 					index,
+	// 					newMoveCoordinates.revisedCoordinates.x,
+	// 					newMoveCoordinates.revisedCoordinates.y
+	// 				);
+	// 				this.$limberGridViewMoveGuide[0].style.transform =
+	// 					"translate(" +
+	// 					newMoveCoordinates.revisedCoordinates.x +
+	// 					"px, " +
+	// 					newMoveCoordinates.revisedCoordinates.y +
+	// 					"px)";
+	// 				this.$limberGridViewMoveGuide[0].classList.add(
+	// 					"limberGridViewMoveGuideActive"
+	// 				);
+	// 			} else {
+	// 				this.movePlaneDemo(
+	// 					index,
+	// 					newMoveCoordinates.x,
+	// 					newMoveCoordinates.y
+	// 				);
+	// 				this.$limberGridViewMoveGuide[0].style.transform =
+	// 					"translate(" +
+	// 					newMoveCoordinates.x +
+	// 					"px, " +
+	// 					newMoveCoordinates.y +
+	// 					"px)";
+	// 				this.$limberGridViewMoveGuide[0].classList.add(
+	// 					"limberGridViewMoveGuideActive"
+	// 				);
+	// 			}
+	// 			this.$limberGridViewBodyPseudoItems[index].classList.remove(
+	// 				"limberGridViewBodyPseudoItemMoveDisallow"
+	// 			);
+	// 			this.$limberGridViewBodyPseudoItems[index].classList.add(
+	// 				"limberGridViewBodyPseudoItemMoveAllow"
+	// 			);
+	// 		}
+	// 	} else {
+	// 		this.$limberGridViewBodyPseudoItems[index].classList.remove(
+	// 			"limberGridViewBodyPseudoItemMoveAllow"
+	// 		);
+	// 		this.$limberGridViewBodyPseudoItems[index].classList.add(
+	// 			"limberGridViewBodyPseudoItemMoveDisallow"
+	// 		);
+	// 	}
+	// };
+
+	// LimberGridView.prototype.showResizeDemo = function(index, width, height) {
+	// 	if (this.resizePlaneDemo(index, width, height) == false) {
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewGridPseudoItemResizeDisallow");
+	// 	} else {
+	// 		this.$limberGridViewGridPseudoItems[
+	// 			this.userActionData.itemIndex
+	// 		].classList.add("limberGridViewGridPseudoItemResizeAllow");
+	// 	}
+	// };
+
+	// LimberGridView.prototype.revertShowMoveOrResizeDemo = function() {
+	// 	var length_0 = this.$limberGridViewItems.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		this.$limberGridViewItems[i].style.transform =
+	// 			"translate(" +
+	// 			this.positionData[i].x +
+	// 			"px, " +
+	// 			this.positionData[i].y +
+	// 			"px)";
+	// 		this.$limberGridViewItems[i].classList.remove(
+	// 			"limberGridViewItemDemo",
+	// 			"limberGridViewItemResizingState"
+	// 		);
+	// 		this.$limberGridViewGridPseudoItems[i].classList.remove(
+	// 			"limberGridViewGridPseudoItemResizingState",
+	// 			"limberGridViewGridPseudoItemActive"
+	// 		);
+	// 	}
+	// };
+
+	// LimberGridView.prototype.adjustHeight = function(yMouseOrTouchPosition) {
+	// 	var scrollHeight = this.$limberGridView[0].scrollHeight;
+	// 	if (scrollHeight - yMouseOrTouchPosition <= this.AUTO_SCROLL_POINT) {
+	// 		this.$limberGridViewHeightAdjustGuide[0].style.height =
+	// 			yMouseOrTouchPosition +
+	// 			this.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
+	// 			"px";
+	// 	}
+	// };
+
+	// LimberGridView.prototype.adjustScroll = function(
+	// 	limberGridViewOnVisibleAreaY,
+	// 	limberGridViewHeightVisibleHeight
+	// ) {
+	// 	var scrollTop = this.$limberGridView[0].scrollTop;
+	// 	// var scrollLeft = this.$limberGridView[0].scrollLeft;
+	// 	var programScrolled = false;
+	// 	if (limberGridViewOnVisibleAreaY > 0) {
+	// 		if (
+	// 			limberGridViewHeightVisibleHeight -
+	// 				limberGridViewOnVisibleAreaY <
+	// 			this.AUTO_SCROLL_POINT
+	// 		) {
+	// 			this.$limberGridView[0].scrollTop =
+	// 				scrollTop + this.AUTO_SCROLL_DISTANCE;
+	// 			programScrolled = true;
+	// 		}
+	// 		if (
+	// 			limberGridViewOnVisibleAreaY < this.HEIGHT / 10 &&
+	// 			scrollTop != 0
+	// 		) {
+	// 			this.$limberGridView[0].scrollTop =
+	// 				scrollTop - this.AUTO_SCROLL_DISTANCE;
+	// 			programScrolled = true;
+	// 		}
+	// 	}
+
+	// 	// if(limberGridViewOnVisibleAreaX > 0){
+	// 	// 	if((limberGridViewWidthVisibleWidth - limberGridViewOnVisibleAreaX) < (this.WIDTH/10)){
+	// 	// 		this.$limberGridView[0].scrollLeft = scrollLeft + 100;
+	// 	// 		var programScrolled = true;
+	// 	// 	}
+	// 	// 	if((limberGridViewOnVisibleAreaX) < (this.WIDTH/10) && scrollLeft != 0){
+	// 	// 		this.$limberGridView[0].scrollLeft = scrollLeft - 100;
+	// 	// 		var programScrolled = true;
+	// 	// 	}
+	// 	// }
+	// 	return programScrolled;
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -6211,231 +6283,231 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.getPlainFrom4Points = function(pointsArray) {
-		var minX = -1;
-		var minY = -1;
-		var maxX = -1;
-		var maxY = -1;
-		var length_0 = pointsArray.length;
-		for (var i = 0; i < length_0; i++) {
-			if (pointsArray[i][0] < minX || minX < 0) {
-				minX = pointsArray[i][0];
-			}
-			if (pointsArray[i][0] > maxX) {
-				maxX = pointsArray[i][0];
-			}
-			if (pointsArray[i][1] < minY || minY < 0) {
-				minY = pointsArray[i][1];
-			}
-			if (pointsArray[i][1] > maxY) {
-				maxY = pointsArray[i][1];
-			}
-		}
+	// LimberGridView.prototype.getPlainFrom4Points = function(pointsArray) {
+	// 	var minX = -1;
+	// 	var minY = -1;
+	// 	var maxX = -1;
+	// 	var maxY = -1;
+	// 	var length_0 = pointsArray.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		if (pointsArray[i][0] < minX || minX < 0) {
+	// 			minX = pointsArray[i][0];
+	// 		}
+	// 		if (pointsArray[i][0] > maxX) {
+	// 			maxX = pointsArray[i][0];
+	// 		}
+	// 		if (pointsArray[i][1] < minY || minY < 0) {
+	// 			minY = pointsArray[i][1];
+	// 		}
+	// 		if (pointsArray[i][1] > maxY) {
+	// 			maxY = pointsArray[i][1];
+	// 		}
+	// 	}
 
-		var plane = {};
-		plane.x = minX;
-		plane.y = minY;
-		plane.width = maxX - minX;
-		plane.height = maxY - minY;
+	// 	var plane = {};
+	// 	plane.x = minX;
+	// 	plane.y = minY;
+	// 	plane.width = maxX - minX;
+	// 	plane.height = maxY - minY;
 
-		return plane;
-	};
+	// 	return plane;
+	// };
 
-	LimberGridView.prototype.getCoordinates = function(item) {
-		var itemTopLeft = [item.x, item.y];
-		var itemTopRight = [item.x + item.width, item.y];
-		var itemBottomLeft = [item.x, item.y + item.height];
-		var itemBottomRight = [item.x + item.width, item.y + item.height];
+	// LimberGridView.prototype.getCoordinates = function(item) {
+	// 	var itemTopLeft = [item.x, item.y];
+	// 	var itemTopRight = [item.x + item.width, item.y];
+	// 	var itemBottomLeft = [item.x, item.y + item.height];
+	// 	var itemBottomRight = [item.x + item.width, item.y + item.height];
 
-		var itemCoordinatesArr = [
-			itemTopLeft,
-			itemTopRight,
-			itemBottomRight,
-			itemBottomLeft
-		];
+	// 	var itemCoordinatesArr = [
+	// 		itemTopLeft,
+	// 		itemTopRight,
+	// 		itemBottomRight,
+	// 		itemBottomLeft
+	// 	];
 
-		return itemCoordinatesArr;
-	};
+	// 	return itemCoordinatesArr;
+	// };
 
-	LimberGridView.prototype.getLines = function(item) {
-		var itemTopLeft = JSON.parse(JSON.stringify([item.x, item.y]));
-		var itemTopRight = JSON.parse(
-			JSON.stringify([item.x + item.width, item.y])
-		);
-		var itemBottomLeft = JSON.parse(
-			JSON.stringify([item.x, item.y + item.height])
-		);
-		var itemBottomRight = JSON.parse(
-			JSON.stringify([item.x + item.width, item.y + item.height])
-		);
+	// LimberGridView.prototype.getLines = function(item) {
+	// 	var itemTopLeft = JSON.parse(JSON.stringify([item.x, item.y]));
+	// 	var itemTopRight = JSON.parse(
+	// 		JSON.stringify([item.x + item.width, item.y])
+	// 	);
+	// 	var itemBottomLeft = JSON.parse(
+	// 		JSON.stringify([item.x, item.y + item.height])
+	// 	);
+	// 	var itemBottomRight = JSON.parse(
+	// 		JSON.stringify([item.x + item.width, item.y + item.height])
+	// 	);
 
-		var topLine = [itemTopLeft, itemTopRight];
-		var rightLine = [itemTopRight, itemBottomRight];
-		var bottomLine = [itemBottomLeft, itemBottomRight];
-		var leftLine = [itemTopLeft, itemBottomLeft];
+	// 	var topLine = [itemTopLeft, itemTopRight];
+	// 	var rightLine = [itemTopRight, itemBottomRight];
+	// 	var bottomLine = [itemBottomLeft, itemBottomRight];
+	// 	var leftLine = [itemTopLeft, itemBottomLeft];
 
-		var allLines = [topLine, rightLine, bottomLine, leftLine];
+	// 	var allLines = [topLine, rightLine, bottomLine, leftLine];
 
-		return allLines;
-	};
+	// 	return allLines;
+	// };
 
-	LimberGridView.prototype.arePlainsSame = function(A, B) {
-		if (
-			A.x == B.x &&
-			A.y == B.y &&
-			A.width == B.width &&
-			A.height == B.height
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	};
+	// LimberGridView.prototype.arePlainsSame = function(A, B) {
+	// 	if (
+	// 		A.x == B.x &&
+	// 		A.y == B.y &&
+	// 		A.width == B.width &&
+	// 		A.height == B.height
+	// 	) {
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// };
 
-	LimberGridView.prototype.arePlainsIdentical = function(A, B) {
-		if (A.width == B.width && A.height == B.height) {
-			return true;
-		} else {
-			return false;
-		}
-	};
+	// LimberGridView.prototype.arePlainsIdentical = function(A, B) {
+	// 	if (A.width == B.width && A.height == B.height) {
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// };
 
-	LimberGridView.prototype.isValidPlane = function(plane) {
-		if (
-			plane.x >= 0 &&
-			plane.y >= 0 &&
-			plane.width > 0 &&
-			plane.height > 0
-		) {
-			return true;
-		} else {
-			return false;
-		}
-	};
+	// LimberGridView.prototype.isValidPlane = function(plane) {
+	// 	if (
+	// 		plane.x >= 0 &&
+	// 		plane.y >= 0 &&
+	// 		plane.width > 0 &&
+	// 		plane.height > 0
+	// 	) {
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// };
 
-	LimberGridView.prototype.sortPlainsByArea = function(
-		planes,
-		order = "dec"
-	) {
-		if (order == "asc") {
-			planes.sort(function(a, b) {
-				return (
-					(a.x + a.width) * (a.y + a.height) -
-					(b.x + b.width) * (b.y + b.height)
-				);
-			});
-		} else {
-			planes.sort(function(a, b) {
-				return (
-					(b.x + b.width) * (b.y + b.height) -
-					(a.x + a.width) * (a.y + a.height)
-				);
-			});
-		}
+	// LimberGridView.prototype.sortPlainsByArea = function(
+	// 	planes,
+	// 	order = "dec"
+	// ) {
+	// 	if (order == "asc") {
+	// 		planes.sort(function(a, b) {
+	// 			return (
+	// 				(a.x + a.width) * (a.y + a.height) -
+	// 				(b.x + b.width) * (b.y + b.height)
+	// 			);
+	// 		});
+	// 	} else {
+	// 		planes.sort(function(a, b) {
+	// 			return (
+	// 				(b.x + b.width) * (b.y + b.height) -
+	// 				(a.x + a.width) * (a.y + a.height)
+	// 			);
+	// 		});
+	// 	}
 
-		return planes;
-	};
+	// 	return planes;
+	// };
 
-	LimberGridView.prototype.sortPlainsByHeight = function(
-		planes,
-		order = "dec"
-	) {
-		if (order == "asc") {
-			planes.sort(function(a, b) {
-				return a.height - b.height;
-			});
-		} else {
-			planes.sort(function(a, b) {
-				return b.height - a.height;
-			});
-		}
+	// LimberGridView.prototype.sortPlainsByHeight = function(
+	// 	planes,
+	// 	order = "dec"
+	// ) {
+	// 	if (order == "asc") {
+	// 		planes.sort(function(a, b) {
+	// 			return a.height - b.height;
+	// 		});
+	// 	} else {
+	// 		planes.sort(function(a, b) {
+	// 			return b.height - a.height;
+	// 		});
+	// 	}
 
-		return planes;
-	};
+	// 	return planes;
+	// };
 
-	LimberGridView.prototype.sortPlainsByDepth = function(
-		planes,
-		order = "dec"
-	) {
-		if (order == "asc") {
-			planes.sort(function(a, b) {
-				return a.y + a.height - (b.y + b.height);
-			});
-		} else {
-			planes.sort(function(a, b) {
-				return b.y + b.height - (a.y + a.height);
-			});
-		}
+	// LimberGridView.prototype.sortPlainsByDepth = function(
+	// 	planes,
+	// 	order = "dec"
+	// ) {
+	// 	if (order == "asc") {
+	// 		planes.sort(function(a, b) {
+	// 			return a.y + a.height - (b.y + b.height);
+	// 		});
+	// 	} else {
+	// 		planes.sort(function(a, b) {
+	// 			return b.y + b.height - (a.y + a.height);
+	// 		});
+	// 	}
 
-		return planes;
-	};
+	// 	return planes;
+	// };
 
-	LimberGridView.prototype.divideEqualNumber = function(a, DEFAULT = 0) {
-		var res = a / a;
-		if (res == NaN) {
-			return 0;
-		} else {
-			return 1;
-		}
-	};
+	// LimberGridView.prototype.divideEqualNumber = function(a, DEFAULT = 0) {
+	// 	var res = a / a;
+	// 	if (res == NaN) {
+	// 		return 0;
+	// 	} else {
+	// 		return 1;
+	// 	}
+	// };
 
-	LimberGridView.prototype.getMarginAtPoint = function(a) {
-		if (a == 0) {
-			return 0;
-		} else {
-			return this.MARGIN;
-		}
-	};
+	// LimberGridView.prototype.getMarginAtPoint = function(a) {
+	// 	if (a == 0) {
+	// 		return 0;
+	// 	} else {
+	// 		return this.MARGIN;
+	// 	}
+	// };
 
-	LimberGridView.prototype.getRowSequence = function(serialize) {
-		var rows = {};
-		var rowsArr = [];
-		var columns = {};
+	// LimberGridView.prototype.getRowSequence = function(serialize) {
+	// 	var rows = {};
+	// 	var rowsArr = [];
+	// 	var columns = {};
 
-		var length_0 = this.positionData.length;
+	// 	var length_0 = this.positionData.length;
 
-		for (var i = 0; i < length_0; i++) {
-			if (rows.hasOwnProperty(this.positionData[i].y)) {
-				rows[this.positionData[i].y].push(i);
-			} else {
-				rows[this.positionData[i].y] = [];
-				rowsArr.push(Number(this.positionData[i].y));
-				rows[this.positionData[i].y].push(i);
-			}
-		}
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		if (rows.hasOwnProperty(this.positionData[i].y)) {
+	// 			rows[this.positionData[i].y].push(i);
+	// 		} else {
+	// 			rows[this.positionData[i].y] = [];
+	// 			rowsArr.push(Number(this.positionData[i].y));
+	// 			rows[this.positionData[i].y].push(i);
+	// 		}
+	// 	}
 
-		rowsArr.sort(function(a, b) {
-			return a - b;
-		});
+	// 	rowsArr.sort(function(a, b) {
+	// 		return a - b;
+	// 	});
 
-		var length_0 = rowsArr.length;
-		for (var i = 0; i < length_0; i++) {
-			rows[rowsArr[i]].sort(
-				function(a, b) {
-					return this.positionData[a].x - this.positionData[b].x;
-				}.bind(this)
-			);
-		}
+	// 	var length_0 = rowsArr.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		rows[rowsArr[i]].sort(
+	// 			function(a, b) {
+	// 				return this.positionData[a].x - this.positionData[b].x;
+	// 			}.bind(this)
+	// 		);
+	// 	}
 
-		if (serialize != true) {
-			return { rowOrder: rowsArr, rows: rows };
-		} else {
-			var arr = [];
-			var map = {};
-			var count = 0;
+	// 	if (serialize != true) {
+	// 		return { rowOrder: rowsArr, rows: rows };
+	// 	} else {
+	// 		var arr = [];
+	// 		var map = {};
+	// 		var count = 0;
 
-			var length_0 = rowsArr.length;
-			for (var i = 0; i < length_0; i++) {
-				var length_1 = rows[rowsArr[i]].length;
-				for (var j = 0; j < length_1; j++) {
-					arr.push(rows[rowsArr[i]][j]);
-					map[rows[rowsArr[i]][j]] = count++;
-				}
-			}
+	// 		var length_0 = rowsArr.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			var length_1 = rows[rowsArr[i]].length;
+	// 			for (var j = 0; j < length_1; j++) {
+	// 				arr.push(rows[rowsArr[i]][j]);
+	// 				map[rows[rowsArr[i]][j]] = count++;
+	// 			}
+	// 		}
 
-			return { list: arr, map: map };
-		}
-	};
+	// 		return { list: arr, map: map };
+	// 	}
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 
