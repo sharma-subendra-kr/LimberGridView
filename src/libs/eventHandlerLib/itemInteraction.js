@@ -26,6 +26,12 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 import { adjustHeight, adjustScroll } from "../utils/utils";
 import { getLines, getMarginAtPoint } from "../utils/essentials";
+import {
+	resizePlane,
+	resizePlaneDemo,
+	movePlane,
+	movePlaneDemo
+} from "../calc/calcPosition";
 
 export const onItemMouseDown = function(event) {
 	if (event.which != 1) {
@@ -772,7 +778,8 @@ export const onMouseUp = function(event) {
 					if (
 						newMoveCoordinates.hasOwnProperty("revisedCoordinates")
 					) {
-						this.movePlane(
+						movePlane.call(
+							this,
 							this.userActionData.itemIndex,
 							newMoveCoordinates.revisedCoordinates.x,
 							newMoveCoordinates.revisedCoordinates.y
@@ -783,7 +790,8 @@ export const onMouseUp = function(event) {
 							newMoveCoordinates.revisedCoordinates.y;
 						itemMoveFlag = true;
 					} else {
-						this.movePlane(
+						movePlane.call(
+							this,
 							this.userActionData.itemIndex,
 							newMoveCoordinates.x,
 							newMoveCoordinates.y
@@ -818,7 +826,8 @@ export const onMouseUp = function(event) {
 			}
 
 			if (
-				this.resizePlane(
+				resizePlane.call(
+					this,
 					this.userActionData.itemIndex,
 					newWidth,
 					newHeight
@@ -945,7 +954,8 @@ export const onTouchEnd = function(event) {
 					if (
 						newMoveCoordinates.hasOwnProperty("revisedCoordinates")
 					) {
-						this.movePlane(
+						movePlane.call(
+							this,
 							this.userActionData.itemIndex,
 							newMoveCoordinates.revisedCoordinates.x,
 							newMoveCoordinates.revisedCoordinates.y
@@ -956,7 +966,8 @@ export const onTouchEnd = function(event) {
 							newMoveCoordinates.revisedCoordinates.y;
 						itemMoveFlag = true;
 					} else {
-						this.movePlane(
+						movePlane.call(
+							this,
 							this.userActionData.itemIndex,
 							newMoveCoordinates.x,
 							newMoveCoordinates.y
@@ -991,7 +1002,8 @@ export const onTouchEnd = function(event) {
 			}
 
 			if (
-				this.resizePlane(
+				resizePlane.call(
+					this,
 					this.userActionData.itemIndex,
 					newWidth,
 					newHeight
@@ -1501,7 +1513,8 @@ export const showMoveDemo = function(index, mousePosition) {
 			);
 		} else {
 			if (newMoveCoordinates.hasOwnProperty("revisedCoordinates")) {
-				this.movePlaneDemo(
+				movePlaneDemo.call(
+					this,
 					index,
 					newMoveCoordinates.revisedCoordinates.x,
 					newMoveCoordinates.revisedCoordinates.y
@@ -1516,7 +1529,8 @@ export const showMoveDemo = function(index, mousePosition) {
 					"limberGridViewMoveGuideActive"
 				);
 			} else {
-				this.movePlaneDemo(
+				movePlaneDemo.call(
+					this,
 					index,
 					newMoveCoordinates.x,
 					newMoveCoordinates.y
@@ -1549,7 +1563,7 @@ export const showMoveDemo = function(index, mousePosition) {
 };
 
 export const showResizeDemo = function(index, width, height) {
-	if (this.resizePlaneDemo(index, width, height) == false) {
+	if (resizePlaneDemo.call(this, index, width, height) == false) {
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
 		].classList.add("limberGridViewGridPseudoItemResizeDisallow");

@@ -15,7 +15,7 @@ var main = function() {
 			event.currentTarget.classList.remove(
 				"toggleAddOrCutSpaceButtonActive"
 			);
-			event.currentTarget.parentNode.childNodes[0].classList.add(
+			event.currentTarget.parentNode.childNodes[1].classList.add(
 				"toggleAddOrCutSpaceButtonActive"
 			);
 			window.limberGridView.setAddOrCutSpace("ADD");
@@ -25,7 +25,7 @@ var main = function() {
 			event.currentTarget.classList.remove(
 				"toggleAddOrCutSpaceButtonActive"
 			);
-			event.currentTarget.parentNode.childNodes[1].classList.add(
+			event.currentTarget.parentNode.childNodes[3].classList.add(
 				"toggleAddOrCutSpaceButtonActive"
 			);
 			window.limberGridView.setAddOrCutSpace("CUTSPACE");

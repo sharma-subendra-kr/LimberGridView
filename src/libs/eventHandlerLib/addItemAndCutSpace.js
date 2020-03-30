@@ -26,6 +26,10 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 import { adjustHeight, adjustScroll } from "../utils/utils";
 import { getMarginAtPoint } from "../utils/essentials";
+import {
+	isPlaneBInsidePlaneA_TouchingIsInside,
+	shiftItemsUp
+} from "../calc/calcUtils";
 
 export const onLimberGridMouseDown = function(event) {
 	if (event.target.classList.contains("limberGridView")) {
@@ -478,7 +482,8 @@ export const onLimberGridMouseUp = function(event) {
 					this.userActionData.newHeight
 				)
 			) {
-				this.shiftItemsUp(
+				shiftItemsUp.call(
+					this,
 					this.userActionData.addPositionY,
 					this.userActionData.newHeight
 				);
@@ -550,7 +555,8 @@ export const onLimberGridTouchEnd = function(event) {
 					this.userActionData.newHeight
 				)
 			) {
-				this.shiftItemsUp(
+				shiftItemsUp.call(
+					this,
 					this.userActionData.addPositionY,
 					this.userActionData.newHeight
 				);
@@ -666,7 +672,7 @@ export const onLimberGridContextMenu = function(event) {
 };
 
 export const addItemAllowCheckTimeOut = function(x, y, width, height) {
-	if (this.addItemAllowCheck.call(this, x, y, width, height) == false) {
+	if (addItemAllowCheck.call(this, x, y, width, height) == false) {
 		this.$limberGridViewAddItemGuide[0].classList.remove(
 			"limberGridViewAddItemGuideAddAllow"
 		);
@@ -725,7 +731,7 @@ export const addItemAllowCheck = function(x, y, width, height) {
 				getMarginAtPoint.call(this, this.positionData[i].y) +
 				this.MARGIN
 		};
-		var isInside = this.isPlaneBInsidePlaneA_TouchingIsInside(
+		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
 			iterItem,
 			tempPlane
 		);
@@ -769,7 +775,7 @@ export const cutSpaceAllowCheck = function(x, y, width, height) {
 
 	var length_0 = this.positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		var isInside = this.isPlaneBInsidePlaneA_TouchingIsInside(
+		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
 			tempPlane,
 			this.positionData[i]
 		);
