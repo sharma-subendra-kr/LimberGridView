@@ -30,8 +30,10 @@ import {
 	resizePlane,
 	resizePlaneDemo,
 	movePlane,
-	movePlaneDemo
+	movePlaneDemo,
 } from "../calc/calcPosition";
+import publicConstants from "../constants/publicConstants";
+import privateConstants from "../constants/privateConstants";
 
 export const onItemMouseDown = function(event) {
 	if (event.which != 1) {
@@ -48,20 +50,24 @@ export const onItemMouseDown = function(event) {
 		Math.pow(0 - event.offsetX, 2) + Math.pow(0 - event.offsetY, 2)
 	);
 	var resizeUIBox = {
-		x: event.currentTarget.offsetWidth - this.RESIZE_SQUARE_GUIDE_LENGTH,
-		y: event.currentTarget.offsetHeight - this.RESIZE_SQUARE_GUIDE_LENGTH,
+		x:
+			event.currentTarget.offsetWidth -
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
+		y:
+			event.currentTarget.offsetHeight -
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
 		width:
-			this.RESIZE_SQUARE_GUIDE_LENGTH +
-			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
+			publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
 		height:
-			this.RESIZE_SQUARE_GUIDE_LENGTH +
-			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
+			publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
 	};
 
-	if (radius <= this.MOVE_GUIDE_RADIUS) {
+	if (radius <= publicConstants.MOVE_GUIDE_RADIUS) {
 		this.userActionData = {
 			type: "move",
-			itemIndex: event.currentTarget.attributes["data-index"].value
+			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 		this.mouseDownCancel = false;
 		this.mouseDownTimerComplete = false;
@@ -81,7 +87,7 @@ export const onItemMouseDown = function(event) {
 		clearTimeout(this.longPressCheck);
 		this.longPressCheck = setTimeout(
 			mouseDownCheck.bind(this, event),
-			this.MOUSE_DOWN_TIME
+			publicConstants.MOUSE_DOWN_TIME
 		);
 
 		event.preventDefault();
@@ -98,7 +104,7 @@ export const onItemMouseDown = function(event) {
 
 		this.userActionData = {
 			type: "resize",
-			itemIndex: event.currentTarget.attributes["data-index"].value
+			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 		this.mouseDownCancel = false;
 		this.mouseDownTimerComplete = true;
@@ -200,20 +206,24 @@ export const onItemTouchStart = function(event) {
 			Math.pow(0 - touchPosOnLimberGridItem.y, 2)
 	);
 	var resizeUIBox = {
-		x: event.currentTarget.offsetWidth - this.RESIZE_SQUARE_GUIDE_LENGTH,
-		y: event.currentTarget.offsetHeight - this.RESIZE_SQUARE_GUIDE_LENGTH,
+		x:
+			event.currentTarget.offsetWidth -
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
+		y:
+			event.currentTarget.offsetHeight -
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
 		width:
-			this.RESIZE_SQUARE_GUIDE_LENGTH +
-			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
+			publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
 		height:
-			this.RESIZE_SQUARE_GUIDE_LENGTH +
-			this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
+			publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
 	};
 
-	if (radius <= this.MOVE_GUIDE_RADIUS) {
+	if (radius <= publicConstants.MOVE_GUIDE_RADIUS) {
 		this.userActionData = {
 			type: "move",
-			itemIndex: event.currentTarget.attributes["data-index"].value
+			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 		this.tapHoldCancel = false;
 		this.tapHoldTimerComplete = false;
@@ -242,7 +252,7 @@ export const onItemTouchStart = function(event) {
 
 		this.longTouchCheck = setTimeout(
 			tapHoldCheck.bind(this, event),
-			this.TOUCH_HOLD_TIME
+			publicConstants.TOUCH_HOLD_TIME
 		);
 
 		event.preventDefault();
@@ -259,7 +269,7 @@ export const onItemTouchStart = function(event) {
 
 		this.userActionData = {
 			type: "resize",
-			itemIndex: event.currentTarget.attributes["data-index"].value
+			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 		this.tapHoldCancel = false;
 		this.tapHoldTimerComplete = true;
@@ -460,7 +470,7 @@ export const onMouseMove = function(event) {
 					this.userActionData.itemIndex,
 					mousePositionOnLimberGrid
 				),
-				this.DEMO_WAIT_TIME
+				publicConstants.DEMO_WAIT_TIME
 			);
 		} else {
 			var scrollTop = this.$limberGridView[0].scrollTop;
@@ -515,7 +525,7 @@ export const onMouseMove = function(event) {
 					newWidth,
 					newHeight
 				),
-				this.DEMO_WAIT_TIME
+				publicConstants.DEMO_WAIT_TIME
 			);
 		}
 	} else {
@@ -622,7 +632,7 @@ export const onTouchMove = function(event) {
 						this.userActionData.itemIndex,
 						touchPositionOnLimberGrid
 					),
-					this.DEMO_WAIT_TIME
+					publicConstants.DEMO_WAIT_TIME
 				);
 			}
 		} else {
@@ -708,7 +718,7 @@ export const onTouchMove = function(event) {
 						newWidth,
 						newHeight
 					),
-					this.DEMO_WAIT_TIME
+					publicConstants.DEMO_WAIT_TIME
 				);
 			}
 		}
@@ -916,7 +926,7 @@ export const onMouseUp = function(event) {
 					x: this.positionData[this.userActionData.itemIndex].x,
 					y: this.positionData[this.userActionData.itemIndex].y,
 					height: newHeight,
-					width: newWidth
+					width: newWidth,
 				}
 			);
 		}
@@ -1105,7 +1115,7 @@ export const onTouchEnd = function(event) {
 					x: this.positionData[this.userActionData.itemIndex].x,
 					y: this.positionData[this.userActionData.itemIndex].y,
 					height: newHeight,
-					width: newWidth
+					width: newWidth,
 				}
 			);
 		}
@@ -1241,12 +1251,12 @@ export const calculateTouchPosOnLimberGrid = function(event) {
 	if (event.type == "touchend") {
 		var touch = {
 			clientX: event.changedTouches[0].clientX,
-			clientY: event.changedTouches[0].clientY
+			clientY: event.changedTouches[0].clientY,
 		};
 	} else {
 		var touch = {
 			clientX: event.touches[0].clientX,
-			clientY: event.touches[0].clientY
+			clientY: event.touches[0].clientY,
 		};
 	}
 	if (
@@ -1328,15 +1338,15 @@ export const checkNewMoveCoordinates = function(
 		var itemTopLeft = [this.positionData[i].x, this.positionData[i].y];
 		var itemTopRight = [
 			this.positionData[i].x + this.positionData[i].width,
-			this.positionData[i].y
+			this.positionData[i].y,
 		];
 		var itemBottomLeft = [
 			this.positionData[i].x,
-			this.positionData[i].y + this.positionData[i].height
+			this.positionData[i].y + this.positionData[i].height,
 		];
 		var itemBottomRight = [
 			this.positionData[i].x + this.positionData[i].width,
-			this.positionData[i].y + this.positionData[i].height
+			this.positionData[i].y + this.positionData[i].height,
 		];
 
 		if (
@@ -1364,44 +1374,44 @@ export const checkNewMoveCoordinates = function(
 		// for TOP LEFT Corner
 		if (
 			y < topLine[0][1] &&
-			x >= topLine[0][0] - this.MARGIN &&
-			x <= topLine[1][0] + this.MARGIN
+			x >= topLine[0][0] - publicConstants.MARGIN &&
+			x <= topLine[1][0] + publicConstants.MARGIN
 		) {
 			var diff = topLine[0][1] - y;
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
 
 		if (
 			y > bottomLine[0][1] &&
-			x >= bottomLine[0][0] - this.MARGIN &&
-			x <= bottomLine[1][0] + this.MARGIN
+			x >= bottomLine[0][0] - publicConstants.MARGIN &&
+			x <= bottomLine[1][0] + publicConstants.MARGIN
 		) {
 			var diff = y - bottomLine[0][1];
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
 
 		if (
 			x > rightLine[0][0] &&
-			y >= rightLine[0][1] - this.MARGIN &&
-			y <= rightLine[1][1] + this.MARGIN
+			y >= rightLine[0][1] - publicConstants.MARGIN &&
+			y <= rightLine[1][1] + publicConstants.MARGIN
 		) {
 			var diff = x - rightLine[0][0];
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
 
 		if (
 			x < leftLine[0][0] &&
-			y >= leftLine[0][1] - this.MARGIN &&
-			y <= leftLine[1][1] + this.MARGIN
+			y >= leftLine[0][1] - publicConstants.MARGIN &&
+			y <= leftLine[1][1] + publicConstants.MARGIN
 		) {
 			var diff = leftLine[0][0] - x;
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
@@ -1410,11 +1420,11 @@ export const checkNewMoveCoordinates = function(
 		// for TOP RIGHT Corner
 		if (
 			y > bottomLine[0][1] &&
-			x + widthOfMovedItem >= bottomLine[0][0] - this.MARGIN &&
-			x + widthOfMovedItem <= bottomLine[1][0] + this.MARGIN
+			x + widthOfMovedItem >= bottomLine[0][0] - publicConstants.MARGIN &&
+			x + widthOfMovedItem <= bottomLine[1][0] + publicConstants.MARGIN
 		) {
 			var diff = y - bottomLine[0][1];
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
@@ -1423,11 +1433,11 @@ export const checkNewMoveCoordinates = function(
 		// for BOTTOM LEFT Corner
 		if (
 			x > rightLine[0][0] &&
-			y + heightOfMovedItem >= rightLine[0][1] - this.MARGIN &&
-			y + heightOfMovedItem <= rightLine[1][1] + this.MARGIN
+			y + heightOfMovedItem >= rightLine[0][1] - publicConstants.MARGIN &&
+			y + heightOfMovedItem <= rightLine[1][1] + publicConstants.MARGIN
 		) {
 			var diff = x - rightLine[0][0];
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
@@ -1442,7 +1452,7 @@ export const checkNewMoveCoordinates = function(
 				bottomLine[1][0] <= x + widthOfMovedItem)
 		) {
 			var diff = y - bottomLine[0][1];
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
@@ -1456,7 +1466,7 @@ export const checkNewMoveCoordinates = function(
 				rightLine[1][1] <= y + heightOfMovedItem)
 		) {
 			var diff = x - rightLine[0][0];
-			if (diff <= this.MARGIN) {
+			if (diff <= publicConstants.MARGIN) {
 				return false;
 			}
 		}
@@ -1467,7 +1477,7 @@ export const checkNewMoveCoordinates = function(
 			x +
 				this.positionData[indexOfMovedItem].width +
 				getMarginAtPoint.call(this, x) >
-			this.WIDTH
+			privateConstants.WIDTH
 		) {
 			return false;
 		} else {
@@ -1481,7 +1491,7 @@ export const checkNewMoveCoordinates = function(
 					this,
 					this.positionData[indexOfOverlappingItem].x
 				) >
-			this.WIDTH
+			privateConstants.WIDTH
 		) {
 			return false;
 		} else {
@@ -1490,8 +1500,8 @@ export const checkNewMoveCoordinates = function(
 				y: y,
 				revisedCoordinates: {
 					x: this.positionData[indexOfOverlappingItem].x,
-					y: this.positionData[indexOfOverlappingItem].y
-				}
+					y: this.positionData[indexOfOverlappingItem].y,
+				},
 			};
 		}
 	}

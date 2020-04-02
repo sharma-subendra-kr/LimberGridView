@@ -24,12 +24,18 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import publicConstants from "../constants/publicConstants";
+import privateConstants from "../constants/privateConstants";
+
 export const adjustHeight = function(yMouseOrTouchPosition) {
 	var scrollHeight = this.$limberGridView[0].scrollHeight;
-	if (scrollHeight - yMouseOrTouchPosition <= this.AUTO_SCROLL_POINT) {
+	if (
+		scrollHeight - yMouseOrTouchPosition <=
+		publicConstants.AUTO_SCROLL_POINT
+	) {
 		this.$limberGridViewHeightAdjustGuide[0].style.height =
 			yMouseOrTouchPosition +
-			this.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
+			publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
 			"px";
 	}
 };
@@ -44,15 +50,18 @@ export const adjustScroll = function(
 	if (limberGridViewOnVisibleAreaY > 0) {
 		if (
 			limberGridViewHeightVisibleHeight - limberGridViewOnVisibleAreaY <
-			this.AUTO_SCROLL_POINT
+			publicConstants.AUTO_SCROLL_POINT
 		) {
 			this.$limberGridView[0].scrollTop =
-				scrollTop + this.AUTO_SCROLL_DISTANCE;
+				scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
 			programScrolled = true;
 		}
-		if (limberGridViewOnVisibleAreaY < this.HEIGHT / 10 && scrollTop != 0) {
+		if (
+			limberGridViewOnVisibleAreaY < privateConstants.HEIGHT / 10 &&
+			scrollTop != 0
+		) {
 			this.$limberGridView[0].scrollTop =
-				scrollTop - this.AUTO_SCROLL_DISTANCE;
+				scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
 			programScrolled = true;
 		}
 	}

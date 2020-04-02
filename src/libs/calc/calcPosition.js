@@ -37,11 +37,12 @@ import {
 	getItemsFromPointDepth,
 	shitftItemsBelow,
 	mergePlains,
-	subtractPlanes
+	subtractPlanes,
 } from "./calcUtils";
+import privateConstants from "../constants/privateConstants";
 
 export const resizePlane = function(index, width, height) {
-	if (this.positionData[index].x + width > this.WIDTH) {
+	if (this.positionData[index].x + width > privateConstants.WIDTH) {
 		return false;
 	}
 
@@ -153,7 +154,7 @@ export const resizePlane = function(index, width, height) {
 };
 
 export const resizePlaneDemo = function(index, width, height) {
-	if (this.positionData[index].x + width > this.WIDTH) {
+	if (this.positionData[index].x + width > privateConstants.WIDTH) {
 		return false;
 	}
 

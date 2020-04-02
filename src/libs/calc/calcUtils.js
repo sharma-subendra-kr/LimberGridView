@@ -33,8 +33,10 @@ import {
 	sortPlainsByArea,
 	sortPlainsByDepth,
 	sortPlainsByHeight,
-	arePlainsSame
+	arePlainsSame,
 } from "../utils/essentials";
+import publicConstants from "../constants/publicConstants";
+import privateConstants from "../constants/privateConstants";
 
 export const findFreeSpaces = function(item, affectedItems) {
 	var freeSpaces = [];
@@ -216,7 +218,7 @@ export const findAffectedItemsOnMove = function(index, toX, toY) {
 
 	return {
 		affectedItems: affectedItems,
-		affectedItemsExceptSelf: affectedItemsExceptSelf
+		affectedItemsExceptSelf: affectedItemsExceptSelf,
 	};
 };
 
@@ -243,7 +245,7 @@ export const findAffectedItemsOnResize = function(index, width, height) {
 
 	return {
 		affectedItems: affectedItems,
-		affectedItemsExceptSelf: affectedItemsExceptSelf
+		affectedItemsExceptSelf: affectedItemsExceptSelf,
 	};
 };
 
@@ -338,7 +340,7 @@ export const isPlaneBInsidePlaneA_TouchingIsInside = function(
 			overall: overallResult,
 			individual: BResultArr,
 			isInside: isInside,
-			engulfed: engulfed
+			engulfed: engulfed,
 		};
 	} else {
 		return overallResult;
@@ -491,7 +493,7 @@ export const isPlaneBInsidePlaneA_TouchingNotInside = function(
 			overall: overallResult,
 			individual: BResultArr,
 			isInside: isInside,
-			engulfed: engulfed
+			engulfed: engulfed,
 		};
 	} else {
 		return overallResult;
@@ -534,7 +536,7 @@ export const fitItemsIntoFreeSpaces = function(
 				),
 			width: tempItem.width,
 			height: tempItem.height,
-			index: tempItem.index
+			index: tempItem.index,
 		};
 		repositionedItems.push(repositionedItem);
 
@@ -553,7 +555,7 @@ export const fitItemsIntoFreeSpaces = function(
 					this,
 					freeSpaces[match.matchingFreeSpaceIndex].y
 				),
-			doNotMergeFlag: true
+			doNotMergeFlag: true,
 		};
 
 		items.splice(match.matchingItemIndex, 1);
@@ -599,11 +601,17 @@ export const findMatchingSpace = function(items, freeSpaces) {
 		var length_1 = freeSpaces.length;
 		for (var j = 0; j < length_1; j++) {
 			var tempItem = JSON.parse(JSON.stringify(items[i]));
-			if (getMarginAtPoint.call(this, freeSpaces[j].x) == this.MARGIN) {
-				tempItem.width += this.MARGIN * 1;
+			if (
+				getMarginAtPoint.call(this, freeSpaces[j].x) ==
+				publicConstants.MARGIN
+			) {
+				tempItem.width += publicConstants.MARGIN * 1;
 			}
-			if (getMarginAtPoint.call(this, freeSpaces[j].y) == this.MARGIN) {
-				tempItem.height += this.MARGIN * 1;
+			if (
+				getMarginAtPoint.call(this, freeSpaces[j].y) ==
+				publicConstants.MARGIN
+			) {
+				tempItem.height += publicConstants.MARGIN * 1;
 			}
 
 			var freeSpaceWidth = freeSpaces[j].width;
@@ -752,7 +760,7 @@ export const findMatchingSpace = function(items, freeSpaces) {
 	}
 	return {
 		matchingItemIndex: matchingItemIndex,
-		matchingFreeSpaceIndex: matchingFreeSpaceIndex
+		matchingFreeSpaceIndex: matchingFreeSpaceIndex,
 	};
 };
 
@@ -914,8 +922,8 @@ export const fitRemainingItemsAboveDeepestLine = function(
 	var linePlane = {
 		x: 0,
 		y: deepPoint,
-		width: this.WIDTH,
-		height: 1
+		width: privateConstants.WIDTH,
+		height: 1,
 	};
 
 	// find all the items above or on deepPoint
@@ -1022,13 +1030,13 @@ export const fitRemainingItemsBelowDeepestLine = function(
 	var initializedPlane = {
 		x: 0,
 		y: startingY,
-		width: this.WIDTH,
+		width: privateConstants.WIDTH,
 		height:
 			remainingItemsObject[0].height +
-			getMarginAtPoint.call(this, startingY)
+			getMarginAtPoint.call(this, startingY),
 	};
 
-	var remainingWidth = this.WIDTH;
+	var remainingWidth = privateConstants.WIDTH;
 	var deepestY = startingY;
 
 	while (remainingItemsObject.length != 0) {
@@ -1051,40 +1059,49 @@ export const fitRemainingItemsBelowDeepestLine = function(
 			if (
 				remainingWidth >=
 				remainingItemsObject[i].width +
-					getMarginAtPoint.call(this, this.WIDTH - remainingWidth)
+					getMarginAtPoint.call(
+						this,
+						privateConstants.WIDTH - remainingWidth
+					)
 			) {
 				remainingItemsObject[i].x =
-					this.WIDTH -
+					privateConstants.WIDTH -
 					remainingWidth +
-					getMarginAtPoint.call(this, this.WIDTH - remainingWidth);
+					getMarginAtPoint.call(
+						this,
+						privateConstants.WIDTH - remainingWidth
+					);
 				remainingItemsObject[i].y =
 					startingY + getMarginAtPoint.call(this, startingY);
 				positionData[remainingItemsObject[i].index].x =
-					this.WIDTH -
+					privateConstants.WIDTH -
 					remainingWidth +
-					getMarginAtPoint.call(this, this.WIDTH - remainingWidth);
+					getMarginAtPoint.call(
+						this,
+						privateConstants.WIDTH - remainingWidth
+					);
 				positionData[remainingItemsObject[i].index].y =
 					startingY + getMarginAtPoint.call(this, startingY);
 
 				var occupiedSpace = {
-					x: this.WIDTH - remainingWidth,
+					x: privateConstants.WIDTH - remainingWidth,
 					y: startingY,
 					width:
 						remainingItemsObject[i].width +
 						getMarginAtPoint.call(
 							this,
-							this.WIDTH - remainingWidth
+							privateConstants.WIDTH - remainingWidth
 						),
 					height:
 						remainingItemsObject[i].height +
 						getMarginAtPoint.call(this, startingY),
-					doNotMergeFlag: true
+					doNotMergeFlag: true,
 				};
 
 				occupiedSpacesInCurrentRow.push(occupiedSpace);
 
 				var freeSpace = {
-					x: this.WIDTH - remainingWidth,
+					x: privateConstants.WIDTH - remainingWidth,
 					y:
 						startingY +
 						getMarginAtPoint.call(this, startingY) +
@@ -1093,14 +1110,14 @@ export const fitRemainingItemsBelowDeepestLine = function(
 						remainingItemsObject[i].width +
 						getMarginAtPoint.call(
 							this,
-							this.WIDTH - remainingWidth
+							privateConstants.WIDTH - remainingWidth
 						),
 					height:
 						initializedPlane.y +
 						initializedPlane.height -
 						(startingY +
 							getMarginAtPoint.call(this, startingY) +
-							remainingItemsObject[i].height)
+							remainingItemsObject[i].height),
 				};
 
 				if (isValidPlane(freeSpace)) {
@@ -1113,7 +1130,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 					(remainingItemsObject[i].width +
 						getMarginAtPoint.call(
 							this,
-							this.WIDTH - remainingWidth
+							privateConstants.WIDTH - remainingWidth
 						));
 			}
 		}
@@ -1126,10 +1143,10 @@ export const fitRemainingItemsBelowDeepestLine = function(
 
 		if (remainingWidth > 0) {
 			var freeSpace = {
-				x: this.WIDTH - remainingWidth,
+				x: privateConstants.WIDTH - remainingWidth,
 				y: startingY,
 				width: remainingWidth,
-				height: initializedPlane.height
+				height: initializedPlane.height,
 			};
 			if (isValidPlane(freeSpace)) {
 				freeSpacesInCurrentRow.push(freeSpace);
@@ -1182,16 +1199,16 @@ export const fitRemainingItemsBelowDeepestLine = function(
 			var nextInitializePlane = {
 				x: 0,
 				y: initializedPlane.y + initializedPlane.height,
-				width: this.WIDTH,
+				width: privateConstants.WIDTH,
 				height:
 					remainingItemsObject[0].height +
 					getMarginAtPoint.call(
 						this,
 						initializedPlane.y + initializedPlane.height
-					)
+					),
 			};
 			var initializedPlane = nextInitializePlane;
-			remainingWidth = this.WIDTH;
+			remainingWidth = privateConstants.WIDTH;
 		}
 	}
 
@@ -1228,7 +1245,7 @@ export const getItemsFromPointDepth = function(
 	}
 	return {
 		itemsFromPointDepth: itemsFromPointDepth,
-		shiftHeightToAdd: shiftHeightToAdd
+		shiftHeightToAdd: shiftHeightToAdd,
 	};
 };
 
@@ -1237,7 +1254,7 @@ export const shitftItemsBelow = function(
 	positionData,
 	indicesToShift
 ) {
-	shiftHeight = shiftHeight + this.MARGIN;
+	shiftHeight = shiftHeight + publicConstants.MARGIN;
 	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		if (indicesToShift.hasOwnProperty(i)) {
@@ -1433,7 +1450,7 @@ export const mergePlains = function(A, B, planes = []) {
 		}
 	}
 
-	if (distance > this.MARGIN) {
+	if (distance > publicConstants.MARGIN) {
 		var pointsToGetPlain = [];
 		var plainToCheckIfFree = null;
 		if (intersectionCount == 4) {
@@ -1550,7 +1567,7 @@ export const mergePlains = function(A, B, planes = []) {
 		}
 
 		if (indexOfIntersectingPlane != null) {
-			if (freeDistance > this.MARGIN) {
+			if (freeDistance > publicConstants.MARGIN) {
 				// making mergedPlane false since the feature is no longer implemented or needed
 				var mergedPlane = false;
 				// making mergedPlane false since the feature is no longer implemented or needed END
@@ -1689,7 +1706,7 @@ export const subtractPlanes = function(A, B) {
 						x: A.x,
 						y: A.y,
 						width: A.width,
-						height: B.y - A.y
+						height: B.y - A.y,
 					};
 					if (isValidPlane(plane)) {
 						planes.push(plane);
@@ -1699,7 +1716,7 @@ export const subtractPlanes = function(A, B) {
 							x: A.x,
 							y: B.y,
 							width: B.x - A.x,
-							height: A.y + A.height - B.y
+							height: A.y + A.height - B.y,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1709,7 +1726,7 @@ export const subtractPlanes = function(A, B) {
 							x: A.x,
 							y: B.y,
 							width: B.x - A.x,
-							height: B.height
+							height: B.height,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1719,7 +1736,7 @@ export const subtractPlanes = function(A, B) {
 								x: A.x,
 								y: B.y + B.height,
 								width: A.width,
-								height: A.y + A.height - (B.y + B.height)
+								height: A.y + A.height - (B.y + B.height),
 							};
 							if (isValidPlane(plane)) {
 								planes.push(plane);
@@ -1732,7 +1749,7 @@ export const subtractPlanes = function(A, B) {
 							x: A.x,
 							y: A.y,
 							width: B.x - A.x,
-							height: A.height
+							height: A.height,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1742,7 +1759,7 @@ export const subtractPlanes = function(A, B) {
 							x: A.x,
 							y: A.y,
 							width: B.x - A.x,
-							height: B.y + B.height - A.y
+							height: B.y + B.height - A.y,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1754,7 +1771,7 @@ export const subtractPlanes = function(A, B) {
 							x: A.x,
 							y: B.y + B.height,
 							width: A.width,
-							height: A.y + A.height - (B.y + B.height)
+							height: A.y + A.height - (B.y + B.height),
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1769,7 +1786,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: B.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: A.y + A.height - B.y
+							height: A.y + A.height - B.y,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1779,7 +1796,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: B.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: B.height
+							height: B.height,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1791,7 +1808,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: A.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: A.height
+							height: A.height,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1801,7 +1818,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: A.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: B.y + B.height - A.y
+							height: B.y + B.height - A.y,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1816,7 +1833,7 @@ export const subtractPlanes = function(A, B) {
 					x: A.x,
 					y: A.y,
 					width: A.width,
-					height: B.y - A.y
+					height: B.y - A.y,
 				};
 				if (isValidPlane(plane)) {
 					planes.push(plane);
@@ -1829,7 +1846,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: B.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: A.y + A.height - B.y
+							height: A.y + A.height - B.y,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1843,7 +1860,7 @@ export const subtractPlanes = function(A, B) {
 								x: A.x,
 								y: B.y + B.height,
 								width: A.width,
-								height: A.y + A.height - (B.y + B.height)
+								height: A.y + A.height - (B.y + B.height),
 							};
 							if (isValidPlane(plane)) {
 								planes.push(plane);
@@ -1854,7 +1871,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: B.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: B.height
+							height: B.height,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1865,7 +1882,7 @@ export const subtractPlanes = function(A, B) {
 								x: A.x,
 								y: B.y + B.height,
 								width: A.width,
-								height: A.y + A.height - (B.y + B.height)
+								height: A.y + A.height - (B.y + B.height),
 							};
 							if (isValidPlane(plane)) {
 								planes.push(plane);
@@ -1882,7 +1899,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: A.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: A.height
+							height: A.height,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1896,7 +1913,7 @@ export const subtractPlanes = function(A, B) {
 								x: A.x,
 								y: B.y + B.height,
 								width: A.width,
-								height: A.y + A.height - (B.y + B.height)
+								height: A.y + A.height - (B.y + B.height),
 							};
 							if (isValidPlane(plane)) {
 								planes.push(plane);
@@ -1907,7 +1924,7 @@ export const subtractPlanes = function(A, B) {
 							x: B.x + B.width,
 							y: A.y,
 							width: A.x + A.width - (B.x + B.width),
-							height: B.y + B.height - A.y
+							height: B.y + B.height - A.y,
 						};
 						if (isValidPlane(plane)) {
 							planes.push(plane);
@@ -1917,7 +1934,7 @@ export const subtractPlanes = function(A, B) {
 								x: A.x,
 								y: B.y + B.height,
 								width: A.width,
-								height: A.y + A.height - (B.y + B.height)
+								height: A.y + A.height - (B.y + B.height),
 							};
 							if (isValidPlane(plane)) {
 								planes.push(plane);

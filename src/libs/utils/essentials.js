@@ -24,6 +24,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import publicConstants from "../constants/publicConstants";
+
 export const getPlainFrom4Points = function(pointsArray) {
 	var minX = -1;
 	var minY = -1;
@@ -64,7 +66,7 @@ export const getCoordinates = function(item) {
 		itemTopLeft,
 		itemTopRight,
 		itemBottomRight,
-		itemBottomLeft
+		itemBottomLeft,
 	];
 
 	return itemCoordinatesArr;
@@ -182,7 +184,7 @@ export const getMarginAtPoint = function(a) {
 	if (a == 0) {
 		return 0;
 	} else {
-		return this.MARGIN;
+		return publicConstants.MARGIN;
 	}
 };
 

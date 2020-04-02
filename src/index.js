@@ -30,7 +30,7 @@ import "./index.scss";
 import {
 	onWindowResize,
 	onWindowResizeTimerCallback,
-	onItemClick
+	onItemClick,
 } from "./libs/eventHandlerLib/miscellaneous";
 import {
 	onLimberGridMouseDown,
@@ -48,7 +48,7 @@ import {
 	addItemAllowCheck,
 	cutSpaceAllowCheckTimeOut,
 	cutSpaceAllowCheck,
-	insertAddItemOnTouchHoldGuideStyles
+	insertAddItemOnTouchHoldGuideStyles,
 } from "./libs/eventHandlerLib/addItemAndCutSpace";
 
 import {
@@ -69,7 +69,7 @@ import {
 	checkNewMoveCoordinates,
 	showMoveDemo,
 	showResizeDemo,
-	revertShowMoveOrResizeDemo
+	revertShowMoveOrResizeDemo,
 } from "./libs/eventHandlerLib/itemInteraction";
 
 import {
@@ -84,8 +84,11 @@ import {
 	sortPlainsByDepth,
 	divideEqualNumber,
 	getMarginAtPoint,
-	getRowSequence
+	getRowSequence,
 } from "./libs/utils/essentials";
+
+import publicConstants from "./libs/constants/publicConstants";
+import privateConstants from "./libs/constants/privateConstants";
 
 window.LimberGridView = (function() {
 	LimberGridView.prototype.constructor = LimberGridView;
@@ -151,22 +154,22 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.MOVE_GUIDE_RADIUS = 10;
-	LimberGridView.prototype.RESIZE_SQUARE_GUIDE_LENGTH = 10;
-	LimberGridView.prototype.RESIZE_SQUARE_BORDER_GUIDE_WIDTH = 3;
-	LimberGridView.prototype.AUTO_SCROLL_DISTANCE = 50;
-	LimberGridView.prototype.AUTO_SCROLL_POINT = 50;
-	LimberGridView.prototype.MOVE_OR_RESIZE_HEIGHT_INCREMENTS = 50;
+	// LimberGridView.prototype.MOVE_GUIDE_RADIUS = 10;
+	// LimberGridView.prototype.RESIZE_SQUARE_GUIDE_LENGTH = 10;
+	// LimberGridView.prototype.RESIZE_SQUARE_BORDER_GUIDE_WIDTH = 3;
+	// LimberGridView.prototype.AUTO_SCROLL_DISTANCE = 50;
+	// LimberGridView.prototype.AUTO_SCROLL_POINT = 50;
+	// LimberGridView.prototype.MOVE_OR_RESIZE_HEIGHT_INCREMENTS = 50;
 
-	LimberGridView.prototype.MOUSE_DOWN_TIME = 500;
-	LimberGridView.prototype.TOUCH_HOLD_TIME = 300;
-	LimberGridView.prototype.DEMO_WAIT_TIME = 500;
-	LimberGridView.prototype.WINDOW_RESIZE_WAIT_TIME = 1000;
-	LimberGridView.prototype.MARGIN = 5;
+	// LimberGridView.prototype.MOUSE_DOWN_TIME = 500;
+	// LimberGridView.prototype.TOUCH_HOLD_TIME = 300;
+	// LimberGridView.prototype.DEMO_WAIT_TIME = 500;
+	// LimberGridView.prototype.WINDOW_RESIZE_WAIT_TIME = 1000;
+	// LimberGridView.prototype.MARGIN = 5;
 
-	LimberGridView.prototype.MOBILE_ASPECT_RATIO = 16 / 9;
+	// LimberGridView.prototype.MOBILE_ASPECT_RATIO = 16 / 9;
 
-	LimberGridView.prototype.ADD_OR_CUTSPACE_TOGGLE = "ADD";
+	// LimberGridView.prototype.ADD_OR_CUTSPACE_TOGGLE = "ADD";
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -192,7 +195,7 @@ window.LimberGridView = (function() {
 				typeof this.options.initialGridData.mobileAspectRatio ==
 				"number"
 			) {
-				this.MOBILE_ASPECT_RATIO = this.options.initialGridData.mobileAspectRatio;
+				publicConstants.MOBILE_ASPECT_RATIO = this.options.initialGridData.mobileAspectRatio;
 			}
 		}
 
@@ -247,7 +250,7 @@ window.LimberGridView = (function() {
 				this.options.moveGuideRadius != null
 			) {
 				if (typeof this.options.moveGuideRadius == "number") {
-					this.MOVE_GUIDE_RADIUS = this.options.moveGuideRadius;
+					publicConstants.MOVE_GUIDE_RADIUS = this.options.moveGuideRadius;
 				}
 			}
 
@@ -256,7 +259,7 @@ window.LimberGridView = (function() {
 				this.options.resizeSquareGuideLength != null
 			) {
 				if (typeof this.options.resizeSquareGuideLength == "number") {
-					this.RESIZE_SQUARE_GUIDE_LENGTH = this.options.resizeSquareGuideLength;
+					publicConstants.RESIZE_SQUARE_GUIDE_LENGTH = this.options.resizeSquareGuideLength;
 				}
 			}
 
@@ -267,7 +270,7 @@ window.LimberGridView = (function() {
 				if (
 					typeof this.options.resizeSquareBorderGuideWidth == "number"
 				) {
-					this.RESIZE_SQUARE_BORDER_GUIDE_WIDTH = this.options.resizeSquareBorderGuideWidth;
+					publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH = this.options.resizeSquareBorderGuideWidth;
 				}
 			}
 		}
@@ -345,11 +348,11 @@ window.LimberGridView = (function() {
 				.getPropertyValue("padding-bottom")
 		);
 
-		this.WIDTH =
+		privateConstants.WIDTH =
 			this.$limberGridView[0].clientWidth -
 			this.PADDING_LEFT -
 			this.PADDING_RIGHT;
-		this.HEIGHT =
+		privateConstants.HEIGHT =
 			this.$limberGridView[0].clientHeight -
 			this.PADDING_TOP -
 			this.PADDING_BOTTOM;
@@ -358,10 +361,10 @@ window.LimberGridView = (function() {
 			(initialGridWidth == undefined || initialGridWidth == null) &&
 			this.positionData.length == 0
 		) {
-			initialGridWidth = this.WIDTH;
+			initialGridWidth = privateConstants.WIDTH;
 		}
 
-		this.WIDTH_SCALE_FACTOR = this.WIDTH / initialGridWidth;
+		this.WIDTH_SCALE_FACTOR = privateConstants.WIDTH / initialGridWidth;
 
 		if (autoArrange == true) {
 			var positionData = JSON.parse(JSON.stringify(this.positionData));
@@ -373,8 +376,8 @@ window.LimberGridView = (function() {
 					positionData[i].width * this.WIDTH_SCALE_FACTOR;
 				positionData[i].height =
 					positionData[i].height * this.WIDTH_SCALE_FACTOR;
-				if (positionData[i].width > this.WIDTH) {
-					positionData[i].width = this.WIDTH;
+				if (positionData[i].width > privateConstants.WIDTH) {
+					positionData[i].width = privateConstants.WIDTH;
 				}
 			}
 			this.positionData = this.fitRemainingItemsBelowDeepestLine(
@@ -392,8 +395,9 @@ window.LimberGridView = (function() {
 					typeof this.initialGridData.margin == "number" &&
 					this.initialGridData.margin > 0
 				) {
-					this.MARGIN = this.initialGridData.margin;
-					this.MARGIN = this.MARGIN * this.WIDTH_SCALE_FACTOR;
+					publicConstants.MARGIN = this.initialGridData.margin;
+					publicConstants.MARGIN =
+						publicConstants.MARGIN * this.WIDTH_SCALE_FACTOR;
 				} else {
 					throw "Margin is required for rendering with position coordinates";
 				}
@@ -411,17 +415,17 @@ window.LimberGridView = (function() {
 
 	LimberGridView.prototype.getGridData = function() {
 		var gridData = {
-			gridHeight: this.HEIGHT,
-			gridWidth: this.WIDTH,
-			margin: this.MARGIN,
-			initialPositionData: JSON.parse(JSON.stringify(this.positionData))
+			gridHeight: privateConstants.HEIGHT,
+			gridWidth: privateConstants.WIDTH,
+			margin: publicConstants.MARGIN,
+			initialPositionData: JSON.parse(JSON.stringify(this.positionData)),
 		};
 		return gridData;
 	};
 
 	LimberGridView.prototype.setAddOrCutSpace = function(flag) {
 		if (flag == "ADD" || flag == "CUTSPACE") {
-			this.ADD_OR_CUTSPACE_TOGGLE = flag;
+			publicConstants.ADD_OR_CUTSPACE_TOGGLE = flag;
 		}
 	};
 
@@ -466,8 +470,8 @@ window.LimberGridView = (function() {
 				var length_0 = positionData.length;
 				for (var i = 0; i < length_0; i++) {
 					positionData[i].width *= WIDTH_SCALE_FACTOR;
-					if (positionData[i].width > this.WIDTH) {
-						positionData[i].width = this.WIDTH;
+					if (positionData[i].width > privateConstants.WIDTH) {
+						positionData[i].width = privateConstants.WIDTH;
 					}
 					var front =
 						'<div class = "' +
@@ -514,8 +518,8 @@ window.LimberGridView = (function() {
 				var length_0 = positionData.length;
 				for (var i = 0; i < length_0; i++) {
 					positionData[i].width *= WIDTH_SCALE_FACTOR;
-					if (positionData[i].width > this.WIDTH) {
-						positionData[i].width = this.WIDTH;
+					if (positionData[i].width > privateConstants.WIDTH) {
+						positionData[i].width = privateConstants.WIDTH;
 					}
 					var div = document.createElement("div");
 					var attribute = document.createAttribute("data-index");
@@ -563,8 +567,8 @@ window.LimberGridView = (function() {
 					positionData[i].height *= WIDTH_SCALE_FACTOR;
 					positionData[i].x *= WIDTH_SCALE_FACTOR;
 					positionData[i].y *= WIDTH_SCALE_FACTOR;
-					if (positionData[i].width > this.WIDTH) {
-						positionData[i].width = this.WIDTH;
+					if (positionData[i].width > privateConstants.WIDTH) {
+						positionData[i].width = privateConstants.WIDTH;
 					}
 					var front =
 						'<div class = "limberGridViewItem" data-index = "' +
@@ -573,17 +577,19 @@ window.LimberGridView = (function() {
 					var style_1 =
 						'style = "transform : translate(' + 0 + "px, ";
 					var style_2 =
-						(this.WIDTH / this.MOBILE_ASPECT_RATIO +
+						(privateConstants.WIDTH /
+							publicConstants.MOBILE_ASPECT_RATIO +
 							getMarginAtPoint.call(
 								this,
 								this.serializedPositionData.map[i]
 							)) *
 							this.serializedPositionData.map[i] +
 						"px); ";
-					var style_3 = "width : " + this.WIDTH + "px; ";
+					var style_3 = "width : " + privateConstants.WIDTH + "px; ";
 					var style_4 =
 						"height : " +
-						this.WIDTH / this.MOBILE_ASPECT_RATIO +
+						privateConstants.WIDTH /
+							publicConstants.MOBILE_ASPECT_RATIO +
 						"px; ";
 					var style_5 = '">';
 
@@ -593,8 +599,9 @@ window.LimberGridView = (function() {
 					var bodyEnd = "</div>";
 					var userData = this.callbacks.getItemRenderDataCallback(
 						i,
-						this.WIDTH,
-						this.WIDTH / this.MOBILE_ASPECT_RATIO,
+						privateConstants.WIDTH,
+						privateConstants.WIDTH /
+							publicConstants.MOBILE_ASPECT_RATIO,
 						"render"
 					);
 
@@ -616,8 +623,8 @@ window.LimberGridView = (function() {
 					positionData[i].height *= WIDTH_SCALE_FACTOR;
 					positionData[i].x *= WIDTH_SCALE_FACTOR;
 					positionData[i].y *= WIDTH_SCALE_FACTOR;
-					if (positionData[i].width > this.WIDTH) {
-						positionData[i].width = this.WIDTH;
+					if (positionData[i].width > privateConstants.WIDTH) {
+						positionData[i].width = privateConstants.WIDTH;
 					}
 					var div = document.createElement("div");
 					var attribute = document.createAttribute("data-index");
@@ -629,21 +636,25 @@ window.LimberGridView = (function() {
 						"translate(" +
 						0 +
 						"px, " +
-						(this.WIDTH / this.MOBILE_ASPECT_RATIO +
+						(privateConstants.WIDTH /
+							publicConstants.MOBILE_ASPECT_RATIO +
 							getMarginAtPoint.call(
 								this,
 								this.serializedPositionData.map[i]
 							)) *
 							this.serializedPositionData.map[i] +
 						"px)";
-					div.style.width = this.WIDTH + "px";
+					div.style.width = privateConstants.WIDTH + "px";
 					div.style.height =
-						this.WIDTH / this.MOBILE_ASPECT_RATIO + "px";
+						privateConstants.WIDTH /
+							publicConstants.MOBILE_ASPECT_RATIO +
+						"px";
 
 					var userData = this.callbacks.getItemRenderDataCallback(
 						i,
-						this.WIDTH,
-						this.WIDTH / this.MOBILE_ASPECT_RATIO,
+						privateConstants.WIDTH,
+						privateConstants.WIDTH /
+							publicConstants.MOBILE_ASPECT_RATIO,
 						"render"
 					);
 					if (typeof userData == "string") {
@@ -745,19 +756,21 @@ window.LimberGridView = (function() {
 					'" ';
 				var style_1 = 'style = "transform : translate(' + 0 + "px, ";
 				var style_2 =
-					(this.WIDTH / this.MOBILE_ASPECT_RATIO +
+					(privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
 						getMarginAtPoint.call(
 							this,
 							this.serializedPositionData.map[i]
 						)) *
 						this.serializedPositionData.map[i] +
 					"px); ";
-				var style_3 = "width : " + this.WIDTH + "px; ";
+				var style_3 = "width : " + privateConstants.WIDTH + "px; ";
 				var style_4 =
 					"height : " +
-					this.WIDTH / this.MOBILE_ASPECT_RATIO +
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
 					"px; ";
-				var style_5 = "margin : " + this.MARGIN + 'px;">';
+				var style_5 = "margin : " + publicConstants.MARGIN + 'px;">';
 
 				var style = style_1 + style_2 + style_3 + style_4 + style_5;
 
@@ -838,8 +851,10 @@ window.LimberGridView = (function() {
 			var length_0 = items.length;
 			for (var i = 0; i < length_0; i++) {
 				this.positionData[items[i]].width *= WIDTH_SCALE_FACTOR;
-				if (this.positionData[items[i]].width > this.WIDTH) {
-					this.positionData[items[i]].width = this.WIDTH;
+				if (
+					this.positionData[items[i]].width > privateConstants.WIDTH
+				) {
+					this.positionData[items[i]].width = privateConstants.WIDTH;
 				}
 				var div = document.createElement("div");
 				var attribute = document.createAttribute("data-index");
@@ -907,20 +922,25 @@ window.LimberGridView = (function() {
 					"translate(" +
 					0 +
 					"px, " +
-					(this.WIDTH / this.MOBILE_ASPECT_RATIO +
+					(privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
 						getMarginAtPoint.call(
 							this,
 							this.serializedPositionData.map[items[i]]
 						)) *
 						this.serializedPositionData.map[items[i]] +
 					"px)";
-				div.style.width = this.WIDTH + "px";
-				div.style.height = this.WIDTH / this.MOBILE_ASPECT_RATIO + "px";
+				div.style.width = privateConstants.WIDTH + "px";
+				div.style.height =
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+					"px";
 
 				var userData = this.callbacks.getItemRenderDataCallback(
 					items[i],
-					this.WIDTH,
-					this.WIDTH / this.MOBILE_ASPECT_RATIO,
+					privateConstants.WIDTH,
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO,
 					processType
 				);
 				if (typeof userData == "string") {
@@ -964,7 +984,7 @@ window.LimberGridView = (function() {
 		var renderDetails = {
 			items: JSON.parse(JSON.stringify(items)),
 			scale: scale,
-			processType: processType
+			processType: processType,
 		};
 
 		if (
@@ -1061,16 +1081,19 @@ window.LimberGridView = (function() {
 					"translate(" +
 					0 +
 					"px, " +
-					(this.WIDTH / this.MOBILE_ASPECT_RATIO +
+					(privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
 						getMarginAtPoint.call(
 							this,
 							this.serializedPositionData.map[i]
 						)) *
 						this.serializedPositionData.map[i] +
 					"px)";
-				divGrid.style.width = this.WIDTH + "px";
+				divGrid.style.width = privateConstants.WIDTH + "px";
 				divGrid.style.height =
-					this.WIDTH / this.MOBILE_ASPECT_RATIO + "px";
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+					"px";
 
 				var divBody = document.createElement("div");
 				var attributeBody = document.createAttribute("data-index");
@@ -1078,9 +1101,11 @@ window.LimberGridView = (function() {
 				divBody.setAttributeNode(attributeBody);
 				divBody.classList.add("limberGridViewBodyPseudoItem");
 				divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				divBody.style.width = this.WIDTH + "px";
+				divBody.style.width = privateConstants.WIDTH + "px";
 				divBody.style.height =
-					this.WIDTH / this.MOBILE_ASPECT_RATIO + "px";
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+					"px";
 
 				if (
 					this.$limberGridViewGridPseudoItems[items[i]] ==
@@ -1192,7 +1217,7 @@ window.LimberGridView = (function() {
 			return;
 		}
 
-		if (itemWidth > this.WIDTH) {
+		if (itemWidth > privateConstants.WIDTH) {
 			return;
 		}
 
@@ -1214,7 +1239,7 @@ window.LimberGridView = (function() {
 		var scrollToPosition = startingY;
 
 		var remainingItems = howMany;
-		var remainingWidth = this.WIDTH;
+		var remainingWidth = privateConstants.WIDTH;
 		while (remainingItems != 0) {
 			var startingX = 0;
 			while (
@@ -1226,7 +1251,7 @@ window.LimberGridView = (function() {
 					x: getMarginAtPoint.call(this, startingX) + startingX,
 					y: startingY,
 					width: itemWidth,
-					height: itemHeight
+					height: itemHeight,
 				};
 
 				remainingWidth =
@@ -1240,8 +1265,8 @@ window.LimberGridView = (function() {
 				remainingItems--;
 				items.push(item);
 			}
-			remainingWidth = this.WIDTH;
-			startingY = startingY + itemHeight + this.MARGIN;
+			remainingWidth = privateConstants.WIDTH;
+			startingY = startingY + itemHeight + publicConstants.MARGIN;
 		}
 
 		var scrollHeight = this.$limberGridView[0].scrollHeight;

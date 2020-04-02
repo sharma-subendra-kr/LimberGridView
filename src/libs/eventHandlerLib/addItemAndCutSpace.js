@@ -28,8 +28,10 @@ import { adjustHeight, adjustScroll } from "../utils/utils";
 import { getMarginAtPoint } from "../utils/essentials";
 import {
 	isPlaneBInsidePlaneA_TouchingIsInside,
-	shiftItemsUp
+	shiftItemsUp,
 } from "../calc/calcUtils";
+import publicConstants from "../constants/publicConstants";
+import privateConstants from "../constants/privateConstants";
 
 export const onLimberGridMouseDown = function(event) {
 	if (event.target.classList.contains("limberGridView")) {
@@ -53,7 +55,7 @@ export const onLimberGridMouseDown = function(event) {
 			event.offsetX,
 			event.offsetY
 		),
-		this.MOUSE_DOWN_TIME
+		publicConstants.MOUSE_DOWN_TIME
 	);
 
 	this.$limberGridView[0].addEventListener(
@@ -83,7 +85,7 @@ export const onLimberGridTouchStart = function(event) {
 	clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
 	this.limberGridTouchStartCheckTimeOutVariable = setTimeout(
 		onLimberGridTouchStartCheck.bind(this, event),
-		this.TOUCH_HOLD_TIME
+		publicConstants.TOUCH_HOLD_TIME
 	);
 
 	this.$limberGridView[0].addEventListener(
@@ -137,7 +139,7 @@ export const onLimberGridMouseDownCheck = function(event, offsetX, offsetY) {
 		this.userActionData = {
 			type: "add",
 			addPositionX: x,
-			addPositionY: y
+			addPositionY: y,
 		};
 
 		this.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
@@ -145,11 +147,11 @@ export const onLimberGridMouseDownCheck = function(event, offsetX, offsetY) {
 		this.$limberGridViewAddItemGuide[0].style.transform =
 			"translate(" + x + "px, " + y + "px)";
 
-		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			this.$limberGridViewAddItemGuide[0].classList.add(
 				"limberGridViewAddItemGuideActive"
 			);
-		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
 			this.$limberGridViewAddItemGuide[0].classList.add(
 				"limberGridViewAddItemGuideActive",
 				"limberGridViewAddItemGuideCutMode"
@@ -197,7 +199,7 @@ export const onLimberGridTouchStartCheck = function(event) {
 		this.userActionData = {
 			type: "add",
 			addPositionX: x,
-			addPositionY: y
+			addPositionY: y,
 		};
 
 		var removeAddItemOnTouchHoldGuideFunction = function() {
@@ -212,11 +214,11 @@ export const onLimberGridTouchStartCheck = function(event) {
 		this.$limberGridViewAddItemGuide[0].style.transform =
 			"translate(" + x + "px, " + y + "px)";
 
-		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			this.$limberGridViewAddItemGuide[0].classList.add(
 				"limberGridViewAddItemGuideActive"
 			);
-		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
 			this.$limberGridViewAddItemGuide[0].classList.add(
 				"limberGridViewAddItemGuideActive",
 				"limberGridViewAddItemGuideCutMode"
@@ -277,7 +279,7 @@ export const onLimberGridMouseMove = function(event) {
 			this.$limberGridViewAddItemGuide[0].style.height = newHeight + "px";
 		}
 
-		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			clearTimeout(this.addItemAllowCheckTimeOutVariable);
 			this.addItemAllowCheckTimeOutVariable = setTimeout(
 				addItemAllowCheckTimeOut.bind(
@@ -287,9 +289,9 @@ export const onLimberGridMouseMove = function(event) {
 					newWidth,
 					newHeight
 				),
-				this.DEMO_WAIT_TIME
+				publicConstants.DEMO_WAIT_TIME
 			);
-		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
 			clearTimeout(this.cutSpaceAllowCheckTimeOutVariable);
 			this.cutSpaceAllowCheckTimeOutVariable = setTimeout(
 				cutSpaceAllowCheckTimeOut.bind(
@@ -299,7 +301,7 @@ export const onLimberGridMouseMove = function(event) {
 					newWidth,
 					newHeight
 				),
-				this.DEMO_WAIT_TIME
+				publicConstants.DEMO_WAIT_TIME
 			);
 		}
 	} else {
@@ -385,7 +387,7 @@ export const onLimberGridTouchMove = function(event) {
 			);
 		}
 
-		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			clearTimeout(this.addItemAllowCheckTimeOutVariable);
 			if (programScrolled != true) {
 				this.addItemAllowCheckTimeOutVariable = setTimeout(
@@ -396,10 +398,10 @@ export const onLimberGridTouchMove = function(event) {
 						newWidth,
 						newHeight
 					),
-					this.DEMO_WAIT_TIME
+					publicConstants.DEMO_WAIT_TIME
 				);
 			}
-		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
 			clearTimeout(this.cutSpaceAllowCheckTimeOutVariable);
 			if (programScrolled != true) {
 				this.cutSpaceAllowCheckTimeOutVariable = setTimeout(
@@ -410,7 +412,7 @@ export const onLimberGridTouchMove = function(event) {
 						newWidth,
 						newHeight
 					),
-					this.DEMO_WAIT_TIME
+					publicConstants.DEMO_WAIT_TIME
 				);
 			}
 		}
@@ -444,7 +446,7 @@ export const onLimberGridMouseUp = function(event) {
 	clearTimeout(this.limberGridMouseDownCheckTimeOutVariable);
 	var itemAddedFlag = false;
 	if (this.limberGridMouseDownTimerComplete == true) {
-		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			if (
 				addItemAllowCheck.call(
 					this,
@@ -458,7 +460,7 @@ export const onLimberGridMouseUp = function(event) {
 					x: this.userActionData.addPositionX,
 					y: this.userActionData.addPositionY,
 					width: this.userActionData.newWidth,
-					height: this.userActionData.newHeight
+					height: this.userActionData.newHeight,
 				};
 
 				var scrollTop = this.$limberGridView[0].scrollTop;
@@ -472,7 +474,7 @@ export const onLimberGridMouseUp = function(event) {
 
 				this.$limberGridView[0].scrollTop = scrollTop;
 			}
-		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
 			if (
 				cutSpaceAllowCheck.call(
 					this,
@@ -515,7 +517,7 @@ export const onLimberGridTouchEnd = function(event) {
 	clearTimeout(this.limberGridTouchStartCheckTimeOutVariable);
 	var itemAddedFlag = false;
 	if (this.limberGridTouchStartTimerComplete == true) {
-		if (this.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			if (
 				addItemAllowCheck.call(
 					this,
@@ -529,7 +531,7 @@ export const onLimberGridTouchEnd = function(event) {
 					x: this.userActionData.addPositionX,
 					y: this.userActionData.addPositionY,
 					width: this.userActionData.newWidth,
-					height: this.userActionData.newHeight
+					height: this.userActionData.newHeight,
 				};
 
 				var scrollTop = this.$limberGridView[0].scrollTop;
@@ -545,7 +547,7 @@ export const onLimberGridTouchEnd = function(event) {
 
 				this.limberGridTouchStartTimerComplete = false;
 			}
-		} else if (this.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
 			if (
 				cutSpaceAllowCheck.call(
 					this,
@@ -694,7 +696,7 @@ export const addItemAllowCheck = function(x, y, width, height) {
 		x: x,
 		y: y,
 		width: width,
-		height: height
+		height: height,
 	};
 
 	if (x < 0 || y < 0) {
@@ -705,7 +707,7 @@ export const addItemAllowCheck = function(x, y, width, height) {
 		return false;
 	}
 
-	if (x + width > this.WIDTH) {
+	if (x + width > privateConstants.WIDTH) {
 		return false;
 	}
 
@@ -725,11 +727,11 @@ export const addItemAllowCheck = function(x, y, width, height) {
 			width:
 				this.positionData[i].width +
 				getMarginAtPoint.call(this, this.positionData[i].x) +
-				this.MARGIN,
+				publicConstants.MARGIN,
 			height:
 				this.positionData[i].height +
 				getMarginAtPoint.call(this, this.positionData[i].y) +
-				this.MARGIN
+				publicConstants.MARGIN,
 		};
 		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
 			iterItem,
@@ -764,9 +766,9 @@ export const cutSpaceAllowCheckTimeOut = function(x, y, width, height) {
 export const cutSpaceAllowCheck = function(x, y, width, height) {
 	var tempPlane = {
 		x: 0,
-		y: y - this.MARGIN / 2,
-		width: this.WIDTH,
-		height: height + this.MARGIN / 2
+		y: y - publicConstants.MARGIN / 2,
+		width: privateConstants.WIDTH,
+		height: height + publicConstants.MARGIN / 2,
 	};
 
 	if (typeof width != "number" || typeof height != "number") {
