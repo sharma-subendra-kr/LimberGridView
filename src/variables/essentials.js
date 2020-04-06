@@ -24,29 +24,37 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import publicConstants from "../../constants/publicConstants";
-import privateConstants from "../../constants/privateConstants";
-import options from "../../variables/options";
-import { callbacks } from "../../variables/essentials";
+import { emptyObject } from "../libs/utils/utils";
 
-export const onWindowResize = function(event) {
-	console.log("onWindowResize CALL", this);
-	setTimeout(
-		this.onWindowResizeTimerCallbackFunctionVariable,
-		publicConstants.WINDOW_RESIZE_WAIT_TIME
-	);
-	window.removeEventListener("resize", this.onWindowResizeFunctionVariable);
+const positionData = [];
+const initialPositionData = [];
+const initialGridData = {};
+let callbacks = {};
+
+const setPositionData = function(pos) {
+	positionData.length = 0;
+	Object.assign(positionData, JSON.parse(JSON.stringify(pos)));
 };
 
-export const onWindowResizeTimerCallback = function(event) {
-	this.init(privateConstants.WIDTH, false);
-	this.render();
-
-	if (options.reRenderOnResize != false) {
-		window.addEventListener("resize", this.onWindowResizeFunctionVariable);
-	}
+const setInitialPositionData = function(pos) {
+	initialPositionData.length = 0;
+	Object.assign(initialPositionData, JSON.parse(JSON.stringify(pos)));
 };
 
-export const onItemClick = function(event) {
-	callbacks.onItemClickCallback(event);
+const setInitialGridData = function(grid) {
+	emptyObject(initialGridData);
+	Object.assign(initialGridData, JSON.parse(JSON.stringify(grid)));
+};
+
+const setCallbacks = function(cbs) {
+	emptyObject(callbacks);
+	Object.assign(callbacks, cbs);
+};
+
+export { positionData, initialPositionData, initialGridData, callbacks };
+export {
+	setPositionData,
+	setInitialPositionData,
+	setInitialGridData,
+	setCallbacks,
 };

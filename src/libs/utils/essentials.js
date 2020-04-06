@@ -24,7 +24,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import publicConstants from "../constants/publicConstants";
+import publicConstants from "../../constants/publicConstants";
+import { positionData } from "../../variables/essentials";
 
 export const getPlainFrom4Points = function(pointsArray) {
 	var minX = -1;
@@ -193,15 +194,15 @@ export const getRowSequence = function(serialize) {
 	var rowsArr = [];
 	var columns = {};
 
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 
 	for (var i = 0; i < length_0; i++) {
-		if (rows.hasOwnProperty(this.positionData[i].y)) {
-			rows[this.positionData[i].y].push(i);
+		if (rows.hasOwnProperty(positionData[i].y)) {
+			rows[positionData[i].y].push(i);
 		} else {
-			rows[this.positionData[i].y] = [];
-			rowsArr.push(Number(this.positionData[i].y));
-			rows[this.positionData[i].y].push(i);
+			rows[positionData[i].y] = [];
+			rowsArr.push(Number(positionData[i].y));
+			rows[positionData[i].y].push(i);
 		}
 	}
 
@@ -213,7 +214,7 @@ export const getRowSequence = function(serialize) {
 	for (var i = 0; i < length_0; i++) {
 		rows[rowsArr[i]].sort(
 			function(a, b) {
-				return this.positionData[a].x - this.positionData[b].x;
+				return positionData[a].x - positionData[b].x;
 			}.bind(this)
 		);
 	}

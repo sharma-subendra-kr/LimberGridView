@@ -24,8 +24,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import publicConstants from "../constants/publicConstants";
-import privateConstants from "../constants/privateConstants";
+import publicConstants from "../../constants/publicConstants";
+import privateConstants from "../../constants/privateConstants";
 
 export const adjustHeight = function(yMouseOrTouchPosition) {
 	var scrollHeight = this.$limberGridView[0].scrollHeight;
@@ -77,4 +77,12 @@ export const adjustScroll = function(
 	// 	}
 	// }
 	return programScrolled;
+};
+
+export const emptyObject = function(obj) {
+	let keys = Object.keys(obj);
+	let length = keys.length;
+	for (let i = 0; i < length; i++) {
+		delete obj[keys[i]];
+	}
 };

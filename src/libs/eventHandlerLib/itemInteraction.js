@@ -32,10 +32,12 @@ import {
 	movePlane,
 	movePlaneDemo,
 } from "../calc/calcPosition";
-import publicConstants from "../constants/publicConstants";
-import privateConstants from "../constants/privateConstants";
+import publicConstants from "../../constants/publicConstants";
+import privateConstants from "../../constants/privateConstants";
+import { callbacks, positionData } from "../../variables/essentials";
 
 export const onItemMouseDown = function(event) {
+	console.log("onItemMouseDown positionData", positionData);
 	if (event.which != 1) {
 		return;
 	}
@@ -138,11 +140,11 @@ export const onItemMouseDown = function(event) {
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
 		].style.width =
-			this.positionData[this.userActionData.itemIndex].width + "px";
+			positionData[this.userActionData.itemIndex].width + "px";
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
 		].style.height =
-			this.positionData[this.userActionData.itemIndex].height + "px";
+			positionData[this.userActionData.itemIndex].height + "px";
 
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
@@ -308,11 +310,11 @@ export const onItemTouchStart = function(event) {
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
 		].style.width =
-			this.positionData[this.userActionData.itemIndex].width + "px";
+			positionData[this.userActionData.itemIndex].width + "px";
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
 		].style.height =
-			this.positionData[this.userActionData.itemIndex].height + "px";
+			positionData[this.userActionData.itemIndex].height + "px";
 
 		this.$limberGridViewGridPseudoItems[
 			this.userActionData.itemIndex
@@ -892,23 +894,21 @@ export const onMouseUp = function(event) {
 
 	//
 	if (
-		this.callbacks.moveCompleteCallback != undefined &&
-		this.callbacks.moveCompleteCallback != null
+		callbacks.moveCompleteCallback != undefined &&
+		callbacks.moveCompleteCallback != null
 	) {
 		if (itemMoveFlag == true) {
-			updatedCoordinates.width = this.positionData[
-				this.userActionData.itemIndex
-			].width;
-			updatedCoordinates.height = this.positionData[
-				this.userActionData.itemIndex
-			].height;
-			this.callbacks.moveCompleteCallback(
+			updatedCoordinates.width =
+				positionData[this.userActionData.itemIndex].width;
+			updatedCoordinates.height =
+				positionData[this.userActionData.itemIndex].height;
+			callbacks.moveCompleteCallback(
 				true,
 				this.userActionData.itemIndex,
 				updatedCoordinates
 			);
 		} else if (this.userActionData.type == "move") {
-			this.callbacks.moveCompleteCallback(
+			callbacks.moveCompleteCallback(
 				false,
 				this.userActionData.itemIndex,
 				event
@@ -916,19 +916,16 @@ export const onMouseUp = function(event) {
 		}
 	}
 	if (
-		this.callbacks.resizeCompleteCallback != undefined &&
-		this.callbacks.resizeCompleteCallback != null
+		callbacks.resizeCompleteCallback != undefined &&
+		callbacks.resizeCompleteCallback != null
 	) {
 		if (itemResizeFlag == true) {
-			this.callbacks.resizeCompleteCallback(
-				this.userActionData.itemIndex,
-				{
-					x: this.positionData[this.userActionData.itemIndex].x,
-					y: this.positionData[this.userActionData.itemIndex].y,
-					height: newHeight,
-					width: newWidth,
-				}
-			);
+			callbacks.resizeCompleteCallback(this.userActionData.itemIndex, {
+				x: positionData[this.userActionData.itemIndex].x,
+				y: positionData[this.userActionData.itemIndex].y,
+				height: newHeight,
+				width: newWidth,
+			});
 		}
 	}
 	//
@@ -1081,23 +1078,21 @@ export const onTouchEnd = function(event) {
 
 	//
 	if (
-		this.callbacks.moveCompleteCallback != undefined &&
-		this.callbacks.moveCompleteCallback != null
+		callbacks.moveCompleteCallback != undefined &&
+		callbacks.moveCompleteCallback != null
 	) {
 		if (itemMoveFlag == true) {
-			updatedCoordinates.width = this.positionData[
-				this.userActionData.itemIndex
-			].width;
-			updatedCoordinates.height = this.positionData[
-				this.userActionData.itemIndex
-			].height;
-			this.callbacks.moveCompleteCallback(
+			updatedCoordinates.width =
+				positionData[this.userActionData.itemIndex].width;
+			updatedCoordinates.height =
+				positionData[this.userActionData.itemIndex].height;
+			callbacks.moveCompleteCallback(
 				true,
 				this.userActionData.itemIndex,
 				updatedCoordinates
 			);
 		} else if (this.userActionData.type == "move") {
-			this.callbacks.moveCompleteCallback(
+			callbacks.moveCompleteCallback(
 				false,
 				this.userActionData.itemIndex,
 				event
@@ -1105,19 +1100,16 @@ export const onTouchEnd = function(event) {
 		}
 	}
 	if (
-		this.callbacks.resizeCompleteCallback != undefined &&
-		this.callbacks.resizeCompleteCallback != null
+		callbacks.resizeCompleteCallback != undefined &&
+		callbacks.resizeCompleteCallback != null
 	) {
 		if (itemResizeFlag == true) {
-			this.callbacks.resizeCompleteCallback(
-				this.userActionData.itemIndex,
-				{
-					x: this.positionData[this.userActionData.itemIndex].x,
-					y: this.positionData[this.userActionData.itemIndex].y,
-					height: newHeight,
-					width: newWidth,
-				}
-			);
+			callbacks.resizeCompleteCallback(this.userActionData.itemIndex, {
+				x: positionData[this.userActionData.itemIndex].x,
+				y: positionData[this.userActionData.itemIndex].y,
+				height: newHeight,
+				width: newWidth,
+			});
 		}
 	}
 	//
@@ -1328,25 +1320,25 @@ export const checkNewMoveCoordinates = function(
 
 	var x = mousePositions.x;
 	var y = mousePositions.y;
-	var widthOfMovedItem = this.positionData[indexOfMovedItem].width;
-	var heightOfMovedItem = this.positionData[indexOfMovedItem].height;
+	var widthOfMovedItem = positionData[indexOfMovedItem].width;
+	var heightOfMovedItem = positionData[indexOfMovedItem].height;
 
 	var isInside = false;
 	var indexOfOverlappingItem = null;
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		var itemTopLeft = [this.positionData[i].x, this.positionData[i].y];
+		var itemTopLeft = [positionData[i].x, positionData[i].y];
 		var itemTopRight = [
-			this.positionData[i].x + this.positionData[i].width,
-			this.positionData[i].y,
+			positionData[i].x + positionData[i].width,
+			positionData[i].y,
 		];
 		var itemBottomLeft = [
-			this.positionData[i].x,
-			this.positionData[i].y + this.positionData[i].height,
+			positionData[i].x,
+			positionData[i].y + positionData[i].height,
 		];
 		var itemBottomRight = [
-			this.positionData[i].x + this.positionData[i].width,
-			this.positionData[i].y + this.positionData[i].height,
+			positionData[i].x + positionData[i].width,
+			positionData[i].y + positionData[i].height,
 		];
 
 		if (
@@ -1364,7 +1356,7 @@ export const checkNewMoveCoordinates = function(
 			break;
 		}
 
-		var lines = getLines(this.positionData[i]);
+		var lines = getLines(positionData[i]);
 
 		var topLine = lines[0];
 		var rightLine = lines[1];
@@ -1475,7 +1467,7 @@ export const checkNewMoveCoordinates = function(
 	if (indexOfOverlappingItem == null) {
 		if (
 			x +
-				this.positionData[indexOfMovedItem].width +
+				positionData[indexOfMovedItem].width +
 				getMarginAtPoint.call(this, x) >
 			privateConstants.WIDTH
 		) {
@@ -1485,11 +1477,11 @@ export const checkNewMoveCoordinates = function(
 		}
 	} else {
 		if (
-			this.positionData[indexOfOverlappingItem].x +
-				this.positionData[indexOfMovedItem].width +
+			positionData[indexOfOverlappingItem].x +
+				positionData[indexOfMovedItem].width +
 				getMarginAtPoint.call(
 					this,
-					this.positionData[indexOfOverlappingItem].x
+					positionData[indexOfOverlappingItem].x
 				) >
 			privateConstants.WIDTH
 		) {
@@ -1499,8 +1491,8 @@ export const checkNewMoveCoordinates = function(
 				x: x,
 				y: y,
 				revisedCoordinates: {
-					x: this.positionData[indexOfOverlappingItem].x,
-					y: this.positionData[indexOfOverlappingItem].y,
+					x: positionData[indexOfOverlappingItem].x,
+					y: positionData[indexOfOverlappingItem].y,
 				},
 			};
 		}
@@ -1589,9 +1581,9 @@ export const revertShowMoveOrResizeDemo = function() {
 	for (var i = 0; i < length_0; i++) {
 		this.$limberGridViewItems[i].style.transform =
 			"translate(" +
-			this.positionData[i].x +
+			positionData[i].x +
 			"px, " +
-			this.positionData[i].y +
+			positionData[i].y +
 			"px)";
 		this.$limberGridViewItems[i].classList.remove(
 			"limberGridViewItemDemo",

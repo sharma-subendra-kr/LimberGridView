@@ -30,8 +30,9 @@ import {
 	isPlaneBInsidePlaneA_TouchingIsInside,
 	shiftItemsUp,
 } from "../calc/calcUtils";
-import publicConstants from "../constants/publicConstants";
-import privateConstants from "../constants/privateConstants";
+import publicConstants from "../../constants/publicConstants";
+import privateConstants from "../../constants/privateConstants";
+import { callbacks, positionData } from "../../variables/essentials";
 
 export const onLimberGridMouseDown = function(event) {
 	if (event.target.classList.contains("limberGridView")) {
@@ -498,11 +499,11 @@ export const onLimberGridMouseUp = function(event) {
 	event.stopPropagation();
 
 	if (
-		this.callbacks.addCompleteCallback != undefined &&
-		this.callbacks.addCompleteCallback != null
+		callbacks.addCompleteCallback != undefined &&
+		callbacks.addCompleteCallback != null
 	) {
 		if (itemAddedFlag == true) {
-			this.callbacks.addCompleteCallback(
+			callbacks.addCompleteCallback(
 				renderDetails.items,
 				item.width,
 				item.height,
@@ -574,11 +575,11 @@ export const onLimberGridTouchEnd = function(event) {
 	event.stopPropagation();
 
 	if (
-		this.callbacks.addCompleteCallback != undefined &&
-		this.callbacks.addCompleteCallback != null
+		callbacks.addCompleteCallback != undefined &&
+		callbacks.addCompleteCallback != null
 	) {
 		if (itemAddedFlag == true) {
-			this.callbacks.addCompleteCallback(
+			callbacks.addCompleteCallback(
 				renderDetails.items,
 				item.width,
 				item.height,
@@ -715,22 +716,22 @@ export const addItemAllowCheck = function(x, y, width, height) {
 		return false;
 	}
 
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		var iterItem = {
 			x:
-				this.positionData[i].x -
-				getMarginAtPoint.call(this, this.positionData[i].x),
+				positionData[i].x -
+				getMarginAtPoint.call(this, positionData[i].x),
 			y:
-				this.positionData[i].y -
-				getMarginAtPoint.call(this, this.positionData[i].y),
+				positionData[i].y -
+				getMarginAtPoint.call(this, positionData[i].y),
 			width:
-				this.positionData[i].width +
-				getMarginAtPoint.call(this, this.positionData[i].x) +
+				positionData[i].width +
+				getMarginAtPoint.call(this, positionData[i].x) +
 				publicConstants.MARGIN,
 			height:
-				this.positionData[i].height +
-				getMarginAtPoint.call(this, this.positionData[i].y) +
+				positionData[i].height +
+				getMarginAtPoint.call(this, positionData[i].y) +
 				publicConstants.MARGIN,
 		};
 		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
@@ -775,11 +776,11 @@ export const cutSpaceAllowCheck = function(x, y, width, height) {
 		return false;
 	}
 
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
 			tempPlane,
-			this.positionData[i]
+			positionData[i]
 		);
 
 		if (isInside) {

@@ -35,8 +35,9 @@ import {
 	sortPlainsByHeight,
 	arePlainsSame,
 } from "../utils/essentials";
-import publicConstants from "../constants/publicConstants";
-import privateConstants from "../constants/privateConstants";
+import publicConstants from "../../constants/publicConstants";
+import privateConstants from "../../constants/privateConstants";
+import { positionData } from "../../variables/essentials";
 
 export const findFreeSpaces = function(item, affectedItems) {
 	var freeSpaces = [];
@@ -44,13 +45,13 @@ export const findFreeSpaces = function(item, affectedItems) {
 	for (var i = 0; i < length_0; i++) {
 		var result = isPlaneBInsidePlaneA_TouchingIsInside(
 			item,
-			this.positionData[affectedItems[i]],
+			positionData[affectedItems[i]],
 			"all"
 		);
 		if (result.isInside == true) {
 			continue;
 		} else {
-			var fs = subtractPlanes(this.positionData[affectedItems[i]], item);
+			var fs = subtractPlanes(positionData[affectedItems[i]], item);
 			var length_1 = fs.length;
 			for (var j = 0; j < length_1; j++) {
 				freeSpaces.push(fs[j]);
@@ -196,17 +197,17 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 };
 
 export const findAffectedItemsOnMove = function(index, toX, toY) {
-	var item = JSON.parse(JSON.stringify(this.positionData[index]));
+	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.x = toX;
 	item.y = toY;
 	var affectedItems = [];
 	var affectedItemsExceptSelf = [];
 
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		var result = isPlaneBInsidePlaneA_TouchingIsInside(
 			item,
-			this.positionData[i]
+			positionData[i]
 		);
 		if (result == true) {
 			affectedItems.push(i);
@@ -223,17 +224,17 @@ export const findAffectedItemsOnMove = function(index, toX, toY) {
 };
 
 export const findAffectedItemsOnResize = function(index, width, height) {
-	var item = JSON.parse(JSON.stringify(this.positionData[index]));
+	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.width = width;
 	item.height = height;
 	var affectedItems = [];
 	var affectedItemsExceptSelf = [];
 
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		var result = isPlaneBInsidePlaneA_TouchingIsInside(
 			item,
-			this.positionData[i]
+			positionData[i]
 		);
 		if (result == true) {
 			affectedItems.push(i);
@@ -1265,15 +1266,15 @@ export const shitftItemsBelow = function(
 };
 
 export const shiftItemsUp = function(y, shiftHeight) {
-	var length_0 = this.positionData.length;
+	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		if (this.positionData[i].y >= y) {
-			this.positionData[i].y -= shiftHeight;
+		if (positionData[i].y >= y) {
+			positionData[i].y -= shiftHeight;
 			this.$limberGridViewItems[i].style.transform =
 				"translate(" +
-				this.positionData[i].x +
+				positionData[i].x +
 				"px, " +
-				this.positionData[i].y +
+				positionData[i].y +
 				"px)";
 		}
 	}

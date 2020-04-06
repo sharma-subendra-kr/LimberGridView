@@ -39,10 +39,13 @@ import {
 	mergePlains,
 	subtractPlanes,
 } from "./calcUtils";
-import privateConstants from "../constants/privateConstants";
+import privateConstants from "../../constants/privateConstants";
+import { positionData, setPositionData } from "../../variables/essentials";
 
 export const resizePlane = function(index, width, height) {
-	if (this.positionData[index].x + width > privateConstants.WIDTH) {
+	let _positionData;
+
+	if (positionData[index].x + width > privateConstants.WIDTH) {
 		return false;
 	}
 
@@ -61,7 +64,7 @@ export const resizePlane = function(index, width, height) {
 		height
 	);
 
-	var item = JSON.parse(JSON.stringify(this.positionData[index]));
+	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.width = width;
 	item.height = height;
 	var freeSpaces = findFreeSpaces.call(
@@ -80,7 +83,7 @@ export const resizePlane = function(index, width, height) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
 			JSON.stringify(
-				this.positionData[allAffectedItems.affectedItemsExceptSelf[i]]
+				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
 			)
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
@@ -94,15 +97,15 @@ export const resizePlane = function(index, width, height) {
 	);
 	var fittedItems = fitDetails.repositionedItems;
 
-	var positionData = JSON.parse(JSON.stringify(this.positionData));
+	_positionData = JSON.parse(JSON.stringify(positionData));
 	var length_0 = fittedItems.length;
 	for (var i = 0; i < length_0; i++) {
 		var ind = fittedItems[i].index;
-		positionData[ind].x = fittedItems[i].x;
-		positionData[ind].y = fittedItems[i].y;
+		_positionData[ind].x = fittedItems[i].x;
+		_positionData[ind].y = fittedItems[i].y;
 	}
-	positionData[index].width = width;
-	positionData[index].height = height;
+	_positionData[index].width = width;
+	_positionData[index].height = height;
 
 	var remainingItems = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -123,22 +126,22 @@ export const resizePlane = function(index, width, height) {
 		}
 	}
 
-	var positionData = fitRemainingItems.call(
+	_positionData = fitRemainingItems.call(
 		this,
-		positionData,
+		_positionData,
 		remainingItems,
 		allAffectedItems,
 		index,
 		JSON.parse(JSON.stringify(fitDetails))
 	);
 
-	var length_0 = positionData.length;
+	var length_0 = _positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		this.$limberGridViewItems[i].style.transform =
 			"translate(" +
-			positionData[i].x +
+			_positionData[i].x +
 			"px, " +
-			positionData[i].y +
+			_positionData[i].y +
 			"px)";
 		this.$limberGridViewItems[i].classList.remove(
 			"limberGridViewItemDemo",
@@ -146,7 +149,7 @@ export const resizePlane = function(index, width, height) {
 		);
 	}
 
-	this.positionData = positionData;
+	setPositionData(_positionData);
 
 	var scrollTop = this.$limberGridView[0].scrollTop;
 	this.renderItems([index], false, "resizeItems");
@@ -154,7 +157,7 @@ export const resizePlane = function(index, width, height) {
 };
 
 export const resizePlaneDemo = function(index, width, height) {
-	if (this.positionData[index].x + width > privateConstants.WIDTH) {
+	if (positionData[index].x + width > privateConstants.WIDTH) {
 		return false;
 	}
 
@@ -170,9 +173,9 @@ export const resizePlaneDemo = function(index, width, height) {
 	for (var i = 0; i < length_0; i++) {
 		this.$limberGridViewItems[i].style.transform =
 			"translate(" +
-			this.positionData[i].x +
+			positionData[i].x +
 			"px, " +
-			this.positionData[i].y +
+			positionData[i].y +
 			"px)";
 		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
@@ -184,7 +187,7 @@ export const resizePlaneDemo = function(index, width, height) {
 		height
 	);
 
-	var item = JSON.parse(JSON.stringify(this.positionData[index]));
+	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.width = width;
 	item.height = height;
 	var freeSpaces = findFreeSpaces.call(
@@ -203,7 +206,7 @@ export const resizePlaneDemo = function(index, width, height) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
 			JSON.stringify(
-				this.positionData[allAffectedItems.affectedItemsExceptSelf[i]]
+				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
 			)
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
@@ -251,9 +254,10 @@ export const resizePlaneDemo = function(index, width, height) {
 };
 
 export const movePlane = function(index, toX, toY) {
+	let _positionData;
 	var allAffectedItems = findAffectedItemsOnMove.call(this, index, toX, toY);
 
-	var item = JSON.parse(JSON.stringify(this.positionData[index]));
+	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.x = toX;
 	item.y = toY;
 	var freeSpaces = findFreeSpaces.call(
@@ -272,7 +276,7 @@ export const movePlane = function(index, toX, toY) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
 			JSON.stringify(
-				this.positionData[allAffectedItems.affectedItemsExceptSelf[i]]
+				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
 			)
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
@@ -286,15 +290,15 @@ export const movePlane = function(index, toX, toY) {
 	);
 	var fittedItems = fitDetails.repositionedItems;
 
-	var positionData = JSON.parse(JSON.stringify(this.positionData));
+	_positionData = JSON.parse(JSON.stringify(positionData));
 	var length_0 = fittedItems.length;
 	for (var i = 0; i < length_0; i++) {
 		var ind = fittedItems[i].index;
-		positionData[ind].x = fittedItems[i].x;
-		positionData[ind].y = fittedItems[i].y;
+		_positionData[ind].x = fittedItems[i].x;
+		_positionData[ind].y = fittedItems[i].y;
 	}
-	positionData[index].x = toX;
-	positionData[index].y = toY;
+	_positionData[index].x = toX;
+	_positionData[index].y = toY;
 
 	var remainingItems = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -315,16 +319,31 @@ export const movePlane = function(index, toX, toY) {
 		}
 	}
 
-	var positionData = fitRemainingItems.call(
+	_positionData = fitRemainingItems.call(
 		this,
-		positionData,
+		_positionData,
 		remainingItems,
 		allAffectedItems,
 		index,
 		JSON.parse(JSON.stringify(fitDetails))
 	);
 
-	var length_0 = positionData.length;
+	var length_0 = _positionData.length;
+	for (var i = 0; i < length_0; i++) {
+		this.$limberGridViewItems[i].style.transform =
+			"translate(" +
+			_positionData[i].x +
+			"px, " +
+			_positionData[i].y +
+			"px)";
+		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
+	}
+
+	setPositionData(_positionData);
+};
+
+export const movePlaneDemo = function(index, toX, toY) {
+	var length_0 = this.$limberGridViewItems.length;
 	for (var i = 0; i < length_0; i++) {
 		this.$limberGridViewItems[i].style.transform =
 			"translate(" +
@@ -335,24 +354,9 @@ export const movePlane = function(index, toX, toY) {
 		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
-	this.positionData = positionData;
-};
-
-export const movePlaneDemo = function(index, toX, toY) {
-	var length_0 = this.$limberGridViewItems.length;
-	for (var i = 0; i < length_0; i++) {
-		this.$limberGridViewItems[i].style.transform =
-			"translate(" +
-			this.positionData[i].x +
-			"px, " +
-			this.positionData[i].y +
-			"px)";
-		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
-	}
-
 	var allAffectedItems = findAffectedItemsOnMove.call(this, index, toX, toY);
 
-	var item = JSON.parse(JSON.stringify(this.positionData[index]));
+	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.x = toX;
 	item.y = toY;
 	var freeSpaces = findFreeSpaces.call(
@@ -371,7 +375,7 @@ export const movePlaneDemo = function(index, toX, toY) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
 			JSON.stringify(
-				this.positionData[allAffectedItems.affectedItemsExceptSelf[i]]
+				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
 			)
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
