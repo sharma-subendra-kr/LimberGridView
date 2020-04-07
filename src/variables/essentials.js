@@ -26,11 +26,23 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 import { emptyObject } from "../libs/utils/utils";
 
+const ev = {
+	elementID: "",
+	pseudoElementID: "",
+};
 const positionData = [];
 const initialPositionData = [];
 const initialGridData = {};
 let callbacks = {};
 const serializedPositionData = {};
+
+const setElementId = function(id) {
+	ev.elementID = id;
+};
+
+const setPseudoElementID = function(id) {
+	ev.pseudoElementID = id;
+};
 
 const setPositionData = function(pos) {
 	positionData.length = 0;
@@ -58,6 +70,7 @@ const setSerializedPositionData = function(serPos) {
 };
 
 export {
+	ev,
 	positionData,
 	initialPositionData,
 	initialGridData,
@@ -65,6 +78,8 @@ export {
 	serializedPositionData,
 };
 export {
+	setElementId,
+	setPseudoElementID,
 	setPositionData,
 	setInitialPositionData,
 	setInitialGridData,

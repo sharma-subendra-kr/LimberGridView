@@ -93,14 +93,18 @@ import privateConstants, {
 	setPaddingRight,
 	setPaddingTop,
 	setPaddingBottom,
+	setWidthScaleFactor,
 } from "./constants/privateConstants";
 import options, { setOptions } from "./variables/options";
 import {
+	ev,
 	positionData,
 	initialPositionData,
 	initialGridData,
 	callbacks,
 	serializedPositionData,
+	setElementId,
+	setPseudoElementID,
 	setPositionData,
 	setInitialPositionData,
 	setInitialGridData,
@@ -123,6 +127,11 @@ import e, {
 	set$limberGridViewAddItemOnTouchHoldGuide,
 } from "./variables/elements";
 import { fitRemainingItemsBelowDeepestLine } from "./libs/calc/calcUtils";
+import {
+	renderPseudoElements,
+	renderPseudoItems,
+} from "./libs/renderers/renderers";
+import { init } from "./initializers/initializers";
 
 window.LimberGridView = (function() {
 	LimberGridView.prototype.constructor = LimberGridView;
@@ -319,129 +328,131 @@ window.LimberGridView = (function() {
 			);
 		}
 
-		this.init(initialGridData.gridWidth, options.autoArrange);
+		init(initialGridData.gridWidth, options.autoArrange);
 	}
 
-	LimberGridView.prototype.init = function(initialGridWidth, autoArrange) {
-		if (options.el.indexOf("#") != 0) {
-			throw "DOM Element with Id required";
-		} else {
-			set$body(document.getElementsByTagName("body"));
-			this.elementID = options.el.substring(1, options.el.length);
-			this.pseudoElementID =
-				"limberGridViewPseudoContainer_" + this.elementID;
-			set$el(
-				document.getElementById(
-					options.el.substring(1, options.el.length)
-				)
-			);
-			console.log(e);
-			e.$body[0].insertAdjacentHTML(
-				"beforeend",
-				'<div id = "' +
-					this.pseudoElementID +
-					'" class = "limberGridViewPseudoContainer"></div>'
-			);
-			set$bodyPseudoEl(document.getElementById(this.pseudoElementID));
-		}
+	// LimberGridView.prototype.init = function(initialGridWidth, autoArrange) {
+	// 	if (options.el.indexOf("#") != 0) {
+	// 		throw "DOM Element with Id required";
+	// 	} else {
+	// 		set$body(document.getElementsByTagName("body"));
+	// 		setElementId(options.el.substring(1, options.el.length));
+	// 		setPseudoElementID("limberGridViewPseudoContainer_" + ev.elementID);
+	// 		set$el(
+	// 			document.getElementById(
+	// 				options.el.substring(1, options.el.length)
+	// 			)
+	// 		);
+	// 		console.log(e);
+	// 		e.$body[0].insertAdjacentHTML(
+	// 			"beforeend",
+	// 			'<div id = "' +
+	// 				ev.pseudoElementID +
+	// 				'" class = "limberGridViewPseudoContainer"></div>'
+	// 		);
+	// 		set$bodyPseudoEl(document.getElementById(ev.pseudoElementID));
+	// 	}
 
-		e.$el.innerHTML =
-			'<div class = "limberGridViewContainer"><style></style><div class = "limberGridView"></div><div class = "limberGridViewLicense"><div class = "limberGridViewLicenseIcon">i</div><div class = "limberGridViewLicenseDetails">LimberGridView Copyright (c) 2018, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>';
-		set$limberGridViewContainer(
-			e.$el.querySelectorAll(".limberGridViewContainer")
-		);
-		set$limberGridViewStyle(e.$el.getElementsByTagName("style"));
-		set$limberGridView(e.$el.querySelectorAll(".limberGridView"));
+	// 	e.$el.innerHTML =
+	// 		'<div class = "limberGridViewContainer"><style></style><div class = "limberGridView"></div><div class = "limberGridViewLicense"><div class = "limberGridViewLicenseIcon">i</div><div class = "limberGridViewLicenseDetails">LimberGridView Copyright (c) 2018, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>';
+	// 	set$limberGridViewContainer(
+	// 		e.$el.querySelectorAll(".limberGridViewContainer")
+	// 	);
+	// 	set$limberGridViewStyle(e.$el.getElementsByTagName("style"));
+	// 	set$limberGridView(e.$el.querySelectorAll(".limberGridView"));
 
-		setPaddingLeft(
-			parseInt(
-				window
-					.getComputedStyle(e.$limberGridView[0], null)
-					.getPropertyValue("padding-left")
-			)
-		);
-		setPaddingRight(
-			parseInt(
-				window
-					.getComputedStyle(e.$limberGridView[0], null)
-					.getPropertyValue("padding-right")
-			)
-		);
-		setPaddingTop(
-			parseInt(
-				window
-					.getComputedStyle(e.$limberGridView[0], null)
-					.getPropertyValue("padding-top")
-			)
-		);
-		setPaddingBottom(
-			parseInt(
-				window
-					.getComputedStyle(e.$limberGridView[0], null)
-					.getPropertyValue("padding-bottom")
-			)
-		);
+	// 	setPaddingLeft(
+	// 		parseInt(
+	// 			window
+	// 				.getComputedStyle(e.$limberGridView[0], null)
+	// 				.getPropertyValue("padding-left")
+	// 		)
+	// 	);
+	// 	setPaddingRight(
+	// 		parseInt(
+	// 			window
+	// 				.getComputedStyle(e.$limberGridView[0], null)
+	// 				.getPropertyValue("padding-right")
+	// 		)
+	// 	);
+	// 	setPaddingTop(
+	// 		parseInt(
+	// 			window
+	// 				.getComputedStyle(e.$limberGridView[0], null)
+	// 				.getPropertyValue("padding-top")
+	// 		)
+	// 	);
+	// 	setPaddingBottom(
+	// 		parseInt(
+	// 			window
+	// 				.getComputedStyle(e.$limberGridView[0], null)
+	// 				.getPropertyValue("padding-bottom")
+	// 		)
+	// 	);
 
-		privateConstants.WIDTH =
-			e.$limberGridView[0].clientWidth -
-			privateConstants.PADDING_LEFT -
-			privateConstants.PADDING_RIGHT;
-		privateConstants.HEIGHT =
-			e.$limberGridView[0].clientHeight -
-			privateConstants.PADDING_TOP -
-			privateConstants.PADDING_BOTTOM;
+	// 	privateConstants.WIDTH =
+	// 		e.$limberGridView[0].clientWidth -
+	// 		privateConstants.PADDING_LEFT -
+	// 		privateConstants.PADDING_RIGHT;
+	// 	privateConstants.HEIGHT =
+	// 		e.$limberGridView[0].clientHeight -
+	// 		privateConstants.PADDING_TOP -
+	// 		privateConstants.PADDING_BOTTOM;
 
-		if (
-			(initialGridWidth == undefined || initialGridWidth == null) &&
-			positionData.length == 0
-		) {
-			initialGridWidth = privateConstants.WIDTH;
-		}
+	// 	if (
+	// 		(initialGridWidth == undefined || initialGridWidth == null) &&
+	// 		positionData.length == 0
+	// 	) {
+	// 		initialGridWidth = privateConstants.WIDTH;
+	// 	}
 
-		this.WIDTH_SCALE_FACTOR = privateConstants.WIDTH / initialGridWidth;
+	// 	setWidthScaleFactor(privateConstants.WIDTH / initialGridWidth);
 
-		if (autoArrange == true) {
-			var _positionData = JSON.parse(JSON.stringify(positionData));
-			var remainingItems = [];
-			var length_0 = _positionData.length;
-			for (var i = 0; i < length_0; i++) {
-				remainingItems.push(i);
-				_positionData[i].width =
-					_positionData[i].width * this.WIDTH_SCALE_FACTOR;
-				_positionData[i].height =
-					_positionData[i].height * this.WIDTH_SCALE_FACTOR;
-				if (_positionData[i].width > privateConstants.WIDTH) {
-					_positionData[i].width = privateConstants.WIDTH;
-				}
-			}
-			setPositionData(
-				fitRemainingItemsBelowDeepestLine(
-					0,
-					_positionData,
-					remainingItems,
-					[]
-				).positionData
-			);
-		} else {
-			if (
-				initialGridData.margin != undefined &&
-				initialGridData.margin != null
-			) {
-				if (
-					typeof initialGridData.margin == "number" &&
-					initialGridData.margin > 0
-				) {
-					publicConstants.MARGIN = initialGridData.margin;
-					publicConstants.MARGIN =
-						publicConstants.MARGIN * this.WIDTH_SCALE_FACTOR;
-				} else {
-					throw "Margin is required for rendering with position coordinates";
-				}
-			} else {
-				throw "Margin is required for rendering with position coordinates";
-			}
-		}
-	};
+	// 	if (autoArrange == true) {
+	// 		var _positionData = JSON.parse(JSON.stringify(positionData));
+	// 		var remainingItems = [];
+	// 		var length_0 = _positionData.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			remainingItems.push(i);
+	// 			_positionData[i].width =
+	// 				_positionData[i].width *
+	// 				privateConstants.WIDTH_SCALE_FACTOR;
+	// 			_positionData[i].height =
+	// 				_positionData[i].height *
+	// 				privateConstants.WIDTH_SCALE_FACTOR;
+	// 			if (_positionData[i].width > privateConstants.WIDTH) {
+	// 				_positionData[i].width = privateConstants.WIDTH;
+	// 			}
+	// 		}
+	// 		setPositionData(
+	// 			fitRemainingItemsBelowDeepestLine(
+	// 				0,
+	// 				_positionData,
+	// 				remainingItems,
+	// 				[]
+	// 			).positionData
+	// 		);
+	// 	} else {
+	// 		if (
+	// 			initialGridData.margin != undefined &&
+	// 			initialGridData.margin != null
+	// 		) {
+	// 			if (
+	// 				typeof initialGridData.margin == "number" &&
+	// 				initialGridData.margin > 0
+	// 			) {
+	// 				publicConstants.MARGIN = initialGridData.margin;
+	// 				publicConstants.MARGIN =
+	// 					publicConstants.MARGIN *
+	// 					privateConstants.WIDTH_SCALE_FACTOR;
+	// 			} else {
+	// 				throw "Margin is required for rendering with position coordinates";
+	// 			}
+	// 		} else {
+	// 			throw "Margin is required for rendering with position coordinates";
+	// 		}
+	// 	}
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -484,7 +495,7 @@ window.LimberGridView = (function() {
 			var _positionData = positionData;
 		}
 		if (scale == true) {
-			var WIDTH_SCALE_FACTOR = this.WIDTH_SCALE_FACTOR;
+			var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
 		} else {
 			var WIDTH_SCALE_FACTOR = 1;
 		}
@@ -707,7 +718,7 @@ window.LimberGridView = (function() {
 			e.$limberGridView[0].querySelectorAll(".limberGridViewItem")
 		);
 
-		this.renderPseudoElements(_positionData);
+		renderPseudoElements(_positionData);
 
 		this.initializeVariables();
 		this.initializeEvents();
@@ -720,134 +731,134 @@ window.LimberGridView = (function() {
 		}
 	};
 
-	LimberGridView.prototype.renderPseudoElements = function(_positionData) {
-		if (e.$limberGridViewGridPseudoItems != undefined) {
-			var length_0 = _positionData.length;
-			for (var i = 0; i < length_0; i++) {
-				e.$limberGridViewGridPseudoItems[0].parentNode.removeChild(
-					e.$limberGridViewGridPseudoItems[0]
-				);
-			}
-			e.$limberGridViewGridPseudoItems = undefined;
-			set$limberGridViewBodyPseudoItems(undefined);
-		}
+	// LimberGridView.prototype.renderPseudoElements = function(_positionData) {
+	// 	if (e.$limberGridViewGridPseudoItems != undefined) {
+	// 		var length_0 = _positionData.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			e.$limberGridViewGridPseudoItems[0].parentNode.removeChild(
+	// 				e.$limberGridViewGridPseudoItems[0]
+	// 			);
+	// 		}
+	// 		e.$limberGridViewGridPseudoItems = undefined;
+	// 		set$limberGridViewBodyPseudoItems(undefined);
+	// 	}
 
-		var gridHtml = [];
-		var bodyHtml = [];
+	// 	var gridHtml = [];
+	// 	var bodyHtml = [];
 
-		if (!isMobile()) {
-			var length_0 = _positionData.length;
-			for (var i = 0; i < length_0; i++) {
-				var gridFront =
-					'<div class = "limberGridViewGridPseudoItem" data-index = "' +
-					i +
-					'" ';
-				var bodyFront =
-					'<div class = "limberGridViewBodyPseudoItem" data-index = "' +
-					i +
-					'" ';
-				var style_1 =
-					'style = "transform : translate(' +
-					_positionData[i].x +
-					"px, ";
-				var style_2 = _positionData[i].y + "px); ";
-				var style_3 = "width : " + _positionData[i].width + "px; ";
-				var style_4 = "height : " + _positionData[i].height + "px; ";
-				var style_5 = '">';
+	// 	if (!isMobile()) {
+	// 		var length_0 = _positionData.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			var gridFront =
+	// 				'<div class = "limberGridViewGridPseudoItem" data-index = "' +
+	// 				i +
+	// 				'" ';
+	// 			var bodyFront =
+	// 				'<div class = "limberGridViewBodyPseudoItem" data-index = "' +
+	// 				i +
+	// 				'" ';
+	// 			var style_1 =
+	// 				'style = "transform : translate(' +
+	// 				_positionData[i].x +
+	// 				"px, ";
+	// 			var style_2 = _positionData[i].y + "px); ";
+	// 			var style_3 = "width : " + _positionData[i].width + "px; ";
+	// 			var style_4 = "height : " + _positionData[i].height + "px; ";
+	// 			var style_5 = '">';
 
-				var style = style_1 + style_2 + style_3 + style_4 + style_5;
+	// 			var style = style_1 + style_2 + style_3 + style_4 + style_5;
 
-				var end = "</div>";
+	// 			var end = "</div>";
 
-				var gridItem = gridFront + style + end;
-				var bodyItem = bodyFront + style + end;
+	// 			var gridItem = gridFront + style + end;
+	// 			var bodyItem = bodyFront + style + end;
 
-				gridHtml.push(gridItem);
-				bodyHtml.push(bodyItem);
-			}
-		} else {
-			var length_0 = _positionData.length;
-			for (var i = 0; i < length_0; i++) {
-				var gridFront =
-					'<div class = "limberGridViewGridPseudoItem" data-index = "' +
-					i +
-					'" ';
-				var bodyFront =
-					'<div class = "limberGridViewBodyPseudoItem" data-index = "' +
-					i +
-					'" ';
-				var style_1 = 'style = "transform : translate(' + 0 + "px, ";
-				var style_2 =
-					(privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-						getMarginAtPoint(serializedPositionData.map[i])) *
-						serializedPositionData.map[i] +
-					"px); ";
-				var style_3 = "width : " + privateConstants.WIDTH + "px; ";
-				var style_4 =
-					"height : " +
-					privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-					"px; ";
-				var style_5 = "margin : " + publicConstants.MARGIN + 'px;">';
+	// 			gridHtml.push(gridItem);
+	// 			bodyHtml.push(bodyItem);
+	// 		}
+	// 	} else {
+	// 		var length_0 = _positionData.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			var gridFront =
+	// 				'<div class = "limberGridViewGridPseudoItem" data-index = "' +
+	// 				i +
+	// 				'" ';
+	// 			var bodyFront =
+	// 				'<div class = "limberGridViewBodyPseudoItem" data-index = "' +
+	// 				i +
+	// 				'" ';
+	// 			var style_1 = 'style = "transform : translate(' + 0 + "px, ";
+	// 			var style_2 =
+	// 				(privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 					getMarginAtPoint(serializedPositionData.map[i])) *
+	// 					serializedPositionData.map[i] +
+	// 				"px); ";
+	// 			var style_3 = "width : " + privateConstants.WIDTH + "px; ";
+	// 			var style_4 =
+	// 				"height : " +
+	// 				privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 				"px; ";
+	// 			var style_5 = "margin : " + publicConstants.MARGIN + 'px;">';
 
-				var style = style_1 + style_2 + style_3 + style_4 + style_5;
+	// 			var style = style_1 + style_2 + style_3 + style_4 + style_5;
 
-				var end = "</div>";
+	// 			var end = "</div>";
 
-				var gridItem = gridFront + style + end;
-				var bodyItem = bodyFront + style + end;
+	// 			var gridItem = gridFront + style + end;
+	// 			var bodyItem = bodyFront + style + end;
 
-				gridHtml.push(gridItem);
-				bodyHtml.push(bodyItem);
-			}
-		}
-		var limberGridViewMoveGuide =
-			'<div class = "limberGridViewMoveGuide"></div>';
-		var limberGridViewHeightAdjustGuide =
-			'<div class = "limberGridViewHeightAdjustGuide"></div>';
-		var limberGridViewAddItemGuide =
-			'<div class = "limberGridViewAddItemGuide"></div>';
-		var limberGridViewAddItemOnTouchHoldGuide =
-			'<div class = "limberGridViewAddItemOnTouchHoldGuide"></div>';
-		gridHtml.push(limberGridViewMoveGuide);
-		gridHtml.push(limberGridViewHeightAdjustGuide);
-		gridHtml.push(limberGridViewAddItemGuide);
-		gridHtml.push(limberGridViewAddItemOnTouchHoldGuide);
+	// 			gridHtml.push(gridItem);
+	// 			bodyHtml.push(bodyItem);
+	// 		}
+	// 	}
+	// 	var limberGridViewMoveGuide =
+	// 		'<div class = "limberGridViewMoveGuide"></div>';
+	// 	var limberGridViewHeightAdjustGuide =
+	// 		'<div class = "limberGridViewHeightAdjustGuide"></div>';
+	// 	var limberGridViewAddItemGuide =
+	// 		'<div class = "limberGridViewAddItemGuide"></div>';
+	// 	var limberGridViewAddItemOnTouchHoldGuide =
+	// 		'<div class = "limberGridViewAddItemOnTouchHoldGuide"></div>';
+	// 	gridHtml.push(limberGridViewMoveGuide);
+	// 	gridHtml.push(limberGridViewHeightAdjustGuide);
+	// 	gridHtml.push(limberGridViewAddItemGuide);
+	// 	gridHtml.push(limberGridViewAddItemOnTouchHoldGuide);
 
-		e.$bodyPseudoEl.innerHTML = bodyHtml.join("");
-		e.$limberGridView[0].insertAdjacentHTML("beforeend", gridHtml.join(""));
-		set$limberGridViewGridPseudoItems(
-			e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewGridPseudoItem"
-			)
-		);
-		set$limberGridViewBodyPseudoItems(
-			e.$bodyPseudoEl.getElementsByClassName(
-				"limberGridViewBodyPseudoItem"
-			)
-		);
-		set$limberGridViewMoveGuide(
-			e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewMoveGuide"
-			)
-		);
-		set$limberGridViewHeightAdjustGuide(
-			e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewHeightAdjustGuide"
-			)
-		);
-		set$limberGridViewAddItemGuide(
-			e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewAddItemGuide"
-			)
-		);
-		set$limberGridViewAddItemOnTouchHoldGuide(
-			e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewAddItemOnTouchHoldGuide"
-			)
-		);
-	};
+	// 	e.$bodyPseudoEl.innerHTML = bodyHtml.join("");
+	// 	e.$limberGridView[0].insertAdjacentHTML("beforeend", gridHtml.join(""));
+	// 	set$limberGridViewGridPseudoItems(
+	// 		e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewGridPseudoItem"
+	// 		)
+	// 	);
+	// 	set$limberGridViewBodyPseudoItems(
+	// 		e.$bodyPseudoEl.getElementsByClassName(
+	// 			"limberGridViewBodyPseudoItem"
+	// 		)
+	// 	);
+	// 	set$limberGridViewMoveGuide(
+	// 		e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewMoveGuide"
+	// 		)
+	// 	);
+	// 	set$limberGridViewHeightAdjustGuide(
+	// 		e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewHeightAdjustGuide"
+	// 		)
+	// 	);
+	// 	set$limberGridViewAddItemGuide(
+	// 		e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewAddItemGuide"
+	// 		)
+	// 	);
+	// 	set$limberGridViewAddItemOnTouchHoldGuide(
+	// 		e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewAddItemOnTouchHoldGuide"
+	// 		)
+	// 	);
+	// };
 
 	LimberGridView.prototype.renderItems = function(
 		items,
@@ -857,7 +868,7 @@ window.LimberGridView = (function() {
 		this.unInitializeEvents();
 		var scrollTop = e.$limberGridView[0].scrollTop;
 		if (scale == true) {
-			var WIDTH_SCALE_FACTOR = this.WIDTH_SCALE_FACTOR;
+			var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
 		} else {
 			var WIDTH_SCALE_FACTOR = 1;
 		}
@@ -993,7 +1004,7 @@ window.LimberGridView = (function() {
 			".limberGridViewItem"
 		);
 
-		this.renderPseudoItems(items);
+		renderPseudoItems(items);
 
 		this.initializeVariables();
 		this.initializeEvents();
@@ -1024,124 +1035,124 @@ window.LimberGridView = (function() {
 		return renderDetails;
 	};
 
-	LimberGridView.prototype.renderPseudoItems = function(items) {
-		var gridHtml = [];
-		var bodyHtml = [];
+	// LimberGridView.prototype.renderPseudoItems = function(items) {
+	// 	var gridHtml = [];
+	// 	var bodyHtml = [];
 
-		if (!isMobile()) {
-			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-			e.$body[0].removeChild(e.$bodyPseudoEl);
-			var length_0 = items.length;
-			for (var i = 0; i < length_0; i++) {
-				var divGrid = document.createElement("div");
-				var attributeGrid = document.createAttribute("data-index");
-				attributeGrid.value = items[i];
-				divGrid.setAttributeNode(attributeGrid);
-				divGrid.classList.add("limberGridViewGridPseudoItem");
-				divGrid.style.transform =
-					"translate(" +
-					positionData[items[i]].x +
-					"px, " +
-					positionData[items[i]].y +
-					"px)";
-				divGrid.style.width = positionData[items[i]].width + "px";
-				divGrid.style.height = positionData[items[i]].height + "px";
+	// 	if (!isMobile()) {
+	// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+	// 		e.$body[0].removeChild(e.$bodyPseudoEl);
+	// 		var length_0 = items.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			var divGrid = document.createElement("div");
+	// 			var attributeGrid = document.createAttribute("data-index");
+	// 			attributeGrid.value = items[i];
+	// 			divGrid.setAttributeNode(attributeGrid);
+	// 			divGrid.classList.add("limberGridViewGridPseudoItem");
+	// 			divGrid.style.transform =
+	// 				"translate(" +
+	// 				positionData[items[i]].x +
+	// 				"px, " +
+	// 				positionData[items[i]].y +
+	// 				"px)";
+	// 			divGrid.style.width = positionData[items[i]].width + "px";
+	// 			divGrid.style.height = positionData[items[i]].height + "px";
 
-				var divBody = document.createElement("div");
-				var attributeBody = document.createAttribute("data-index");
-				attributeBody.value = items[i];
-				divBody.setAttributeNode(attributeBody);
-				divBody.classList.add("limberGridViewBodyPseudoItem");
-				divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				divBody.style.width = positionData[items[i]].width + "px";
-				divBody.style.height = positionData[items[i]].height + "px";
+	// 			var divBody = document.createElement("div");
+	// 			var attributeBody = document.createAttribute("data-index");
+	// 			attributeBody.value = items[i];
+	// 			divBody.setAttributeNode(attributeBody);
+	// 			divBody.classList.add("limberGridViewBodyPseudoItem");
+	// 			divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+	// 			divBody.style.width = positionData[items[i]].width + "px";
+	// 			divBody.style.height = positionData[items[i]].height + "px";
 
-				if (
-					e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
-					e.$limberGridViewGridPseudoItems[items[i]] == null
-				) {
-					e.$limberGridView[0].appendChild(divGrid);
-					e.$bodyPseudoEl.appendChild(divBody);
-				} else {
-					e.$limberGridView[0].replaceChild(
-						divGrid,
-						e.$limberGridViewGridPseudoItems[items[i]]
-					);
-					e.$bodyPseudoEl.replaceChild(
-						divBody,
-						e.$limberGridViewBodyPseudoItems[items[i]]
-					);
-				}
-			}
-			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-			e.$body[0].appendChild(e.$bodyPseudoEl);
-		} else {
-			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-			e.$body[0].removeChild(e.$bodyPseudoEl);
-			var length_0 = items.length;
-			for (var i = 0; i < length_0; i++) {
-				var divGrid = document.createElement("div");
-				var attributeGrid = document.createAttribute("data-index");
-				attributeGrid.value = items[i];
-				divGrid.setAttributeNode(attributeGrid);
-				divGrid.classList.add("limberGridViewGridPseudoItem");
-				divGrid.style.transform =
-					"translate(" +
-					0 +
-					"px, " +
-					(privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-						getMarginAtPoint(serializedPositionData.map[i])) *
-						serializedPositionData.map[i] +
-					"px)";
-				divGrid.style.width = privateConstants.WIDTH + "px";
-				divGrid.style.height =
-					privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-					"px";
+	// 			if (
+	// 				e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
+	// 				e.$limberGridViewGridPseudoItems[items[i]] == null
+	// 			) {
+	// 				e.$limberGridView[0].appendChild(divGrid);
+	// 				e.$bodyPseudoEl.appendChild(divBody);
+	// 			} else {
+	// 				e.$limberGridView[0].replaceChild(
+	// 					divGrid,
+	// 					e.$limberGridViewGridPseudoItems[items[i]]
+	// 				);
+	// 				e.$bodyPseudoEl.replaceChild(
+	// 					divBody,
+	// 					e.$limberGridViewBodyPseudoItems[items[i]]
+	// 				);
+	// 			}
+	// 		}
+	// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	// 		e.$body[0].appendChild(e.$bodyPseudoEl);
+	// 	} else {
+	// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+	// 		e.$body[0].removeChild(e.$bodyPseudoEl);
+	// 		var length_0 = items.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			var divGrid = document.createElement("div");
+	// 			var attributeGrid = document.createAttribute("data-index");
+	// 			attributeGrid.value = items[i];
+	// 			divGrid.setAttributeNode(attributeGrid);
+	// 			divGrid.classList.add("limberGridViewGridPseudoItem");
+	// 			divGrid.style.transform =
+	// 				"translate(" +
+	// 				0 +
+	// 				"px, " +
+	// 				(privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 					getMarginAtPoint(serializedPositionData.map[i])) *
+	// 					serializedPositionData.map[i] +
+	// 				"px)";
+	// 			divGrid.style.width = privateConstants.WIDTH + "px";
+	// 			divGrid.style.height =
+	// 				privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 				"px";
 
-				var divBody = document.createElement("div");
-				var attributeBody = document.createAttribute("data-index");
-				attributeBody.value = items[i];
-				divBody.setAttributeNode(attributeBody);
-				divBody.classList.add("limberGridViewBodyPseudoItem");
-				divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-				divBody.style.width = privateConstants.WIDTH + "px";
-				divBody.style.height =
-					privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-					"px";
+	// 			var divBody = document.createElement("div");
+	// 			var attributeBody = document.createAttribute("data-index");
+	// 			attributeBody.value = items[i];
+	// 			divBody.setAttributeNode(attributeBody);
+	// 			divBody.classList.add("limberGridViewBodyPseudoItem");
+	// 			divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
+	// 			divBody.style.width = privateConstants.WIDTH + "px";
+	// 			divBody.style.height =
+	// 				privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 				"px";
 
-				if (
-					e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
-					e.$limberGridViewGridPseudoItems[items[i]] == null
-				) {
-					e.$limberGridView[0].appendChild(divGrid);
-					e.$bodyPseudoEl.appendChild(divBody);
-				} else {
-					e.$limberGridView[0].replaceChild(
-						divGrid,
-						e.$limberGridViewGridPseudoItems[items[i]]
-					);
-					e.$bodyPseudoEl.replaceChild(
-						divBody,
-						e.$limberGridViewBodyPseudoItems[items[i]]
-					);
-				}
-			}
-			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-			e.$body[0].appendChild(e.$bodyPseudoEl);
-		}
+	// 			if (
+	// 				e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
+	// 				e.$limberGridViewGridPseudoItems[items[i]] == null
+	// 			) {
+	// 				e.$limberGridView[0].appendChild(divGrid);
+	// 				e.$bodyPseudoEl.appendChild(divBody);
+	// 			} else {
+	// 				e.$limberGridView[0].replaceChild(
+	// 					divGrid,
+	// 					e.$limberGridViewGridPseudoItems[items[i]]
+	// 				);
+	// 				e.$bodyPseudoEl.replaceChild(
+	// 					divBody,
+	// 					e.$limberGridViewBodyPseudoItems[items[i]]
+	// 				);
+	// 			}
+	// 		}
+	// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	// 		e.$body[0].appendChild(e.$bodyPseudoEl);
+	// 	}
 
-		set$limberGridViewGridPseudoItems(
-			e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewGridPseudoItem"
-			)
-		);
-		e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
-			"limberGridViewBodyPseudoItem"
-		);
-	};
+	// 	set$limberGridViewGridPseudoItems(
+	// 		e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewGridPseudoItem"
+	// 		)
+	// 	);
+	// 	e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
+	// 		"limberGridViewBodyPseudoItem"
+	// 	);
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 

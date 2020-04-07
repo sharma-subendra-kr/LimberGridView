@@ -28,6 +28,7 @@ import publicConstants from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
 import options from "../../variables/options";
 import { callbacks } from "../../variables/essentials";
+import { init } from "../../initializers/initializers";
 
 export const onWindowResize = function(event) {
 	console.log("onWindowResize CALL", this);
@@ -39,7 +40,7 @@ export const onWindowResize = function(event) {
 };
 
 export const onWindowResizeTimerCallback = function(event) {
-	this.init(privateConstants.WIDTH, false);
+	init(privateConstants.WIDTH, false);
 	this.render();
 
 	if (options.reRenderOnResize != false) {

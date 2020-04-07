@@ -5,6 +5,7 @@ const constants = {
 	PADDING_RIGHT: 0,
 	PADDING_TOP: 0,
 	PADDING_BOTTOM: 0,
+	WIDTH_SCALE_FACTOR: 0,
 };
 
 const setPrivateConstantByName = function(name, value) {
@@ -33,5 +34,15 @@ const setPaddingBottom = function(val) {
 	constants.PADDING_BOTTOM = val;
 };
 
+const setWidthScaleFactor = function(val) {
+	constants.WIDTH_SCALE_FACTOR = val;
+};
+
 export default constants;
-export { setPaddingLeft, setPaddingRight, setPaddingTop, setPaddingBottom };
+export {
+	setPaddingLeft,
+	setPaddingRight,
+	setPaddingTop,
+	setPaddingBottom,
+	setWidthScaleFactor,
+};
