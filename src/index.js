@@ -86,7 +86,7 @@ import {
 	getMarginAtPoint,
 	getRowSequence,
 } from "./libs/utils/essentials";
-
+import { isMobile } from "./libs/utils/utils";
 import publicConstants from "./constants/publicConstants";
 import privateConstants, {
 	setPaddingLeft,
@@ -100,10 +100,12 @@ import {
 	initialPositionData,
 	initialGridData,
 	callbacks,
+	serializedPositionData,
 	setPositionData,
 	setInitialPositionData,
 	setInitialGridData,
 	setCallbacks,
+	setSerializedPositionData,
 } from "./variables/essentials";
 import e, {
 	set$body,
@@ -120,6 +122,7 @@ import e, {
 	set$limberGridViewAddItemGuide,
 	set$limberGridViewAddItemOnTouchHoldGuide,
 } from "./variables/elements";
+import { fitRemainingItemsBelowDeepestLine } from "./libs/calc/calcUtils";
 
 window.LimberGridView = (function() {
 	LimberGridView.prototype.constructor = LimberGridView;
@@ -412,7 +415,7 @@ window.LimberGridView = (function() {
 				}
 			}
 			setPositionData(
-				this.fitRemainingItemsBelowDeepestLine(
+				fitRemainingItemsBelowDeepestLine(
 					0,
 					_positionData,
 					remainingItems,
@@ -498,7 +501,7 @@ window.LimberGridView = (function() {
 		var t0 = performance.now();
 		// dev Code END
 
-		if (!this.isMobile()) {
+		if (!isMobile()) {
 			if (options.dataType == "string") {
 				var length_0 = _positionData.length;
 				for (var i = 0; i < length_0; i++) {
@@ -588,7 +591,7 @@ window.LimberGridView = (function() {
 				e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
 			}
 		} else {
-			this.serializedPositionData = getRowSequence.call(this, true);
+			setSerializedPositionData(getRowSequence(true));
 			if (options.dataType == "string") {
 				var length_0 = _positionData.length;
 				for (var i = 0; i < length_0; i++) {
@@ -608,11 +611,8 @@ window.LimberGridView = (function() {
 					var style_2 =
 						(privateConstants.WIDTH /
 							publicConstants.MOBILE_ASPECT_RATIO +
-							getMarginAtPoint.call(
-								this,
-								this.serializedPositionData.map[i]
-							)) *
-							this.serializedPositionData.map[i] +
+							getMarginAtPoint(serializedPositionData.map[i])) *
+							serializedPositionData.map[i] +
 						"px); ";
 					var style_3 = "width : " + privateConstants.WIDTH + "px; ";
 					var style_4 =
@@ -665,11 +665,8 @@ window.LimberGridView = (function() {
 						"px, " +
 						(privateConstants.WIDTH /
 							publicConstants.MOBILE_ASPECT_RATIO +
-							getMarginAtPoint.call(
-								this,
-								this.serializedPositionData.map[i]
-							)) *
-							this.serializedPositionData.map[i] +
+							getMarginAtPoint(serializedPositionData.map[i])) *
+							serializedPositionData.map[i] +
 						"px)";
 					div.style.width = privateConstants.WIDTH + "px";
 					div.style.height =
@@ -738,7 +735,7 @@ window.LimberGridView = (function() {
 		var gridHtml = [];
 		var bodyHtml = [];
 
-		if (!this.isMobile()) {
+		if (!isMobile()) {
 			var length_0 = _positionData.length;
 			for (var i = 0; i < length_0; i++) {
 				var gridFront =
@@ -783,11 +780,8 @@ window.LimberGridView = (function() {
 				var style_2 =
 					(privateConstants.WIDTH /
 						publicConstants.MOBILE_ASPECT_RATIO +
-						getMarginAtPoint.call(
-							this,
-							this.serializedPositionData.map[i]
-						)) *
-						this.serializedPositionData.map[i] +
+						getMarginAtPoint(serializedPositionData.map[i])) *
+						serializedPositionData.map[i] +
 					"px); ";
 				var style_3 = "width : " + privateConstants.WIDTH + "px; ";
 				var style_4 =
@@ -878,7 +872,7 @@ window.LimberGridView = (function() {
 		// dev Code
 		var t0 = performance.now();
 		// dev Code END
-		if (!this.isMobile()) {
+		if (!isMobile()) {
 			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 			var length_0 = items.length;
 			for (var i = 0; i < length_0; i++) {
@@ -950,11 +944,10 @@ window.LimberGridView = (function() {
 					"px, " +
 					(privateConstants.WIDTH /
 						publicConstants.MOBILE_ASPECT_RATIO +
-						getMarginAtPoint.call(
-							this,
-							this.serializedPositionData.map[items[i]]
+						getMarginAtPoint(
+							serializedPositionData.map[items[i]]
 						)) *
-						this.serializedPositionData.map[items[i]] +
+						serializedPositionData.map[items[i]] +
 					"px)";
 				div.style.width = privateConstants.WIDTH + "px";
 				div.style.height =
@@ -1035,7 +1028,7 @@ window.LimberGridView = (function() {
 		var gridHtml = [];
 		var bodyHtml = [];
 
-		if (!this.isMobile()) {
+		if (!isMobile()) {
 			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 			e.$body[0].removeChild(e.$bodyPseudoEl);
 			var length_0 = items.length;
@@ -1098,11 +1091,8 @@ window.LimberGridView = (function() {
 					"px, " +
 					(privateConstants.WIDTH /
 						publicConstants.MOBILE_ASPECT_RATIO +
-						getMarginAtPoint.call(
-							this,
-							this.serializedPositionData.map[i]
-						)) *
-						this.serializedPositionData.map[i] +
+						getMarginAtPoint(serializedPositionData.map[i])) *
+						serializedPositionData.map[i] +
 					"px)";
 				divGrid.style.width = privateConstants.WIDTH + "px";
 				divGrid.style.height =
@@ -1207,8 +1197,8 @@ window.LimberGridView = (function() {
 
 		itemsToRender.splice(positionData.length);
 
-		if (this.isMobile()) {
-			this.serializedPositionData = getRowSequence.call(this, true);
+		if (isMobile()) {
+			setSerializedPositionData(getRowSequence(true));
 		}
 
 		this.renderItems(itemsToRender, false, "removeItems");
@@ -1242,7 +1232,7 @@ window.LimberGridView = (function() {
 				startingY = positionData[i].y + positionData[i].height;
 			}
 		}
-		startingY = startingY + getMarginAtPoint.call(this, startingY);
+		startingY = startingY + getMarginAtPoint(startingY);
 
 		var items = [];
 
@@ -1253,25 +1243,19 @@ window.LimberGridView = (function() {
 		while (remainingItems != 0) {
 			var startingX = 0;
 			while (
-				remainingWidth >
-					itemWidth + getMarginAtPoint.call(this, startingX) &&
+				remainingWidth > itemWidth + getMarginAtPoint(startingX) &&
 				remainingItems != 0
 			) {
 				var item = {
-					x: getMarginAtPoint.call(this, startingX) + startingX,
+					x: getMarginAtPoint(startingX) + startingX,
 					y: startingY,
 					width: itemWidth,
 					height: itemHeight,
 				};
 
 				remainingWidth =
-					remainingWidth -
-					itemWidth -
-					getMarginAtPoint.call(this, startingX);
-				startingX =
-					startingX +
-					getMarginAtPoint.call(this, startingX) +
-					itemWidth;
+					remainingWidth - itemWidth - getMarginAtPoint(startingX);
+				startingX = startingX + getMarginAtPoint(startingX) + itemWidth;
 				remainingItems--;
 				items.push(item);
 			}
@@ -1283,7 +1267,7 @@ window.LimberGridView = (function() {
 
 		var renderDetails = this.addItemsAtPositions(items, false, "addItems");
 
-		if (!this.isMobile()) {
+		if (!isMobile()) {
 			e.$limberGridView[0].scrollTop = scrollToPosition;
 		} else {
 			e.$limberGridView[0].scrollTop = scrollHeight;
@@ -1313,10 +1297,10 @@ window.LimberGridView = (function() {
 		var length_0 = items.length;
 		for (var i = 0; i < length_0; i++) {
 			addArray.push(startingIndex + i);
-			if (this.isMobile()) {
-				this.serializedPositionData.list.push(startingIndex + i);
-				this.serializedPositionData.map[startingIndex + i] =
-					this.serializedPositionData.list.length - 1;
+			if (isMobile()) {
+				serializedPositionData.list.push(startingIndex + i);
+				serializedPositionData.map[startingIndex + i] =
+					serializedPositionData.list.length - 1;
 			}
 			positionData.push(items[i]);
 		}
@@ -1347,7 +1331,7 @@ window.LimberGridView = (function() {
 
 	LimberGridView.prototype.initializeEvents = function() {
 		if (options.editable == true) {
-			if (this.isMobile() == false) {
+			if (isMobile() == false) {
 				if (options.enableInteractiveAddAndCut != false) {
 					e.$limberGridView[0].addEventListener(
 						"mousedown",
@@ -1364,7 +1348,7 @@ window.LimberGridView = (function() {
 
 			var length_0 = e.$limberGridViewItems.length;
 			for (var i = 0; i < length_0; i++) {
-				if (this.isMobile() == false) {
+				if (isMobile() == false) {
 					e.$limberGridViewItems[i].addEventListener(
 						"mousedown",
 						this.onItemMouseDownFunctionVariable
@@ -1462,16 +1446,16 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.isMobile = function() {
-		// production
-		return window.matchMedia(
-			"only screen and (max-width: 1033px) and (min-width : 1px)"
-		).matches;
-		// production END
-		// return window.matchMedia("only screen and (max-width: 900px) and (min-width : 1px)").matches;
-		// return false;
-		// return true;
-	};
+	// LimberGridView.prototype.isMobile = function() {
+	// 	// production
+	// 	return window.matchMedia(
+	// 		"only screen and (max-width: 1033px) and (min-width : 1px)"
+	// 	).matches;
+	// 	// production END
+	// 	// return window.matchMedia("only screen and (max-width: 900px) and (min-width : 1px)").matches;
+	// 	// return false;
+	// 	// return true;
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 

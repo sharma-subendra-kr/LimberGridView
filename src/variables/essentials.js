@@ -30,6 +30,7 @@ const positionData = [];
 const initialPositionData = [];
 const initialGridData = {};
 let callbacks = {};
+const serializedPositionData = {};
 
 const setPositionData = function(pos) {
 	positionData.length = 0;
@@ -51,10 +52,22 @@ const setCallbacks = function(cbs) {
 	Object.assign(callbacks, cbs);
 };
 
-export { positionData, initialPositionData, initialGridData, callbacks };
+const setSerializedPositionData = function(serPos) {
+	emptyObject(serializedPositionData);
+	Object.assign(serializedPositionData, serPos);
+};
+
+export {
+	positionData,
+	initialPositionData,
+	initialGridData,
+	callbacks,
+	serializedPositionData,
+};
 export {
 	setPositionData,
 	setInitialPositionData,
 	setInitialGridData,
 	setCallbacks,
+	setSerializedPositionData,
 };

@@ -66,7 +66,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 	var mergePlainsFreeSpacesAndItemsNotToMerge = freeSpaces.concat(
 		itemsNotToMerge
 	);
-	var isPlaneInsideStack = function(stack, plane, context) {
+	var isPlaneInsideStack = function(stack, plane) {
 		var flag = false;
 		var length_0 = stack.length;
 		for (var i = 0; i < length_0; i++) {
@@ -88,14 +88,13 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 					freeSpaces[j]
 				)
 			) {
-				var mergedPlane = mergePlains.call(
-					this,
+				var mergedPlane = mergePlains(
 					freeSpaces[i],
 					freeSpaces[j],
 					mergePlainsFreeSpacesAndItemsNotToMerge
 				);
 				if (mergedPlane != false) {
-					if (!isPlaneInsideStack(mergedStack, mergedPlane, this)) {
+					if (!isPlaneInsideStack(mergedStack, mergedPlane)) {
 						mergedStack.push(mergedPlane);
 					}
 				}
@@ -106,8 +105,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 	var mergeStackItemWithFreeSpaces = function(
 		freeSpaces,
 		mergedStack,
-		mergePlainsFreeSpacesAndItemsNotToMerge,
-		context
+		mergePlainsFreeSpacesAndItemsNotToMerge
 	) {
 		var newStack = [];
 		var length_0 = freeSpaces.length;
@@ -120,8 +118,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 						mergedStack[j]
 					)
 				) {
-					var mergedPlane = mergePlains.call(
-						context,
+					var mergedPlane = mergePlains(
 						freeSpaces[i],
 						mergedStack[j],
 						mergePlainsFreeSpacesAndItemsNotToMerge
@@ -130,8 +127,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 						if (
 							!isPlaneInsideStack(
 								mergedStack.concat(newStack),
-								mergedPlane,
-								context
+								mergedPlane
 							)
 						) {
 							newStack.push(mergedPlane);
@@ -146,8 +142,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 	var newStack = mergeStackItemWithFreeSpaces(
 		freeSpaces,
 		mergedStack,
-		mergePlainsFreeSpacesAndItemsNotToMerge,
-		this
+		mergePlainsFreeSpacesAndItemsNotToMerge
 	);
 
 	while (newStack.length > 0) {
@@ -155,8 +150,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 		var newStack = mergeStackItemWithFreeSpaces(
 			freeSpaces,
 			mergedStack,
-			mergePlainsFreeSpacesAndItemsNotToMerge,
-			this
+			mergePlainsFreeSpacesAndItemsNotToMerge
 		);
 	}
 
@@ -514,7 +508,7 @@ export const fitItemsIntoFreeSpaces = function(
 	sortPlainsByArea(items);
 
 	var repositionedItems = [];
-	var match = findMatchingSpace.call(this, items, freeSpaces);
+	var match = findMatchingSpace(items, freeSpaces);
 	while (
 		match.matchingItemIndex != null &&
 		match.matchingFreeSpaceIndex != null
@@ -526,16 +520,10 @@ export const fitItemsIntoFreeSpaces = function(
 		var repositionedItem = {
 			x:
 				freeSpaces[match.matchingFreeSpaceIndex].x +
-				getMarginAtPoint.call(
-					this,
-					freeSpaces[match.matchingFreeSpaceIndex].x
-				),
+				getMarginAtPoint(freeSpaces[match.matchingFreeSpaceIndex].x),
 			y:
 				freeSpaces[match.matchingFreeSpaceIndex].y +
-				getMarginAtPoint.call(
-					this,
-					freeSpaces[match.matchingFreeSpaceIndex].y
-				),
+				getMarginAtPoint(freeSpaces[match.matchingFreeSpaceIndex].y),
 			width: tempItem.width,
 			height: tempItem.height,
 			index: tempItem.index,
@@ -547,16 +535,10 @@ export const fitItemsIntoFreeSpaces = function(
 			y: freeSpaces[match.matchingFreeSpaceIndex].y,
 			width:
 				tempItem.width +
-				getMarginAtPoint.call(
-					this,
-					freeSpaces[match.matchingFreeSpaceIndex].x
-				),
+				getMarginAtPoint(freeSpaces[match.matchingFreeSpaceIndex].x),
 			height:
 				tempItem.height +
-				getMarginAtPoint.call(
-					this,
-					freeSpaces[match.matchingFreeSpaceIndex].y
-				),
+				getMarginAtPoint(freeSpaces[match.matchingFreeSpaceIndex].y),
 			doNotMergeFlag: true,
 		};
 
@@ -576,14 +558,13 @@ export const fitItemsIntoFreeSpaces = function(
 
 		// calculate new mergedFreeSpaces
 		doNotMergeItems.push(occupiedSpace);
-		var newMergedFreeSpaces = mergeFreeSpaces.call(
-			this,
+		var newMergedFreeSpaces = mergeFreeSpaces(
 			newFreeSpaces,
 			doNotMergeItems
 		);
 
 		freeSpaces = newMergedFreeSpaces;
-		var match = findMatchingSpace.call(this, items, newMergedFreeSpaces);
+		var match = findMatchingSpace(items, newMergedFreeSpaces);
 	}
 	return { repositionedItems: repositionedItems, freeSpaces: freeSpaces };
 };
@@ -603,16 +584,10 @@ export const findMatchingSpace = function(items, freeSpaces) {
 		var length_1 = freeSpaces.length;
 		for (var j = 0; j < length_1; j++) {
 			var tempItem = JSON.parse(JSON.stringify(items[i]));
-			if (
-				getMarginAtPoint.call(this, freeSpaces[j].x) ==
-				publicConstants.MARGIN
-			) {
+			if (getMarginAtPoint(freeSpaces[j].x) == publicConstants.MARGIN) {
 				tempItem.width += publicConstants.MARGIN * 1;
 			}
-			if (
-				getMarginAtPoint.call(this, freeSpaces[j].y) ==
-				publicConstants.MARGIN
-			) {
+			if (getMarginAtPoint(freeSpaces[j].y) == publicConstants.MARGIN) {
 				tempItem.height += publicConstants.MARGIN * 1;
 			}
 
@@ -868,8 +843,7 @@ export const fitRemainingItems = function(
 		positionData = initialFitData.positionData;
 		remainingItems = initialFitData.remainingItems;
 
-		var finalFitData = fitRemainingItemsBelowDeepestLine.call(
-			this,
+		var finalFitData = fitRemainingItemsBelowDeepestLine(
 			greatestDepthOfAffectedArea,
 			positionData,
 			remainingItems,
@@ -897,8 +871,7 @@ export const fitRemainingItems = function(
 		);
 		var itemsToShift = itemsToShiftData.itemsFromPointDepth;
 
-		var finalFitData = fitRemainingItemsBelowDeepestLine.call(
-			this,
+		var finalFitData = fitRemainingItemsBelowDeepestLine(
 			greatestDepthOfAffectedArea,
 			positionData,
 			remainingItems,
@@ -954,8 +927,7 @@ export const fitRemainingItemsAboveDeepestLine = function(
 	var remainingFreeSpaces = previousFitDetails.freeSpaces;
 	remainingFreeSpaces.push(linePlane);
 
-	var mergedFreeSpaces = mergeFreeSpaces.call(
-		this,
+	var mergedFreeSpaces = mergeFreeSpaces(
 		remainingFreeSpaces,
 		doNotMergeItems
 	);
@@ -977,8 +949,7 @@ export const fitRemainingItemsAboveDeepestLine = function(
 		);
 		remainingItemsObject[i].index = remainingItems[i];
 	}
-	var fitDetails = fitItemsIntoFreeSpaces.call(
-		this,
+	var fitDetails = fitItemsIntoFreeSpaces(
 		remainingItemsObject,
 		mergedFreeSpaces,
 		doNotMergeItems
@@ -1033,9 +1004,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 		x: 0,
 		y: startingY,
 		width: privateConstants.WIDTH,
-		height:
-			remainingItemsObject[0].height +
-			getMarginAtPoint.call(this, startingY),
+		height: remainingItemsObject[0].height + getMarginAtPoint(startingY),
 	};
 
 	var remainingWidth = privateConstants.WIDTH;
@@ -1046,7 +1015,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 			deepestY =
 				startingY +
 				remainingItemsObject[0].height +
-				getMarginAtPoint.call(this, startingY);
+				getMarginAtPoint(startingY);
 		}
 
 		var freeSpacesInCurrentRow = [];
@@ -1061,42 +1030,32 @@ export const fitRemainingItemsBelowDeepestLine = function(
 			if (
 				remainingWidth >=
 				remainingItemsObject[i].width +
-					getMarginAtPoint.call(
-						this,
-						privateConstants.WIDTH - remainingWidth
-					)
+					getMarginAtPoint(privateConstants.WIDTH - remainingWidth)
 			) {
 				remainingItemsObject[i].x =
 					privateConstants.WIDTH -
 					remainingWidth +
-					getMarginAtPoint.call(
-						this,
-						privateConstants.WIDTH - remainingWidth
-					);
+					getMarginAtPoint(privateConstants.WIDTH - remainingWidth);
 				remainingItemsObject[i].y =
-					startingY + getMarginAtPoint.call(this, startingY);
+					startingY + getMarginAtPoint(startingY);
 				positionData[remainingItemsObject[i].index].x =
 					privateConstants.WIDTH -
 					remainingWidth +
-					getMarginAtPoint.call(
-						this,
-						privateConstants.WIDTH - remainingWidth
-					);
+					getMarginAtPoint(privateConstants.WIDTH - remainingWidth);
 				positionData[remainingItemsObject[i].index].y =
-					startingY + getMarginAtPoint.call(this, startingY);
+					startingY + getMarginAtPoint(startingY);
 
 				var occupiedSpace = {
 					x: privateConstants.WIDTH - remainingWidth,
 					y: startingY,
 					width:
 						remainingItemsObject[i].width +
-						getMarginAtPoint.call(
-							this,
+						getMarginAtPoint(
 							privateConstants.WIDTH - remainingWidth
 						),
 					height:
 						remainingItemsObject[i].height +
-						getMarginAtPoint.call(this, startingY),
+						getMarginAtPoint(startingY),
 					doNotMergeFlag: true,
 				};
 
@@ -1106,19 +1065,18 @@ export const fitRemainingItemsBelowDeepestLine = function(
 					x: privateConstants.WIDTH - remainingWidth,
 					y:
 						startingY +
-						getMarginAtPoint.call(this, startingY) +
+						getMarginAtPoint(startingY) +
 						remainingItemsObject[i].height,
 					width:
 						remainingItemsObject[i].width +
-						getMarginAtPoint.call(
-							this,
+						getMarginAtPoint(
 							privateConstants.WIDTH - remainingWidth
 						),
 					height:
 						initializedPlane.y +
 						initializedPlane.height -
 						(startingY +
-							getMarginAtPoint.call(this, startingY) +
+							getMarginAtPoint(startingY) +
 							remainingItemsObject[i].height),
 				};
 
@@ -1130,8 +1088,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 				remainingWidth =
 					remainingWidth -
 					(remainingItemsObject[i].width +
-						getMarginAtPoint.call(
-							this,
+						getMarginAtPoint(
 							privateConstants.WIDTH - remainingWidth
 						));
 			}
@@ -1156,13 +1113,11 @@ export const fitRemainingItemsBelowDeepestLine = function(
 		}
 
 		if (remainingItemsObject.length > 0) {
-			var mergedFreeSpaces = mergeFreeSpaces.call(
-				this,
+			var mergedFreeSpaces = mergeFreeSpaces(
 				freeSpacesInCurrentRow,
 				occupiedSpacesInCurrentRow
 			);
-			var fitDetails = fitItemsIntoFreeSpaces.call(
-				this,
+			var fitDetails = fitItemsIntoFreeSpaces(
 				remainingItemsObject,
 				freeSpacesInCurrentRow,
 				occupiedSpacesInCurrentRow
@@ -1204,8 +1159,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 				width: privateConstants.WIDTH,
 				height:
 					remainingItemsObject[0].height +
-					getMarginAtPoint.call(
-						this,
+					getMarginAtPoint(
 						initializedPlane.y + initializedPlane.height
 					),
 			};

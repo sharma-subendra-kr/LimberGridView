@@ -213,11 +213,9 @@ export const getRowSequence = function(serialize) {
 
 	var length_0 = rowsArr.length;
 	for (var i = 0; i < length_0; i++) {
-		rows[rowsArr[i]].sort(
-			function(a, b) {
-				return positionData[a].x - positionData[b].x;
-			}.bind(this)
-		);
+		rows[rowsArr[i]].sort(function(a, b) {
+			return positionData[a].x - positionData[b].x;
+		});
 	}
 
 	if (serialize != true) {
