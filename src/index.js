@@ -100,7 +100,21 @@ import {
 	setInitialGridData,
 	setCallbacks,
 } from "./variables/essentials";
-// import {} from "./variables/elements";
+import e, {
+	set$body,
+	set$bodyPseudoEl,
+	set$limberGridViewBodyPseudoItems,
+	set$el,
+	set$limberGridView,
+	set$limberGridViewItems,
+	set$limberGridViewContainer,
+	set$limberGridViewStyle,
+	set$limberGridViewGridPseudoItems,
+	set$limberGridViewMoveGuide,
+	set$limberGridViewHeightAdjustGuide,
+	set$limberGridViewAddItemGuide,
+	set$limberGridViewAddItemOnTouchHoldGuide,
+} from "./variables/elements";
 
 window.LimberGridView = (function() {
 	LimberGridView.prototype.constructor = LimberGridView;
@@ -307,57 +321,60 @@ window.LimberGridView = (function() {
 		if (options.el.indexOf("#") != 0) {
 			throw "DOM Element with Id required";
 		} else {
-			this.$body = document.getElementsByTagName("body");
+			set$body(document.getElementsByTagName("body"));
 			this.elementID = options.el.substring(1, options.el.length);
 			this.pseudoElementID =
 				"limberGridViewPseudoContainer_" + this.elementID;
-			this.$el = document.getElementById(
-				options.el.substring(1, options.el.length)
+			set$el(
+				document.getElementById(
+					options.el.substring(1, options.el.length)
+				)
 			);
-			this.$body[0].insertAdjacentHTML(
+			console.log(e);
+			e.$body[0].insertAdjacentHTML(
 				"beforeend",
 				'<div id = "' +
 					this.pseudoElementID +
 					'" class = "limberGridViewPseudoContainer"></div>'
 			);
-			this.$bodyPseudoEl = document.getElementById(this.pseudoElementID);
+			set$bodyPseudoEl(document.getElementById(this.pseudoElementID));
 		}
 
-		this.$el.innerHTML =
+		e.$el.innerHTML =
 			'<div class = "limberGridViewContainer"><style></style><div class = "limberGridView"></div><div class = "limberGridViewLicense"><div class = "limberGridViewLicenseIcon">i</div><div class = "limberGridViewLicenseDetails">LimberGridView Copyright (c) 2018, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>';
-		this.$limberGridViewContainer = this.$el.querySelectorAll(
-			".limberGridViewContainer"
+		set$limberGridViewContainer(
+			e.$el.querySelectorAll(".limberGridViewContainer")
 		);
-		this.$limberGridViewStyle = this.$el.getElementsByTagName("style");
-		this.$limberGridView = this.$el.querySelectorAll(".limberGridView");
+		set$limberGridViewStyle(e.$el.getElementsByTagName("style"));
+		set$limberGridView(e.$el.querySelectorAll(".limberGridView"));
 
 		this.PADDING_LEFT = parseInt(
 			window
-				.getComputedStyle(this.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView[0], null)
 				.getPropertyValue("padding-left")
 		);
 		this.PADDING_RIGHT = parseInt(
 			window
-				.getComputedStyle(this.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView[0], null)
 				.getPropertyValue("padding-right")
 		);
 		this.PADDING_TOP = parseInt(
 			window
-				.getComputedStyle(this.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView[0], null)
 				.getPropertyValue("padding-top")
 		);
 		this.PADDING_BOTTOM = parseInt(
 			window
-				.getComputedStyle(this.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView[0], null)
 				.getPropertyValue("padding-bottom")
 		);
 
 		privateConstants.WIDTH =
-			this.$limberGridView[0].clientWidth -
+			e.$limberGridView[0].clientWidth -
 			this.PADDING_LEFT -
 			this.PADDING_RIGHT;
 		privateConstants.HEIGHT =
-			this.$limberGridView[0].clientHeight -
+			e.$limberGridView[0].clientHeight -
 			this.PADDING_TOP -
 			this.PADDING_BOTTOM;
 
@@ -517,9 +534,7 @@ window.LimberGridView = (function() {
 					html.push(item);
 				}
 			} else if (options.dataType == "node") {
-				this.$limberGridViewContainer[0].removeChild(
-					this.$limberGridView[0]
-				);
+				e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 
 				var length_0 = _positionData.length;
 				for (var i = 0; i < length_0; i++) {
@@ -558,11 +573,9 @@ window.LimberGridView = (function() {
 					} else {
 						div.appendChild(userData);
 					}
-					this.$limberGridView[0].appendChild(div);
+					e.$limberGridView[0].appendChild(div);
 				}
-				this.$limberGridViewContainer[0].appendChild(
-					this.$limberGridView[0]
-				);
+				e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
 			}
 		} else {
 			this.serializedPositionData = getRowSequence.call(this, true);
@@ -619,9 +632,7 @@ window.LimberGridView = (function() {
 					html.push(item);
 				}
 			} else if (options.dataType == "node") {
-				this.$limberGridViewContainer[0].removeChild(
-					this.$limberGridView[0]
-				);
+				e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 
 				var length_0 = _positionData.length;
 				for (var i = 0; i < length_0; i++) {
@@ -668,16 +679,14 @@ window.LimberGridView = (function() {
 					} else {
 						div.appendChild(userData);
 					}
-					this.$limberGridView[0].appendChild(div);
+					e.$limberGridView[0].appendChild(div);
 				}
-				this.$limberGridViewContainer[0].appendChild(
-					this.$limberGridView[0]
-				);
+				e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
 			}
 		}
 
 		if (options.dataType == "string") {
-			this.$limberGridView[0].innerHTML = html.join("");
+			e.$limberGridView[0].innerHTML = html.join("");
 		}
 
 		// dev Code
@@ -687,8 +696,8 @@ window.LimberGridView = (function() {
 		console.log(t1 - t0);
 		// dev Code END
 
-		this.$limberGridViewItems = this.$limberGridView[0].querySelectorAll(
-			".limberGridViewItem"
+		set$limberGridViewItems(
+			e.$limberGridView[0].querySelectorAll(".limberGridViewItem")
 		);
 
 		this.renderPseudoElements(_positionData);
@@ -705,15 +714,15 @@ window.LimberGridView = (function() {
 	};
 
 	LimberGridView.prototype.renderPseudoElements = function(_positionData) {
-		if (this.$limberGridViewGridPseudoItems != undefined) {
+		if (e.$limberGridViewGridPseudoItems != undefined) {
 			var length_0 = _positionData.length;
 			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewGridPseudoItems[0].parentNode.removeChild(
-					this.$limberGridViewGridPseudoItems[0]
+				e.$limberGridViewGridPseudoItems[0].parentNode.removeChild(
+					e.$limberGridViewGridPseudoItems[0]
 				);
 			}
-			this.$limberGridViewGridPseudoItems = undefined;
-			this.$limberGridViewBodyPseudoItems = undefined;
+			e.$limberGridViewGridPseudoItems = undefined;
+			set$limberGridViewBodyPseudoItems(undefined);
 		}
 
 		var gridHtml = [];
@@ -802,28 +811,37 @@ window.LimberGridView = (function() {
 		gridHtml.push(limberGridViewAddItemGuide);
 		gridHtml.push(limberGridViewAddItemOnTouchHoldGuide);
 
-		this.$bodyPseudoEl.innerHTML = bodyHtml.join("");
-		this.$limberGridView[0].insertAdjacentHTML(
-			"beforeend",
-			gridHtml.join("")
+		e.$bodyPseudoEl.innerHTML = bodyHtml.join("");
+		e.$limberGridView[0].insertAdjacentHTML("beforeend", gridHtml.join(""));
+		set$limberGridViewGridPseudoItems(
+			e.$limberGridView[0].getElementsByClassName(
+				"limberGridViewGridPseudoItem"
+			)
 		);
-		this.$limberGridViewGridPseudoItems = this.$limberGridView[0].getElementsByClassName(
-			"limberGridViewGridPseudoItem"
+		set$limberGridViewBodyPseudoItems(
+			e.$bodyPseudoEl.getElementsByClassName(
+				"limberGridViewBodyPseudoItem"
+			)
 		);
-		this.$limberGridViewBodyPseudoItems = this.$bodyPseudoEl.getElementsByClassName(
-			"limberGridViewBodyPseudoItem"
+		set$limberGridViewMoveGuide(
+			e.$limberGridView[0].getElementsByClassName(
+				"limberGridViewMoveGuide"
+			)
 		);
-		this.$limberGridViewMoveGuide = this.$limberGridView[0].getElementsByClassName(
-			"limberGridViewMoveGuide"
+		set$limberGridViewHeightAdjustGuide(
+			e.$limberGridView[0].getElementsByClassName(
+				"limberGridViewHeightAdjustGuide"
+			)
 		);
-		this.$limberGridViewHeightAdjustGuide = this.$limberGridView[0].getElementsByClassName(
-			"limberGridViewHeightAdjustGuide"
+		set$limberGridViewAddItemGuide(
+			e.$limberGridView[0].getElementsByClassName(
+				"limberGridViewAddItemGuide"
+			)
 		);
-		this.$limberGridViewAddItemGuide = this.$limberGridView[0].getElementsByClassName(
-			"limberGridViewAddItemGuide"
-		);
-		this.$limberGridViewAddItemOnTouchHoldGuide = this.$limberGridView[0].getElementsByClassName(
-			"limberGridViewAddItemOnTouchHoldGuide"
+		set$limberGridViewAddItemOnTouchHoldGuide(
+			e.$limberGridView[0].getElementsByClassName(
+				"limberGridViewAddItemOnTouchHoldGuide"
+			)
 		);
 	};
 
@@ -833,7 +851,7 @@ window.LimberGridView = (function() {
 		processType = "onDemand"
 	) {
 		this.unInitializeEvents();
-		var scrollTop = this.$limberGridView[0].scrollTop;
+		var scrollTop = e.$limberGridView[0].scrollTop;
 		if (scale == true) {
 			var WIDTH_SCALE_FACTOR = this.WIDTH_SCALE_FACTOR;
 		} else {
@@ -851,9 +869,7 @@ window.LimberGridView = (function() {
 		var t0 = performance.now();
 		// dev Code END
 		if (!this.isMobile()) {
-			this.$limberGridViewContainer[0].removeChild(
-				this.$limberGridView[0]
-			);
+			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 			var length_0 = items.length;
 			for (var i = 0; i < length_0; i++) {
 				positionData[items[i]].width *= WIDTH_SCALE_FACTOR;
@@ -896,24 +912,20 @@ window.LimberGridView = (function() {
 				}
 
 				if (
-					this.$limberGridViewItems[items[i]] == undefined ||
-					this.$limberGridViewItems[items[i]] == null
+					e.$limberGridViewItems[items[i]] == undefined ||
+					e.$limberGridViewItems[items[i]] == null
 				) {
-					this.$limberGridView[0].appendChild(div);
+					e.$limberGridView[0].appendChild(div);
 				} else {
-					this.$limberGridView[0].replaceChild(
+					e.$limberGridView[0].replaceChild(
 						div,
-						this.$limberGridViewItems[items[i]]
+						e.$limberGridViewItems[items[i]]
 					);
 				}
 			}
-			this.$limberGridViewContainer[0].appendChild(
-				this.$limberGridView[0]
-			);
+			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
 		} else {
-			this.$limberGridViewContainer[0].removeChild(
-				this.$limberGridView[0]
-			);
+			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 			var length_0 = items.length;
 			for (var i = 0; i < length_0; i++) {
 				var div = document.createElement("div");
@@ -954,20 +966,18 @@ window.LimberGridView = (function() {
 				}
 
 				if (
-					this.$limberGridViewItems[items[i]] == undefined ||
-					this.$limberGridViewItems[items[i]] == null
+					e.$limberGridViewItems[items[i]] == undefined ||
+					e.$limberGridViewItems[items[i]] == null
 				) {
-					this.$limberGridView[0].appendChild(div);
+					e.$limberGridView[0].appendChild(div);
 				} else {
-					this.$limberGridView[0].replaceChild(
+					e.$limberGridView[0].replaceChild(
 						div,
-						this.$limberGridViewItems[items[i]]
+						e.$limberGridViewItems[items[i]]
 					);
 				}
 			}
-			this.$limberGridViewContainer[0].appendChild(
-				this.$limberGridView[0]
-			);
+			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
 		}
 
 		// dev Code
@@ -976,7 +986,7 @@ window.LimberGridView = (function() {
 		console.log(t1);
 		console.log(t1 - t0);
 		// dev Code END
-		this.$limberGridViewItems = this.$limberGridView[0].querySelectorAll(
+		e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
 			".limberGridViewItem"
 		);
 
@@ -999,7 +1009,7 @@ window.LimberGridView = (function() {
 			processType != "removeItems" &&
 			processType != "addItemInteractive"
 		) {
-			this.$limberGridView[0].scrollTop = scrollTop;
+			e.$limberGridView[0].scrollTop = scrollTop;
 			callbacks.itemsRenderComplete(
 				renderDetails.items,
 				scale,
@@ -1016,10 +1026,8 @@ window.LimberGridView = (function() {
 		var bodyHtml = [];
 
 		if (!this.isMobile()) {
-			this.$limberGridViewContainer[0].removeChild(
-				this.$limberGridView[0]
-			);
-			this.$body[0].removeChild(this.$bodyPseudoEl);
+			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+			e.$body[0].removeChild(e.$bodyPseudoEl);
 			var length_0 = items.length;
 			for (var i = 0; i < length_0; i++) {
 				var divGrid = document.createElement("div");
@@ -1046,32 +1054,27 @@ window.LimberGridView = (function() {
 				divBody.style.height = positionData[items[i]].height + "px";
 
 				if (
-					this.$limberGridViewGridPseudoItems[items[i]] ==
-						undefined ||
-					this.$limberGridViewGridPseudoItems[items[i]] == null
+					e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
+					e.$limberGridViewGridPseudoItems[items[i]] == null
 				) {
-					this.$limberGridView[0].appendChild(divGrid);
-					this.$bodyPseudoEl.appendChild(divBody);
+					e.$limberGridView[0].appendChild(divGrid);
+					e.$bodyPseudoEl.appendChild(divBody);
 				} else {
-					this.$limberGridView[0].replaceChild(
+					e.$limberGridView[0].replaceChild(
 						divGrid,
-						this.$limberGridViewGridPseudoItems[items[i]]
+						e.$limberGridViewGridPseudoItems[items[i]]
 					);
-					this.$bodyPseudoEl.replaceChild(
+					e.$bodyPseudoEl.replaceChild(
 						divBody,
-						this.$limberGridViewBodyPseudoItems[items[i]]
+						e.$limberGridViewBodyPseudoItems[items[i]]
 					);
 				}
 			}
-			this.$limberGridViewContainer[0].appendChild(
-				this.$limberGridView[0]
-			);
-			this.$body[0].appendChild(this.$bodyPseudoEl);
+			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+			e.$body[0].appendChild(e.$bodyPseudoEl);
 		} else {
-			this.$limberGridViewContainer[0].removeChild(
-				this.$limberGridView[0]
-			);
-			this.$body[0].removeChild(this.$bodyPseudoEl);
+			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+			e.$body[0].removeChild(e.$bodyPseudoEl);
 			var length_0 = items.length;
 			for (var i = 0; i < length_0; i++) {
 				var divGrid = document.createElement("div");
@@ -1110,33 +1113,32 @@ window.LimberGridView = (function() {
 					"px";
 
 				if (
-					this.$limberGridViewGridPseudoItems[items[i]] ==
-						undefined ||
-					this.$limberGridViewGridPseudoItems[items[i]] == null
+					e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
+					e.$limberGridViewGridPseudoItems[items[i]] == null
 				) {
-					this.$limberGridView[0].appendChild(divGrid);
-					this.$bodyPseudoEl.appendChild(divBody);
+					e.$limberGridView[0].appendChild(divGrid);
+					e.$bodyPseudoEl.appendChild(divBody);
 				} else {
-					this.$limberGridView[0].replaceChild(
+					e.$limberGridView[0].replaceChild(
 						divGrid,
-						this.$limberGridViewGridPseudoItems[items[i]]
+						e.$limberGridViewGridPseudoItems[items[i]]
 					);
-					this.$bodyPseudoEl.replaceChild(
+					e.$bodyPseudoEl.replaceChild(
 						divBody,
-						this.$limberGridViewBodyPseudoItems[items[i]]
+						e.$limberGridViewBodyPseudoItems[items[i]]
 					);
 				}
 			}
-			this.$limberGridViewContainer[0].appendChild(
-				this.$limberGridView[0]
-			);
-			this.$body[0].appendChild(this.$bodyPseudoEl);
+			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+			e.$body[0].appendChild(e.$bodyPseudoEl);
 		}
 
-		this.$limberGridViewGridPseudoItems = this.$limberGridView[0].getElementsByClassName(
-			"limberGridViewGridPseudoItem"
+		set$limberGridViewGridPseudoItems(
+			e.$limberGridView[0].getElementsByClassName(
+				"limberGridViewGridPseudoItem"
+			)
 		);
-		this.$limberGridViewBodyPseudoItems = this.$bodyPseudoEl.getElementsByClassName(
+		e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
 			"limberGridViewBodyPseudoItem"
 		);
 	};
@@ -1156,7 +1158,7 @@ window.LimberGridView = (function() {
 	LimberGridView.prototype.removeItems = function(itemsIndices) {
 		this.unInitializeEvents();
 
-		var scrollTop = this.$limberGridView[0].scrollTop;
+		var scrollTop = e.$limberGridView[0].scrollTop;
 
 		var itemsToRender = [];
 		var length_0 = positionData.length - 1;
@@ -1174,21 +1176,21 @@ window.LimberGridView = (function() {
 			var index = itemsIndices[i];
 			positionData.splice(index, 1);
 
-			var item = this.$limberGridViewItems[index];
-			var pseudoGridItem = this.$limberGridViewGridPseudoItems[index];
-			var pseudoBodyItem = this.$limberGridViewBodyPseudoItems[index];
+			var item = e.$limberGridViewItems[index];
+			var pseudoGridItem = e.$limberGridViewGridPseudoItems[index];
+			var pseudoBodyItem = e.$limberGridViewBodyPseudoItems[index];
 
-			this.$limberGridView[0].removeChild(item);
-			this.$limberGridView[0].removeChild(pseudoGridItem);
-			this.$bodyPseudoEl.removeChild(pseudoBodyItem);
+			e.$limberGridView[0].removeChild(item);
+			e.$limberGridView[0].removeChild(pseudoGridItem);
+			e.$bodyPseudoEl.removeChild(pseudoBodyItem);
 
-			this.$limberGridViewItems = this.$limberGridView[0].querySelectorAll(
+			e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
 				".limberGridViewItem"
 			);
-			this.$limberGridViewGridPseudoItems = this.$limberGridView[0].getElementsByClassName(
+			e.$limberGridViewGridPseudoItems = e.$limberGridView[0].getElementsByClassName(
 				"limberGridViewGridPseudoItem"
 			);
-			this.$limberGridViewBodyPseudoItems = this.$bodyPseudoEl.getElementsByClassName(
+			e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
 				"limberGridViewBodyPseudoItem"
 			);
 		}
@@ -1205,7 +1207,7 @@ window.LimberGridView = (function() {
 			callbacks.removeCompleteCallback != undefined &&
 			callbacks.removeCompleteCallback != null
 		) {
-			this.$limberGridView[0].scrollTop = scrollTop;
+			e.$limberGridView[0].scrollTop = scrollTop;
 			callbacks.removeCompleteCallback(itemsIndices);
 		}
 	};
@@ -1267,14 +1269,14 @@ window.LimberGridView = (function() {
 			startingY = startingY + itemHeight + publicConstants.MARGIN;
 		}
 
-		var scrollHeight = this.$limberGridView[0].scrollHeight;
+		var scrollHeight = e.$limberGridView[0].scrollHeight;
 
 		var renderDetails = this.addItemsAtPositions(items, false, "addItems");
 
 		if (!this.isMobile()) {
-			this.$limberGridView[0].scrollTop = scrollToPosition;
+			e.$limberGridView[0].scrollTop = scrollToPosition;
 		} else {
-			this.$limberGridView[0].scrollTop = scrollHeight;
+			e.$limberGridView[0].scrollTop = scrollHeight;
 		}
 
 		if (
@@ -1337,12 +1339,12 @@ window.LimberGridView = (function() {
 		if (options.editable == true) {
 			if (this.isMobile() == false) {
 				if (options.enableInteractiveAddAndCut != false) {
-					this.$limberGridView[0].addEventListener(
+					e.$limberGridView[0].addEventListener(
 						"mousedown",
 						this.onLimberGridMouseDownFunctionVariable
 					);
 					if (options.enableTouchInteraction != false) {
-						this.$limberGridView[0].addEventListener(
+						e.$limberGridView[0].addEventListener(
 							"touchstart",
 							this.onLimberGridTouchStartFunctionVariable
 						);
@@ -1350,15 +1352,15 @@ window.LimberGridView = (function() {
 				}
 			}
 
-			var length_0 = this.$limberGridViewItems.length;
+			var length_0 = e.$limberGridViewItems.length;
 			for (var i = 0; i < length_0; i++) {
 				if (this.isMobile() == false) {
-					this.$limberGridViewItems[i].addEventListener(
+					e.$limberGridViewItems[i].addEventListener(
 						"mousedown",
 						this.onItemMouseDownFunctionVariable
 					);
 					if (options.enableTouchInteraction != false) {
-						this.$limberGridViewItems[i].addEventListener(
+						e.$limberGridViewItems[i].addEventListener(
 							"touchstart",
 							this.onItemTouchStartFunctionVariable
 						);
@@ -1369,7 +1371,7 @@ window.LimberGridView = (function() {
 					callbacks.onItemClickCallback != undefined &&
 					callbacks.onItemClickCallback != null
 				) {
-					this.$limberGridViewItems[i].addEventListener(
+					e.$limberGridViewItems[i].addEventListener(
 						"click",
 						this.onItemClickFunctionVariable
 					);
@@ -1380,30 +1382,30 @@ window.LimberGridView = (function() {
 
 	LimberGridView.prototype.unInitializeEvents = function() {
 		if (options.editable == true) {
-			if (this.$limberGridView != undefined) {
-				this.$limberGridView[0].removeEventListener(
+			if (e.$limberGridView != undefined) {
+				e.$limberGridView[0].removeEventListener(
 					"mousedown",
 					this.onLimberGridMouseDownFunctionVariable
 				);
-				this.$limberGridView[0].removeEventListener(
+				e.$limberGridView[0].removeEventListener(
 					"touchstart",
 					this.onLimberGridTouchStartFunctionVariable
 				);
 			}
 
-			if (this.$limberGridViewItems != undefined) {
-				var length_0 = this.$limberGridViewItems.length;
+			if (e.$limberGridViewItems != undefined) {
+				var length_0 = e.$limberGridViewItems.length;
 				for (var i = 0; i < length_0; i++) {
-					this.$limberGridViewItems[i].removeEventListener(
+					e.$limberGridViewItems[i].removeEventListener(
 						"mousedown",
 						this.onItemMouseDownFunctionVariable
 					);
-					this.$limberGridViewItems[i].removeEventListener(
+					e.$limberGridViewItems[i].removeEventListener(
 						"touchstart",
 						this.onItemTouchStartFunctionVariable
 					);
 
-					this.$limberGridViewItems[i].removeEventListener(
+					e.$limberGridViewItems[i].removeEventListener(
 						"click",
 						this.onItemClickFunctionVariable
 					);
@@ -1413,14 +1415,14 @@ window.LimberGridView = (function() {
 	};
 
 	LimberGridView.prototype.initializeItemTouchEvents = function() {
-		if (this.$limberGridViewItems != undefined) {
-			var length_0 = this.$limberGridViewItems.length;
+		if (e.$limberGridViewItems != undefined) {
+			var length_0 = e.$limberGridViewItems.length;
 			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewItems[i].addEventListener(
+				e.$limberGridViewItems[i].addEventListener(
 					"mousedown",
 					this.onItemMouseDownFunctionVariable
 				);
-				this.$limberGridViewItems[i].addEventListener(
+				e.$limberGridViewItems[i].addEventListener(
 					"touchstart",
 					this.onItemTouchStartFunctionVariable
 				);
@@ -1429,14 +1431,14 @@ window.LimberGridView = (function() {
 	};
 
 	LimberGridView.prototype.unInitializeItemTouchEvents = function() {
-		if (this.$limberGridViewItems != undefined) {
-			var length_0 = this.$limberGridViewItems.length;
+		if (e.$limberGridViewItems != undefined) {
+			var length_0 = e.$limberGridViewItems.length;
 			for (var i = 0; i < length_0; i++) {
-				this.$limberGridViewItems[i].removeEventListener(
+				e.$limberGridViewItems[i].removeEventListener(
 					"mousedown",
 					this.onItemMouseDownFunctionVariable
 				);
-				this.$limberGridViewItems[i].removeEventListener(
+				e.$limberGridViewItems[i].removeEventListener(
 					"touchstart",
 					this.onItemTouchStartFunctionVariable
 				);

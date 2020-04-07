@@ -38,6 +38,7 @@ import {
 import publicConstants from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
 import { positionData } from "../../variables/essentials";
+import e from "../../variables/elements";
 
 export const findFreeSpaces = function(item, affectedItems) {
 	var freeSpaces = [];
@@ -1270,7 +1271,7 @@ export const shiftItemsUp = function(y, shiftHeight) {
 	for (var i = 0; i < length_0; i++) {
 		if (positionData[i].y >= y) {
 			positionData[i].y -= shiftHeight;
-			this.$limberGridViewItems[i].style.transform =
+			e.$limberGridViewItems[i].style.transform =
 				"translate(" +
 				positionData[i].x +
 				"px, " +

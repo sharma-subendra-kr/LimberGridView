@@ -41,6 +41,7 @@ import {
 } from "./calcUtils";
 import privateConstants from "../../constants/privateConstants";
 import { positionData, setPositionData } from "../../variables/essentials";
+import e from "../../variables/elements";
 
 export const resizePlane = function(index, width, height) {
 	let _positionData;
@@ -137,13 +138,13 @@ export const resizePlane = function(index, width, height) {
 
 	var length_0 = _positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		this.$limberGridViewItems[i].style.transform =
+		e.$limberGridViewItems[i].style.transform =
 			"translate(" +
 			_positionData[i].x +
 			"px, " +
 			_positionData[i].y +
 			"px)";
-		this.$limberGridViewItems[i].classList.remove(
+		e.$limberGridViewItems[i].classList.remove(
 			"limberGridViewItemDemo",
 			"limberGridViewItemResizingState"
 		);
@@ -151,9 +152,9 @@ export const resizePlane = function(index, width, height) {
 
 	setPositionData(_positionData);
 
-	var scrollTop = this.$limberGridView[0].scrollTop;
+	var scrollTop = e.$limberGridView[0].scrollTop;
 	this.renderItems([index], false, "resizeItems");
-	this.$limberGridView[0].scrollTop = scrollTop;
+	e.$limberGridView[0].scrollTop = scrollTop;
 };
 
 export const resizePlaneDemo = function(index, width, height) {
@@ -169,15 +170,15 @@ export const resizePlaneDemo = function(index, width, height) {
 		return false;
 	}
 
-	var length_0 = this.$limberGridViewItems.length;
+	var length_0 = e.$limberGridViewItems.length;
 	for (var i = 0; i < length_0; i++) {
-		this.$limberGridViewItems[i].style.transform =
+		e.$limberGridViewItems[i].style.transform =
 			"translate(" +
 			positionData[i].x +
 			"px, " +
 			positionData[i].y +
 			"px)";
-		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
+		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
 	var allAffectedItems = findAffectedItemsOnResize.call(
@@ -223,11 +224,11 @@ export const resizePlaneDemo = function(index, width, height) {
 	var length_0 = fittedItems.length;
 	for (var i = 0; i < length_0; i++) {
 		var ind = fittedItems[i].index;
-		this.$limberGridViewItems[ind].style.transform =
+		e.$limberGridViewItems[ind].style.transform =
 			"translate(" + fittedItems[i].x + "px, " + fittedItems[i].y + "px)";
 	}
 
-	this.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
+	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
 
 	var remainingItems = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -246,9 +247,7 @@ export const resizePlaneDemo = function(index, width, height) {
 		if (fittedFlag == false) {
 			var ind = allAffectedItems.affectedItemsExceptSelf[i];
 			remainingItems.push(allAffectedItems.affectedItemsExceptSelf[i]);
-			this.$limberGridViewItems[ind].classList.add(
-				"limberGridViewItemDemo"
-			);
+			e.$limberGridViewItems[ind].classList.add("limberGridViewItemDemo");
 		}
 	}
 };
@@ -330,28 +329,28 @@ export const movePlane = function(index, toX, toY) {
 
 	var length_0 = _positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		this.$limberGridViewItems[i].style.transform =
+		e.$limberGridViewItems[i].style.transform =
 			"translate(" +
 			_positionData[i].x +
 			"px, " +
 			_positionData[i].y +
 			"px)";
-		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
+		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
 	setPositionData(_positionData);
 };
 
 export const movePlaneDemo = function(index, toX, toY) {
-	var length_0 = this.$limberGridViewItems.length;
+	var length_0 = e.$limberGridViewItems.length;
 	for (var i = 0; i < length_0; i++) {
-		this.$limberGridViewItems[i].style.transform =
+		e.$limberGridViewItems[i].style.transform =
 			"translate(" +
 			positionData[i].x +
 			"px, " +
 			positionData[i].y +
 			"px)";
-		this.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
+		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
 	var allAffectedItems = findAffectedItemsOnMove.call(this, index, toX, toY);
@@ -392,11 +391,11 @@ export const movePlaneDemo = function(index, toX, toY) {
 	var length_0 = fittedItems.length;
 	for (var i = 0; i < length_0; i++) {
 		var ind = fittedItems[i].index;
-		this.$limberGridViewItems[ind].style.transform =
+		e.$limberGridViewItems[ind].style.transform =
 			"translate(" + fittedItems[i].x + "px, " + fittedItems[i].y + "px)";
 	}
 
-	this.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
+	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
 
 	var remainingItems = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -415,9 +414,7 @@ export const movePlaneDemo = function(index, toX, toY) {
 		if (fittedFlag == false) {
 			var ind = allAffectedItems.affectedItemsExceptSelf[i];
 			remainingItems.push(allAffectedItems.affectedItemsExceptSelf[i]);
-			this.$limberGridViewItems[ind].classList.add(
-				"limberGridViewItemDemo"
-			);
+			e.$limberGridViewItems[ind].classList.add("limberGridViewItemDemo");
 		}
 	}
 };

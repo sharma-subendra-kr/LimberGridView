@@ -26,6 +26,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 import publicConstants from "../../constants/publicConstants";
 import { positionData } from "../../variables/essentials";
+import e from "../../variables/elements";
 
 export const getPlainFrom4Points = function(pointsArray) {
 	var minX = -1;
@@ -237,4 +238,56 @@ export const getRowSequence = function(serialize) {
 
 		return { list: arr, map: map };
 	}
+};
+
+export const adjustHeight = function(yMouseOrTouchPosition) {
+	var scrollHeight = e.$limberGridView[0].scrollHeight;
+	if (
+		scrollHeight - yMouseOrTouchPosition <=
+		publicConstants.AUTO_SCROLL_POINT
+	) {
+		e.$limberGridViewHeightAdjustGuide[0].style.height =
+			yMouseOrTouchPosition +
+			publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
+			"px";
+	}
+};
+
+export const adjustScroll = function(
+	limberGridViewOnVisibleAreaY,
+	limberGridViewHeightVisibleHeight
+) {
+	var scrollTop = e.$limberGridView[0].scrollTop;
+	// var scrollLeft = this.$limberGridView[0].scrollLeft;
+	var programScrolled = false;
+	if (limberGridViewOnVisibleAreaY > 0) {
+		if (
+			limberGridViewHeightVisibleHeight - limberGridViewOnVisibleAreaY <
+			publicConstants.AUTO_SCROLL_POINT
+		) {
+			e.$limberGridView[0].scrollTop =
+				scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
+			programScrolled = true;
+		}
+		if (
+			limberGridViewOnVisibleAreaY < privateConstants.HEIGHT / 10 &&
+			scrollTop != 0
+		) {
+			e.$limberGridView[0].scrollTop =
+				scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
+			programScrolled = true;
+		}
+	}
+
+	// if(limberGridViewOnVisibleAreaX > 0){
+	// 	if((limberGridViewWidthVisibleWidth - limberGridViewOnVisibleAreaX) < (this.WIDTH/10)){
+	// 		this.$limberGridView[0].scrollLeft = scrollLeft + 100;
+	// 		var programScrolled = true;
+	// 	}
+	// 	if((limberGridViewOnVisibleAreaX) < (this.WIDTH/10) && scrollLeft != 0){
+	// 		this.$limberGridView[0].scrollLeft = scrollLeft - 100;
+	// 		var programScrolled = true;
+	// 	}
+	// }
+	return programScrolled;
 };
