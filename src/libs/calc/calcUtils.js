@@ -986,7 +986,7 @@ export const fitRemainingItemsAboveDeepestLine = function(
 	var fittedItems = fitDetails.repositionedItems;
 
 	if (fittedItems.length > 0) {
-		fittedRemainingItems = {};
+		let fittedRemainingItems = {};
 		var length_0 = fittedItems.length;
 		var length_1 = remainingItems.length;
 		for (var i = 0; i < length_0; i++) {

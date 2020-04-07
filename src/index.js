@@ -88,7 +88,12 @@ import {
 } from "./libs/utils/essentials";
 
 import publicConstants from "./constants/publicConstants";
-import privateConstants from "./constants/privateConstants";
+import privateConstants, {
+	setPaddingLeft,
+	setPaddingRight,
+	setPaddingTop,
+	setPaddingBottom,
+} from "./constants/privateConstants";
 import options, { setOptions } from "./variables/options";
 import {
 	positionData,
@@ -263,9 +268,6 @@ window.LimberGridView = (function() {
 				this
 			);
 
-			this.limberGridMouseDownCheckTimeOutVariable = null;
-			this.limberGridTouchStartCheckTimeOutVariable = null;
-
 			if (
 				options.moveGuideRadius != undefined &&
 				options.moveGuideRadius != null
@@ -348,35 +350,43 @@ window.LimberGridView = (function() {
 		set$limberGridViewStyle(e.$el.getElementsByTagName("style"));
 		set$limberGridView(e.$el.querySelectorAll(".limberGridView"));
 
-		this.PADDING_LEFT = parseInt(
-			window
-				.getComputedStyle(e.$limberGridView[0], null)
-				.getPropertyValue("padding-left")
+		setPaddingLeft(
+			parseInt(
+				window
+					.getComputedStyle(e.$limberGridView[0], null)
+					.getPropertyValue("padding-left")
+			)
 		);
-		this.PADDING_RIGHT = parseInt(
-			window
-				.getComputedStyle(e.$limberGridView[0], null)
-				.getPropertyValue("padding-right")
+		setPaddingRight(
+			parseInt(
+				window
+					.getComputedStyle(e.$limberGridView[0], null)
+					.getPropertyValue("padding-right")
+			)
 		);
-		this.PADDING_TOP = parseInt(
-			window
-				.getComputedStyle(e.$limberGridView[0], null)
-				.getPropertyValue("padding-top")
+		setPaddingTop(
+			parseInt(
+				window
+					.getComputedStyle(e.$limberGridView[0], null)
+					.getPropertyValue("padding-top")
+			)
 		);
-		this.PADDING_BOTTOM = parseInt(
-			window
-				.getComputedStyle(e.$limberGridView[0], null)
-				.getPropertyValue("padding-bottom")
+		setPaddingBottom(
+			parseInt(
+				window
+					.getComputedStyle(e.$limberGridView[0], null)
+					.getPropertyValue("padding-bottom")
+			)
 		);
 
 		privateConstants.WIDTH =
 			e.$limberGridView[0].clientWidth -
-			this.PADDING_LEFT -
-			this.PADDING_RIGHT;
+			privateConstants.PADDING_LEFT -
+			privateConstants.PADDING_RIGHT;
 		privateConstants.HEIGHT =
 			e.$limberGridView[0].clientHeight -
-			this.PADDING_TOP -
-			this.PADDING_BOTTOM;
+			privateConstants.PADDING_TOP -
+			privateConstants.PADDING_BOTTOM;
 
 		if (
 			(initialGridWidth == undefined || initialGridWidth == null) &&
