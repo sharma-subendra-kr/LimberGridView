@@ -86,7 +86,10 @@ import {
 	getMarginAtPoint,
 	getRowSequence,
 } from "./libs/utils/essentials";
-import { isMobile } from "./libs/utils/utils";
+import {
+	isMobile,
+	setIsMobileFunction as setIsMobileFunc,
+} from "./libs/utils/utils";
 import publicConstants from "./constants/publicConstants";
 import privateConstants, {
 	setPaddingLeft,
@@ -1472,6 +1475,10 @@ window.LimberGridView = (function() {
 	// --------------------------- EVENT INITIALIZERS AND UNINITIALIZERS END ------------------- //
 
 	// ----------------------------------------------------------------------------------------- //
+
+	LimberGridView.prototype.setIsMobileFunction = function(f) {
+		setIsMobileFunc(f);
+	};
 
 	// LimberGridView.prototype.isMobile = function() {
 	// 	// production

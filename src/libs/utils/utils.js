@@ -27,6 +27,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 import publicConstants from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
 
+let isMobileFunction;
+
 export const emptyObject = function(obj) {
 	let keys = Object.keys(obj);
 	let length = keys.length;
@@ -35,7 +37,11 @@ export const emptyObject = function(obj) {
 	}
 };
 
-export const isMobile = function() {
+export let isMobile = function() {
+	if (isMobileFunction) {
+		return isMobileFunction();
+	}
+
 	// production
 	return window.matchMedia(
 		"only screen and (max-width: 1033px) and (min-width : 1px)"
@@ -44,4 +50,8 @@ export const isMobile = function() {
 	// return window.matchMedia("only screen and (max-width: 900px) and (min-width : 1px)").matches;
 	// return false;
 	// return true;
+};
+
+export const setIsMobileFunction = function(f) {
+	isMobileFunction = f;
 };
