@@ -59,25 +59,16 @@ export const resizePlane = function(index, width, height) {
 		return false;
 	}
 
-	var allAffectedItems = findAffectedItemsOnResize.call(
-		this,
-		index,
-		width,
-		height
-	);
+	var allAffectedItems = findAffectedItemsOnResize(index, width, height);
 
 	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.width = width;
 	item.height = height;
-	var freeSpaces = findFreeSpaces.call(
-		this,
-		item,
-		allAffectedItems.affectedItems
-	);
+	var freeSpaces = findFreeSpaces(item, allAffectedItems.affectedItems);
 
 	// NOW MERGE FREE SPACES
 	item.doNotMergeFlag = true;
-	var mergedFreeSpaces = mergeFreeSpaces.call(this, freeSpaces, [item]);
+	var mergedFreeSpaces = mergeFreeSpaces(freeSpaces, [item]);
 
 	var affectedItemsExceptSelfObjects = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -91,8 +82,7 @@ export const resizePlane = function(index, width, height) {
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
 
-	var fitDetails = fitItemsIntoFreeSpaces.call(
-		this,
+	var fitDetails = fitItemsIntoFreeSpaces(
 		affectedItemsExceptSelfObjects,
 		JSON.parse(JSON.stringify(mergedFreeSpaces)),
 		[item]
@@ -128,8 +118,7 @@ export const resizePlane = function(index, width, height) {
 		}
 	}
 
-	_positionData = fitRemainingItems.call(
-		this,
+	_positionData = fitRemainingItems(
 		_positionData,
 		remainingItems,
 		allAffectedItems,
@@ -182,25 +171,16 @@ export const resizePlaneDemo = function(index, width, height) {
 		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
-	var allAffectedItems = findAffectedItemsOnResize.call(
-		this,
-		index,
-		width,
-		height
-	);
+	var allAffectedItems = findAffectedItemsOnResize(index, width, height);
 
 	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.width = width;
 	item.height = height;
-	var freeSpaces = findFreeSpaces.call(
-		this,
-		item,
-		allAffectedItems.affectedItems
-	);
+	var freeSpaces = findFreeSpaces(item, allAffectedItems.affectedItems);
 
 	// NOW MERGE FREE SPACES
 	item.doNotMergeFlag = true;
-	var mergedFreeSpaces = mergeFreeSpaces.call(this, freeSpaces, [item]);
+	var mergedFreeSpaces = mergeFreeSpaces(freeSpaces, [item]);
 
 	var affectedItemsExceptSelfObjects = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -214,8 +194,7 @@ export const resizePlaneDemo = function(index, width, height) {
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
 
-	var fitDetails = fitItemsIntoFreeSpaces.call(
-		this,
+	var fitDetails = fitItemsIntoFreeSpaces(
 		affectedItemsExceptSelfObjects,
 		JSON.parse(JSON.stringify(mergedFreeSpaces)),
 		[item]
@@ -255,20 +234,16 @@ export const resizePlaneDemo = function(index, width, height) {
 
 export const movePlane = function(index, toX, toY) {
 	let _positionData;
-	var allAffectedItems = findAffectedItemsOnMove.call(this, index, toX, toY);
+	var allAffectedItems = findAffectedItemsOnMove(index, toX, toY);
 
 	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.x = toX;
 	item.y = toY;
-	var freeSpaces = findFreeSpaces.call(
-		this,
-		item,
-		allAffectedItems.affectedItems
-	);
+	var freeSpaces = findFreeSpaces(item, allAffectedItems.affectedItems);
 
 	// NOW MERGE FREE SPACES
 	item.doNotMergeFlag = true;
-	var mergedFreeSpaces = mergeFreeSpaces.call(this, freeSpaces, [item]);
+	var mergedFreeSpaces = mergeFreeSpaces(freeSpaces, [item]);
 
 	var affectedItemsExceptSelfObjects = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -282,8 +257,7 @@ export const movePlane = function(index, toX, toY) {
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
 
-	var fitDetails = fitItemsIntoFreeSpaces.call(
-		this,
+	var fitDetails = fitItemsIntoFreeSpaces(
 		affectedItemsExceptSelfObjects,
 		JSON.parse(JSON.stringify(mergedFreeSpaces)),
 		[item]
@@ -319,8 +293,7 @@ export const movePlane = function(index, toX, toY) {
 		}
 	}
 
-	_positionData = fitRemainingItems.call(
-		this,
+	_positionData = fitRemainingItems(
 		_positionData,
 		remainingItems,
 		allAffectedItems,
@@ -354,20 +327,16 @@ export const movePlaneDemo = function(index, toX, toY) {
 		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
-	var allAffectedItems = findAffectedItemsOnMove.call(this, index, toX, toY);
+	var allAffectedItems = findAffectedItemsOnMove(index, toX, toY);
 
 	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.x = toX;
 	item.y = toY;
-	var freeSpaces = findFreeSpaces.call(
-		this,
-		item,
-		allAffectedItems.affectedItems
-	);
+	var freeSpaces = findFreeSpaces(item, allAffectedItems.affectedItems);
 
 	// NOW MERGE FREE SPACES
 	item.doNotMergeFlag = true;
-	var mergedFreeSpaces = mergeFreeSpaces.call(this, freeSpaces, [item]);
+	var mergedFreeSpaces = mergeFreeSpaces(freeSpaces, [item]);
 
 	var affectedItemsExceptSelfObjects = [];
 	var length_0 = allAffectedItems.affectedItemsExceptSelf.length;
@@ -381,8 +350,7 @@ export const movePlaneDemo = function(index, toX, toY) {
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
 
-	var fitDetails = fitItemsIntoFreeSpaces.call(
-		this,
+	var fitDetails = fitItemsIntoFreeSpaces(
 		affectedItemsExceptSelfObjects,
 		JSON.parse(JSON.stringify(mergedFreeSpaces)),
 		[item]

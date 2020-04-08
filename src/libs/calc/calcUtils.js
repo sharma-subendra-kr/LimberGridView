@@ -825,16 +825,14 @@ export const fitRemainingItems = function(
 	) {
 		// fitRemainingItems Case I
 		var greatestDepthOfAffectedArea = recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseGreater;
-		var itemsToShiftData = getItemsFromPointDepth.call(
-			this,
+		var itemsToShiftData = getItemsFromPointDepth(
 			greatestDepthOfAffectedArea,
 			true,
 			positionData
 		);
 		var itemsToShift = itemsToShiftData.itemsFromPointDepth;
 
-		var initialFitData = fitRemainingItemsAboveDeepestLine.call(
-			this,
+		var initialFitData = fitRemainingItemsAboveDeepestLine(
 			greatestDepthOfAffectedArea,
 			positionData,
 			remainingItems,
@@ -849,8 +847,7 @@ export const fitRemainingItems = function(
 			remainingItems,
 			allAffectedItems
 		);
-		var finalPositionData = shitftItemsBelow.call(
-			this,
+		var finalPositionData = shitftItemsBelow(
 			finalFitData.deepestY -
 				greatestDepthOfAffectedArea +
 				itemsToShiftData.shiftHeightToAdd,
@@ -863,8 +860,7 @@ export const fitRemainingItems = function(
 	) {
 		// fitRemainingItems Case II
 		var greatestDepthOfAffectedArea = recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseLesser;
-		var itemsToShiftData = getItemsFromPointDepth.call(
-			this,
+		var itemsToShiftData = getItemsFromPointDepth(
 			greatestDepthOfAffectedArea,
 			false,
 			positionData
@@ -877,8 +873,7 @@ export const fitRemainingItems = function(
 			remainingItems,
 			allAffectedItems
 		);
-		var finalPositionData = shitftItemsBelow.call(
-			this,
+		var finalPositionData = shitftItemsBelow(
 			finalFitData.deepestY - greatestDepthOfAffectedArea,
 			finalFitData.positionData,
 			itemsToShift
