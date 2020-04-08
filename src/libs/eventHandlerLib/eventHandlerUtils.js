@@ -24,6 +24,9 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import e from "../../variables/elements";
+import privateConstants from "../../constants/privateConstants";
+
 export const calculateTouchPosOnLimberGrid = function(event) {
 	var limberGridViewPosition = e.$limberGridView[0].getBoundingClientRect();
 

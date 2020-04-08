@@ -24,7 +24,9 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import options from "../../variables/options";
 import e, {
+	set$limberGridViewItems,
 	set$limberGridViewBodyPseudoItems,
 	set$limberGridViewGridPseudoItems,
 	set$limberGridViewMoveGuide,
@@ -35,11 +37,260 @@ import e, {
 import { isMobile } from "../utils/utils";
 import {
 	positionData,
+	callbacks,
 	serializedPositionData,
+	setSerializedPositionData,
 } from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
-import { getMarginAtPoint } from "../utils/essentials";
+import { getMarginAtPoint, getRowSequence } from "../utils/essentials";
+import {
+	initializeEvents,
+	unInitializeEvents,
+	initializeVariables,
+} from "../eventHandlerLib/initializers";
+
+export const render = function(_positionData, scale = true) {
+	unInitializeEvents();
+
+	if (_positionData === undefined || _positionData === null) {
+		var _positionData = positionData;
+	}
+	if (scale == true) {
+		var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
+	} else {
+		var WIDTH_SCALE_FACTOR = 1;
+	}
+
+	var classList = ["limberGridViewItem"];
+	if (options.editable == true) {
+		classList.push("limberGridViewItemEditable");
+	}
+	var classListString = classList.join(" ");
+
+	var html = [];
+
+	// dev Code
+	var t0 = performance.now();
+	// dev Code END
+
+	if (!isMobile()) {
+		if (options.dataType == "string") {
+			var length_0 = _positionData.length;
+			for (var i = 0; i < length_0; i++) {
+				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+				if (_positionData[i].width > privateConstants.WIDTH) {
+					_positionData[i].width = privateConstants.WIDTH;
+				}
+				var front =
+					'<div class = "' +
+					classListString +
+					'" data-index = "' +
+					i +
+					'" ';
+				var style_1 =
+					'style = "transform : translate(' +
+					(_positionData[i].x *= WIDTH_SCALE_FACTOR) +
+					"px, ";
+				var style_2 =
+					(_positionData[i].y *= WIDTH_SCALE_FACTOR) + "px); ";
+				var style_3 = "width : " + _positionData[i].width + "px; ";
+				var style_4 =
+					"height : " +
+					(_positionData[i].height *= WIDTH_SCALE_FACTOR) +
+					"px; ";
+				var style_5 = '">';
+
+				var style = style_1 + style_2 + style_3 + style_4 + style_5;
+
+				var bodyFront = "<div>";
+				var bodyEnd = "</div>";
+				var userData = callbacks.getItemRenderDataCallback(
+					i,
+					_positionData[i].width,
+					_positionData[i].height,
+					"render"
+				);
+
+				var body = bodyFront + userData + bodyEnd;
+				var end = "</div>";
+
+				var item = front + style + body + end;
+
+				html.push(item);
+			}
+		} else if (options.dataType == "node") {
+			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+
+			var length_0 = _positionData.length;
+			for (var i = 0; i < length_0; i++) {
+				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+				if (_positionData[i].width > privateConstants.WIDTH) {
+					_positionData[i].width = privateConstants.WIDTH;
+				}
+				var div = document.createElement("div");
+				var attribute = document.createAttribute("data-index");
+				attribute.value = i;
+				div.setAttributeNode(attribute);
+				if (classList.length > 0) {
+					div.classList.add(classList[0]);
+					div.classList.add(classList[1]);
+				} else {
+					div.classList.add(classList[0]);
+				}
+				div.style.transform =
+					"translate(" +
+					(_positionData[i].x *= WIDTH_SCALE_FACTOR) +
+					"px, " +
+					(_positionData[i].y *= WIDTH_SCALE_FACTOR) +
+					"px)";
+				div.style.width = _positionData[i].width + "px";
+				div.style.height =
+					(_positionData[i].height *= WIDTH_SCALE_FACTOR) + "px";
+
+				var userData = callbacks.getItemRenderDataCallback(
+					i,
+					_positionData[i].width,
+					_positionData[i].height,
+					"render"
+				);
+				if (typeof userData == "string") {
+					div.innerHTML = userData;
+				} else {
+					div.appendChild(userData);
+				}
+				e.$limberGridView[0].appendChild(div);
+			}
+			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+		}
+	} else {
+		setSerializedPositionData(getRowSequence(true));
+		if (options.dataType == "string") {
+			var length_0 = _positionData.length;
+			for (var i = 0; i < length_0; i++) {
+				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+				_positionData[i].height *= WIDTH_SCALE_FACTOR;
+				_positionData[i].x *= WIDTH_SCALE_FACTOR;
+				_positionData[i].y *= WIDTH_SCALE_FACTOR;
+				if (_positionData[i].width > privateConstants.WIDTH) {
+					_positionData[i].width = privateConstants.WIDTH;
+				}
+				var front =
+					'<div class = "limberGridViewItem" data-index = "' +
+					i +
+					'" ';
+				var style_1 = 'style = "transform : translate(' + 0 + "px, ";
+				var style_2 =
+					(privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+						getMarginAtPoint(serializedPositionData.map[i])) *
+						serializedPositionData.map[i] +
+					"px); ";
+				var style_3 = "width : " + privateConstants.WIDTH + "px; ";
+				var style_4 =
+					"height : " +
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+					"px; ";
+				var style_5 = '">';
+
+				var style = style_1 + style_2 + style_3 + style_4 + style_5;
+
+				var bodyFront = "<div>";
+				var bodyEnd = "</div>";
+				var userData = callbacks.getItemRenderDataCallback(
+					i,
+					privateConstants.WIDTH,
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO,
+					"render"
+				);
+
+				var body = bodyFront + userData + bodyEnd;
+				var end = "</div>";
+
+				var item = front + style + body + end;
+
+				html.push(item);
+			}
+		} else if (options.dataType == "node") {
+			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+
+			var length_0 = _positionData.length;
+			for (var i = 0; i < length_0; i++) {
+				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+				_positionData[i].height *= WIDTH_SCALE_FACTOR;
+				_positionData[i].x *= WIDTH_SCALE_FACTOR;
+				_positionData[i].y *= WIDTH_SCALE_FACTOR;
+				if (_positionData[i].width > privateConstants.WIDTH) {
+					_positionData[i].width = privateConstants.WIDTH;
+				}
+				var div = document.createElement("div");
+				var attribute = document.createAttribute("data-index");
+				attribute.value = i;
+				div.setAttributeNode(attribute);
+				div.classList.add("limberGridViewItem");
+
+				div.style.transform =
+					"translate(" +
+					0 +
+					"px, " +
+					(privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+						getMarginAtPoint(serializedPositionData.map[i])) *
+						serializedPositionData.map[i] +
+					"px)";
+				div.style.width = privateConstants.WIDTH + "px";
+				div.style.height =
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO +
+					"px";
+
+				var userData = callbacks.getItemRenderDataCallback(
+					i,
+					privateConstants.WIDTH,
+					privateConstants.WIDTH /
+						publicConstants.MOBILE_ASPECT_RATIO,
+					"render"
+				);
+				if (typeof userData == "string") {
+					div.innerHTML = userData;
+				} else {
+					div.appendChild(userData);
+				}
+				e.$limberGridView[0].appendChild(div);
+			}
+			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+		}
+	}
+
+	if (options.dataType == "string") {
+		e.$limberGridView[0].innerHTML = html.join("");
+	}
+
+	// dev Code
+	var t1 = performance.now();
+	console.log(t0);
+	console.log(t1);
+	console.log(t1 - t0);
+	// dev Code END
+
+	set$limberGridViewItems(
+		e.$limberGridView[0].querySelectorAll(".limberGridViewItem")
+	);
+
+	renderPseudoElements(_positionData);
+
+	initializeVariables();
+	initializeEvents();
+
+	if (
+		callbacks.renderComplete != undefined &&
+		callbacks.renderComplete != null
+	) {
+		callbacks.renderComplete();
+	}
+};
 
 export const renderPseudoElements = function(_positionData) {
 	if (e.$limberGridViewGridPseudoItems != undefined) {
@@ -160,6 +411,175 @@ export const renderPseudoElements = function(_positionData) {
 			"limberGridViewAddItemOnTouchHoldGuide"
 		)
 	);
+};
+
+export const renderItems = function(
+	items,
+	scale = true,
+	processType = "onDemand"
+) {
+	unInitializeEvents();
+	var scrollTop = e.$limberGridView[0].scrollTop;
+	if (scale == true) {
+		var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
+	} else {
+		var WIDTH_SCALE_FACTOR = 1;
+	}
+
+	var classList = ["limberGridViewItem"];
+	if (options.editable == true) {
+		classList.push("limberGridViewItemEditable");
+	}
+
+	var html = [];
+
+	// dev Code
+	var t0 = performance.now();
+	// dev Code END
+	if (!isMobile()) {
+		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+		var length_0 = items.length;
+		for (var i = 0; i < length_0; i++) {
+			positionData[items[i]].width *= WIDTH_SCALE_FACTOR;
+			if (positionData[items[i]].width > privateConstants.WIDTH) {
+				positionData[items[i]].width = privateConstants.WIDTH;
+			}
+			var div = document.createElement("div");
+			var attribute = document.createAttribute("data-index");
+			attribute.value = items[i];
+			div.setAttributeNode(attribute);
+
+			if (classList.length > 0) {
+				div.classList.add(classList[0]);
+				div.classList.add(classList[1]);
+			} else {
+				div.classList.add(classList[0]);
+			}
+
+			div.style.transform =
+				"translate(" +
+				(positionData[items[i]].x *= WIDTH_SCALE_FACTOR) +
+				"px, " +
+				(positionData[items[i]].y *= WIDTH_SCALE_FACTOR) +
+				"px)";
+			div.style.width = positionData[items[i]].width + "px";
+			div.style.height =
+				(positionData[items[i]].height *= WIDTH_SCALE_FACTOR) + "px";
+
+			var userData = callbacks.getItemRenderDataCallback(
+				items[i],
+				positionData[items[i]].width,
+				positionData[items[i]].height,
+				processType
+			);
+			if (typeof userData == "string") {
+				div.innerHTML = userData;
+			} else {
+				div.appendChild(userData);
+			}
+
+			if (
+				e.$limberGridViewItems[items[i]] == undefined ||
+				e.$limberGridViewItems[items[i]] == null
+			) {
+				e.$limberGridView[0].appendChild(div);
+			} else {
+				e.$limberGridView[0].replaceChild(
+					div,
+					e.$limberGridViewItems[items[i]]
+				);
+			}
+		}
+		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	} else {
+		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+		var length_0 = items.length;
+		for (var i = 0; i < length_0; i++) {
+			var div = document.createElement("div");
+			var attribute = document.createAttribute("data-index");
+			attribute.value = items[i];
+			div.setAttributeNode(attribute);
+
+			div.classList.add("limberGridViewItem");
+			div.style.transform =
+				"translate(" +
+				0 +
+				"px, " +
+				(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO +
+					getMarginAtPoint(serializedPositionData.map[items[i]])) *
+					serializedPositionData.map[items[i]] +
+				"px)";
+			div.style.width = privateConstants.WIDTH + "px";
+			div.style.height =
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO +
+				"px";
+
+			var userData = callbacks.getItemRenderDataCallback(
+				items[i],
+				privateConstants.WIDTH,
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO,
+				processType
+			);
+			if (typeof userData == "string") {
+				div.innerHTML = userData;
+			} else {
+				div.appendChild(userData);
+			}
+
+			if (
+				e.$limberGridViewItems[items[i]] == undefined ||
+				e.$limberGridViewItems[items[i]] == null
+			) {
+				e.$limberGridView[0].appendChild(div);
+			} else {
+				e.$limberGridView[0].replaceChild(
+					div,
+					e.$limberGridViewItems[items[i]]
+				);
+			}
+		}
+		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	}
+
+	// dev Code
+	var t1 = performance.now();
+	console.log(t0);
+	console.log(t1);
+	console.log(t1 - t0);
+	// dev Code END
+	e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
+		".limberGridViewItem"
+	);
+
+	renderPseudoItems(items);
+
+	initializeVariables();
+	initializeEvents();
+
+	var renderDetails = {
+		items: JSON.parse(JSON.stringify(items)),
+		scale: scale,
+		processType: processType,
+	};
+
+	if (
+		callbacks.itemsRenderComplete != undefined &&
+		callbacks.itemsRenderComplete != null &&
+		processType != "addItems" &&
+		processType != "resizeItems" &&
+		processType != "removeItems" &&
+		processType != "addItemInteractive"
+	) {
+		e.$limberGridView[0].scrollTop = scrollTop;
+		callbacks.itemsRenderComplete(
+			renderDetails.items,
+			scale,
+			processType,
+			scrollTop
+		);
+	}
+
+	return renderDetails;
 };
 
 export const renderPseudoItems = function(items) {

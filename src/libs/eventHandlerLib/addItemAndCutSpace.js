@@ -38,6 +38,11 @@ import privateConstants from "../../constants/privateConstants";
 import { callbacks, positionData } from "../../variables/essentials";
 import e from "../../variables/elements";
 import { calculateTouchPosOnLimberGrid } from "./eventHandlerUtils.js";
+import {
+	initializeItemTouchEvents,
+	unInitializeItemTouchEvents,
+} from "./initializers";
+import { addItemsAtPositions } from "../renderers/addOrRemoveItems";
 
 let userActionData = {};
 let limberGridMouseDownCancel = false;
@@ -74,18 +79,9 @@ export const onLimberGridMouseDown = function(event) {
 		publicConstants.MOUSE_DOWN_TIME
 	);
 
-	e.$limberGridView[0].addEventListener(
-		"mousemove",
-		this.onLimberGridMouseMoveBindedFunctionVariable
-	);
-	document.addEventListener(
-		"mouseup",
-		this.onLimberGridMouseUpBindedFunctionVariable
-	);
-	document.addEventListener(
-		"contextmenu",
-		this.onLimberGridContextMenuBindedFunctionVariable
-	);
+	e.$limberGridView[0].addEventListener("mousemove", onLimberGridMouseMove);
+	document.addEventListener("mouseup", onLimberGridMouseUp);
+	document.addEventListener("contextmenu", onLimberGridContextMenu);
 };
 
 export const onLimberGridTouchStart = function(event) {
@@ -104,23 +100,11 @@ export const onLimberGridTouchStart = function(event) {
 		publicConstants.TOUCH_HOLD_TIME
 	);
 
-	e.$limberGridView[0].addEventListener(
-		"touchmove",
-		this.onLimberGridTouchMoveBindedFunctionVariable
-	);
-	document.addEventListener(
-		"touchend",
-		this.onLimberGridTouchEndBindedFunctionVariable
-	);
-	document.addEventListener(
-		"touchcancel",
-		this.onLimberGridTouchCancelBindedFunctionVariable
-	);
-	document.addEventListener(
-		"contextmenu",
-		this.onLimberGridTouchContextMenuBindedFunctionVariable
-	);
-	this.unInitializeItemTouchEvents();
+	e.$limberGridView[0].addEventListener("touchmove", onLimberGridTouchMove);
+	document.addEventListener("touchend", onLimberGridTouchEnd);
+	document.addEventListener("touchcancel", onLimberGridTouchCancel);
+	document.addEventListener("contextmenu", onLimberGridTouchContextMenu);
+	unInitializeItemTouchEvents();
 
 	event.stopPropagation();
 };
@@ -324,16 +308,10 @@ export const onLimberGridMouseMove = function(event) {
 		clearTimeout(limberGridMouseDownCheckTimeOutVariable);
 		e.$limberGridView[0].removeEventListener(
 			"mousemove",
-			this.onLimberGridMouseMoveBindedFunctionVariable
+			onLimberGridMouseMove
 		);
-		document.removeEventListener(
-			"mouseup",
-			this.onLimberGridMouseUpBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onLimberGridContextMenuBindedFunctionVariable
-		);
+		document.removeEventListener("mouseup", onLimberGridMouseUp);
+		document.removeEventListener("contextmenu", onLimberGridContextMenu);
 	}
 	event.stopPropagation();
 };
@@ -438,21 +416,15 @@ export const onLimberGridTouchMove = function(event) {
 		clearTimeout(limberGridTouchStartCheckTimeOutVariable);
 		e.$limberGridView[0].removeEventListener(
 			"touchmove",
-			this.onLimberGridTouchMoveBindedFunctionVariable
+			onLimberGridTouchMove
 		);
-		document.removeEventListener(
-			"touchend",
-			this.onLimberGridTouchEndBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchcancel",
-			this.onLimberGridTouchCancelBindedFunctionVariable
-		);
+		document.removeEventListener("touchend", onLimberGridTouchEnd);
+		document.removeEventListener("touchcancel", onLimberGridTouchCancel);
 		document.removeEventListener(
 			"contextmenu",
-			this.onLimberGridTouchContextMenuBindedFunctionVariable
+			onLimberGridTouchContextMenu
 		);
-		this.initializeItemTouchEvents();
+		initializeItemTouchEvents();
 	}
 
 	event.stopPropagation();
@@ -482,7 +454,7 @@ export const onLimberGridMouseUp = function(event) {
 
 				var scrollTop = e.$limberGridView[0].scrollTop;
 
-				var renderDetails = this.addItemsAtPositions(
+				var renderDetails = addItemsAtPositions(
 					[item],
 					false,
 					"addItemInteractive"
@@ -553,7 +525,7 @@ export const onLimberGridTouchEnd = function(event) {
 
 				var scrollTop = e.$limberGridView[0].scrollTop;
 
-				var renderDetails = this.addItemsAtPositions(
+				var renderDetails = addItemsAtPositions(
 					[item],
 					false,
 					"addItemInteractive"
@@ -586,7 +558,7 @@ export const onLimberGridTouchEnd = function(event) {
 	}
 	limberGridTouchStartTimerComplete = false;
 	onLimberGridContextMenu.call(this);
-	this.initializeItemTouchEvents();
+	initializeItemTouchEvents();
 
 	event.stopPropagation();
 
@@ -611,7 +583,7 @@ export const onLimberGridTouchCancel = function(event) {
 	limberGridTouchStartCancel = false;
 	limberGridTouchStartTimerComplete = false;
 	onLimberGridContextMenu.call(this);
-	this.initializeItemTouchEvents();
+	initializeItemTouchEvents();
 
 	event.stopPropagation();
 };
@@ -661,33 +633,18 @@ export const onLimberGridContextMenu = function(event) {
 
 	e.$limberGridView[0].removeEventListener(
 		"mousemove",
-		this.onLimberGridMouseMoveBindedFunctionVariable
+		onLimberGridMouseMove
 	);
-	document.removeEventListener(
-		"mouseup",
-		this.onLimberGridMouseUpBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"contextmenu",
-		this.onLimberGridContextMenuBindedFunctionVariable
-	);
+	document.removeEventListener("mouseup", onLimberGridMouseUp);
+	document.removeEventListener("contextmenu", onLimberGridContextMenu);
 
 	e.$limberGridView[0].removeEventListener(
 		"touchmove",
-		this.onLimberGridTouchMoveBindedFunctionVariable
+		onLimberGridTouchMove
 	);
-	document.removeEventListener(
-		"touchend",
-		this.onLimberGridTouchEndBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"touchcancel",
-		this.onLimberGridTouchCancelBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"contextmenu",
-		this.onLimberGridTouchContextMenuBindedFunctionVariable
-	);
+	document.removeEventListener("touchend", onLimberGridTouchEnd);
+	document.removeEventListener("touchcancel", onLimberGridTouchCancel);
+	document.removeEventListener("contextmenu", onLimberGridTouchContextMenu);
 };
 
 export const addItemAllowCheckTimeOut = function(x, y, width, height) {

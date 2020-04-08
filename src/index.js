@@ -128,10 +128,22 @@ import e, {
 } from "./variables/elements";
 import { fitRemainingItemsBelowDeepestLine } from "./libs/calc/calcUtils";
 import {
+	render,
 	renderPseudoElements,
+	renderItems,
 	renderPseudoItems,
 } from "./libs/renderers/renderers";
+import {
+	removeItems,
+	addItems,
+	addItemsAtPositions,
+} from "./libs/renderers/addOrRemoveItems";
 import { init } from "./initializers/initializers";
+import {
+	initializeVariables,
+	initializeEvents,
+	unInitializeEvents,
+} from "./libs/eventHandlerLib/initializers";
 
 window.LimberGridView = (function() {
 	LimberGridView.prototype.constructor = LimberGridView;
@@ -238,47 +250,47 @@ window.LimberGridView = (function() {
 		}
 
 		if (options.editable == true) {
-			this.onLimberGridMouseDownFunctionVariable = onLimberGridMouseDown.bind(
-				this
-			);
-			this.onLimberGridMouseMoveBindedFunctionVariable = onLimberGridMouseMove.bind(
-				this
-			);
-			this.onLimberGridMouseUpBindedFunctionVariable = onLimberGridMouseUp.bind(
-				this
-			);
-			this.onLimberGridContextMenuBindedFunctionVariable = onLimberGridContextMenu.bind(
-				this
-			);
+			// this.onLimberGridMouseDownFunctionVariable = onLimberGridMouseDown.bind(
+			// 	this
+			// );
+			// this.onLimberGridMouseMoveBindedFunctionVariable = onLimberGridMouseMove.bind(
+			// 	this
+			// );
+			// this.onLimberGridMouseUpBindedFunctionVariable = onLimberGridMouseUp.bind(
+			// 	this
+			// );
+			// this.onLimberGridContextMenuBindedFunctionVariable = onLimberGridContextMenu.bind(
+			// 	this
+			// );
 
-			this.onLimberGridTouchStartFunctionVariable = onLimberGridTouchStart.bind(
-				this
-			);
-			this.onLimberGridTouchMoveBindedFunctionVariable = onLimberGridTouchMove.bind(
-				this
-			);
-			this.onLimberGridTouchEndBindedFunctionVariable = onLimberGridTouchEnd.bind(
-				this
-			);
-			this.onLimberGridTouchCancelBindedFunctionVariable = onLimberGridTouchCancel.bind(
-				this
-			);
-			this.onLimberGridTouchContextMenuBindedFunctionVariable = onLimberGridTouchContextMenu.bind(
-				this
-			);
+			// this.onLimberGridTouchStartFunctionVariable = onLimberGridTouchStart.bind(
+			// 	this
+			// );
+			// this.onLimberGridTouchMoveBindedFunctionVariable = onLimberGridTouchMove.bind(
+			// 	this
+			// );
+			// this.onLimberGridTouchEndBindedFunctionVariable = onLimberGridTouchEnd.bind(
+			// 	this
+			// );
+			// this.onLimberGridTouchCancelBindedFunctionVariable = onLimberGridTouchCancel.bind(
+			// 	this
+			// );
+			// this.onLimberGridTouchContextMenuBindedFunctionVariable = onLimberGridTouchContextMenu.bind(
+			// 	this
+			// );
 
-			this.onItemMouseDownFunctionVariable = onItemMouseDown.bind(this);
-			this.onMouseMoveBindedFunctionVariable = onMouseMove.bind(this);
-			this.onMouseUpBindedFunctionVariable = onMouseUp.bind(this);
-			this.onContextMenuBindedFunctionVariable = onContextMenu.bind(this);
+			// this.onItemMouseDownFunctionVariable = onItemMouseDown.bind(this);
+			// this.onMouseMoveBindedFunctionVariable = onMouseMove.bind(this);
+			// this.onMouseUpBindedFunctionVariable = onMouseUp.bind(this);
+			// this.onContextMenuBindedFunctionVariable = onContextMenu.bind(this);
 
-			this.onItemTouchStartFunctionVariable = onItemTouchStart.bind(this);
-			this.onTouchMoveBindedFunctionVariable = onTouchMove.bind(this);
-			this.onTouchEndBindedFunctionVariable = onTouchEnd.bind(this);
-			this.onTouchCancelBindedFunctionVariable = onTouchCancel.bind(this);
-			this.onItemTouchContextMenuBindedFunctionVariable = onItemTouchContextMenu.bind(
-				this
-			);
+			// this.onItemTouchStartFunctionVariable = onItemTouchStart.bind(this);
+			// this.onTouchMoveBindedFunctionVariable = onTouchMove.bind(this);
+			// this.onTouchEndBindedFunctionVariable = onTouchEnd.bind(this);
+			// this.onTouchCancelBindedFunctionVariable = onTouchCancel.bind(this);
+			// this.onItemTouchContextMenuBindedFunctionVariable = onItemTouchContextMenu.bind(
+			// 	this
+			// );
 
 			if (
 				options.moveGuideRadius != undefined &&
@@ -310,22 +322,19 @@ window.LimberGridView = (function() {
 			}
 		}
 
-		if (
-			callbacks.onItemClickCallback != undefined &&
-			callbacks.onItemClickCallback != null
-		) {
-			this.onItemClickFunctionVariable = onItemClick.bind(this);
-		}
+		// if (
+		// 	callbacks.onItemClickCallback != undefined &&
+		// 	callbacks.onItemClickCallback != null
+		// ) {
+		// 	this.onItemClickFunctionVariable = onItemClick.bind(this);
+		// }
 
 		if (options.reRenderOnResize != false) {
-			this.onWindowResizeFunctionVariable = onWindowResize.bind(this);
-			this.onWindowResizeTimerCallbackFunctionVariable = onWindowResizeTimerCallback.bind(
-				this
-			);
-			window.addEventListener(
-				"resize",
-				this.onWindowResizeFunctionVariable
-			);
+			// this.onWindowResizeFunctionVariable = onWindowResize.bind(this);
+			// this.onWindowResizeTimerCallbackFunctionVariable = onWindowResizeTimerCallback.bind(
+			// 	this
+			// );
+			window.addEventListener("resize", onWindowResize);
 		}
 
 		init(initialGridData.gridWidth, options.autoArrange);
@@ -488,248 +497,250 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.render = function(_positionData, scale = true) {
-		this.unInitializeEvents();
+	LimberGridView.prototype.render = render;
 
-		if (_positionData === undefined || _positionData === null) {
-			var _positionData = positionData;
-		}
-		if (scale == true) {
-			var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
-		} else {
-			var WIDTH_SCALE_FACTOR = 1;
-		}
+	// LimberGridView.prototype.render = function(_positionData, scale = true) {
+	// 	unInitializeEvents();
 
-		var classList = ["limberGridViewItem"];
-		if (options.editable == true) {
-			classList.push("limberGridViewItemEditable");
-		}
-		var classListString = classList.join(" ");
+	// 	if (_positionData === undefined || _positionData === null) {
+	// 		var _positionData = positionData;
+	// 	}
+	// 	if (scale == true) {
+	// 		var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
+	// 	} else {
+	// 		var WIDTH_SCALE_FACTOR = 1;
+	// 	}
 
-		var html = [];
+	// 	var classList = ["limberGridViewItem"];
+	// 	if (options.editable == true) {
+	// 		classList.push("limberGridViewItemEditable");
+	// 	}
+	// 	var classListString = classList.join(" ");
 
-		// dev Code
-		var t0 = performance.now();
-		// dev Code END
+	// 	var html = [];
 
-		if (!isMobile()) {
-			if (options.dataType == "string") {
-				var length_0 = _positionData.length;
-				for (var i = 0; i < length_0; i++) {
-					_positionData[i].width *= WIDTH_SCALE_FACTOR;
-					if (_positionData[i].width > privateConstants.WIDTH) {
-						_positionData[i].width = privateConstants.WIDTH;
-					}
-					var front =
-						'<div class = "' +
-						classListString +
-						'" data-index = "' +
-						i +
-						'" ';
-					var style_1 =
-						'style = "transform : translate(' +
-						(_positionData[i].x *= WIDTH_SCALE_FACTOR) +
-						"px, ";
-					var style_2 =
-						(_positionData[i].y *= WIDTH_SCALE_FACTOR) + "px); ";
-					var style_3 = "width : " + _positionData[i].width + "px; ";
-					var style_4 =
-						"height : " +
-						(_positionData[i].height *= WIDTH_SCALE_FACTOR) +
-						"px; ";
-					var style_5 = '">';
+	// 	// dev Code
+	// 	var t0 = performance.now();
+	// 	// dev Code END
 
-					var style = style_1 + style_2 + style_3 + style_4 + style_5;
+	// 	if (!isMobile()) {
+	// 		if (options.dataType == "string") {
+	// 			var length_0 = _positionData.length;
+	// 			for (var i = 0; i < length_0; i++) {
+	// 				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+	// 				if (_positionData[i].width > privateConstants.WIDTH) {
+	// 					_positionData[i].width = privateConstants.WIDTH;
+	// 				}
+	// 				var front =
+	// 					'<div class = "' +
+	// 					classListString +
+	// 					'" data-index = "' +
+	// 					i +
+	// 					'" ';
+	// 				var style_1 =
+	// 					'style = "transform : translate(' +
+	// 					(_positionData[i].x *= WIDTH_SCALE_FACTOR) +
+	// 					"px, ";
+	// 				var style_2 =
+	// 					(_positionData[i].y *= WIDTH_SCALE_FACTOR) + "px); ";
+	// 				var style_3 = "width : " + _positionData[i].width + "px; ";
+	// 				var style_4 =
+	// 					"height : " +
+	// 					(_positionData[i].height *= WIDTH_SCALE_FACTOR) +
+	// 					"px; ";
+	// 				var style_5 = '">';
 
-					var bodyFront = "<div>";
-					var bodyEnd = "</div>";
-					var userData = callbacks.getItemRenderDataCallback(
-						i,
-						_positionData[i].width,
-						_positionData[i].height,
-						"render"
-					);
+	// 				var style = style_1 + style_2 + style_3 + style_4 + style_5;
 
-					var body = bodyFront + userData + bodyEnd;
-					var end = "</div>";
+	// 				var bodyFront = "<div>";
+	// 				var bodyEnd = "</div>";
+	// 				var userData = callbacks.getItemRenderDataCallback(
+	// 					i,
+	// 					_positionData[i].width,
+	// 					_positionData[i].height,
+	// 					"render"
+	// 				);
 
-					var item = front + style + body + end;
+	// 				var body = bodyFront + userData + bodyEnd;
+	// 				var end = "</div>";
 
-					html.push(item);
-				}
-			} else if (options.dataType == "node") {
-				e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+	// 				var item = front + style + body + end;
 
-				var length_0 = _positionData.length;
-				for (var i = 0; i < length_0; i++) {
-					_positionData[i].width *= WIDTH_SCALE_FACTOR;
-					if (_positionData[i].width > privateConstants.WIDTH) {
-						_positionData[i].width = privateConstants.WIDTH;
-					}
-					var div = document.createElement("div");
-					var attribute = document.createAttribute("data-index");
-					attribute.value = i;
-					div.setAttributeNode(attribute);
-					if (classList.length > 0) {
-						div.classList.add(classList[0]);
-						div.classList.add(classList[1]);
-					} else {
-						div.classList.add(classList[0]);
-					}
-					div.style.transform =
-						"translate(" +
-						(_positionData[i].x *= WIDTH_SCALE_FACTOR) +
-						"px, " +
-						(_positionData[i].y *= WIDTH_SCALE_FACTOR) +
-						"px)";
-					div.style.width = _positionData[i].width + "px";
-					div.style.height =
-						(_positionData[i].height *= WIDTH_SCALE_FACTOR) + "px";
+	// 				html.push(item);
+	// 			}
+	// 		} else if (options.dataType == "node") {
+	// 			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 
-					var userData = callbacks.getItemRenderDataCallback(
-						i,
-						_positionData[i].width,
-						_positionData[i].height,
-						"render"
-					);
-					if (typeof userData == "string") {
-						div.innerHTML = userData;
-					} else {
-						div.appendChild(userData);
-					}
-					e.$limberGridView[0].appendChild(div);
-				}
-				e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-			}
-		} else {
-			setSerializedPositionData(getRowSequence(true));
-			if (options.dataType == "string") {
-				var length_0 = _positionData.length;
-				for (var i = 0; i < length_0; i++) {
-					_positionData[i].width *= WIDTH_SCALE_FACTOR;
-					_positionData[i].height *= WIDTH_SCALE_FACTOR;
-					_positionData[i].x *= WIDTH_SCALE_FACTOR;
-					_positionData[i].y *= WIDTH_SCALE_FACTOR;
-					if (_positionData[i].width > privateConstants.WIDTH) {
-						_positionData[i].width = privateConstants.WIDTH;
-					}
-					var front =
-						'<div class = "limberGridViewItem" data-index = "' +
-						i +
-						'" ';
-					var style_1 =
-						'style = "transform : translate(' + 0 + "px, ";
-					var style_2 =
-						(privateConstants.WIDTH /
-							publicConstants.MOBILE_ASPECT_RATIO +
-							getMarginAtPoint(serializedPositionData.map[i])) *
-							serializedPositionData.map[i] +
-						"px); ";
-					var style_3 = "width : " + privateConstants.WIDTH + "px; ";
-					var style_4 =
-						"height : " +
-						privateConstants.WIDTH /
-							publicConstants.MOBILE_ASPECT_RATIO +
-						"px; ";
-					var style_5 = '">';
+	// 			var length_0 = _positionData.length;
+	// 			for (var i = 0; i < length_0; i++) {
+	// 				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+	// 				if (_positionData[i].width > privateConstants.WIDTH) {
+	// 					_positionData[i].width = privateConstants.WIDTH;
+	// 				}
+	// 				var div = document.createElement("div");
+	// 				var attribute = document.createAttribute("data-index");
+	// 				attribute.value = i;
+	// 				div.setAttributeNode(attribute);
+	// 				if (classList.length > 0) {
+	// 					div.classList.add(classList[0]);
+	// 					div.classList.add(classList[1]);
+	// 				} else {
+	// 					div.classList.add(classList[0]);
+	// 				}
+	// 				div.style.transform =
+	// 					"translate(" +
+	// 					(_positionData[i].x *= WIDTH_SCALE_FACTOR) +
+	// 					"px, " +
+	// 					(_positionData[i].y *= WIDTH_SCALE_FACTOR) +
+	// 					"px)";
+	// 				div.style.width = _positionData[i].width + "px";
+	// 				div.style.height =
+	// 					(_positionData[i].height *= WIDTH_SCALE_FACTOR) + "px";
 
-					var style = style_1 + style_2 + style_3 + style_4 + style_5;
+	// 				var userData = callbacks.getItemRenderDataCallback(
+	// 					i,
+	// 					_positionData[i].width,
+	// 					_positionData[i].height,
+	// 					"render"
+	// 				);
+	// 				if (typeof userData == "string") {
+	// 					div.innerHTML = userData;
+	// 				} else {
+	// 					div.appendChild(userData);
+	// 				}
+	// 				e.$limberGridView[0].appendChild(div);
+	// 			}
+	// 			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	// 		}
+	// 	} else {
+	// 		setSerializedPositionData(getRowSequence(true));
+	// 		if (options.dataType == "string") {
+	// 			var length_0 = _positionData.length;
+	// 			for (var i = 0; i < length_0; i++) {
+	// 				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+	// 				_positionData[i].height *= WIDTH_SCALE_FACTOR;
+	// 				_positionData[i].x *= WIDTH_SCALE_FACTOR;
+	// 				_positionData[i].y *= WIDTH_SCALE_FACTOR;
+	// 				if (_positionData[i].width > privateConstants.WIDTH) {
+	// 					_positionData[i].width = privateConstants.WIDTH;
+	// 				}
+	// 				var front =
+	// 					'<div class = "limberGridViewItem" data-index = "' +
+	// 					i +
+	// 					'" ';
+	// 				var style_1 =
+	// 					'style = "transform : translate(' + 0 + "px, ";
+	// 				var style_2 =
+	// 					(privateConstants.WIDTH /
+	// 						publicConstants.MOBILE_ASPECT_RATIO +
+	// 						getMarginAtPoint(serializedPositionData.map[i])) *
+	// 						serializedPositionData.map[i] +
+	// 					"px); ";
+	// 				var style_3 = "width : " + privateConstants.WIDTH + "px; ";
+	// 				var style_4 =
+	// 					"height : " +
+	// 					privateConstants.WIDTH /
+	// 						publicConstants.MOBILE_ASPECT_RATIO +
+	// 					"px; ";
+	// 				var style_5 = '">';
 
-					var bodyFront = "<div>";
-					var bodyEnd = "</div>";
-					var userData = callbacks.getItemRenderDataCallback(
-						i,
-						privateConstants.WIDTH,
-						privateConstants.WIDTH /
-							publicConstants.MOBILE_ASPECT_RATIO,
-						"render"
-					);
+	// 				var style = style_1 + style_2 + style_3 + style_4 + style_5;
 
-					var body = bodyFront + userData + bodyEnd;
-					var end = "</div>";
+	// 				var bodyFront = "<div>";
+	// 				var bodyEnd = "</div>";
+	// 				var userData = callbacks.getItemRenderDataCallback(
+	// 					i,
+	// 					privateConstants.WIDTH,
+	// 					privateConstants.WIDTH /
+	// 						publicConstants.MOBILE_ASPECT_RATIO,
+	// 					"render"
+	// 				);
 
-					var item = front + style + body + end;
+	// 				var body = bodyFront + userData + bodyEnd;
+	// 				var end = "</div>";
 
-					html.push(item);
-				}
-			} else if (options.dataType == "node") {
-				e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+	// 				var item = front + style + body + end;
 
-				var length_0 = _positionData.length;
-				for (var i = 0; i < length_0; i++) {
-					_positionData[i].width *= WIDTH_SCALE_FACTOR;
-					_positionData[i].height *= WIDTH_SCALE_FACTOR;
-					_positionData[i].x *= WIDTH_SCALE_FACTOR;
-					_positionData[i].y *= WIDTH_SCALE_FACTOR;
-					if (_positionData[i].width > privateConstants.WIDTH) {
-						_positionData[i].width = privateConstants.WIDTH;
-					}
-					var div = document.createElement("div");
-					var attribute = document.createAttribute("data-index");
-					attribute.value = i;
-					div.setAttributeNode(attribute);
-					div.classList.add("limberGridViewItem");
+	// 				html.push(item);
+	// 			}
+	// 		} else if (options.dataType == "node") {
+	// 			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
 
-					div.style.transform =
-						"translate(" +
-						0 +
-						"px, " +
-						(privateConstants.WIDTH /
-							publicConstants.MOBILE_ASPECT_RATIO +
-							getMarginAtPoint(serializedPositionData.map[i])) *
-							serializedPositionData.map[i] +
-						"px)";
-					div.style.width = privateConstants.WIDTH + "px";
-					div.style.height =
-						privateConstants.WIDTH /
-							publicConstants.MOBILE_ASPECT_RATIO +
-						"px";
+	// 			var length_0 = _positionData.length;
+	// 			for (var i = 0; i < length_0; i++) {
+	// 				_positionData[i].width *= WIDTH_SCALE_FACTOR;
+	// 				_positionData[i].height *= WIDTH_SCALE_FACTOR;
+	// 				_positionData[i].x *= WIDTH_SCALE_FACTOR;
+	// 				_positionData[i].y *= WIDTH_SCALE_FACTOR;
+	// 				if (_positionData[i].width > privateConstants.WIDTH) {
+	// 					_positionData[i].width = privateConstants.WIDTH;
+	// 				}
+	// 				var div = document.createElement("div");
+	// 				var attribute = document.createAttribute("data-index");
+	// 				attribute.value = i;
+	// 				div.setAttributeNode(attribute);
+	// 				div.classList.add("limberGridViewItem");
 
-					var userData = callbacks.getItemRenderDataCallback(
-						i,
-						privateConstants.WIDTH,
-						privateConstants.WIDTH /
-							publicConstants.MOBILE_ASPECT_RATIO,
-						"render"
-					);
-					if (typeof userData == "string") {
-						div.innerHTML = userData;
-					} else {
-						div.appendChild(userData);
-					}
-					e.$limberGridView[0].appendChild(div);
-				}
-				e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-			}
-		}
+	// 				div.style.transform =
+	// 					"translate(" +
+	// 					0 +
+	// 					"px, " +
+	// 					(privateConstants.WIDTH /
+	// 						publicConstants.MOBILE_ASPECT_RATIO +
+	// 						getMarginAtPoint(serializedPositionData.map[i])) *
+	// 						serializedPositionData.map[i] +
+	// 					"px)";
+	// 				div.style.width = privateConstants.WIDTH + "px";
+	// 				div.style.height =
+	// 					privateConstants.WIDTH /
+	// 						publicConstants.MOBILE_ASPECT_RATIO +
+	// 					"px";
 
-		if (options.dataType == "string") {
-			e.$limberGridView[0].innerHTML = html.join("");
-		}
+	// 				var userData = callbacks.getItemRenderDataCallback(
+	// 					i,
+	// 					privateConstants.WIDTH,
+	// 					privateConstants.WIDTH /
+	// 						publicConstants.MOBILE_ASPECT_RATIO,
+	// 					"render"
+	// 				);
+	// 				if (typeof userData == "string") {
+	// 					div.innerHTML = userData;
+	// 				} else {
+	// 					div.appendChild(userData);
+	// 				}
+	// 				e.$limberGridView[0].appendChild(div);
+	// 			}
+	// 			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	// 		}
+	// 	}
 
-		// dev Code
-		var t1 = performance.now();
-		console.log(t0);
-		console.log(t1);
-		console.log(t1 - t0);
-		// dev Code END
+	// 	if (options.dataType == "string") {
+	// 		e.$limberGridView[0].innerHTML = html.join("");
+	// 	}
 
-		set$limberGridViewItems(
-			e.$limberGridView[0].querySelectorAll(".limberGridViewItem")
-		);
+	// 	// dev Code
+	// 	var t1 = performance.now();
+	// 	console.log(t0);
+	// 	console.log(t1);
+	// 	console.log(t1 - t0);
+	// 	// dev Code END
 
-		renderPseudoElements(_positionData);
+	// 	set$limberGridViewItems(
+	// 		e.$limberGridView[0].querySelectorAll(".limberGridViewItem")
+	// 	);
 
-		this.initializeVariables();
-		this.initializeEvents();
+	// 	renderPseudoElements(_positionData);
 
-		if (
-			callbacks.renderComplete != undefined &&
-			callbacks.renderComplete != null
-		) {
-			callbacks.renderComplete();
-		}
-	};
+	// 	initializeVariables();
+	// 	initializeEvents();
+
+	// 	if (
+	// 		callbacks.renderComplete != undefined &&
+	// 		callbacks.renderComplete != null
+	// 	) {
+	// 		callbacks.renderComplete();
+	// 	}
+	// };
 
 	// LimberGridView.prototype.renderPseudoElements = function(_positionData) {
 	// 	if (e.$limberGridViewGridPseudoItems != undefined) {
@@ -860,180 +871,182 @@ window.LimberGridView = (function() {
 	// 	);
 	// };
 
-	LimberGridView.prototype.renderItems = function(
-		items,
-		scale = true,
-		processType = "onDemand"
-	) {
-		this.unInitializeEvents();
-		var scrollTop = e.$limberGridView[0].scrollTop;
-		if (scale == true) {
-			var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
-		} else {
-			var WIDTH_SCALE_FACTOR = 1;
-		}
+	LimberGridView.prototype.renderItems = renderItems;
 
-		var classList = ["limberGridViewItem"];
-		if (options.editable == true) {
-			classList.push("limberGridViewItemEditable");
-		}
+	// LimberGridView.prototype.renderItems = function(
+	// 	items,
+	// 	scale = true,
+	// 	processType = "onDemand"
+	// ) {
+	// 	unInitializeEvents();
+	// 	var scrollTop = e.$limberGridView[0].scrollTop;
+	// 	if (scale == true) {
+	// 		var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
+	// 	} else {
+	// 		var WIDTH_SCALE_FACTOR = 1;
+	// 	}
 
-		var html = [];
+	// 	var classList = ["limberGridViewItem"];
+	// 	if (options.editable == true) {
+	// 		classList.push("limberGridViewItemEditable");
+	// 	}
 
-		// dev Code
-		var t0 = performance.now();
-		// dev Code END
-		if (!isMobile()) {
-			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-			var length_0 = items.length;
-			for (var i = 0; i < length_0; i++) {
-				positionData[items[i]].width *= WIDTH_SCALE_FACTOR;
-				if (positionData[items[i]].width > privateConstants.WIDTH) {
-					positionData[items[i]].width = privateConstants.WIDTH;
-				}
-				var div = document.createElement("div");
-				var attribute = document.createAttribute("data-index");
-				attribute.value = items[i];
-				div.setAttributeNode(attribute);
+	// 	var html = [];
 
-				if (classList.length > 0) {
-					div.classList.add(classList[0]);
-					div.classList.add(classList[1]);
-				} else {
-					div.classList.add(classList[0]);
-				}
+	// 	// dev Code
+	// 	var t0 = performance.now();
+	// 	// dev Code END
+	// 	if (!isMobile()) {
+	// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+	// 		var length_0 = items.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			positionData[items[i]].width *= WIDTH_SCALE_FACTOR;
+	// 			if (positionData[items[i]].width > privateConstants.WIDTH) {
+	// 				positionData[items[i]].width = privateConstants.WIDTH;
+	// 			}
+	// 			var div = document.createElement("div");
+	// 			var attribute = document.createAttribute("data-index");
+	// 			attribute.value = items[i];
+	// 			div.setAttributeNode(attribute);
 
-				div.style.transform =
-					"translate(" +
-					(positionData[items[i]].x *= WIDTH_SCALE_FACTOR) +
-					"px, " +
-					(positionData[items[i]].y *= WIDTH_SCALE_FACTOR) +
-					"px)";
-				div.style.width = positionData[items[i]].width + "px";
-				div.style.height =
-					(positionData[items[i]].height *= WIDTH_SCALE_FACTOR) +
-					"px";
+	// 			if (classList.length > 0) {
+	// 				div.classList.add(classList[0]);
+	// 				div.classList.add(classList[1]);
+	// 			} else {
+	// 				div.classList.add(classList[0]);
+	// 			}
 
-				var userData = callbacks.getItemRenderDataCallback(
-					items[i],
-					positionData[items[i]].width,
-					positionData[items[i]].height,
-					processType
-				);
-				if (typeof userData == "string") {
-					div.innerHTML = userData;
-				} else {
-					div.appendChild(userData);
-				}
+	// 			div.style.transform =
+	// 				"translate(" +
+	// 				(positionData[items[i]].x *= WIDTH_SCALE_FACTOR) +
+	// 				"px, " +
+	// 				(positionData[items[i]].y *= WIDTH_SCALE_FACTOR) +
+	// 				"px)";
+	// 			div.style.width = positionData[items[i]].width + "px";
+	// 			div.style.height =
+	// 				(positionData[items[i]].height *= WIDTH_SCALE_FACTOR) +
+	// 				"px";
 
-				if (
-					e.$limberGridViewItems[items[i]] == undefined ||
-					e.$limberGridViewItems[items[i]] == null
-				) {
-					e.$limberGridView[0].appendChild(div);
-				} else {
-					e.$limberGridView[0].replaceChild(
-						div,
-						e.$limberGridViewItems[items[i]]
-					);
-				}
-			}
-			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-		} else {
-			e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-			var length_0 = items.length;
-			for (var i = 0; i < length_0; i++) {
-				var div = document.createElement("div");
-				var attribute = document.createAttribute("data-index");
-				attribute.value = items[i];
-				div.setAttributeNode(attribute);
+	// 			var userData = callbacks.getItemRenderDataCallback(
+	// 				items[i],
+	// 				positionData[items[i]].width,
+	// 				positionData[items[i]].height,
+	// 				processType
+	// 			);
+	// 			if (typeof userData == "string") {
+	// 				div.innerHTML = userData;
+	// 			} else {
+	// 				div.appendChild(userData);
+	// 			}
 
-				div.classList.add("limberGridViewItem");
-				div.style.transform =
-					"translate(" +
-					0 +
-					"px, " +
-					(privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-						getMarginAtPoint(
-							serializedPositionData.map[items[i]]
-						)) *
-						serializedPositionData.map[items[i]] +
-					"px)";
-				div.style.width = privateConstants.WIDTH + "px";
-				div.style.height =
-					privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO +
-					"px";
+	// 			if (
+	// 				e.$limberGridViewItems[items[i]] == undefined ||
+	// 				e.$limberGridViewItems[items[i]] == null
+	// 			) {
+	// 				e.$limberGridView[0].appendChild(div);
+	// 			} else {
+	// 				e.$limberGridView[0].replaceChild(
+	// 					div,
+	// 					e.$limberGridViewItems[items[i]]
+	// 				);
+	// 			}
+	// 		}
+	// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	// 	} else {
+	// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
+	// 		var length_0 = items.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			var div = document.createElement("div");
+	// 			var attribute = document.createAttribute("data-index");
+	// 			attribute.value = items[i];
+	// 			div.setAttributeNode(attribute);
 
-				var userData = callbacks.getItemRenderDataCallback(
-					items[i],
-					privateConstants.WIDTH,
-					privateConstants.WIDTH /
-						publicConstants.MOBILE_ASPECT_RATIO,
-					processType
-				);
-				if (typeof userData == "string") {
-					div.innerHTML = userData;
-				} else {
-					div.appendChild(userData);
-				}
+	// 			div.classList.add("limberGridViewItem");
+	// 			div.style.transform =
+	// 				"translate(" +
+	// 				0 +
+	// 				"px, " +
+	// 				(privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 					getMarginAtPoint(
+	// 						serializedPositionData.map[items[i]]
+	// 					)) *
+	// 					serializedPositionData.map[items[i]] +
+	// 				"px)";
+	// 			div.style.width = privateConstants.WIDTH + "px";
+	// 			div.style.height =
+	// 				privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO +
+	// 				"px";
 
-				if (
-					e.$limberGridViewItems[items[i]] == undefined ||
-					e.$limberGridViewItems[items[i]] == null
-				) {
-					e.$limberGridView[0].appendChild(div);
-				} else {
-					e.$limberGridView[0].replaceChild(
-						div,
-						e.$limberGridViewItems[items[i]]
-					);
-				}
-			}
-			e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-		}
+	// 			var userData = callbacks.getItemRenderDataCallback(
+	// 				items[i],
+	// 				privateConstants.WIDTH,
+	// 				privateConstants.WIDTH /
+	// 					publicConstants.MOBILE_ASPECT_RATIO,
+	// 				processType
+	// 			);
+	// 			if (typeof userData == "string") {
+	// 				div.innerHTML = userData;
+	// 			} else {
+	// 				div.appendChild(userData);
+	// 			}
 
-		// dev Code
-		var t1 = performance.now();
-		console.log(t0);
-		console.log(t1);
-		console.log(t1 - t0);
-		// dev Code END
-		e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
-			".limberGridViewItem"
-		);
+	// 			if (
+	// 				e.$limberGridViewItems[items[i]] == undefined ||
+	// 				e.$limberGridViewItems[items[i]] == null
+	// 			) {
+	// 				e.$limberGridView[0].appendChild(div);
+	// 			} else {
+	// 				e.$limberGridView[0].replaceChild(
+	// 					div,
+	// 					e.$limberGridViewItems[items[i]]
+	// 				);
+	// 			}
+	// 		}
+	// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
+	// 	}
 
-		renderPseudoItems(items);
+	// 	// dev Code
+	// 	var t1 = performance.now();
+	// 	console.log(t0);
+	// 	console.log(t1);
+	// 	console.log(t1 - t0);
+	// 	// dev Code END
+	// 	e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
+	// 		".limberGridViewItem"
+	// 	);
 
-		this.initializeVariables();
-		this.initializeEvents();
+	// 	renderPseudoItems(items);
 
-		var renderDetails = {
-			items: JSON.parse(JSON.stringify(items)),
-			scale: scale,
-			processType: processType,
-		};
+	// 	initializeVariables();
+	// 	initializeEvents();
 
-		if (
-			callbacks.itemsRenderComplete != undefined &&
-			callbacks.itemsRenderComplete != null &&
-			processType != "addItems" &&
-			processType != "resizeItems" &&
-			processType != "removeItems" &&
-			processType != "addItemInteractive"
-		) {
-			e.$limberGridView[0].scrollTop = scrollTop;
-			callbacks.itemsRenderComplete(
-				renderDetails.items,
-				scale,
-				processType,
-				scrollTop
-			);
-		}
+	// 	var renderDetails = {
+	// 		items: JSON.parse(JSON.stringify(items)),
+	// 		scale: scale,
+	// 		processType: processType,
+	// 	};
 
-		return renderDetails;
-	};
+	// 	if (
+	// 		callbacks.itemsRenderComplete != undefined &&
+	// 		callbacks.itemsRenderComplete != null &&
+	// 		processType != "addItems" &&
+	// 		processType != "resizeItems" &&
+	// 		processType != "removeItems" &&
+	// 		processType != "addItemInteractive"
+	// 	) {
+	// 		e.$limberGridView[0].scrollTop = scrollTop;
+	// 		callbacks.itemsRenderComplete(
+	// 			renderDetails.items,
+	// 			scale,
+	// 			processType,
+	// 			scrollTop
+	// 		);
+	// 	}
+
+	// 	return renderDetails;
+	// };
 
 	// LimberGridView.prototype.renderPseudoItems = function(items) {
 	// 	var gridHtml = [];
@@ -1166,160 +1179,163 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.removeItems = function(itemsIndices) {
-		this.unInitializeEvents();
+	LimberGridView.prototype.removeItems = removeItems;
+	LimberGridView.prototype.addItems = addItems;
 
-		var scrollTop = e.$limberGridView[0].scrollTop;
+	// LimberGridView.prototype.removeItems = function(itemsIndices) {
+	// 	unInitializeEvents();
 
-		var itemsToRender = [];
-		var length_0 = positionData.length - 1;
-		for (var i = length_0; i >= 0; i--) {
-			var index = i;
+	// 	var scrollTop = e.$limberGridView[0].scrollTop;
 
-			itemsToRender.push(length_0 - i);
-		}
+	// 	var itemsToRender = [];
+	// 	var length_0 = positionData.length - 1;
+	// 	for (var i = length_0; i >= 0; i--) {
+	// 		var index = i;
 
-		itemsIndices.sort(function(a, b) {
-			return Number(a) - Number(b);
-		});
-		var length_0 = itemsIndices.length - 1;
-		for (var i = length_0; i >= 0; i--) {
-			var index = itemsIndices[i];
-			positionData.splice(index, 1);
+	// 		itemsToRender.push(length_0 - i);
+	// 	}
 
-			var item = e.$limberGridViewItems[index];
-			var pseudoGridItem = e.$limberGridViewGridPseudoItems[index];
-			var pseudoBodyItem = e.$limberGridViewBodyPseudoItems[index];
+	// 	itemsIndices.sort(function(a, b) {
+	// 		return Number(a) - Number(b);
+	// 	});
+	// 	var length_0 = itemsIndices.length - 1;
+	// 	for (var i = length_0; i >= 0; i--) {
+	// 		var index = itemsIndices[i];
+	// 		positionData.splice(index, 1);
 
-			e.$limberGridView[0].removeChild(item);
-			e.$limberGridView[0].removeChild(pseudoGridItem);
-			e.$bodyPseudoEl.removeChild(pseudoBodyItem);
+	// 		var item = e.$limberGridViewItems[index];
+	// 		var pseudoGridItem = e.$limberGridViewGridPseudoItems[index];
+	// 		var pseudoBodyItem = e.$limberGridViewBodyPseudoItems[index];
 
-			e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
-				".limberGridViewItem"
-			);
-			e.$limberGridViewGridPseudoItems = e.$limberGridView[0].getElementsByClassName(
-				"limberGridViewGridPseudoItem"
-			);
-			e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
-				"limberGridViewBodyPseudoItem"
-			);
-		}
+	// 		e.$limberGridView[0].removeChild(item);
+	// 		e.$limberGridView[0].removeChild(pseudoGridItem);
+	// 		e.$bodyPseudoEl.removeChild(pseudoBodyItem);
 
-		itemsToRender.splice(positionData.length);
+	// 		e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
+	// 			".limberGridViewItem"
+	// 		);
+	// 		e.$limberGridViewGridPseudoItems = e.$limberGridView[0].getElementsByClassName(
+	// 			"limberGridViewGridPseudoItem"
+	// 		);
+	// 		e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
+	// 			"limberGridViewBodyPseudoItem"
+	// 		);
+	// 	}
 
-		if (isMobile()) {
-			setSerializedPositionData(getRowSequence(true));
-		}
+	// 	itemsToRender.splice(positionData.length);
 
-		this.renderItems(itemsToRender, false, "removeItems");
+	// 	if (isMobile()) {
+	// 		setSerializedPositionData(getRowSequence(true));
+	// 	}
 
-		if (
-			callbacks.removeCompleteCallback != undefined &&
-			callbacks.removeCompleteCallback != null
-		) {
-			e.$limberGridView[0].scrollTop = scrollTop;
-			callbacks.removeCompleteCallback(itemsIndices);
-		}
-	};
+	// 	this.renderItems(itemsToRender, false, "removeItems");
 
-	LimberGridView.prototype.addItems = function(
-		howMany = 1,
-		itemWidth = 100,
-		itemHeight = 100
-	) {
-		if (howMany == 0) {
-			return;
-		}
+	// 	if (
+	// 		callbacks.removeCompleteCallback != undefined &&
+	// 		callbacks.removeCompleteCallback != null
+	// 	) {
+	// 		e.$limberGridView[0].scrollTop = scrollTop;
+	// 		callbacks.removeCompleteCallback(itemsIndices);
+	// 	}
+	// };
 
-		if (itemWidth > privateConstants.WIDTH) {
-			return;
-		}
+	// LimberGridView.prototype.addItems = function(
+	// 	howMany = 1,
+	// 	itemWidth = 100,
+	// 	itemHeight = 100
+	// ) {
+	// 	if (howMany == 0) {
+	// 		return;
+	// 	}
 
-		var startingY = 0;
-		var length_0 = positionData.length;
-		for (var i = 0; i < length_0; i++) {
-			if (positionData[i].y + positionData[i].height > startingY) {
-				startingY = positionData[i].y + positionData[i].height;
-			}
-		}
-		startingY = startingY + getMarginAtPoint(startingY);
+	// 	if (itemWidth > privateConstants.WIDTH) {
+	// 		return;
+	// 	}
 
-		var items = [];
+	// 	var startingY = 0;
+	// 	var length_0 = positionData.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		if (positionData[i].y + positionData[i].height > startingY) {
+	// 			startingY = positionData[i].y + positionData[i].height;
+	// 		}
+	// 	}
+	// 	startingY = startingY + getMarginAtPoint(startingY);
 
-		var scrollToPosition = startingY;
+	// 	var items = [];
 
-		var remainingItems = howMany;
-		var remainingWidth = privateConstants.WIDTH;
-		while (remainingItems != 0) {
-			var startingX = 0;
-			while (
-				remainingWidth > itemWidth + getMarginAtPoint(startingX) &&
-				remainingItems != 0
-			) {
-				var item = {
-					x: getMarginAtPoint(startingX) + startingX,
-					y: startingY,
-					width: itemWidth,
-					height: itemHeight,
-				};
+	// 	var scrollToPosition = startingY;
 
-				remainingWidth =
-					remainingWidth - itemWidth - getMarginAtPoint(startingX);
-				startingX = startingX + getMarginAtPoint(startingX) + itemWidth;
-				remainingItems--;
-				items.push(item);
-			}
-			remainingWidth = privateConstants.WIDTH;
-			startingY = startingY + itemHeight + publicConstants.MARGIN;
-		}
+	// 	var remainingItems = howMany;
+	// 	var remainingWidth = privateConstants.WIDTH;
+	// 	while (remainingItems != 0) {
+	// 		var startingX = 0;
+	// 		while (
+	// 			remainingWidth > itemWidth + getMarginAtPoint(startingX) &&
+	// 			remainingItems != 0
+	// 		) {
+	// 			var item = {
+	// 				x: getMarginAtPoint(startingX) + startingX,
+	// 				y: startingY,
+	// 				width: itemWidth,
+	// 				height: itemHeight,
+	// 			};
 
-		var scrollHeight = e.$limberGridView[0].scrollHeight;
+	// 			remainingWidth =
+	// 				remainingWidth - itemWidth - getMarginAtPoint(startingX);
+	// 			startingX = startingX + getMarginAtPoint(startingX) + itemWidth;
+	// 			remainingItems--;
+	// 			items.push(item);
+	// 		}
+	// 		remainingWidth = privateConstants.WIDTH;
+	// 		startingY = startingY + itemHeight + publicConstants.MARGIN;
+	// 	}
 
-		var renderDetails = this.addItemsAtPositions(items, false, "addItems");
+	// 	var scrollHeight = e.$limberGridView[0].scrollHeight;
 
-		if (!isMobile()) {
-			e.$limberGridView[0].scrollTop = scrollToPosition;
-		} else {
-			e.$limberGridView[0].scrollTop = scrollHeight;
-		}
+	// 	var renderDetails = this.addItemsAtPositions(items, false, "addItems");
 
-		if (
-			callbacks.addCompleteCallback != undefined &&
-			callbacks.addCompleteCallback != null
-		) {
-			callbacks.addCompleteCallback(
-				renderDetails.items,
-				itemWidth,
-				itemHeight,
-				"addItems"
-			);
-		}
-	};
+	// 	if (!isMobile()) {
+	// 		e.$limberGridView[0].scrollTop = scrollToPosition;
+	// 	} else {
+	// 		e.$limberGridView[0].scrollTop = scrollHeight;
+	// 	}
 
-	LimberGridView.prototype.addItemsAtPositions = function(
-		items,
-		scale = true,
-		processType = "onDemand"
-	) {
-		var addArray = [];
-		var startingIndex = positionData.length;
+	// 	if (
+	// 		callbacks.addCompleteCallback != undefined &&
+	// 		callbacks.addCompleteCallback != null
+	// 	) {
+	// 		callbacks.addCompleteCallback(
+	// 			renderDetails.items,
+	// 			itemWidth,
+	// 			itemHeight,
+	// 			"addItems"
+	// 		);
+	// 	}
+	// };
 
-		var length_0 = items.length;
-		for (var i = 0; i < length_0; i++) {
-			addArray.push(startingIndex + i);
-			if (isMobile()) {
-				serializedPositionData.list.push(startingIndex + i);
-				serializedPositionData.map[startingIndex + i] =
-					serializedPositionData.list.length - 1;
-			}
-			positionData.push(items[i]);
-		}
+	// LimberGridView.prototype.addItemsAtPositions = function(
+	// 	items,
+	// 	scale = true,
+	// 	processType = "onDemand"
+	// ) {
+	// 	var addArray = [];
+	// 	var startingIndex = positionData.length;
 
-		var renderDetails = this.renderItems(addArray, scale, processType);
+	// 	var length_0 = items.length;
+	// 	for (var i = 0; i < length_0; i++) {
+	// 		addArray.push(startingIndex + i);
+	// 		if (isMobile()) {
+	// 			serializedPositionData.list.push(startingIndex + i);
+	// 			serializedPositionData.map[startingIndex + i] =
+	// 				serializedPositionData.list.length - 1;
+	// 		}
+	// 		positionData.push(items[i]);
+	// 	}
 
-		return renderDetails;
-	};
+	// 	var renderDetails = this.renderItems(addArray, scale, processType);
+
+	// 	return renderDetails;
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 
@@ -1333,123 +1349,123 @@ window.LimberGridView = (function() {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	LimberGridView.prototype.reInitializeEvents = function() {
-		this.unInitializeEvents();
-		this.initializeEvents();
-	};
+	// LimberGridView.prototype.reInitializeEvents = function() {
+	// 	this.unInitializeEvents();
+	// 	this.initializeEvents();
+	// };
 
-	LimberGridView.prototype.initializeVariables = function() {};
+	// LimberGridView.prototype.initializeVariables = function() {};
 
-	LimberGridView.prototype.initializeEvents = function() {
-		if (options.editable == true) {
-			if (isMobile() == false) {
-				if (options.enableInteractiveAddAndCut != false) {
-					e.$limberGridView[0].addEventListener(
-						"mousedown",
-						this.onLimberGridMouseDownFunctionVariable
-					);
-					if (options.enableTouchInteraction != false) {
-						e.$limberGridView[0].addEventListener(
-							"touchstart",
-							this.onLimberGridTouchStartFunctionVariable
-						);
-					}
-				}
-			}
+	// LimberGridView.prototype.initializeEvents = function() {
+	// 	if (options.editable == true) {
+	// 		if (isMobile() == false) {
+	// 			if (options.enableInteractiveAddAndCut != false) {
+	// 				e.$limberGridView[0].addEventListener(
+	// 					"mousedown",
+	// 					this.onLimberGridMouseDownFunctionVariable
+	// 				);
+	// 				if (options.enableTouchInteraction != false) {
+	// 					e.$limberGridView[0].addEventListener(
+	// 						"touchstart",
+	// 						this.onLimberGridTouchStartFunctionVariable
+	// 					);
+	// 				}
+	// 			}
+	// 		}
 
-			var length_0 = e.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				if (isMobile() == false) {
-					e.$limberGridViewItems[i].addEventListener(
-						"mousedown",
-						this.onItemMouseDownFunctionVariable
-					);
-					if (options.enableTouchInteraction != false) {
-						e.$limberGridViewItems[i].addEventListener(
-							"touchstart",
-							this.onItemTouchStartFunctionVariable
-						);
-					}
-				}
+	// 		var length_0 = e.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			if (isMobile() == false) {
+	// 				e.$limberGridViewItems[i].addEventListener(
+	// 					"mousedown",
+	// 					this.onItemMouseDownFunctionVariable
+	// 				);
+	// 				if (options.enableTouchInteraction != false) {
+	// 					e.$limberGridViewItems[i].addEventListener(
+	// 						"touchstart",
+	// 						this.onItemTouchStartFunctionVariable
+	// 					);
+	// 				}
+	// 			}
 
-				if (
-					callbacks.onItemClickCallback != undefined &&
-					callbacks.onItemClickCallback != null
-				) {
-					e.$limberGridViewItems[i].addEventListener(
-						"click",
-						this.onItemClickFunctionVariable
-					);
-				}
-			}
-		}
-	};
+	// 			if (
+	// 				callbacks.onItemClickCallback != undefined &&
+	// 				callbacks.onItemClickCallback != null
+	// 			) {
+	// 				e.$limberGridViewItems[i].addEventListener(
+	// 					"click",
+	// 					this.onItemClickFunctionVariable
+	// 				);
+	// 			}
+	// 		}
+	// 	}
+	// };
 
-	LimberGridView.prototype.unInitializeEvents = function() {
-		if (options.editable == true) {
-			if (e.$limberGridView != undefined) {
-				e.$limberGridView[0].removeEventListener(
-					"mousedown",
-					this.onLimberGridMouseDownFunctionVariable
-				);
-				e.$limberGridView[0].removeEventListener(
-					"touchstart",
-					this.onLimberGridTouchStartFunctionVariable
-				);
-			}
+	// LimberGridView.prototype.unInitializeEvents = function() {
+	// 	if (options.editable == true) {
+	// 		if (e.$limberGridView != undefined) {
+	// 			e.$limberGridView[0].removeEventListener(
+	// 				"mousedown",
+	// 				this.onLimberGridMouseDownFunctionVariable
+	// 			);
+	// 			e.$limberGridView[0].removeEventListener(
+	// 				"touchstart",
+	// 				this.onLimberGridTouchStartFunctionVariable
+	// 			);
+	// 		}
 
-			if (e.$limberGridViewItems != undefined) {
-				var length_0 = e.$limberGridViewItems.length;
-				for (var i = 0; i < length_0; i++) {
-					e.$limberGridViewItems[i].removeEventListener(
-						"mousedown",
-						this.onItemMouseDownFunctionVariable
-					);
-					e.$limberGridViewItems[i].removeEventListener(
-						"touchstart",
-						this.onItemTouchStartFunctionVariable
-					);
+	// 		if (e.$limberGridViewItems != undefined) {
+	// 			var length_0 = e.$limberGridViewItems.length;
+	// 			for (var i = 0; i < length_0; i++) {
+	// 				e.$limberGridViewItems[i].removeEventListener(
+	// 					"mousedown",
+	// 					this.onItemMouseDownFunctionVariable
+	// 				);
+	// 				e.$limberGridViewItems[i].removeEventListener(
+	// 					"touchstart",
+	// 					this.onItemTouchStartFunctionVariable
+	// 				);
 
-					e.$limberGridViewItems[i].removeEventListener(
-						"click",
-						this.onItemClickFunctionVariable
-					);
-				}
-			}
-		}
-	};
+	// 				e.$limberGridViewItems[i].removeEventListener(
+	// 					"click",
+	// 					this.onItemClickFunctionVariable
+	// 				);
+	// 			}
+	// 		}
+	// 	}
+	// };
 
-	LimberGridView.prototype.initializeItemTouchEvents = function() {
-		if (e.$limberGridViewItems != undefined) {
-			var length_0 = e.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				e.$limberGridViewItems[i].addEventListener(
-					"mousedown",
-					this.onItemMouseDownFunctionVariable
-				);
-				e.$limberGridViewItems[i].addEventListener(
-					"touchstart",
-					this.onItemTouchStartFunctionVariable
-				);
-			}
-		}
-	};
+	// LimberGridView.prototype.initializeItemTouchEvents = function() {
+	// 	if (e.$limberGridViewItems != undefined) {
+	// 		var length_0 = e.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			e.$limberGridViewItems[i].addEventListener(
+	// 				"mousedown",
+	// 				this.onItemMouseDownFunctionVariable
+	// 			);
+	// 			e.$limberGridViewItems[i].addEventListener(
+	// 				"touchstart",
+	// 				this.onItemTouchStartFunctionVariable
+	// 			);
+	// 		}
+	// 	}
+	// };
 
-	LimberGridView.prototype.unInitializeItemTouchEvents = function() {
-		if (e.$limberGridViewItems != undefined) {
-			var length_0 = e.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
-				e.$limberGridViewItems[i].removeEventListener(
-					"mousedown",
-					this.onItemMouseDownFunctionVariable
-				);
-				e.$limberGridViewItems[i].removeEventListener(
-					"touchstart",
-					this.onItemTouchStartFunctionVariable
-				);
-			}
-		}
-	};
+	// LimberGridView.prototype.unInitializeItemTouchEvents = function() {
+	// 	if (e.$limberGridViewItems != undefined) {
+	// 		var length_0 = e.$limberGridViewItems.length;
+	// 		for (var i = 0; i < length_0; i++) {
+	// 			e.$limberGridViewItems[i].removeEventListener(
+	// 				"mousedown",
+	// 				this.onItemMouseDownFunctionVariable
+	// 			);
+	// 			e.$limberGridViewItems[i].removeEventListener(
+	// 				"touchstart",
+	// 				this.onItemTouchStartFunctionVariable
+	// 			);
+	// 		}
+	// 	}
+	// };
 
 	// ----------------------------------------------------------------------------------------- //
 

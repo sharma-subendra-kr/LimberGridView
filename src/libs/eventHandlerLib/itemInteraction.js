@@ -44,6 +44,7 @@ import {
 	calculateTouchPosOnLimberGrid,
 	calculateTouchPosOnLimberGridItem,
 } from "./eventHandlerUtils.js";
+import { onLimberGridTouchStart } from "./addItemAndCutSpace";
 
 let userActionData = {};
 let mouseDownCancel = false;
@@ -93,18 +94,9 @@ export const onItemMouseDown = function(event) {
 		mouseDownCancel = false;
 		mouseDownTimerComplete = false;
 
-		document.addEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		document.addEventListener(
-			"mouseup",
-			this.onMouseUpBindedFunctionVariable
-		);
-		document.addEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
+		document.addEventListener("mousemove", onMouseMove);
+		document.addEventListener("mouseup", onMouseUp);
+		document.addEventListener("contextmenu", onContextMenu);
 		clearTimeout(longPressCheck);
 		longPressCheck = setTimeout(
 			mouseDownCheck.bind(this, event),
@@ -130,18 +122,9 @@ export const onItemMouseDown = function(event) {
 		mouseDownCancel = false;
 		mouseDownTimerComplete = true;
 
-		e.$limberGridView[0].addEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		document.addEventListener(
-			"mouseup",
-			this.onMouseUpBindedFunctionVariable
-		);
-		document.addEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
+		e.$limberGridView[0].addEventListener("mousemove", onMouseMove);
+		document.addEventListener("mouseup", onMouseUp);
+		document.addEventListener("contextmenu", onContextMenu);
 
 		var transformStyle =
 			e.$limberGridViewItems[userActionData.itemIndex].style.transform;
@@ -242,27 +225,15 @@ export const onItemTouchStart = function(event) {
 		tapHoldCancel = false;
 		tapHoldTimerComplete = false;
 
-		document.addEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		document.addEventListener(
-			"touchend",
-			this.onTouchEndBindedFunctionVariable
-		);
+		document.addEventListener("touchmove", onTouchMove);
+		document.addEventListener("touchend", onTouchEnd);
 		e.$limberGridView[0].removeEventListener(
 			"touchstart",
-			this.onLimberGridTouchStartFunctionVariable
+			onLimberGridTouchStart
 		);
 
-		document.addEventListener(
-			"contextmenu",
-			this.onItemTouchContextMenuBindedFunctionVariable
-		);
-		document.addEventListener(
-			"touchcancel",
-			this.onTouchCancelBindedFunctionVariable
-		);
+		document.addEventListener("contextmenu", onItemTouchContextMenu);
+		document.addEventListener("touchcancel", onTouchCancel);
 
 		longTouchCheck = setTimeout(
 			tapHoldCheck.bind(this, event),
@@ -288,23 +259,14 @@ export const onItemTouchStart = function(event) {
 		tapHoldCancel = false;
 		tapHoldTimerComplete = true;
 
-		e.$limberGridView[0].addEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		document.addEventListener(
-			"touchend",
-			this.onTouchEndBindedFunctionVariable
-		);
+		e.$limberGridView[0].addEventListener("touchmove", onTouchMove);
+		document.addEventListener("touchend", onTouchEnd);
 		e.$limberGridView[0].removeEventListener(
 			"touchstart",
-			this.onLimberGridTouchStartFunctionVariable
+			onLimberGridTouchStart
 		);
 
-		document.addEventListener(
-			"touchcancel",
-			this.onTouchCancelBindedFunctionVariable
-		);
+		document.addEventListener("touchcancel", onTouchCancel);
 
 		var transformStyle =
 			e.$limberGridViewItems[userActionData.itemIndex].style.transform;
@@ -543,22 +505,10 @@ export const onMouseMove = function(event) {
 	} else {
 		mouseDownCancel = true;
 		clearTimeout(longPressCheck);
-		document.removeEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		e.$limberGridView[0].removeEventListener(
-			"mousemove",
-			this.onMouseMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"mouseup",
-			this.onMouseUpBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
+		document.removeEventListener("mousemove", onMouseMove);
+		e.$limberGridView[0].removeEventListener("mousemove", onMouseMove);
+		document.removeEventListener("mouseup", onMouseUp);
+		document.removeEventListener("contextmenu", onContextMenu);
 
 		// canceling mouseHold
 	}
@@ -739,33 +689,15 @@ export const onTouchMove = function(event) {
 	} else {
 		tapHoldCancel = true;
 		clearTimeout(longTouchCheck);
-		document.removeEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		e.$limberGridView[0].removeEventListener(
-			"touchmove",
-			this.onTouchMoveBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchend",
-			this.onTouchEndBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onContextMenuBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"contextmenu",
-			this.onItemTouchContextMenuBindedFunctionVariable
-		);
-		document.removeEventListener(
-			"touchcancel",
-			this.onTouchCancelBindedFunctionVariable
-		);
+		document.removeEventListener("touchmove", onTouchMove);
+		e.$limberGridView[0].removeEventListener("touchmove", onTouchMove);
+		document.removeEventListener("touchend", onTouchEnd);
+		document.removeEventListener("contextmenu", onContextMenu);
+		document.removeEventListener("contextmenu", onItemTouchContextMenu);
+		document.removeEventListener("touchcancel", onTouchCancel);
 		e.$limberGridView[0].addEventListener(
 			"touchstart",
-			this.onLimberGridTouchStartFunctionVariable
+			onLimberGridTouchStart
 		);
 
 		// canceling taphold
@@ -873,22 +805,10 @@ export const onMouseUp = function(event) {
 		clearTimeout(longPressCheck);
 		// canceling mouseHold
 	}
-	document.removeEventListener(
-		"mousemove",
-		this.onMouseMoveBindedFunctionVariable
-	);
-	e.$limberGridView[0].removeEventListener(
-		"mousemove",
-		this.onMouseMoveBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"mouseup",
-		this.onMouseUpBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"contextmenu",
-		this.onContextMenuBindedFunctionVariable
-	);
+	document.removeEventListener("mousemove", onMouseMove);
+	e.$limberGridView[0].removeEventListener("mousemove", onMouseMove);
+	document.removeEventListener("mouseup", onMouseUp);
+	document.removeEventListener("contextmenu", onContextMenu);
 
 	e.$body[0].classList.remove(
 		"limberGridViewBodyTagStateElementDraggingOrResizing"
@@ -1045,34 +965,13 @@ export const onTouchEnd = function(event) {
 		// canceling taphold
 	}
 
-	document.removeEventListener(
-		"touchmove",
-		this.onTouchMoveBindedFunctionVariable
-	);
-	e.$limberGridView[0].removeEventListener(
-		"touchmove",
-		this.onTouchMoveBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"touchend",
-		this.onTouchEndBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"contextmenu",
-		this.onContextMenuBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"contextmenu",
-		this.onItemTouchContextMenuBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"touchcancel",
-		this.onTouchCancelBindedFunctionVariable
-	);
-	e.$limberGridView[0].addEventListener(
-		"touchstart",
-		this.onLimberGridTouchStartFunctionVariable
-	);
+	document.removeEventListener("touchmove", onTouchMove);
+	e.$limberGridView[0].removeEventListener("touchmove", onTouchMove);
+	document.removeEventListener("touchend", onTouchEnd);
+	document.removeEventListener("contextmenu", onContextMenu);
+	document.removeEventListener("contextmenu", onItemTouchContextMenu);
+	document.removeEventListener("touchcancel", onTouchCancel);
+	e.$limberGridView[0].addEventListener("touchstart", onLimberGridTouchStart);
 
 	e.$body[0].classList.remove(
 		"limberGridViewBodyTagStateElementDraggingOrResizing"
@@ -1144,44 +1043,17 @@ export const onContextMenu = function(event) {
 	e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].style.transform =
 		"translate(" + 0 + "px, " + 0 + "px)";
 
-	document.removeEventListener(
-		"mousemove",
-		this.onMouseMoveBindedFunctionVariable
-	);
-	e.$limberGridView[0].removeEventListener(
-		"mousemove",
-		this.onMouseMoveBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"mouseup",
-		this.onMouseUpBindedFunctionVariable
-	);
+	document.removeEventListener("mousemove", onMouseMove);
+	e.$limberGridView[0].removeEventListener("mousemove", onMouseMove);
+	document.removeEventListener("mouseup", onMouseUp);
 
-	document.removeEventListener(
-		"touchmove",
-		this.onTouchMoveBindedFunctionVariable
-	);
-	e.$limberGridView[0].removeEventListener(
-		"touchmove",
-		this.onTouchMoveBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"touchend",
-		this.onTouchEndBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"contextmenu",
-		this.onItemTouchContextMenuBindedFunctionVariable
-	);
-	document.removeEventListener(
-		"touchcancel",
-		this.onTouchCancelBindedFunctionVariable
-	);
+	document.removeEventListener("touchmove", onTouchMove);
+	e.$limberGridView[0].removeEventListener("touchmove", onTouchMove);
+	document.removeEventListener("touchend", onTouchEnd);
+	document.removeEventListener("contextmenu", onItemTouchContextMenu);
+	document.removeEventListener("touchcancel", onTouchCancel);
 
-	document.removeEventListener(
-		"contextmenu",
-		this.onContextMenuBindedFunctionVariable
-	);
+	document.removeEventListener("contextmenu", onContextMenu);
 
 	e.$body[0].classList.remove(
 		"limberGridViewBodyTagStateElementDraggingOrResizing"
@@ -1207,10 +1079,7 @@ export const onItemTouchContextMenu = function(event) {
 export const onTouchCancel = function(event) {
 	onContextMenu.call(this);
 	tapHoldTimerComplete = false;
-	e.$limberGridView[0].addEventListener(
-		"touchstart",
-		this.onLimberGridTouchStartFunctionVariable
-	);
+	e.$limberGridView[0].addEventListener("touchstart", onLimberGridTouchStart);
 };
 
 export const calculateMousePosOnLimberGrid = function(event) {

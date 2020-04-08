@@ -42,6 +42,7 @@ import {
 import privateConstants from "../../constants/privateConstants";
 import { positionData, setPositionData } from "../../variables/essentials";
 import e from "../../variables/elements";
+import { renderItems } from "../renderers/renderers";
 
 export const resizePlane = function(index, width, height) {
 	let _positionData;
@@ -153,7 +154,7 @@ export const resizePlane = function(index, width, height) {
 	setPositionData(_positionData);
 
 	var scrollTop = e.$limberGridView[0].scrollTop;
-	this.renderItems([index], false, "resizeItems");
+	renderItems([index], false, "resizeItems");
 	e.$limberGridView[0].scrollTop = scrollTop;
 };
 

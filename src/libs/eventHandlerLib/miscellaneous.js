@@ -29,22 +29,23 @@ import privateConstants from "../../constants/privateConstants";
 import options from "../../variables/options";
 import { callbacks } from "../../variables/essentials";
 import { init } from "../../initializers/initializers";
+import { render } from "../renderers/renderers";
 
 export const onWindowResize = function(event) {
 	console.log("onWindowResize CALL", this);
 	setTimeout(
-		this.onWindowResizeTimerCallbackFunctionVariable,
+		onWindowResizeTimerCallback,
 		publicConstants.WINDOW_RESIZE_WAIT_TIME
 	);
-	window.removeEventListener("resize", this.onWindowResizeFunctionVariable);
+	window.removeEventListener("resize", onWindowResize);
 };
 
 export const onWindowResizeTimerCallback = function(event) {
 	init(privateConstants.WIDTH, false);
-	this.render();
+	render();
 
 	if (options.reRenderOnResize != false) {
-		window.addEventListener("resize", this.onWindowResizeFunctionVariable);
+		window.addEventListener("resize", onWindowResize);
 	}
 };
 

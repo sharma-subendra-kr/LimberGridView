@@ -24,6 +24,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
 import { positionData } from "../../variables/essentials";
 import e from "../../variables/elements";
