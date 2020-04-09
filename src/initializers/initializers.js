@@ -5,7 +5,7 @@ This software is released under the GNU General Public License version 3, or (at
 
 LimberGridView, a powerful JavaScript Libary that gives you flexible, movable, resizable(any size) and auto-arranging grids. 
 
-Copyright (c) 2018, Subendra Kumar Sharma. All Rights reserved. (sharma.subendra.kr@gmail.com, sharma.subendrakr@yahoo.com)
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (sharma.subendra.kr@gmail.com, sharma.subendrakr@yahoo.com)
 
 This file is part of LimberGridView.
 
@@ -69,7 +69,7 @@ export const init = function(initialGridWidth, autoArrange) {
 	}
 
 	e.$el.innerHTML =
-		'<div class = "limberGridViewContainer"><style></style><div class = "limberGridView"></div><div class = "limberGridViewLicense"><div class = "limberGridViewLicenseIcon">i</div><div class = "limberGridViewLicenseDetails">LimberGridView Copyright (c) 2018, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>';
+		'<div class = "limberGridViewContainer"><style></style><div class = "limberGridView"></div><div class = "limberGridViewLicense"><div class = "limberGridViewLicenseIcon">i</div><div class = "limberGridViewLicenseDetails">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>';
 	set$limberGridViewContainer(
 		e.$el.querySelectorAll(".limberGridViewContainer")
 	);
