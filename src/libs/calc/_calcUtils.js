@@ -180,7 +180,7 @@ export const subtractRect = (rectA, rectB) => {
 		};
 		bmNbl = {
 			tl: subRects.subRectB.tl,
-			tr: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
+			tr: { x: subRects.subRectR.bl.x, y: subRects.subRectB.tl.y },
 			br: subRects.subRectR.bl,
 			bl: subRects.subRectB.bl,
 		};
@@ -228,10 +228,26 @@ export const subtractRect = (rectA, rectB) => {
 		};
 	}
 
-	tm = horizontalSubtract(tlNtm, tl) || horizontalSubtract(tmNtr, tr);
-	rm = verticalSubtract(trNrm, tr) || verticalSubtract(rmNbr, br);
-	bm = horizontalSubtract(brNbm, br) || horizontalSubtract(bmNbl, bl);
-	lm = verticalSubtract(blNlm, bl) || verticalSubtract(lmNtl, tl);
+	tm =
+		horizontalSubtract(tlNtm, tl) ||
+		horizontalSubtract(tmNtr, tr) ||
+		tlNtm ||
+		tmNtr;
+	rm =
+		verticalSubtract(trNrm, tr) ||
+		verticalSubtract(rmNbr, br) ||
+		trNrm ||
+		rmNbr;
+	bm =
+		horizontalSubtract(brNbm, br) ||
+		horizontalSubtract(bmNbl, bl) ||
+		brNbm ||
+		bmNbl;
+	lm =
+		verticalSubtract(blNlm, bl) ||
+		verticalSubtract(lmNtl, tl) ||
+		blNlm ||
+		lmNtl;
 
 	let rects = [tl, tm, tr, rm, br, bm, bl, lm];
 	// let rects = [
@@ -244,7 +260,7 @@ export const subtractRect = (rectA, rectB) => {
 	// 	getRectObjectFromCo(bl),
 	// 	getRectObjectFromCo(lm),
 	// ];
-	rects.filter((o) => o);
+	rects = rects.filter((o) => o);
 
 	if (rects.length === 0) {
 		rects = Object.keys(subRects).map(
@@ -279,13 +295,13 @@ const horizontalSubtract = (rectA, rectB) => {
 	let result = null;
 	if (
 		rectA.tl.x === rectB.tl.x ||
-		rectA.tl.x - rectB.tl.x < rectA.tr.x - rectB.tr.x
+		Math.abs(rectA.tl.x - rectB.tl.x) < Math.abs(rectA.tr.x - rectB.tr.x)
 	) {
 		// Case I
 		result = { tl: rectB.tr, tr: rectA.tr, br: rectA.br, bl: rectB.br };
 	} else if (
 		rectA.tr === rectB.tr ||
-		rectB.tl.x - rectA.tl.x > rectB.tr.x - rectA.tr.x
+		Math.abs(rectB.tl.x - rectA.tl.x) > Math.abs(rectB.tr.x - rectA.tr.x)
 	) {
 		// Case II
 		result = { tl: rectA.tl, tr: rectB.tl, br: rectB.bl, bl: rectA.bl };
@@ -314,13 +330,13 @@ const verticalSubtract = (rectA, rectB) => {
 	let result = null;
 	if (
 		rectA.tl.y === rectB.tl.y ||
-		rectA.tl.y - rectB.tl.y < rectA.bl.y - rectB.bl.y
+		Math.abs(rectA.tl.y - rectB.tl.y) < Math.abs(rectA.bl.y - rectB.bl.y)
 	) {
 		// Case I
-		result = { tl: rectB.br, tr: rectB.bl, br: rectA.br, bl: rectA.bl };
+		result = { tl: rectB.bl, tr: rectB.br, br: rectA.br, bl: rectA.bl };
 	} else if (
 		rectA.bl.y === rectB.bl.y ||
-		rectB.tl.y - rectA.tl.y > rectB.bl.y - rectA.bl.y
+		Math.abs(rectB.tl.y - rectA.tl.y) > Math.abs(rectB.bl.y - rectA.bl.y)
 	) {
 		// Case II
 		result = { tl: rectA.tl, tr: rectA.tr, br: rectB.tr, bl: rectB.tl };
