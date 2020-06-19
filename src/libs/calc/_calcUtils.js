@@ -41,47 +41,51 @@ import { positionData } from "../../variables/essentials";
 import e from "../../variables/elements";
 
 export const doRectsOverlap = (rectA, rectB) => {
-	// lt: left top
-	// rt: right top
-	const tlA = { x: rectA.x, y: rectA.y };
-	const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
-	const tlB = { x: rectB.x, y: rectB.y };
-	const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
+	try {
+		const tlA = { x: rectA.x, y: rectA.y };
+		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
+		const tlB = { x: rectB.x, y: rectB.y };
+		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
 
-	if (tlA.x >= brB.x || tlB.x >= brA.x) {
-		return false;
+		if (tlA.x >= brB.x || tlB.x >= brA.x) {
+			return false;
+		}
+
+		if (tlA.y >= brB.y || tlB.y >= brA.y) {
+			return false;
+		}
+
+		return true;
+	} catch (e) {
+		return null;
 	}
-
-	if (tlA.y >= brB.y || tlB.y >= brA.y) {
-		return false;
-	}
-
-	return true;
 };
 
-export const doRectsTouch = (rectA, rectB) => {
-	// lt: left top
-	// rt: right top
-	const tlA = { x: rectA.x, y: rectA.y };
-	const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
-	const tlB = { x: rectB.x, y: rectB.y };
-	const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
+export const doRectsOnlyTouch = (rectA, rectB) => {
+	try {
+		const tlA = { x: rectA.x, y: rectA.y };
+		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
+		const tlB = { x: rectB.x, y: rectB.y };
+		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
 
-	if (tlA.x > brB.x || tlB.x > brA.x) {
+		if (tlA.x > brB.x || tlB.x > brA.x) {
+			return false;
+		}
+
+		if (tlA.y > brB.y || tlB.y > brA.y) {
+			return false;
+		}
+
+		if (doRectsOverlap(rectA, rectB) === false) return true;
+
 		return false;
+	} catch (e) {
+		return null;
 	}
-
-	if (tlA.y > brB.y || tlB.y > brA.y) {
-		return false;
-	}
-
-	if (doRectsOverlap(rectA, rectB) === false) return true;
-
-	return false;
 };
 
 export const subtractRect = (rectA, rectB) => {
-	// gives the non overlaping free spaces in rectA
+	// gives the non overlapping free spaces in rectA
 
 	if (!doRectsOverlap(rectA, rectB)) {
 		return null;
@@ -133,123 +137,213 @@ export const subtractRect = (rectA, rectB) => {
 
 	const keys = Object.keys(subRects);
 	for (let i = 0; i < keys.length; i++) {
-		if (!isValidSubRectangle(subRects[keys[i]])) {
+		if (!isValidRectCoForm(subRects[keys[i]])) {
 			delete subRects[keys[i]];
 		}
 	}
 
-	const rects = {};
-	let r1, r2, r3;
+	let tl, tm, tr, rm, br, bm, bl, lm;
+	let tlNtm, tmNtr, trNrm, rmNbr, brNbm, bmNbl, blNlm, lmNtl;
 	if (subRects.subRectT && subRects.subRectR) {
-		r1 = {
+		tlNtm = {
 			tl: subRects.subRectT.tl,
 			tr: subRects.subRectR.tl,
 			br: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
 			bl: subRects.subRectT.bl,
 		};
-		r2 = {
+		tr = {
 			tl: subRects.subRectR.tl,
 			tr: subRects.subRectR.tr,
 			br: subRects.subRectT.br,
 			bl: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
 		};
-		r3 = {
+		rmNbr = {
 			tl: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
 			tr: subRects.subRectT.br,
 			br: subRects.subRectR.br,
 			bl: subRects.subRectR.bl,
 		};
-		rects[`${r1.tl}${r1.tr}${r1.br}${r1.bl}`] = r1;
-		rects[`${r2.tl}${r2.tr}${r2.br}${r2.bl}`] = r2;
-		rects[`${r3.tl}${r3.tr}${r3.br}${r3.bl}`] = r3;
 	}
 
 	if (subRects.subRectR && subRects.subRectB) {
-		r1 = {
+		trNrm = {
 			tl: subRects.subRectR.tl,
 			tr: subRects.subRectR.tr,
 			br: subRects.subRectB.tr,
 			bl: { x: subRects.subRectR.bl.x, y: subRects.subRectB.tl.y },
 		};
-		r2 = {
+		br = {
 			tl: { x: subRects.subRectR.bl.x, y: subRects.subRectB.tl.y },
 			tr: subRects.subRectB.tr,
 			br: subRects.subRectB.br,
 			bl: subRects.subRectR.bl,
 		};
-		r3 = {
+		bmNbl = {
 			tl: subRects.subRectB.tl,
 			tr: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
 			br: subRects.subRectR.bl,
 			bl: subRects.subRectB.bl,
 		};
-		rects[`${r1.tl}${r1.tr}${r1.br}${r1.bl}`] = r1;
-		rects[`${r2.tl}${r2.tr}${r2.br}${r2.bl}`] = r2;
-		rects[`${r3.tl}${r3.tr}${r3.br}${r3.bl}`] = r3;
 	}
 
 	if (subRects.subRectB && subRects.subRectL) {
-		r1 = {
+		lmNtl = {
 			tl: subRects.subRectL.tl,
 			tr: subRects.subRectL.tr,
 			br: { x: subRects.subRectL.tr.x, y: subRects.subRectB.tr.y },
 			bl: subRects.subRectB.tl,
 		};
-		r2 = {
+		bl = {
 			tl: subRects.subRectB.tl,
 			tr: { x: subRects.subRectL.tr.x, y: subRects.subRectB.tr.y },
 			br: subRects.subRectL.br,
 			bl: subRects.subRectB.bl,
 		};
-		r3 = {
+		brNbm = {
 			tl: { x: subRects.subRectL.tr.x, y: subRects.subRectB.tr.y },
 			tr: subRects.subRectB.tr,
 			br: subRects.subRectB.br,
 			bl: subRects.subRectL.br,
 		};
-		rects[`${r1.tl}${r1.tr}${r1.br}${r1.bl}`] = r1;
-		rects[`${r2.tl}${r2.tr}${r2.br}${r2.bl}`] = r2;
-		rects[`${r3.tl}${r3.tr}${r3.br}${r3.bl}`] = r3;
 	}
 
 	if (subRects.subRectL && subRects.subRectT) {
-		r1 = {
+		blNlm = {
 			tl: subRects.subRectT.bl,
 			tr: { x: subRects.subRectL.tr.x, y: subRects.subRectT.bl.y },
-			br: subRects.subRectL.bl,
-			bl: subRects.subRectL.br,
+			br: subRects.subRectL.br,
+			bl: subRects.subRectL.bl,
 		};
-		r2 = {
+		tl = {
 			tl: subRects.subRectT.tl,
 			tr: subRects.subRectL.tr,
 			br: { x: subRects.subRectL.tr.x, y: subRects.subRectT.bl.y },
 			bl: subRects.subRectT.bl,
 		};
-		r3 = {
+		tmNtr = {
 			tl: subRects.subRectL.tr,
 			tr: subRects.subRectT.tr,
 			br: subRects.subRectT.br,
 			bl: { x: subRects.subRectL.tr.x, y: subRects.subRectT.bl.y },
 		};
-		rects[`${r1.tl}${r1.tr}${r1.br}${r1.bl}`] = r1;
-		rects[`${r2.tl}${r2.tr}${r2.br}${r2.bl}`] = r2;
-		rects[`${r3.tl}${r3.tr}${r3.br}${r3.bl}`] = r3;
 	}
 
-	return Object.values(rects);
+	tm = horizontalSubtract(tlNtm, tl) || horizontalSubtract(tmNtr, tr);
+	rm = verticalSubtract(trNrm, tr) || verticalSubtract(rmNbr, br);
+	bm = horizontalSubtract(brNbm, br) || horizontalSubtract(bmNbl, bl);
+	lm = verticalSubtract(blNlm, bl) || verticalSubtract(lmNtl, tl);
+
+	let rects = [tl, tm, tr, rm, br, bm, bl, lm];
+	// let rects = [
+	// 	getRectObjectFromCo(tl),
+	// 	getRectObjectFromCo(tm),
+	// 	getRectObjectFromCo(tr),
+	// 	getRectObjectFromCo(rm),
+	// 	getRectObjectFromCo(br),
+	// 	getRectObjectFromCo(bm),
+	// 	getRectObjectFromCo(bl),
+	// 	getRectObjectFromCo(lm),
+	// ];
+	rects.filter((o) => o);
+
+	if (rects.length === 0) {
+		rects = Object.keys(subRects).map(
+			(o) =>
+				// getRectObjectFromCo(subRects[o])
+				subRects[o]
+		);
+	}
+
+	return rects;
 };
 
-export const isValidSubRectangle = function(rect) {
-	let top, right, bottom, left;
-	top = rect.tr.x - rect.tl.x;
-	right = rect.br.y - rect.tr.y;
-	bottom = rect.br.x - rect.bl.x;
-	left = rect.bl.y - rect.tl.y;
+const horizontalSubtract = (rectA, rectB) => {
+	// rectA and rectB needs to be in Coordinate form
+	if (!rectA && !rectB) return null;
+	if (!doRectsOverlap(rectA, rectB)) return null;
 
-	if (top <= 0 || right <= 0 || bottom <= 0 || left <= 0) {
-		return false;
+	/*
+		Case I
+		____________________
+		| ____ 				|
+		||____|				|
+		|___________________|
+	
+		Case II
+		____________________
+		| 	 		  _____	|
+		|			  |____||
+		|___________________|
+	*/
+
+	let result = null;
+	if (
+		rectA.tl.x === rectB.tl.x ||
+		rectA.tl.x - rectB.tl.x < rectA.tr.x - rectB.tr.x
+	) {
+		// Case I
+		result = { tl: rectB.tr, tr: rectA.tr, br: rectA.br, bl: rectB.br };
+	} else if (
+		rectA.tr === rectB.tr ||
+		rectB.tl.x - rectA.tl.x > rectB.tr.x - rectA.tr.x
+	) {
+		// Case II
+		result = { tl: rectA.tl, tr: rectB.tl, br: rectB.bl, bl: rectA.bl };
 	}
-	return true;
+
+	return result;
+};
+
+const verticalSubtract = (rectA, rectB) => {
+	// rectA and rectB needs to be in Coordinate form
+	if (!rectA && !rectB) return;
+	if (!doRectsOverlap(rectA, rectB)) return;
+
+	/*
+		Case I 				Case II
+		_______ 			________
+		| ____ | 			|		|
+		| |   || 			|		|
+		| |___|| 			|		|
+		|  	   | 			|  ____ |
+		|      | 			|  |   ||	
+		|      | 			|  |___||	
+		|______| 			|_______|
+	*/
+
+	let result = null;
+	if (
+		rectA.tl.y === rectB.tl.y ||
+		rectA.tl.y - rectB.tl.y < rectA.bl.y - rectB.bl.y
+	) {
+		// Case I
+		result = { tl: rectB.br, tr: rectB.bl, br: rectA.br, bl: rectA.bl };
+	} else if (
+		rectA.bl.y === rectB.bl.y ||
+		rectB.tl.y - rectA.tl.y > rectB.bl.y - rectA.bl.y
+	) {
+		// Case II
+		result = { tl: rectA.tl, tr: rectA.tr, br: rectB.tr, bl: rectB.tl };
+	}
+
+	return result;
+};
+
+export const isValidRectCoForm = function(rect) {
+	try {
+		let top, right, bottom, left;
+		top = rect.tr.x - rect.tl.x;
+		right = rect.br.y - rect.tr.y;
+		bottom = rect.br.x - rect.bl.x;
+		left = rect.bl.y - rect.tl.y;
+
+		if (top <= 0 || right <= 0 || bottom <= 0 || left <= 0) {
+			return false;
+		}
+		return true;
+	} catch (e) {
+		return null;
+	}
 };
 
 export const getCoordinates = function(rect) {
@@ -259,4 +353,15 @@ export const getCoordinates = function(rect) {
 	const bl = { x: rect.x, y: rect.y + rect.height };
 
 	return { tl, tr, br, bl };
+};
+
+export const getRectObjectFromCo = function(rect) {
+	// assumes the rectangle is valid
+	if (!isValidRectCoForm(rect)) return null;
+	return {
+		x: rect.tl.x,
+		y: rect.tl.y,
+		width: rect.tr.x - rect.tl.x,
+		height: rect.bl.y - rect.tl.y,
+	};
 };
