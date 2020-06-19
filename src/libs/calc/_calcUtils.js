@@ -249,24 +249,23 @@ export const subtractRect = (rectA, rectB) => {
 		blNlm ||
 		lmNtl;
 
-	let rects = [tl, tm, tr, rm, br, bm, bl, lm];
-	// let rects = [
-	// 	getRectObjectFromCo(tl),
-	// 	getRectObjectFromCo(tm),
-	// 	getRectObjectFromCo(tr),
-	// 	getRectObjectFromCo(rm),
-	// 	getRectObjectFromCo(br),
-	// 	getRectObjectFromCo(bm),
-	// 	getRectObjectFromCo(bl),
-	// 	getRectObjectFromCo(lm),
-	// ];
+	// let rects = [tl, tm, tr, rm, br, bm, bl, lm];
+	let rects = [
+		getRectObjectFromCo(tl),
+		getRectObjectFromCo(tm),
+		getRectObjectFromCo(tr),
+		getRectObjectFromCo(rm),
+		getRectObjectFromCo(br),
+		getRectObjectFromCo(bm),
+		getRectObjectFromCo(bl),
+		getRectObjectFromCo(lm),
+	];
 	rects = rects.filter((o) => o);
 
 	if (rects.length === 0) {
 		rects = Object.keys(subRects).map(
-			(o) =>
-				// getRectObjectFromCo(subRects[o])
-				subRects[o]
+			(o) => getRectObjectFromCo(subRects[o])
+			// subRects[o]
 		);
 	}
 
@@ -372,7 +371,6 @@ export const getCoordinates = function(rect) {
 };
 
 export const getRectObjectFromCo = function(rect) {
-	// assumes the rectangle is valid
 	if (!isValidRectCoForm(rect)) return null;
 	return {
 		x: rect.tl.x,
