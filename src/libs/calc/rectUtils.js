@@ -40,6 +40,41 @@ import privateConstants from "../../constants/privateConstants";
 import { positionData } from "../../variables/essentials";
 import e from "../../variables/elements";
 
+export const isPointInsideRect = (rect, point) => {
+	const rectCo = getCoordinates(rect);
+	try {
+		if (
+			point.x > rectCo.tl.x &&
+			point.x < rectCo.tr.x &&
+			point.y > rectCo.tl.y &&
+			point.y < rectCo.bl.y
+		) {
+			return true;
+		}
+		return false;
+	} catch (e) {
+		return null;
+	}
+};
+
+export const doesPointTouchRect = (rect, point) => {
+	const rectCo = getCoordinates(rect);
+	try {
+		if (
+			point.x >= rectCo.tl.x &&
+			point.x <= rectCo.tr.x &&
+			point.y >= rectCo.tl.y &&
+			point.y <= rectCo.bl.y &&
+			!isPointInsideRect(rect, point)
+		) {
+			return true;
+		}
+		return false;
+	} catch (e) {
+		return null;
+	}
+};
+
 export const doRectsOverlap = (rectA, rectB) => {
 	try {
 		const tlA = { x: rectA.x, y: rectA.y };
