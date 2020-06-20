@@ -45,6 +45,7 @@ import {
 	calculateTouchPosOnLimberGridItem,
 } from "./eventHandlerUtils.js";
 import { onLimberGridTouchStart } from "./addItemAndCutSpace";
+import { moveItem, moveItemDemo } from "../interaction/itemInteraction";
 
 let userActionData = {};
 let mouseDownCancel = false;
@@ -57,7 +58,6 @@ let showResizeDemoTimeOutVariable;
 let showMoveDemoTimeOutVariable;
 
 export const onItemMouseDown = function(event) {
-	console.log("onItemMouseDown positionData", positionData);
 	if (event.which != 1) {
 		return;
 	}
@@ -720,38 +720,15 @@ export const onMouseUp = function(event) {
 				event
 			);
 			if (mousePositionOnLimberGrid != false) {
-				var newMoveCoordinates = checkNewMoveCoordinates(
+				var updatedCoordinates = {};
+				moveItem(
 					userActionData.itemIndex,
-					mousePositionOnLimberGrid
+					mousePositionOnLimberGrid.x,
+					mousePositionOnLimberGrid.y
 				);
-				if (newMoveCoordinates != false) {
-					var updatedCoordinates = {};
-					if (
-						newMoveCoordinates.hasOwnProperty("revisedCoordinates")
-					) {
-						movePlane(
-							userActionData.itemIndex,
-							newMoveCoordinates.revisedCoordinates.x,
-							newMoveCoordinates.revisedCoordinates.y
-						);
-						updatedCoordinates.x =
-							newMoveCoordinates.revisedCoordinates.x;
-						updatedCoordinates.y =
-							newMoveCoordinates.revisedCoordinates.y;
-						itemMoveFlag = true;
-					} else {
-						movePlane(
-							userActionData.itemIndex,
-							newMoveCoordinates.x,
-							newMoveCoordinates.y
-						);
-						updatedCoordinates.x = newMoveCoordinates.x;
-						updatedCoordinates.y = newMoveCoordinates.y;
-						itemMoveFlag = true;
-					}
-				} else {
-					revertShowMoveOrResizeDemo();
-				}
+				updatedCoordinates.x = mousePositionOnLimberGrid.x;
+				updatedCoordinates.y = mousePositionOnLimberGrid.y;
+				itemMoveFlag = true;
 			} else {
 				revertShowMoveOrResizeDemo();
 			}
@@ -871,38 +848,15 @@ export const onTouchEnd = function(event) {
 				event
 			);
 			if (touchPositionOnLimberGrid != false) {
-				var newMoveCoordinates = checkNewMoveCoordinates(
+				var updatedCoordinates = {};
+				moveItem(
 					userActionData.itemIndex,
-					touchPositionOnLimberGrid
+					touchPositionOnLimberGrid.x,
+					touchPositionOnLimberGrid.y
 				);
-				if (newMoveCoordinates != false) {
-					var updatedCoordinates = {};
-					if (
-						newMoveCoordinates.hasOwnProperty("revisedCoordinates")
-					) {
-						movePlane(
-							userActionData.itemIndex,
-							newMoveCoordinates.revisedCoordinates.x,
-							newMoveCoordinates.revisedCoordinates.y
-						);
-						updatedCoordinates.x =
-							newMoveCoordinates.revisedCoordinates.x;
-						updatedCoordinates.y =
-							newMoveCoordinates.revisedCoordinates.y;
-						itemMoveFlag = true;
-					} else {
-						movePlane(
-							userActionData.itemIndex,
-							newMoveCoordinates.x,
-							newMoveCoordinates.y
-						);
-						updatedCoordinates.x = newMoveCoordinates.x;
-						updatedCoordinates.y = newMoveCoordinates.y;
-						itemMoveFlag = true;
-					}
-				} else {
-					revertShowMoveOrResizeDemo();
-				}
+				updatedCoordinates.x = touchPositionOnLimberGrid.x;
+				updatedCoordinates.y = touchPositionOnLimberGrid.y;
+				itemMoveFlag = true;
 			} else {
 				revertShowMoveOrResizeDemo();
 			}
@@ -1098,237 +1052,32 @@ export const calculateMousePosOnLimberGrid = function(event) {
 	}
 };
 
-export const checkNewMoveCoordinates = function(
-	indexOfMovedItem,
-	mousePositions
-) {
-	if (mousePositions == false) {
-		return false;
-	}
-
-	var x = mousePositions.x;
-	var y = mousePositions.y;
-	var widthOfMovedItem = positionData[indexOfMovedItem].width;
-	var heightOfMovedItem = positionData[indexOfMovedItem].height;
-
-	var isInside = false;
-	var indexOfOverlappingItem = null;
-	var length_0 = positionData.length;
-	for (var i = 0; i < length_0; i++) {
-		var itemTopLeft = [positionData[i].x, positionData[i].y];
-		var itemTopRight = [
-			positionData[i].x + positionData[i].width,
-			positionData[i].y,
-		];
-		var itemBottomLeft = [
-			positionData[i].x,
-			positionData[i].y + positionData[i].height,
-		];
-		var itemBottomRight = [
-			positionData[i].x + positionData[i].width,
-			positionData[i].y + positionData[i].height,
-		];
-
-		if (
-			x >= itemTopLeft[0] &&
-			x <= itemTopRight[0] &&
-			x >= itemBottomLeft[0] &&
-			x <= itemBottomRight[0] &&
-			y >= itemTopLeft[1] &&
-			y <= itemBottomLeft[1] &&
-			y >= itemTopRight[1] &&
-			y <= itemBottomRight[1]
-		) {
-			isInside = true;
-			indexOfOverlappingItem = i;
-			break;
-		}
-
-		var lines = getLines(positionData[i]);
-
-		var topLine = lines[0];
-		var rightLine = lines[1];
-		var bottomLine = lines[2];
-		var leftLine = lines[3];
-
-		// for TOP LEFT Corner
-		if (
-			y < topLine[0][1] &&
-			x >= topLine[0][0] - publicConstants.MARGIN &&
-			x <= topLine[1][0] + publicConstants.MARGIN
-		) {
-			var diff = topLine[0][1] - y;
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-
-		if (
-			y > bottomLine[0][1] &&
-			x >= bottomLine[0][0] - publicConstants.MARGIN &&
-			x <= bottomLine[1][0] + publicConstants.MARGIN
-		) {
-			var diff = y - bottomLine[0][1];
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-
-		if (
-			x > rightLine[0][0] &&
-			y >= rightLine[0][1] - publicConstants.MARGIN &&
-			y <= rightLine[1][1] + publicConstants.MARGIN
-		) {
-			var diff = x - rightLine[0][0];
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-
-		if (
-			x < leftLine[0][0] &&
-			y >= leftLine[0][1] - publicConstants.MARGIN &&
-			y <= leftLine[1][1] + publicConstants.MARGIN
-		) {
-			var diff = leftLine[0][0] - x;
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-		// for TOP LEFT Corner END
-
-		// for TOP RIGHT Corner
-		if (
-			y > bottomLine[0][1] &&
-			x + widthOfMovedItem >= bottomLine[0][0] - publicConstants.MARGIN &&
-			x + widthOfMovedItem <= bottomLine[1][0] + publicConstants.MARGIN
-		) {
-			var diff = y - bottomLine[0][1];
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-		// for TOP RIGHT Corner END
-
-		// for BOTTOM LEFT Corner
-		if (
-			x > rightLine[0][0] &&
-			y + heightOfMovedItem >= rightLine[0][1] - publicConstants.MARGIN &&
-			y + heightOfMovedItem <= rightLine[1][1] + publicConstants.MARGIN
-		) {
-			var diff = x - rightLine[0][0];
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-		// for BOTTOM LEFT Corner END
-
-		if (
-			(y > bottomLine[0][1] &&
-				bottomLine[0][0] >= x &&
-				bottomLine[0][0] <= x + widthOfMovedItem) ||
-			(y > bottomLine[0][1] &&
-				bottomLine[1][0] >= x &&
-				bottomLine[1][0] <= x + widthOfMovedItem)
-		) {
-			var diff = y - bottomLine[0][1];
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-
-		if (
-			(x > rightLine[0][0] &&
-				rightLine[0][1] >= y &&
-				rightLine[0][1] <= y + heightOfMovedItem) ||
-			(x > rightLine[0][0] &&
-				rightLine[1][1] >= y &&
-				rightLine[1][1] <= y + heightOfMovedItem)
-		) {
-			var diff = x - rightLine[0][0];
-			if (diff <= publicConstants.MARGIN) {
-				return false;
-			}
-		}
-	}
-
-	if (indexOfOverlappingItem == null) {
-		if (
-			x + positionData[indexOfMovedItem].width + getMarginAtPoint(x) >
-			privateConstants.WIDTH
-		) {
-			return false;
-		} else {
-			return mousePositions;
-		}
-	} else {
-		if (
-			positionData[indexOfOverlappingItem].x +
-				positionData[indexOfMovedItem].width +
-				getMarginAtPoint(positionData[indexOfOverlappingItem].x) >
-			privateConstants.WIDTH
-		) {
-			return false;
-		} else {
-			return {
-				x: x,
-				y: y,
-				revisedCoordinates: {
-					x: positionData[indexOfOverlappingItem].x,
-					y: positionData[indexOfOverlappingItem].y,
-				},
-			};
-		}
-	}
-};
-
 export const showMoveDemo = function(index, mousePosition) {
 	if (mousePosition != false) {
-		var newMoveCoordinates = checkNewMoveCoordinates(index, mousePosition);
-		if (newMoveCoordinates == false) {
+		console.log(moveItemDemo(index, mousePosition.x, mousePosition.y));
+		if (moveItemDemo(index, mousePosition.x, mousePosition.y)) {
+			e.$limberGridViewMoveGuide[0].style.transform =
+				"translate(" +
+				mousePosition.x +
+				"px, " +
+				mousePosition.y +
+				"px)";
+			e.$limberGridViewMoveGuide[0].classList.add(
+				"limberGridViewMoveGuideActive"
+			);
+
 			e.$limberGridViewBodyPseudoItems[index].classList.remove(
-				"limberGridViewBodyPseudoItemMoveAllow"
+				"limberGridViewBodyPseudoItemMoveDisallow"
 			);
 			e.$limberGridViewBodyPseudoItems[index].classList.add(
-				"limberGridViewBodyPseudoItemMoveDisallow"
+				"limberGridViewBodyPseudoItemMoveAllow"
 			);
 		} else {
-			if (newMoveCoordinates.hasOwnProperty("revisedCoordinates")) {
-				movePlaneDemo(
-					index,
-					newMoveCoordinates.revisedCoordinates.x,
-					newMoveCoordinates.revisedCoordinates.y
-				);
-				e.$limberGridViewMoveGuide[0].style.transform =
-					"translate(" +
-					newMoveCoordinates.revisedCoordinates.x +
-					"px, " +
-					newMoveCoordinates.revisedCoordinates.y +
-					"px)";
-				e.$limberGridViewMoveGuide[0].classList.add(
-					"limberGridViewMoveGuideActive"
-				);
-			} else {
-				movePlaneDemo(
-					index,
-					newMoveCoordinates.x,
-					newMoveCoordinates.y
-				);
-				e.$limberGridViewMoveGuide[0].style.transform =
-					"translate(" +
-					newMoveCoordinates.x +
-					"px, " +
-					newMoveCoordinates.y +
-					"px)";
-				e.$limberGridViewMoveGuide[0].classList.add(
-					"limberGridViewMoveGuideActive"
-				);
-			}
 			e.$limberGridViewBodyPseudoItems[index].classList.remove(
-				"limberGridViewBodyPseudoItemMoveDisallow"
+				"limberGridViewBodyPseudoItemMoveAllow"
 			);
 			e.$limberGridViewBodyPseudoItems[index].classList.add(
-				"limberGridViewBodyPseudoItemMoveAllow"
+				"limberGridViewBodyPseudoItemMoveDisallow"
 			);
 		}
 	} else {

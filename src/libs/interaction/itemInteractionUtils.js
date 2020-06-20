@@ -24,11 +24,19 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import { doRectsOverlap, doRectsOnlyTouch } from "../calc/rectUtils";
+import {
+	doRectsOverlap,
+	doRectsOnlyTouch,
+	isPointInsideRect,
+	doesPointTouchRect,
+} from "../calc/rectUtils";
 import publicConstants from "../../constants/publicConstants";
+import privateConstants from "../../constants/privateConstants";
+import { positionData as pd } from "../../variables/essentials";
+import e from "../../variables/elements";
 
-export const getResizeAffectedItems = (positionData, item, index) => {
-	const len = positionData.length;
+export const getResizeAffectedItems = (item, index) => {
+	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
 
@@ -37,20 +45,19 @@ export const getResizeAffectedItems = (positionData, item, index) => {
 	_item.y -= publicConstants.MARGIN;
 	_item.width += publicConstants.MARGIN;
 	_item.height += publicConstants.MARGIN;
-	let temp;
+	let temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
-		temp = { ...positionData[i] };
-		temp.x -= publicConstants.MARGIN;
-		temp.y -= publicConstants.MARGIN;
-		temp.width += publicConstants.MARGIN;
-		temp.height += publicConstants.MARGIN;
+		temp.x = pd[i].x - publicConstants.MARGIN;
+		temp.y = pd[i].y - publicConstants.MARGIN;
+		temp.width = pd[i].width + publicConstants.MARGIN;
+		temp.height = pd[i].height + publicConstants.MARGIN;
 		if (
 			doRectsOverlap(temp, _item) &&
 			doRectsOnlyTouch(temp, _item) &&
 			i !== index
 		) {
-			affectedArr[count++] = positionData[i];
+			affectedArr[count++] = i;
 		}
 	}
 
@@ -62,51 +69,41 @@ export const getResizeAffectedItems = (positionData, item, index) => {
 	return result;
 };
 
-export const getMoveAffectedItems = (positionData, item, index) => {
-	const len = positionData.length;
+export const getMoveAffectedItems = (item, index) => {
+	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
-	let includesIndex = false;
 
 	const _item = { ...item };
 	_item.x -= publicConstants.MARGIN;
 	_item.y -= publicConstants.MARGIN;
 	_item.width += publicConstants.MARGIN;
 	_item.height += publicConstants.MARGIN;
-	let temp;
+	let temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
-		temp = { ...positionData[i] };
-		temp.x -= publicConstants.MARGIN;
-		temp.y -= publicConstants.MARGIN;
-		temp.width += publicConstants.MARGIN;
-		temp.height += publicConstants.MARGIN;
-		if (doRectsOverlap(temp, _item) && doRectsOnlyTouch(temp, _item)) {
-			affectedArr[count++] = positionData[i];
-
-			if (i === index) {
-				includesIndex = true;
+		temp.x = pd[i].x - publicConstants.MARGIN;
+		temp.y = pd[i].y - publicConstants.MARGIN;
+		temp.width = pd[i].width + publicConstants.MARGIN;
+		temp.height = pd[i].height + publicConstants.MARGIN;
+		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+			if (i !== index) {
+				affectedArr[count++] = i;
 			}
 		}
 	}
 
-	const result = new Array(includesIndex ? count : count + 1);
+	const result = new Array(count + 1);
 	for (let i = 0; i < count; i++) {
 		result[i] = affectedArr[i];
 	}
-
-	if (!includesIndex) {
-		result[count] = positionData[index];
-	}
+	result[count] = index;
 
 	return result;
 };
 
 export const resizeItemInitialChecks = (index, width, height) => {
-	if (
-		positionData[index].x + width + publicConstants.MARGIN >
-		privateConstants.WIDTH
-	) {
+	if (pd[index].x + width + publicConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
 		return false;
 	}
@@ -124,7 +121,7 @@ export const resizeItemInitialChecks = (index, width, height) => {
 };
 
 export const moveItemInitialChecks = (index, toX, toY) => {
-	if (index < 0 || index >= positionData.length) {
+	if (index < 0 || index >= pd.length) {
 		// invalid index
 		return false;
 	}
@@ -135,7 +132,7 @@ export const moveItemInitialChecks = (index, toX, toY) => {
 	}
 
 	if (
-		toX + positionData[index].width + publicConstants.MARGIN >
+		toX + pd[index].width + publicConstants.MARGIN >
 		privateConstants.WIDTH
 	) {
 		// falls outside
@@ -143,4 +140,36 @@ export const moveItemInitialChecks = (index, toX, toY) => {
 	}
 
 	return true;
+};
+
+export const resetDemoUIChanges = () => {
+	const len = pd.length;
+	for (var i = 0; i < len; i++) {
+		e.$limberGridViewItems[i].style.transform =
+			"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
+		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
+	}
+};
+
+export const movePointAdjust = (toX, toY) => {
+	let overlapped;
+	let len = pd.length;
+	let temp = { x: 0, y: 0, height: 0, width: 0 };
+	const pt = { x: toX, y: toY };
+	let inside = null;
+	for (let i = 0; i < len; i++) {
+		temp.x = pd[i].x - publicConstants.MARGIN;
+		temp.y = pd[i].y - publicConstants.MARGIN;
+		temp.width = pd[i].width + publicConstants.MARGIN;
+		temp.height = pd[i].height + publicConstants.MARGIN;
+		if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
+			inside = i;
+			break;
+		}
+	}
+	if (inside != null) {
+		toX = pd[inside].x;
+		toY = pd[inside].y;
+	}
+	return { toX, toY };
 };
