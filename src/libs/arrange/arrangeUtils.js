@@ -92,4 +92,4 @@ export const getItemsInWorkSpace = (workSpaceRect) => {
 	return res;
 };
 
-export const shuffleArray = (arr) => {};
+export const buildTreeData = () => {};
