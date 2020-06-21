@@ -29,7 +29,7 @@ import {
 	doRectsOnlyTouch,
 	isPointInsideRect,
 	doesPointTouchRect,
-} from "../calc/rectUtils";
+} from "../rect/rectUtils";
 import publicConstants from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
 import { positionData as pd } from "../../variables/essentials";
