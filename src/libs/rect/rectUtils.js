@@ -147,7 +147,6 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 
 export const subtractRect = (rectA, rectB, oCoForm) => {
 	// gives the non overlapping free spaces in rectA
-
 	if (!doRectsOverlap(rectA, rectB)) {
 		return null;
 	}
@@ -344,7 +343,8 @@ export const subtractRect = (rectA, rectB, oCoForm) => {
 const horizontalSubtract = (rectA, rectB) => {
 	// rectA and rectB needs to be in Coordinate form
 	if (!rectA && !rectB) return null;
-	if (!doRectsOverlap(rectA, rectB)) return null;
+	if (!doRectsOverlap(getRectObjectFromCo(rectA), getRectObjectFromCo(rectB)))
+		return null;
 
 	/*
 		Case I
@@ -380,8 +380,9 @@ const horizontalSubtract = (rectA, rectB) => {
 
 const verticalSubtract = (rectA, rectB) => {
 	// rectA and rectB needs to be in Coordinate form
-	if (!rectA && !rectB) return;
-	if (!doRectsOverlap(rectA, rectB)) return;
+	if (!rectA && !rectB) return null;
+	if (!doRectsOverlap(getRectObjectFromCo(rectA), getRectObjectFromCo(rectB)))
+		return null;
 
 	/*
 		Case I 				Case II
@@ -453,14 +454,19 @@ export const areRectsAdjacent = (rectA, rectB) => {
 	const rectACo = getCoordinates(rectA);
 	const rectBCo = getCoordinates(rectB);
 
+	if (!doRectsOnlyTouch(rectA, rectB)) {
+		return false;
+	}
 	if (
-		(rectACo.tl.x - rectBCo.tr.x <= 1 &&
-			rectACo.tl.x - rectBCo.tr.x >= 0) ||
-		(rectBCo.tl.x - rectACo.tr.x <= 1 &&
-			rectACo.tl.x - rectBCo.tr.x >= 0) ||
-		(rectACo.tl.y - rectBCo.bl.y <= 1 &&
-			rectACo.tl.x - rectBCo.tr.x >= 0) ||
-		(rectBCo.tl.y - rectACo.bl.y <= 1 && rectACo.tl.x - rectBCo.tr.x >= 0)
+		(rectACo.tl.y >= rectBCo.tl.y && rectACo.tl.y < rectBCo.bl.y) ||
+		(rectBCo.tl.y >= rectACo.tl.y && rectBCo.tl.y < rectACo.bl.y) ||
+		(rectACo.tl.x >= rectBCo.tl.x && rectACo.tl.x < rectBCo.tr.x) ||
+		(rectBCo.tl.x >= rectACo.tl.x && rectBCo.tl.x < rectACo.tr.x) ||
+		//
+		(rectACo.bl.y <= rectBCo.bl.y && rectACo.bl.y > rectBCo.tl.y) ||
+		(rectBCo.bl.y <= rectACo.bl.y && rectBCo.bl.y > rectACo.tl.y) ||
+		(rectACo.tr.x <= rectBCo.tr.x && rectACo.tr.x > rectBCo.tl.x) ||
+		(rectBCo.tr.x <= rectACo.tr.x && rectBCo.tr.x > rectACo.tl.x)
 	) {
 		return true;
 	} else {

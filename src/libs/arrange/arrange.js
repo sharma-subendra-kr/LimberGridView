@@ -60,6 +60,7 @@ export const arrangeAffectedItems = (
 
 	let tempRect;
 	for (let i = 0; i < itXDataLen; i++) {
+		freeRectsArr[i].d.id = i;
 		tempRect = getCoordinates(freeRectsArr[i].d.rect);
 		itXData[i] = {
 			low: tempRect.tl.x,
@@ -69,12 +70,12 @@ export const arrangeAffectedItems = (
 	}
 
 	const freeRectsItX = new IntervalTreesIterative({ data: itXData });
+
 	assignAdjacentRects(freeRectsItY, freeRectsItX);
 
 	if (DEBUG_MODE) {
-		printUnmergedFreeRects(freeRectsArr);
+		printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 	}
-
 	// mergeRects(freeRectsArr, freeRectsItY, freeRectsItX);
 };
 
@@ -99,7 +100,6 @@ export const sweepLine = (area, areaCo, items) => {
 	let dLen = 0;
 
 	const len = items.length;
-
 	for (let i = 0; i < len; i++) {
 		tempItem = getCoordinates(items[i]);
 		fInterval = { low: tempItem.tl.y, high: tempItem.bl.y };
@@ -108,6 +108,14 @@ export const sweepLine = (area, areaCo, items) => {
 		for (let j = 0; j < iLen; j++) {
 			if (doRectsOverlap(intervals[j].d.rect, items[i])) {
 				diff = subtractRect(intervals[j].d.rect, items[i], true);
+
+				// DEBUG:
+				// printUnmergedFreeRects(
+				// 	diff.map((o) => ({
+				// 		rect: getRectObjectFromCo(o),
+				// 	}))
+				// );
+
 				dLen = diff.length;
 				for (let k = 0; k < dLen; k++) {
 					it.insert({
@@ -126,7 +134,6 @@ export const sweepLine = (area, areaCo, items) => {
 };
 
 export const assignAdjacentRects = (rectsItY, rectsItX) => {
-	let idCount = 0;
 	const rectItYArr = rectsItY.getDataInArray();
 	const rectItXArr = rectsItX.getDataInArray();
 
@@ -134,19 +141,11 @@ export const assignAdjacentRects = (rectsItY, rectsItX) => {
 	let resY, resX, lenY, lenX;
 
 	for (let i = 0; i < len; i++) {
-		resY = rectsItY.findAll(rectItYArr[i].interval, rectItYArr[i].d);
+		resY = rectsItY.findAll(rectItYArr[i].interval);
 		lenY = resY.length;
 		for (let j = 0; j < lenY; j++) {
-			if (areRectsAdjacent(rectItYArr[i].d.rect, resY[j])) {
-				rectItYArr[i].d.a[idCount++] = resY[j];
-			}
-		}
-
-		resX = rectsItX.findAll(rectItXArr[i].interval, rectItXArr[i].d);
-		lenX = resX.length;
-		for (let j = 0; j < lenX; j++) {
-			if (areRectsAdjacent(rectItXArr[i].d.rect, resX[j])) {
-				rectItXArr[i].d.a[idCount++] = resX[j];
+			if (areRectsAdjacent(rectItYArr[i].d.rect, resY[j].d.rect)) {
+				rectItYArr[i].d.a[resY[j].d.id] = resY[j];
 			}
 		}
 	}

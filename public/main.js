@@ -395,6 +395,25 @@ var main = function() {
 			gridWidth: 999,
 			margin: 3.830521472392638,
 			initialPositionData: [
+				// {
+				// 	x: 50,
+				// 	y: 100,
+				// 	width: 200,
+				// 	height: 200,
+				// },
+				// {
+				// 	x: 270,
+				// 	y: 100,
+				// 	width: 200,
+				// 	height: 200,
+				// },
+				// {
+				// 	x: 590,
+				// 	y: 100,
+				// 	width: 200,
+				// 	height: 200,
+				// },
+
 				{
 					x: 0 + 5,
 					y: 0 + 5,

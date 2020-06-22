@@ -13,6 +13,9 @@ export const printUnmergedFreeRects = (arr) => {
 	}
 	set$limberGridViewDebugUnmergedRects([]);
 
+	// USE it to hide items
+	// e.$limberGridView[0].innerHTML = "";
+
 	len = arr.length;
 	let html;
 	let node;
@@ -23,11 +26,17 @@ export const printUnmergedFreeRects = (arr) => {
 			"class",
 			"limberGridViewDebugRect limberGridViewDebugUnmergedRect"
 		);
-		node.style.transform = `translate(${arr[i].d.rect.x}px, ${
-			arr[i].d.rect.y
+
+		node.setAttribute(
+			"title",
+			`${Object.keys(arr[i].a).map((o) => arr[i].a[o].d.id)}`
+		);
+		node.innerHTML = arr[i].id;
+		node.style.transform = `translate(${arr[i].rect.x}px, ${
+			arr[i].rect.y
 		}px)`;
-		node.style.width = arr[i].d.rect.width + "px";
-		node.style.height = arr[i].d.rect.height + "px";
+		node.style.width = arr[i].rect.width + "px";
+		node.style.height = arr[i].rect.height + "px";
 		e.$limberGridView[0].appendChild(node);
 	}
 

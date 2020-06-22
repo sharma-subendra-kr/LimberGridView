@@ -315,4 +315,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	position: absolute;
 	user-select: none;
 	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
