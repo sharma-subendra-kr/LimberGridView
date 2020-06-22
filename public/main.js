@@ -10,7 +10,7 @@ var main = function() {
 	var $addButtonIcon = document.getElementsByClassName("addButtonIcon");
 
 	var onToggleModeClick = function(event) {
-		console.log(event);
+		// console.log(event);
 		if (event.currentTarget.classList.contains("activateAddMode")) {
 			event.currentTarget.classList.remove(
 				"toggleAddOrCutSpaceButtonActive"
@@ -33,7 +33,7 @@ var main = function() {
 	};
 
 	var onAddButtonIconClick = function(event) {
-		console.log(event);
+		// console.log(event);
 		window.limberGridView.addItems(1);
 	};
 
@@ -250,7 +250,7 @@ var main = function() {
 	function remove(event) {
 		debugger;
 		var index = event.currentTarget.attributes["data-index"].value;
-		console.log(index);
+		// console.log(index);
 		var indices = [index];
 		indices.sort(function(a, b) {
 			return Number(a) - Number(b);
@@ -268,10 +268,10 @@ var main = function() {
 	}
 
 	function getItemRenderDataCallback(index, width, height, processType) {
-		console.log(index);
-		console.log(width);
-		console.log(height);
-		console.log(processType);
+		// console.log(index);
+		// console.log(width);
+		// console.log(height);
+		// console.log(processType);
 
 		var div = document.createElement("div");
 		div.style.width = width + "px";
@@ -334,39 +334,39 @@ var main = function() {
 	};
 
 	var renderComplete = function() {
-		console.log("renderComplete");
+		// console.log("renderComplete");
 	};
 
 	var itemsRenderComplete = function(indices, scale, processType) {
-		console.log("itemsRenderComplete");
-		console.log(event);
+		// console.log("itemsRenderComplete");
+		// console.log(event);
 	};
 
 	var resizeCompleteCallback = function(index, width, height) {
-		console.log("resizeCompleteCallback");
-		console.log(index);
-		console.log(width);
-		console.log(height);
+		// console.log("resizeCompleteCallback");
+		// console.log(index);
+		// console.log(width);
+		// console.log(height);
 	};
 
 	var moveCompleteCallback = function(status, index, coordinatesOrEvent) {
-		console.log("moveCompleteCallback");
-		console.log(status);
-		console.log(index);
-		console.log(coordinatesOrEvent);
+		// console.log("moveCompleteCallback");
+		// console.log(status);
+		// console.log(index);
+		// console.log(coordinatesOrEvent);
 	};
 
 	var addCompleteCallback = function(indices, width, height, processType) {
-		console.log("addCompleteCallback");
-		console.log(indices);
-		console.log(width);
-		console.log(height);
-		console.log(processType);
+		// console.log("addCompleteCallback");
+		// console.log(indices);
+		// console.log(width);
+		// console.log(height);
+		// console.log(processType);
 	};
 
 	var removeCompleteCallback = function(indices) {
-		console.log("removeCompleteCallback");
-		console.log(indices);
+		// console.log("removeCompleteCallback");
+		// console.log(indices);
 	};
 
 	var obj = {
@@ -429,32 +429,32 @@ var main = function() {
 					x: 207.91370558375635,
 					y: 383.17659057643795,
 					height: 202.84263959390861,
-					width: 202.84263959390861 + 100,
+					width: 202.84263959390861,
 				},
-				// {
-				// 	x: 415.8274111675127,
-				// 	y: 383.17659057643795,
-				// 	height: 202.84263959390861,
-				// 	width: 578.1015228426396,
-				// },
-				// {
-				// 	x: 0 + 5,
-				// 	y: 591.0902961601943,
-				// 	height: 608.5279187817258,
-				// 	width: 405.68527918781723 - 5,
-				// },
-				// {
-				// 	x: 414.4624233128834,
-				// 	y: 594.4969325153374,
-				// 	height: 486.2310736196319,
-				// 	width: 552.2370874233128,
-				// },
-				// {
-				// 	x: 0 + 5,
-				// 	y: 1208.197027498365,
-				// 	height: 438.1580291411043,
-				// 	width: 718.6058282208588 - 5,
-				// },
+				{
+					x: 415.8274111675127,
+					y: 383.17659057643795,
+					height: 202.84263959390861,
+					width: 578.1015228426396,
+				},
+				{
+					x: 0 + 5,
+					y: 591.0902961601943,
+					height: 608.5279187817258,
+					width: 405.68527918781723 - 5,
+				},
+				{
+					x: 414.4624233128834,
+					y: 594.4969325153374,
+					height: 486.2310736196319,
+					width: 552.2370874233128,
+				},
+				{
+					x: 0 + 5,
+					y: 1208.197027498365,
+					height: 438.1580291411043,
+					width: 718.6058282208588 - 5,
+				},
 			],
 		},
 
@@ -491,9 +491,9 @@ var main = function() {
 		// },
 	};
 
-	console.log(
-		window.getComputedStyle(body[0], null).getPropertyValue("width")
-	);
+	// console.log(
+	// 	window.getComputedStyle(body[0], null).getPropertyValue("width")
+	// );
 
 	window.limberGridView = new LimberGridView(obj);
 	// window.limberGridView.MOVE_GUIDE_RADIUS = 20;

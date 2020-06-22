@@ -1,4 +1,7 @@
-import { positionData as pd } from "../../variables/essentials";
+import {
+	positionData as pd,
+	modifiedPositionData as mpd,
+} from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
 import { doRectsOverlap } from "../rect/rectUtils";
@@ -14,7 +17,12 @@ export const isFlippingPosPossible = () => {
 	}
 };
 
-export const getMinMaxY = (affectedItems) => {
+export const getMinMaxY = (
+	affectedItems,
+	resizedBottomY,
+	toY,
+	movedBottomY
+) => {
 	let minY = Number.MAX_SAFE_INTEGER,
 		maxY = 0;
 	let len = affectedItems.length;
@@ -22,10 +30,16 @@ export const getMinMaxY = (affectedItems) => {
 		if (pd[affectedItems[i]].y < minY) {
 			minY = pd[affectedItems[i]].y;
 		}
-		if (pd[affectedItems[i]].y > maxY) {
-			maxY = pd[affectedItems[i]].y;
+		if (pd[affectedItems[i]].y + pd[affectedItems[i]].height > maxY) {
+			maxY = pd[affectedItems[i]].y + pd[affectedItems[i]].height;
 		}
 	}
+
+	if (resizedBottomY > maxY) maxY = resizedBottomY;
+
+	if (toY < minY) minY = toY;
+
+	if (movedBottomY > maxY) maxY = movedBottomY;
 
 	return { minY, maxY };
 };
@@ -74,19 +88,19 @@ export const fixMinYMaxY = (rectCo) => {
 	return { arrangeTopY, arrangeBottomY };
 };
 
-export const getItemsInWorkSpace = (workSpaceRect) => {
-	const len = pd.length;
+export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
+	const len = mpd.length;
 	const itemsInWorkSpace = new Array(len);
 	let count = 0;
 	for (let i = 0; i < len; i++) {
-		if (doRectsOverlap(workSpaceRect, pd[i])) {
-			itemsInWorkSpace[count++] = pd[i];
+		if (doRectsOverlap(workSpaceRect, mpd[i])) {
+			itemsInWorkSpace[count++] = mpd[i];
 		}
 	}
 
 	const res = new Array(count);
 	for (let i = 0; i < count; i++) {
-		res[i] = itemsInWorkSpacep[i];
+		res[i] = itemsInWorkSpace[i];
 	}
 
 	return res;

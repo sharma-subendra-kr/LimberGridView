@@ -77,6 +77,19 @@ export const doesPointTouchRect = (rect, point) => {
 
 export const doRectsOverlap = (rectA, rectB) => {
 	try {
+		if (
+			!rectA.x ||
+			!rectA.y ||
+			!rectA.width ||
+			!rectA.height ||
+			!rectB.x ||
+			!rectB.y ||
+			!rectB.width ||
+			!rectB.height
+		) {
+			return null;
+		}
+
 		const tlA = { x: rectA.x, y: rectA.y };
 		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
 		const tlB = { x: rectB.x, y: rectB.y };
@@ -98,6 +111,19 @@ export const doRectsOverlap = (rectA, rectB) => {
 
 export const doRectsOnlyTouch = (rectA, rectB) => {
 	try {
+		if (
+			!rectA.x ||
+			!rectA.y ||
+			!rectA.width ||
+			!rectA.height ||
+			!rectB.x ||
+			!rectB.y ||
+			!rectB.width ||
+			!rectB.height
+		) {
+			return null;
+		}
+
 		const tlA = { x: rectA.x, y: rectA.y };
 		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
 		const tlB = { x: rectB.x, y: rectB.y };
@@ -119,7 +145,7 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 	}
 };
 
-export const subtractRect = (rectA, rectB) => {
+export const subtractRect = (rectA, rectB, oCoForm) => {
 	// gives the non overlapping free spaces in rectA
 
 	if (!doRectsOverlap(rectA, rectB)) {
@@ -284,24 +310,32 @@ export const subtractRect = (rectA, rectB) => {
 		blNlm ||
 		lmNtl;
 
-	// let rects = [tl, tm, tr, rm, br, bm, bl, lm];
-	let rects = [
-		getRectObjectFromCo(tl),
-		getRectObjectFromCo(tm),
-		getRectObjectFromCo(tr),
-		getRectObjectFromCo(rm),
-		getRectObjectFromCo(br),
-		getRectObjectFromCo(bm),
-		getRectObjectFromCo(bl),
-		getRectObjectFromCo(lm),
-	];
+	let rects;
+	if (oCoForm) {
+		rects = [tl, tm, tr, rm, br, bm, bl, lm];
+	} else {
+		rects = [
+			getRectObjectFromCo(tl),
+			getRectObjectFromCo(tm),
+			getRectObjectFromCo(tr),
+			getRectObjectFromCo(rm),
+			getRectObjectFromCo(br),
+			getRectObjectFromCo(bm),
+			getRectObjectFromCo(bl),
+			getRectObjectFromCo(lm),
+		];
+	}
+
 	rects = rects.filter((o) => o);
 
 	if (rects.length === 0) {
-		rects = Object.keys(subRects).map(
-			(o) => getRectObjectFromCo(subRects[o])
-			// subRects[o]
-		);
+		rects = Object.keys(subRects).map((o) => {
+			if (oCoForm) {
+				return subRects[o];
+			} else {
+				return getRectObjectFromCo(subRects[o]);
+			}
+		});
 	}
 
 	return rects;
@@ -413,4 +447,23 @@ export const getRectObjectFromCo = function(rect) {
 		width: rect.tr.x - rect.tl.x,
 		height: rect.bl.y - rect.tl.y,
 	};
+};
+
+export const areRectsAdjacent = (rectA, rectB) => {
+	const rectACo = getCoordinates(rectA);
+	const rectBCo = getCoordinates(rectB);
+
+	if (
+		(rectACo.tl.x - rectBCo.tr.x <= 1 &&
+			rectACo.tl.x - rectBCo.tr.x >= 0) ||
+		(rectBCo.tl.x - rectACo.tr.x <= 1 &&
+			rectACo.tl.x - rectBCo.tr.x >= 0) ||
+		(rectACo.tl.y - rectBCo.bl.y <= 1 &&
+			rectACo.tl.x - rectBCo.tr.x >= 0) ||
+		(rectBCo.tl.y - rectACo.bl.y <= 1 && rectACo.tl.x - rectBCo.tr.x >= 0)
+	) {
+		return true;
+	} else {
+		return false;
+	}
 };

@@ -31,10 +31,12 @@ const ev = {
 	pseudoElementID: "",
 };
 const positionData = [];
+const modifiedPositionData = [];
 const initialPositionData = [];
 const initialGridData = {};
 let callbacks = {};
 const serializedPositionData = {};
+let DEBUG_MODE = true;
 
 const setElementId = function(id) {
 	ev.elementID = id;
@@ -47,6 +49,11 @@ const setPseudoElementID = function(id) {
 const setPositionData = function(pos) {
 	positionData.length = 0;
 	Object.assign(positionData, JSON.parse(JSON.stringify(pos)));
+};
+
+const setModifiedPositionData = function(pos) {
+	modifiedPositionData.length = 0;
+	Object.assign(modifiedPositionData, JSON.parse(JSON.stringify(pos)));
 };
 
 const setInitialPositionData = function(pos) {
@@ -69,20 +76,28 @@ const setSerializedPositionData = function(serPos) {
 	Object.assign(serializedPositionData, serPos);
 };
 
+const setDebugMode = function(flag) {
+	DEBUG_MODE = flag;
+};
+
 export {
 	ev,
 	positionData,
+	modifiedPositionData,
 	initialPositionData,
 	initialGridData,
 	callbacks,
 	serializedPositionData,
+	DEBUG_MODE,
 };
 export {
 	setElementId,
 	setPseudoElementID,
 	setPositionData,
+	setModifiedPositionData,
 	setInitialPositionData,
 	setInitialGridData,
 	setCallbacks,
 	setSerializedPositionData,
+	setDebugMode,
 };

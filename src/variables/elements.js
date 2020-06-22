@@ -33,6 +33,8 @@ const e = {
 	$el: {},
 	$limberGridView: [],
 	$limberGridViewItems: [],
+	$limberGridViewDebugUnmergedRects: [],
+	$limberGridViewDebugMergedRects: [],
 	$limberGridViewContainer: [],
 	$limberGridViewStyle: [],
 	$limberGridViewGridPseudoItems: undefined,
@@ -64,6 +66,14 @@ const set$limberGridView = function(elm) {
 
 const set$limberGridViewItems = function(elm) {
 	e.$limberGridViewItems = elm;
+};
+
+const set$limberGridViewDebugUnmergedRects = function(elm) {
+	e.$limberGridViewDebugUnmergedRects = elm;
+};
+
+const set$limberGridViewDebugMergedRects = function(elem) {
+	e.$limberGridViewDebugMergedRects = elm;
 };
 
 const set$limberGridViewContainer = function(elm) {
@@ -102,6 +112,8 @@ export {
 	set$el,
 	set$limberGridView,
 	set$limberGridViewItems,
+	set$limberGridViewDebugUnmergedRects,
+	set$limberGridViewDebugMergedRects,
 	set$limberGridViewContainer,
 	set$limberGridViewStyle,
 	set$limberGridViewGridPseudoItems,

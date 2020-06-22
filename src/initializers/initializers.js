@@ -58,7 +58,7 @@ export const init = function(initialGridWidth, autoArrange) {
 		set$el(
 			document.getElementById(options.el.substring(1, options.el.length))
 		);
-		console.log(e);
+		// console.log(e);
 		e.$body[0].insertAdjacentHTML(
 			"beforeend",
 			'<div id = "' +

@@ -32,7 +32,11 @@ import {
 } from "../rect/rectUtils";
 import publicConstants from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
-import { positionData as pd } from "../../variables/essentials";
+import {
+	positionData as pd,
+	modifiedPositionData as mpd,
+	setModifiedPositionData,
+} from "../../variables/essentials";
 import e from "../../variables/elements";
 
 export const getResizeAffectedItems = (item, index) => {
@@ -53,18 +57,18 @@ export const getResizeAffectedItems = (item, index) => {
 		temp.width = pd[i].width + publicConstants.MARGIN;
 		temp.height = pd[i].height + publicConstants.MARGIN;
 		if (
-			doRectsOverlap(temp, _item) &&
-			doRectsOnlyTouch(temp, _item) &&
+			(doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
 			i !== index
 		) {
 			affectedArr[count++] = i;
 		}
 	}
 
-	const result = new Array(count);
+	const result = new Array(count + 1);
 	for (let i = 0; i < count; i++) {
 		result[i] = affectedArr[i];
 	}
+	result[count] = index;
 
 	return result;
 };
@@ -89,6 +93,8 @@ export const getMoveAffectedItems = (item, index) => {
 		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
 			if (i !== index) {
 				affectedArr[count++] = i;
+				mpd[i].x = null;
+				mpd[i].y = null;
 			}
 		}
 	}
@@ -171,5 +177,5 @@ export const movePointAdjust = (toX, toY) => {
 		toX = pd[inside].x;
 		toY = pd[inside].y;
 	}
-	return { toX, toY };
+	return { toX, toY, overlappedItemIndex: inside };
 };

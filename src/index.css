@@ -309,3 +309,10 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 .limberGridViewLicenseIcon:hover + .limberGridViewLicenseDetails {
 	display: inline-block;
 }
+
+.limberGridViewDebugUnmergedRect {
+	border: solid 1px orange;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+}

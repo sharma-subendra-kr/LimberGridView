@@ -270,9 +270,9 @@ export const render = function(_positionData, scale = true) {
 
 	// dev Code
 	var t1 = performance.now();
-	console.log(t0);
-	console.log(t1);
-	console.log(t1 - t0);
+	// console.log(t0);
+	// console.log(t1);
+	// console.log(t1 - t0);
 	// dev Code END
 
 	set$limberGridViewItems(

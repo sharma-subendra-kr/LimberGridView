@@ -51,7 +51,9 @@ import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
 import {
 	positionData as pd,
+	modifiedPositionData as mpd,
 	setPositionData,
+	setModifiedPositionData,
 } from "../../variables/essentials";
 import e from "../../variables/elements";
 
@@ -61,6 +63,10 @@ export const resizeItem = function(index, width, height) {
 	index = parseInt(index);
 	if (!resizeItemInitialChecks(index, width, height)) return false;
 
+	setModifiedPositionData(pd);
+	mpd[index].width = width;
+	mpd[index].heigt = heigt;
+
 	const modifiedItem = {
 		x: pd[index].x,
 		y: pd[index].y,
@@ -69,7 +75,7 @@ export const resizeItem = function(index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems);
+	arrangeAffectedItems(affectedItems, modifiedItem.y + modifiedItem.height);
 };
 
 export const resizeItemDemo = function(index, width, height) {
@@ -77,6 +83,10 @@ export const resizeItemDemo = function(index, width, height) {
 	if (!resizeItemInitialChecks(index, width, height)) return false;
 	resetDemoUIChanges();
 
+	setModifiedPositionData(pd);
+	mpd[index].width = width;
+	mpd[index].heigt = heigt;
+
 	const modifiedItem = {
 		x: pd[index].x,
 		y: pd[index].y,
@@ -85,11 +95,12 @@ export const resizeItemDemo = function(index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems);
+	arrangeAffectedItems(affectedItems, modifiedItem.y + modifiedItem.height);
 };
 
 export const moveItem = function(index, toX, toY) {
 	index = parseInt(index);
+	let adjustedPt = {};
 	if (true) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
@@ -100,6 +111,10 @@ export const moveItem = function(index, toX, toY) {
 
 	if (!moveItemInitialChecks(index, toX, toY)) return false;
 
+	setModifiedPositionData(pd);
+	mpd[index].x = toX;
+	mpd[index].y = toY;
+
 	const modifiedItem = {
 		x: toX,
 		y: toY,
@@ -108,7 +123,7 @@ export const moveItem = function(index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems);
+	arrangeAffectedItems(affectedItems, null, toY, toY + pd[index].height);
 
 	// const flipDetails = isFlippingPosPossible(index, toX, toY, affectedItems);
 	// if (flipDetails) {
@@ -120,16 +135,21 @@ export const moveItem = function(index, toX, toY) {
 
 export const moveItemDemo = function(index, toX, toY) {
 	index = parseInt(index);
+	let adjustedPt = {};
 	if (true) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
-		const adjustedPt = movePointAdjust(toX, toY);
+		adjustedPt = movePointAdjust(toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
 	}
 
 	if (!moveItemInitialChecks(index, toX, toY)) return false;
 	resetDemoUIChanges();
+
+	setModifiedPositionData(pd);
+	mpd[index].x = toX;
+	mpd[index].y = toY;
 
 	const modifiedItem = {
 		x: toX,
@@ -139,7 +159,7 @@ export const moveItemDemo = function(index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems);
+	arrangeAffectedItems(affectedItems, null, toY, toY + pd[index].height);
 
 	// const flipDetails = isFlippingPosPossible(index, toX, toY, affectedItems);
 	// if (flipDetails) {
