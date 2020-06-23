@@ -492,7 +492,7 @@ export const mergeRects = (rectA, rectB) => {
 		return {
 			tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
 			tr: { x: x, y: rectBCo.tl.y },
-			br: { x: y, y: rectACo.bl.y },
+			br: { x: x, y: rectACo.bl.y },
 			bl: { x: rectACo.bl.x, y: rectACo.bl.y },
 		};
 	}
@@ -548,10 +548,10 @@ export const mergeRects = (rectA, rectB) => {
 	) {
 		let x = rectACo.tl.x < rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
 		return {
-			tl: { x: 0, y: rectACo.tl.y },
+			tl: { x: x, y: rectACo.tl.y },
 			tr: { x: rectACo.tr.x, y: rectACo.tr.y },
 			br: { x: rectACo.tr.x, y: rectBCo.br.y },
-			bl: { x: 0, y: rectBCo.bl.y },
+			bl: { x: x, y: rectBCo.bl.y },
 		};
 	}
 
@@ -562,8 +562,8 @@ export const mergeRects = (rectA, rectB) => {
 	) {
 		let y = rectACo.tl.y < rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		return {
-			tl: { x: rectACo.tl.x, y: 0 },
-			tr: { x: rectBCo.tr.x, y: 0 },
+			tl: { x: rectACo.tl.x, y: y },
+			tr: { x: rectBCo.tr.x, y: y },
 			br: { x: rectBCo.br.x, y: rectACo.br.y },
 			bl: { x: rectACo.bl.x, y: rectACo.bl.y },
 		};

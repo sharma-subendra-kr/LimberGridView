@@ -14,7 +14,7 @@ import {
 import { shuffle } from "../array/arrayUtils";
 import Stack from "../stack/stack";
 import { printUnmergedFreeRects, printMergedFreeRects } from "../debug/debug";
-
+window.mergeRects = mergeRects;
 export const arrangeAffectedItems = (
 	affectedItems,
 	resizedBottomY,
@@ -78,7 +78,7 @@ export const arrangeAffectedItems = (
 	if (DEBUG_MODE) {
 		printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 	}
-	mergeRects(freeRectsArr);
+	mergeFreeRects(freeRectsArr);
 };
 
 export const sweepLine = (area, areaCo, items) => {
@@ -153,7 +153,7 @@ export const assignAdjacentRects = (rectsItY, rectsItX) => {
 	}
 };
 
-export const mergeRects = (freeRectsArr) => {
+export const mergeFreeRects = (freeRectsArr) => {
 	console.log("freeRectsArr", freeRectsArr);
 
 	const stack = new Stack();
