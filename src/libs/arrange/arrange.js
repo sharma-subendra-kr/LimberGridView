@@ -163,10 +163,10 @@ export const mergeRects = (freeRectsArr) => {
 	stack.push(freeRectsArr[0]);
 	while (!stack.isEmpty()) {
 		top = stack.pop();
-		// if (top.d?.a) {
-		// }
-		// if (top?.d?.a) {
-		// for (let i = 0; i < top.length; i++) {}
-		// }
+		if (top?.d?.a) {
+			for (let i = 0; i < top.length; i++) {}
+		} else {
+			resultStack.push(top);
+		}
 	}
 };
