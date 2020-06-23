@@ -475,6 +475,7 @@ export const areRectsAdjacent = (rectA, rectB) => {
 };
 
 export const mergeRects = (rectA, rectB) => {
+	debugger;
 	if (doRectsOverlap(rectA, rectB)) {
 		return false;
 	}
@@ -486,7 +487,7 @@ export const mergeRects = (rectA, rectB) => {
 	if (
 		rectACo.tl.x >= rectBCo.bl.x &&
 		rectACo.tl.x < rectBCo.br.x &&
-		(rectACo.tl.y === rectBCo.bl.y || rectACo.tl.y - rectBCo.bl.y < 1)
+		rectACo.tl.y >= rectBCo.bl.y
 	) {
 		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
 		return {
@@ -500,7 +501,7 @@ export const mergeRects = (rectA, rectB) => {
 	if (
 		rectACo.tl.y >= rectBCo.tr.y &&
 		rectACo.tl.y < rectBCo.br.y &&
-		(rectACo.tl.x === rectBCo.tr.x || rectACo.tl.x - rectBCo.tr.x < 1)
+		rectACo.tl.x >= rectBCo.tr.x
 	) {
 		let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
 		return {
@@ -513,9 +514,9 @@ export const mergeRects = (rectA, rectB) => {
 
 	// check tr
 	if (
-		rectACo.tr.x > rectBCo.bl.x &&
 		rectACo.tr.x <= rectBCo.br.x &&
-		(rectACo.tr.y === rectBCo.bl.y || rectACo.tr.y - rectBCo.bl.y < 1)
+		rectACo.tr.x > rectBCo.bl.x &&
+		rectACo.tr.y >= rectBCo.bl.y
 	) {
 		let x = rectAco.tl.x > rectBCo.tl.x ? rectAco.tl.x : rectBCo.tl.x;
 		return {
@@ -529,7 +530,7 @@ export const mergeRects = (rectA, rectB) => {
 	if (
 		rectACo.tr.y >= rectBCo.tl.y &&
 		rectACo.tr.y < rectBCo.bl.y &&
-		(rectACo.tr.x === rectBCo.tl.x || rectBCo.tl.x - rectACo.tr.x < 1)
+		rectACo.tr.x <= rectBCo.tl.x
 	) {
 		let y = rectA.bl.y < rectB.bl.y ? rectA.bl.y : rectB.bl.y;
 		return {
@@ -544,7 +545,7 @@ export const mergeRects = (rectA, rectB) => {
 	if (
 		rectACo.br.x <= rectBCo.tr.x &&
 		rectACo.br.x > rectBCo.tl.x &&
-		(rectACo.br.y === rectBCo.tl.y || rectBCo.tl.y - rectACo.br.y < 1)
+		rectACo.br.y <= rectBCo.tl.y
 	) {
 		let x = rectACo.tl.x < rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
 		return {
@@ -556,9 +557,9 @@ export const mergeRects = (rectA, rectB) => {
 	}
 
 	if (
-		rectACo.br.y > rectBCo.tl.y &&
 		rectACo.br.y <= rectBCo.bl.y &&
-		(rectACo.br.x === rectBCo.tl.x || rectBCo.tl.x - rectACo.br.x < 1)
+		rectACo.br.y > rectBCo.tl.y &&
+		rectACo.br.x <= rectBCo.tl.x
 	) {
 		let y = rectACo.tl.y < rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		return {
@@ -573,7 +574,7 @@ export const mergeRects = (rectA, rectB) => {
 	if (
 		rectACo.bl.x >= rectBCo.tl.x &&
 		rectACo.bl.x < rectBCo.tr.x &&
-		(rectACo.bl.y === rectBCo.tl.y || rectBCo.tl.y - rectACo.bl.y < 1)
+		rectACo.bl.y <= rectBCo.tl.y
 	) {
 		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
 		return {
@@ -587,7 +588,7 @@ export const mergeRects = (rectA, rectB) => {
 	if (
 		rectACo.bl.y <= rectBCo.br.y &&
 		rectACo.bl.y > rectBCo.tr.y &&
-		(rectACo.bl.x === rectBCo.tr.x || rectACo.bl.x - rectBCo.tr.x < 1)
+		rectACo.bl.x >= rectBCo.tr.x
 	) {
 		let y = rectACo.tl.y < rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		return {
