@@ -11,6 +11,7 @@ import {
 	getCoordinates,
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
+import Stack from "../stack/stack";
 import { printUnmergedFreeRects, printMergedFreeRects } from "../debug/debug";
 
 export const arrangeAffectedItems = (
@@ -76,7 +77,7 @@ export const arrangeAffectedItems = (
 	if (DEBUG_MODE) {
 		printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 	}
-	// mergeRects(freeRectsArr, freeRectsItY, freeRectsItX);
+	mergeRects(freeRectsArr);
 };
 
 export const sweepLine = (area, areaCo, items) => {
@@ -151,4 +152,21 @@ export const assignAdjacentRects = (rectsItY, rectsItX) => {
 	}
 };
 
-export const mergeRects = (freeRectsArr, freeRectsItY, freeRectsItX) => {};
+export const mergeRects = (freeRectsArr) => {
+	console.log("freeRectsArr", freeRectsArr);
+
+	const stack = new Stack();
+	const resultStack = new Stack();
+
+	let adjacents, top;
+
+	stack.push(freeRectsArr[0]);
+	while (!stack.isEmpty()) {
+		top = stack.pop();
+		// if (top.d?.a) {
+		// }
+		// if (top?.d?.a) {
+		// for (let i = 0; i < top.length; i++) {}
+		// }
+	}
+};
