@@ -9,6 +9,7 @@ import {
 	doRectsOverlap,
 	areRectsAdjacent,
 	getCoordinates,
+	mergeRects,
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
 import Stack from "../stack/stack";
