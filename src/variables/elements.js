@@ -72,7 +72,7 @@ const set$limberGridViewDebugUnmergedRects = function(elm) {
 	e.$limberGridViewDebugUnmergedRects = elm;
 };
 
-const set$limberGridViewDebugMergedRects = function(elem) {
+const set$limberGridViewDebugMergedRects = function(elm) {
 	e.$limberGridViewDebugMergedRects = elm;
 };
 

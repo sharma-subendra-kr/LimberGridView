@@ -65,6 +65,7 @@ Stack.prototype.getData = function() {
 	for (let i = 0; i <= this.ptr; i++) {
 		arr[i] = this.stack[i];
 	}
+	return arr;
 };
 
 export default Stack;

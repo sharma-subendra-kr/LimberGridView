@@ -311,11 +311,36 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limberGridViewDebugUnmergedRect {
-	border: solid 1px orange;
+	border: solid 1px blue;
 	position: absolute;
 	user-select: none;
 	background: transparent;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	color: blue;
+	font-weight: 900;
+}
+
+.limberGridViewDebugUnmergedRect:hover {
+	border-width: 3px;
+}
+
+.limberGridViewDebugMergedRect {
+	border: solid 1px red;
+
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: red;
+	font-weight: 900;
+}
+
+.limberGridViewDebugMergedRect:hover {
+	border-width: 3px;
 }
