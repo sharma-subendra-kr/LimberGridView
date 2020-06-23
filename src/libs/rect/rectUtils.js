@@ -474,219 +474,126 @@ export const areRectsAdjacent = (rectA, rectB) => {
 	}
 };
 
-export const mergeRect = (rectA, rectB) => {
+export const mergeRects = (rectA, rectB) => {
+	if (doRectsOverlap(rectA, rectB)) {
+		return false;
+	}
+
 	const rectACo = getCoordinates(rectA);
 	const rectBCo = getCoordinates(rectB);
 
-	// check tl
-	if (
-		rectACo.tl.x >= rectBCo.bl.x &&
-		rectACo.tl.x < rectBCo.br.x &&
-		(rectACo.tl.y === rectBCo.bl.y || rectACo.tl.y - rectBCo.bl.y < 1)
-	) {
-		return {
-			tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
-			tr: 0,
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+	const merge = (rectA, rectB) => {
+		// check tl
+		if (
+			rectACo.tl.x >= rectBCo.bl.x &&
+			rectACo.tl.x < rectBCo.br.x &&
+			(rectACo.tl.y === rectBCo.bl.y || rectACo.tl.y - rectBCo.bl.y < 1)
+		) {
+			let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
+			return {
+				tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
+				tr: { x: x, y: rectBCo.tl.y },
+				br: { x: y, y: rectACo.bl.y },
+				bl: { x: rectACo.bl.x, y: rectACo.bl.y },
+			};
+		}
 
-	if (
-		rectACo.tl.y >= rectBCo.tr.y &&
-		rectACo.tl.y < rectBCo.br.y &&
-		(rectACo.tl.x === rectBCo.tr.x || rectACo.tl.x - rectBCo.tr.x < 1)
-	) {
-		return {
-			tl: { x: rectBCo.tl.x, y: rectACo.tl.y },
-			tr: 0,
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		if (
+			rectACo.tl.y >= rectBCo.tr.y &&
+			rectACo.tl.y < rectBCo.br.y &&
+			(rectACo.tl.x === rectBCo.tr.x || rectACo.tl.x - rectBCo.tr.x < 1)
+		) {
+			let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
+			return {
+				tl: { x: rectBCo.tl.x, y: rectACo.tl.y },
+				tr: { x: rectACo.tr.x, y: rectACo.tr.y },
+				br: { x: rectACo.br.x, y: y },
+				bl: { x: rectBCo.bl.x, y: y },
+			};
+		}
 
-	if (
-		rectBCo.tl.x >= rectACo.bl.x &&
-		rectBCo.tl.x < rectACo.br.x &&
-		(rectBCo.tl.y === rectACo.bl.y || rectBCo.tl.y - rectACo.bl.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		// check tr
+		if (
+			rectACo.tr.x > rectBCo.bl.x &&
+			rectACo.tr.x <= rectBCo.br.x &&
+			(rectACo.tr.y === rectBCo.bl.y || rectACo.tr.y - rectBCo.bl.y < 1)
+		) {
+			let x = rectAco.tl.x > rectBCo.tl.x ? rectAco.tl.x : rectBCo.tl.x;
+			return {
+				tl: { x: x, y: rectBCo.tl.y },
+				tr: { x: rectACo.tr.x, y: rectBCo.tr.y },
+				br: { x: rectACo.br.x, y: rectACo.br.y },
+				bl: { x: X, y: rectACo.bl.y },
+			};
+		}
 
-	if (
-		rectBCo.tl.y >= rectACo.tr.y &&
-		rectBCo.tl.y < rectACo.br.y &&
-		(rectBCo.tl.x === rectACo.tr.x || rectBCo.tl.x - rectACo.tr.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		if (
+			rectACo.tr.y >= rectBCo.tl.y &&
+			rectACo.tr.y < rectBCo.bl.y &&
+			(rectACo.tr.x === rectBCo.tl.x || rectBCo.tl.x - rectACo.tr.x < 1)
+		) {
+			return {
+				tl: { x: 0, y: 0 },
+				tr: { x: 0, y: 0 },
+				br: { x: 0, y: 0 },
+				bl: { x: 0, y: 0 },
+			};
+		}
 
-	// check tr
-	if (
-		rectACo.tr.x >= rectBCo.bl.x &&
-		rectACo.tr.x < rectBCo.br.x &&
-		(rectACo.tr.y === rectBCo.bl.y || rectACo.tr.y - rectBCo.bl.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		// check br
+		if (
+			rectACo.br.x >= rectBCo.tl.x &&
+			rectACo.br.x < rectBCo.tr.x &&
+			(rectACo.br.y === rectBCo.tl.y || rectBCo.tl.y - rectACo.br.y < 1)
+		) {
+			return {
+				tl: { x: 0, y: 0 },
+				tr: { x: 0, y: 0 },
+				br: { x: 0, y: 0 },
+				bl: { x: 0, y: 0 },
+			};
+		}
 
-	if (
-		rectACo.tr.y >= rectBCo.tl.y &&
-		rectACo.tr.y < rectBCo.bl.y &&
-		(rectACo.tr.x === rectBCo.tl.x || rectBCo.tl.x - rectACo.tr.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		if (
+			rectACo.br.y >= rectBCo.tl.y &&
+			rectACo.br.y < rectBCo.bl.y &&
+			(rectACo.br.x === rectBCo.tl.x || rectBCo.tl.x - rectACo.br.x < 1)
+		) {
+			return {
+				tl: { x: 0, y: 0 },
+				tr: { x: 0, y: 0 },
+				br: { x: 0, y: 0 },
+				bl: { x: 0, y: 0 },
+			};
+		}
 
-	if (
-		rectBCo.tr.x >= rectACo.bl.x &&
-		rectBCo.tr.x < rectACo.br.x &&
-		(rectBCo.tr.y === rectACo.bl.y || rectBCo.tr.y - rectACo.bl.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		// check bl
+		if (
+			rectACo.bl.x >= rectBCo.tl.x &&
+			rectACo.bl.x < rectBCo.tr.x &&
+			(rectACo.bl.y === rectBCo.tl.y || rectBCo.tl.y - rectACo.bl.y < 1)
+		) {
+			return {
+				tl: { x: 0, y: 0 },
+				tr: { x: 0, y: 0 },
+				br: { x: 0, y: 0 },
+				bl: { x: 0, y: 0 },
+			};
+		}
 
-	if (
-		rectBCo.tr.y >= rectACo.tl.y &&
-		rectBCo.ty.y < rectACo.bl.y &&
-		(rectBCo.tr.x === rectACo.tl.x || rectACo.tl.x - rectBCo.tr.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		if (
+			rectACo.bl.y >= rectBCo.tr.y &&
+			rectACo.bl.y < rectBCo.br.y &&
+			(rectACo.bl.x === rectBCo.tr.x || rectACo.bl.x - rectBCo.tr.x < 1)
+		) {
+			return {
+				tl: { x: 0, y: 0 },
+				tr: { x: 0, y: 0 },
+				br: { x: 0, y: 0 },
+				bl: { x: 0, y: 0 },
+			};
+		}
 
-	// check br
-	if (
-		rectACo.br.x >= rectBCo.tl.x &&
-		rectACo.br.x < rectBCo.tr.x &&
-		(rectACo.br.y === rectBCo.tl.y || rectBCo.tl.y - rectACo.br.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	if (
-		rectACo.br.y >= rectBCo.tl.y &&
-		rectACo.br.y < rectBCo.bl.y &&
-		(rectACo.br.x === rectBCo.tl.x || rectBCo.tl.x - rectACo.br.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	if (
-		rectBCo.br.x >= rectACo.tl.x &&
-		rectBCo.br.x < rectACo.tr.x &&
-		(rectBCo.br.y === rectACo.tl.y || rectACo.tl.y - rectBCo.br.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	if (
-		rectBCo.br.y >= rectACo.tl.y &&
-		rectBCo.br.y < rectACo.bl.y &&
-		(rectBCo.br.x === rectACo.tl.x || rectACo.tl.x - rectBCo.br.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	// check bl
-	if (
-		rectACo.bl.x >= rectBCo.tl.x &&
-		rectACo.bl.x < rectBCo.tr.x &&
-		(rectACo.bl.y === rectBCo.tl.y || rectBCo.tl.y - rectACo.bl.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	if (
-		rectACo.bl.y >= rectBCo.tr.y &&
-		rectACo.bl.y < rectBCo.br.y &&
-		(rectACo.bl.x === rectBCo.tr.x || rectACo.bl.x - rectBCo.tr.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	if (
-		rectBCo.bl.x >= rectACo.tl.x &&
-		rectBCo.bl.x < rectACo.tr.x &&
-		(rectBCo.bl.y === rectACo.tl.y || rectACo.tl.y - rectBCo.bl.y < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
-
-	if (
-		rectBCo.bl.y >= rectACo.tr.y &&
-		rectBCo.bl.y < rectACo.br.y &&
-		(rectBCo.bl.x === rectACo.tr.x || rectBCo.bl.x - rectACo.tr.x < 1)
-	) {
-		return {
-			tl: { x: 0, y: 0 },
-			tr: { x: 0, y: 0 },
-			br: { x: 0, y: 0 },
-			bl: { x: 0, y: 0 },
-		};
-	}
+		return false;
+	};
 };
