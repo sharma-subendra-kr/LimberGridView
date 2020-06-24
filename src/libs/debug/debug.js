@@ -29,7 +29,9 @@ export const printUnmergedFreeRects = (arr) => {
 
 		node.setAttribute(
 			"title",
-			`${Object.keys(arr[i].a).map((o) => arr[i].a[o].d.id)}`
+			`${arr[i].id}: ${Object.keys(arr[i].a).map(
+				(o) => arr[i].a[o].d.id
+			)}`
 		);
 		node.innerHTML = arr[i].id;
 		node.style.transform = `translate(${arr[i].rect.x}px, ${
@@ -70,7 +72,7 @@ export const printMergedFreeRects = (arr) => {
 
 		// node.setAttribute(
 		// 	"title",
-		// 	`${Object.keys(arr[i].a).map((o) => arr[i].a[o].d.id)}`
+		// 	`${arr[i].id}: ${Object.keys(arr[i].o).map((o) => arr[i].o[o].id)}`
 		// );
 		node.innerHTML = arr[i].id;
 		node.style.transform = `translate(${arr[i].rect.x}px, ${

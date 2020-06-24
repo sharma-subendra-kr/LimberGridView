@@ -93,7 +93,7 @@ export const sweepLine = (area, areaCo, items) => {
 	it.insert({
 		low: areaCo.tl.y,
 		high: areaCo.bl.y,
-		d: { rect: area, a: {} },
+		d: { rect: area, a: {}, o: {} },
 	});
 
 	let tempItem;
@@ -125,7 +125,7 @@ export const sweepLine = (area, areaCo, items) => {
 					it.insert({
 						low: diff[k].tl.y,
 						high: diff[k].bl.y,
-						d: { rect: getRectObjectFromCo(diff[k]), a: {} },
+						d: { rect: getRectObjectFromCo(diff[k]), a: {}, o: {} },
 					});
 				}
 
@@ -163,7 +163,6 @@ export const mergeFreeRects = (freeRectsArr) => {
 		adjacents,
 		adjacentsKeys,
 		adjacentsKeysLen,
-		mergeFound,
 		top,
 		keys,
 		keyslen,
