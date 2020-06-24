@@ -159,8 +159,8 @@ export const mergeFreeRects = (freeRectsArr) => {
 	const stack = new Stack();
 	const resultStack = new Stack();
 
-	let visited = {},
-		adjacents,
+	const visited = {};
+	let adjacents,
 		adj,
 		// adjacentsKeys,
 		// adjacentsKeysLen,
@@ -168,9 +168,9 @@ export const mergeFreeRects = (freeRectsArr) => {
 		keys,
 		keyslen,
 		mergedObject,
-		mergedRect,
-		idCount = freeRectsArr.length,
-		freeRectsLen = idCount;
+		mergedRect;
+	let idCount = freeRectsArr.length;
+	const freeRectsLen = idCount;
 
 	for (let k = 0; k < freeRectsLen; k++) {
 		debugger;
@@ -211,29 +211,30 @@ export const mergeFreeRects = (freeRectsArr) => {
 								id: idCount++,
 								rect: mergedRect,
 								a: adjacents,
-								o: {},
+								o: { ...top.d.o, ...adj.d.o },
 							},
 						};
 
 						filterAdjacents(mergedObject, visited);
+						filterOverlapped(mergedObject, visited);
 
 						stack.push(mergedObject);
-
-						if (isRectInside(mergedRect, adj.d.rect)) {
-							visited[adj.d.id] = true;
-						} else {
-							// mergedObject.d.o[adj.d.id] = adj;
-							// adj.d.o[mergedObject.d.id] = mergedObject;
-							delete adj.d.a[top.d.id];
-						}
 
 						if (isRectInside(mergedRect, top.d.rect)) {
 							visited[top.d.id] = true;
 						} else {
-							// mergedObject.d.o[top.d.id] = top;
-							// top.d.o[mergedObject.d.id] = mergedObject;
+							mergedObject.d.o[top.d.id] = top;
+							top.d.o[mergedObject.d.id] = mergedObject;
 							delete top.d.a[keys[i]];
 							stack.push(top);
+						}
+
+						if (isRectInside(mergedRect, adj.d.rect)) {
+							visited[adj.d.id] = true;
+						} else {
+							mergedObject.d.o[adj.d.id] = adj;
+							adj.d.o[mergedObject.d.id] = mergedObject;
+							delete adj.d.a[top.d.id];
 						}
 
 						// if (DEBUG_MODE)
@@ -269,6 +270,25 @@ export const filterAdjacents = (mergedObject, visited) => {
 		} else {
 			// Hey! you guys! Hey! you guys! I'm your neighbour!
 			adj.d.a[mergedObject.d.id] = mergedObject;
+		}
+	}
+};
+
+export const filterOverlapped = (mergedObject, visited) => {
+	debugger;
+	const mergedRect = mergedObject.d.rect;
+	const olpds = mergedObject.d.o;
+	let olpd;
+	const olpdsKeys = Object.keys(olpds);
+	const olpdsKeysLen = olpdsKeys.length;
+	for (let j = 0; j < olpdsKeysLen; j++) {
+		olpd = olpds[olpdsKeys[j]];
+		console.log("doRectsOverlap", doRectsOverlap(mergedRect, olpd.d.rect));
+		if (!doRectsOverlap(mergedRect, olpd.d.rect)) {
+			delete olpds[olpdsKeys[j]];
+		} else {
+			// Hey! you guys! Hey! you guys! I'm your neighbour!
+			olpd.d.o[mergedObject.d.id] = mergedObject;
 		}
 	}
 };

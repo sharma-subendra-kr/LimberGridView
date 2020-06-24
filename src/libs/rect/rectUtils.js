@@ -475,9 +475,9 @@ export const areRectsAdjacent = (rectA, rectB) => {
 };
 
 export const mergeRects = (rectA, rectB, oCoForm) => {
-	if (doRectsOverlap(rectA, rectB)) {
-		return false;
-	}
+	// if (doRectsOverlap(rectA, rectB)) {
+	// 	return false;
+	// }
 
 	const rectACo = getCoordinates(rectA);
 	const rectBCo = getCoordinates(rectB);
@@ -485,6 +485,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 	let result;
 
 	const merge = (rectACo, rectBCo) => {
+		let res;
 		// check tl
 		if (
 			rectACo.tl.x >= rectBCo.bl.x &&
@@ -492,7 +493,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.tl.y >= rectBCo.bl.y
 		) {
 			let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-			result = {
+			res = {
 				tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
 				tr: { x: x, y: rectBCo.tl.y },
 				br: { x: x, y: rectACo.bl.y },
@@ -506,7 +507,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.tl.x >= rectBCo.tr.x
 		) {
 			let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
-			result = {
+			res = {
 				tl: { x: rectBCo.tl.x, y: rectACo.tl.y },
 				tr: { x: rectACo.tr.x, y: rectACo.tr.y },
 				br: { x: rectACo.br.x, y: y },
@@ -521,7 +522,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.tr.y >= rectBCo.bl.y
 		) {
 			let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-			result = {
+			res = {
 				tl: { x: x, y: rectBCo.tl.y },
 				tr: { x: rectACo.tr.x, y: rectBCo.tr.y },
 				br: { x: rectACo.br.x, y: rectACo.br.y },
@@ -535,7 +536,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.tr.x <= rectBCo.tl.x
 		) {
 			let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
-			result = {
+			res = {
 				tl: { x: rectACo.tl.x, y: rectACo.tl.y },
 				tr: { x: rectBCo.tr.x, y: rectACo.tl.y },
 				br: { x: rectBCo.br.x, y: y },
@@ -550,7 +551,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.br.y <= rectBCo.tl.y
 		) {
 			let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-			result = {
+			res = {
 				tl: { x: x, y: rectACo.tl.y },
 				tr: { x: rectACo.tr.x, y: rectACo.tr.y },
 				br: { x: rectACo.tr.x, y: rectBCo.br.y },
@@ -564,7 +565,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.br.x <= rectBCo.tl.x
 		) {
 			let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-			result = {
+			res = {
 				tl: { x: rectACo.tl.x, y: y },
 				tr: { x: rectBCo.tr.x, y: y },
 				br: { x: rectBCo.br.x, y: rectACo.br.y },
@@ -579,7 +580,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.bl.y <= rectBCo.tl.y
 		) {
 			let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-			result = {
+			res = {
 				tl: { x: rectACo.tl.x, y: rectACo.tl.y },
 				tr: { x: x, y: rectACo.tr.y },
 				br: { x: x, y: rectBCo.br.y },
@@ -593,17 +594,46 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 			rectACo.bl.x >= rectBCo.tr.x
 		) {
 			let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-			result = {
+			res = {
 				tl: { x: rectBCo.tl.x, y: y },
 				tr: { x: rectACo.tr.x, y: y },
 				br: { x: rectACo.br.x, y: rectACo.br.y },
 				bl: { x: rectBCo.bl.x, y: rectACo.bl.y },
 			};
 		}
+
+		return res;
 	};
 
-	merge(rectACo, rectBCo);
-	if (!result) merge(rectBCo, rectACo);
+	const mergeOverlapping = () => {
+		const diff = subtractRect(rectA, rectB, true);
+
+		const arr = new Array(diff?.length || 0);
+		let m;
+		let count = 0;
+		const len = arr.length;
+
+		// for (const d of diff) {
+		for (let i = 0; i < len; i++) {
+			m = merge(diff[i], rectB);
+			if (m && !isRectInside(rectA, m)) {
+				arr[count++] = m;
+			}
+		}
+
+		const res = new Array(count);
+		for (let i = 0; i < count; i++) {
+			res[i] = arr[i];
+		}
+
+		return res.length ? res : null;
+	};
+
+	result = merge(rectACo, rectBCo);
+	if (!result) result = merge(rectBCo, rectACo);
+	if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
+		result = mergeOverlapping();
+	}
 
 	if (result) {
 		if (oCoForm) {
