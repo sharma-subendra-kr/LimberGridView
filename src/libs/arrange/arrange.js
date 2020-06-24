@@ -80,7 +80,7 @@ export const arrangeAffectedItems = (
 
 	const mergedRects = mergeFreeRects(freeRectsArr);
 
-	if (DEBUG_MODE) printMergedFreeRects(mergedRects);
+	if (DEBUG_MODE) printMergedFreeRects(mergedRects.map((o) => o.d));
 };
 
 export const sweepLine = (area, areaCo, items) => {
@@ -161,76 +161,83 @@ export const mergeFreeRects = (freeRectsArr) => {
 
 	let visited = {},
 		adjacents,
-		adjacentsKeys,
-		adjacentsKeysLen,
+		adj,
+		// adjacentsKeys,
+		// adjacentsKeysLen,
 		top,
 		keys,
 		keyslen,
+		mergedObject,
 		mergedRect,
 		idCount = freeRectsArr.length,
 		freeRectsLen = idCount;
 
 	for (let k = 0; k < freeRectsLen; k++) {
+		debugger;
 		if (visited[freeRectsArr[k].d.id]) {
 			continue;
 		}
-		stack.push(freeRectsArr[k].d);
+		stack.push(freeRectsArr[k]);
 		while (!stack.isEmpty()) {
 			top = stack.pop();
 
-			keys = Object.keys(top.a);
+			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
-			if (!keyslen && !visited[top.id]) {
-				visited[top.id] = true;
+			if (!keyslen && !visited[top.d.id]) {
+				visited[top.d.id] = true;
 				resultStack.push(top);
 
-				if (DEBUG_MODE) printMergedFreeRects(resultStack.getData());
+				// if (DEBUG_MODE)
+				// printMergedFreeRects(resultStack.getData().map((o) => o.d));
 
 				continue;
 			}
 
 			for (let i = 0; i < keyslen; i++) {
 				if (!visited[keys[i]]) {
-					mergedRect = mergeRects(top.rect, top.a[keys[i]].d.rect);
+					adj = top.d.a[keys[i]];
+					mergedRect = mergeRects(top.d.rect, adj.d.rect);
 
 					if (mergedRect) {
-						adjacents = { ...top.a };
-						adjacents = { ...adjacents, ...top.a[keys[i]].d.a };
-						delete adjacents[top.id];
-						delete adjacents[top.a[keys[i]].d.id];
+						adjacents = { ...top.d.a, ...top.d.o };
+						adjacents = { ...adjacents, ...adj.d.a, ...adj.d.o };
+						delete adjacents[top.d.id];
+						delete adjacents[adj.d.id];
 
-						adjacentsKeys = Object.keys(adjacents);
-						adjacentsKeysLen = adjacentsKeys.length;
-						for (let j = 0; j < adjacentsKeysLen; j++) {
-							if (
-								!areRectsAdjacent(
-									mergedRect,
-									adjacents[adjacentsKeys[j]].d.rect
-								) ||
-								visited[adjacents[adjacentsKeys[j]].d.id]
-							) {
-								delete adjacents[adjacentsKeys[j]];
-							}
+						filterAdjacents(adjacents, mergedRect, visited);
+
+						mergedObject = {
+							d: {
+								id: idCount++,
+								rect: mergedRect,
+								a: adjacents,
+								o: {},
+							},
+						};
+						stack.push(mergedObject);
+
+						if (isRectInside(mergedRect, adj.d.rect)) {
+							visited[adj.d.id] = true;
+						} else {
+							mergedObject.d.o[adj.d.id] = adj;
+							adj.d.o[mergedObject.d.id] = mergedObject;
+							delete adj.d.a[top.d.id];
 						}
 
-						stack.push({
-							rect: mergedRect,
-							a: adjacents,
-							id: idCount++,
-						});
-
-						if (isRectInside(mergedRect, top.a[keys[i]].d.rect)) {
-							visited[top.a[keys[i]].d.id] = true;
+						if (isRectInside(mergedRect, top.d.rect)) {
+							visited[top.d.id] = true;
 						} else {
-							delete top.a[keys[i]].d.a[top.id];
-						}
-
-						if (isRectInside(mergedRect, top.rect)) {
-							visited[top.id] = true;
-						} else {
-							delete top.a[keys[i]];
+							mergedObject.d.o[top.d.id] = top;
+							top.d.o[mergedObject.d.id] = mergedObject;
+							delete top.d.a[keys[i]];
 							stack.push(top);
 						}
+
+						// if (DEBUG_MODE)
+						// 	printMergedFreeRects(
+						// 		stack.getData().map((o) => o.d)
+						// 	);
+
 						break;
 					}
 				}
@@ -239,4 +246,17 @@ export const mergeFreeRects = (freeRectsArr) => {
 	}
 
 	return resultStack.getData();
+};
+
+export const filterAdjacents = (adjacents, mergedRect, visited) => {
+	const adjacentsKeys = Object.keys(adjacents);
+	const adjacentsKeysLen = adjacentsKeys.length;
+	for (let j = 0; j < adjacentsKeysLen; j++) {
+		if (
+			!areRectsAdjacent(mergedRect, adjacents[adjacentsKeys[j]].d.rect) ||
+			visited[adjacents[adjacentsKeys[j]].d.id]
+		) {
+			delete adjacents[adjacentsKeys[j]];
+		}
+	}
 };
