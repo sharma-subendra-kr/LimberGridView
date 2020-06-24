@@ -199,12 +199,12 @@ export const mergeFreeRects = (freeRectsArr) => {
 					mergedRect = mergeRects(top.d.rect, adj.d.rect);
 
 					if (mergedRect) {
-						adjacents = { ...top.d.a, ...top.d.o };
-						adjacents = { ...adjacents, ...adj.d.a, ...adj.d.o };
+						// adjacents = { ...top.d.a, ...top.d.o };
+						// adjacents = { ...adjacents, ...adj.d.a, ...adj.d.o };
+						adjacents = { ...top.d.a };
+						adjacents = { ...adjacents, ...adj.d.a };
 						delete adjacents[top.d.id];
 						delete adjacents[adj.d.id];
-
-						filterAdjacents(adjacents, mergedRect, visited);
 
 						mergedObject = {
 							d: {
@@ -214,21 +214,24 @@ export const mergeFreeRects = (freeRectsArr) => {
 								o: {},
 							},
 						};
+
+						filterAdjacents(mergedObject, visited);
+
 						stack.push(mergedObject);
 
 						if (isRectInside(mergedRect, adj.d.rect)) {
 							visited[adj.d.id] = true;
 						} else {
-							mergedObject.d.o[adj.d.id] = adj;
-							adj.d.o[mergedObject.d.id] = mergedObject;
+							// mergedObject.d.o[adj.d.id] = adj;
+							// adj.d.o[mergedObject.d.id] = mergedObject;
 							delete adj.d.a[top.d.id];
 						}
 
 						if (isRectInside(mergedRect, top.d.rect)) {
 							visited[top.d.id] = true;
 						} else {
-							mergedObject.d.o[top.d.id] = top;
-							top.d.o[mergedObject.d.id] = mergedObject;
+							// mergedObject.d.o[top.d.id] = top;
+							// top.d.o[mergedObject.d.id] = mergedObject;
 							delete top.d.a[keys[i]];
 							stack.push(top);
 						}
@@ -248,15 +251,24 @@ export const mergeFreeRects = (freeRectsArr) => {
 	return resultStack.getData();
 };
 
-export const filterAdjacents = (adjacents, mergedRect, visited) => {
-	const adjacentsKeys = Object.keys(adjacents);
-	const adjacentsKeysLen = adjacentsKeys.length;
-	for (let j = 0; j < adjacentsKeysLen; j++) {
-		if (
-			!areRectsAdjacent(mergedRect, adjacents[adjacentsKeys[j]].d.rect) ||
-			visited[adjacents[adjacentsKeys[j]].d.id]
-		) {
-			delete adjacents[adjacentsKeys[j]];
+export const filterAdjacents = (mergedObject, visited) => {
+	debugger;
+	const mergedRect = mergedObject.d.rect;
+	const adjs = mergedObject.d.a;
+	let adj;
+	const adjsKeys = Object.keys(adjs);
+	const adjsKeysLen = adjsKeys.length;
+	for (let j = 0; j < adjsKeysLen; j++) {
+		adj = adjs[adjsKeys[j]];
+		console.log(
+			"areRectsAdjacent",
+			areRectsAdjacent(mergedRect, adj.d.rect)
+		);
+		if (!areRectsAdjacent(mergedRect, adj.d.rect) || visited[adj.d.id]) {
+			delete adjs[adjsKeys[j]];
+		} else {
+			// Hey! you guys! Hey! you guys! I'm your neighbour!
+			adj.d.a[mergedObject.d.id] = mergedObject;
 		}
 	}
 };
