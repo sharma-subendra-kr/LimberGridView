@@ -478,7 +478,6 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 	// if (doRectsOverlap(rectA, rectB)) {
 	// 	return false;
 	// }
-
 	const rectACo = getCoordinates(rectA);
 	const rectBCo = getCoordinates(rectB);
 
@@ -615,8 +614,8 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 
 		// for (const d of diff) {
 		for (let i = 0; i < len; i++) {
-			m = merge(diff[i], rectB);
-			if (m && !isRectInside(rectA, m)) {
+			m = merge(diff[i], rectBCo);
+			if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
 				arr[count++] = m;
 			}
 		}
@@ -631,6 +630,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 
 	result = merge(rectACo, rectBCo);
 	if (!result) result = merge(rectBCo, rectACo);
+	if (result) result = [result];
 	if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
 		result = mergeOverlapping();
 	}
@@ -639,7 +639,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 		if (oCoForm) {
 			return result;
 		} else {
-			return getRectObjectFromCo(result);
+			return result.map((o) => getRectObjectFromCo(o));
 		}
 	}
 
