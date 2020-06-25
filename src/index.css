@@ -320,11 +320,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	align-items: center;
 
 	color: blue;
-	font-weight: 900;
+	font-weight: 400;
 }
 
 .limberGridViewDebugUnmergedRect:hover {
 	border-width: 3px;
+	font-weight: 900;
+	font-size: 30px;
 }
 
 .limberGridViewDebugMergedRect {
@@ -338,9 +340,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	align-items: center;
 
 	color: red;
-	font-weight: 900;
+	font-weight: 400;
 }
 
 .limberGridViewDebugMergedRect:hover {
 	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
 }

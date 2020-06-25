@@ -530,6 +530,34 @@ var main = function() {
 	// 	).matches;
 	// });
 	window.limberGridView.render();
+
+	window.toggleMerged = function() {
+		const els = document.getElementsByClassName(
+			"limberGridViewDebugMergedRect"
+		);
+		for (let i = 0; i < els.length; i++) {
+			const el = els[i];
+			if (el.style.display === "") {
+				el.style.display = "none";
+			} else {
+				el.style.display = "";
+			}
+		}
+	};
+
+	window.toggleUmnergedMerged = function() {
+		const els = document.getElementsByClassName(
+			"limberGridViewDebugUnmergedRect"
+		);
+		for (let i = 0; i < els.length; i++) {
+			const el = els[i];
+			if (el.style.display === "") {
+				el.style.display = "none";
+			} else {
+				el.style.display = "";
+			}
+		}
+	};
 };
 
 // gridHeight : 624,

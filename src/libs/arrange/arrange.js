@@ -193,6 +193,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
+			breakSig = false;
 			for (let i = 0; i < keyslen; i++) {
 				if (!top.d.a[keys[i]]) {
 					continue;
@@ -237,13 +238,14 @@ export const mergeFreeRects = (freeRectsArr) => {
 
 							if (isRectInside(mergedRect, top.d.rect)) {
 								top.d.ref = mergedObject;
-								top.d.a = {};
+								// top.d.a = {};
+								breakSig = true;
 								break;
 							}
 
 							if (isRectInside(mergedRect, adj.d.rect)) {
 								adj.d.ref = mergedObject;
-								adj.d.a = {};
+								// adj.d.a = {};
 							}
 
 							debugger;
@@ -255,11 +257,13 @@ export const mergeFreeRects = (freeRectsArr) => {
 							debugger;
 						}
 					}
+					if (breakSig) break;
 				}
 			}
-			keys = Object.keys(top.d.a);
-			keyslen = keys.length;
-			if (!keyslen) {
+			// keys = Object.keys(top.d.a);
+			// keyslen = keys.length;
+			// if (!keyslen && !breakSig) {
+			if (!breakSig) {
 				resultStack.push(top);
 				if (DEBUG_MODE)
 					printMergedFreeRects([
