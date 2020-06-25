@@ -205,8 +205,8 @@ export const mergeFreeRects = (freeRectsArr) => {
 
 				console.log("====");
 				console.log("top", top.d.id);
-				console.log("adj", adj);
 				console.log("adj", adj.d.id);
+				console.log("adj", adj);
 				debugger;
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
 				mergeRectsLen = mergedRects?.length || 0;
@@ -224,8 +224,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 									id: idCount++,
 									rect: mergedRect,
 									a: adjacents,
-									o: {},
-									m: {},
+									ref: null,
 								},
 							};
 
@@ -236,16 +235,16 @@ export const mergeFreeRects = (freeRectsArr) => {
 							delete top.d.a[keys[i]];
 							delete adj.d.a[top.d.id];
 
+							if (isRectInside(mergedRect, adj.d.rect)) {
+								adj.d.ref = mergedObject;
+								// adj.d.a = {};
+							}
+
 							if (isRectInside(mergedRect, top.d.rect)) {
 								top.d.ref = mergedObject;
 								// top.d.a = {};
 								breakSig = true;
 								break;
-							}
-
-							if (isRectInside(mergedRect, adj.d.rect)) {
-								adj.d.ref = mergedObject;
-								// adj.d.a = {};
 							}
 
 							debugger;
