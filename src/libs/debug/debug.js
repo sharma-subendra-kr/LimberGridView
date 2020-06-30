@@ -3,8 +3,13 @@ import e, {
 	set$limberGridViewDebugUnmergedRects,
 	set$limberGridViewDebugMergedRects,
 } from "../../variables/elements";
+import { DEBUG_MODE } from "../../variables/essentials";
 
 export const printUnmergedFreeRects = (arr) => {
+	if (!DEBUG_MODE) {
+		return;
+	}
+
 	let len = e.$limberGridViewDebugUnmergedRects.length;
 	for (let i = 0; i < len; i++) {
 		e.$limberGridView[0].removeChild(
@@ -49,6 +54,10 @@ export const printUnmergedFreeRects = (arr) => {
 };
 
 export const printMergedFreeRects = (arr) => {
+	if (!DEBUG_MODE) {
+		return;
+	}
+
 	let len = e.$limberGridViewDebugMergedRects.length;
 	for (let i = 0; i < len; i++) {
 		e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRects[i]);

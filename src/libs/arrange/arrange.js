@@ -1,9 +1,19 @@
 import { IntervalTreesIterative } from "interval-trees";
 import { ClosestBST } from "closest-bst";
-import { positionData as pd, DEBUG_MODE } from "../../variables/essentials";
+import {
+	positionData as pd,
+	modifiedPositionData as mpd,
+	DEBUG_MODE,
+} from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
-import { getMinMaxY, fixMinYMaxY, getItemsInWorkSpace } from "./arrangeUtils";
+import {
+	getMinMaxY,
+	fixMinYMaxY,
+	getItemsInWorkSpace,
+	getAffectedItemsScore,
+	assignScoreToFreeRects,
+} from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
 	subtractRect,
@@ -21,7 +31,8 @@ export const arrangeAffectedItems = (
 	affectedItems,
 	resizedBottomY,
 	toY,
-	movedBottomY
+	movedBottomY,
+	arrangeFor
 ) => {
 	const { minY, maxY } = getMinMaxY(
 		affectedItems,
@@ -78,20 +89,39 @@ export const arrangeAffectedItems = (
 
 	assignAdjacentRects(freeRectsItY);
 
-	if (DEBUG_MODE) printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+	// DEBUG:
+	printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 
 	const mergedRects = mergeFreeRects(freeRectsArr);
 
-	if (DEBUG_MODE) printMergedFreeRects(mergedRects.map((o) => o.d));
+	// DEBUG:
+	printMergedFreeRects(mergedRects.map((o) => o.d));
 
 	const overlappedRectsIt = findOverlapped(mergedRects);
 
-	console.log("overlappedRectsIt", overlappedRectsIt.getDataInArray());
+	// DEBUG:
+	printMergedFreeRects(overlappedRectsIt.getDataInArray().map((o) => o.d));
 
-	if (DEBUG_MODE)
-		printMergedFreeRects(
-			overlappedRectsIt.getDataInArray().map((o) => o.d)
-		);
+	const { maxScore, maxHWSum } = assignScoreToFreeRects(
+		overlappedRectsIt.getDataInArray()
+	);
+	console.log("overlappedRectsIt", overlappedRectsIt);
+
+	const afItemsScoreArr = getAffectedItemsScore(affectedItems, maxHWSum);
+	shuffle(afItemsScoreArr);
+	console.log("afItemsScoreArr", afItemsScoreArr);
+	const scoreCBST = new ClosestBST({ data: afItemsScoreArr });
+
+	console.log(scoreCBST);
+
+	if (affectedItems.length === 1) {
+		// resize or move to the desired coordinates
+		// this condition should be on top
+		// for development it is here
+		// shift to top after development
+	} else if (affectedItems.length === 2 && arrangeFor === "move") {
+		// try replacing first
+	}
 };
 
 export const sweepLine = (area, areaCo, items) => {

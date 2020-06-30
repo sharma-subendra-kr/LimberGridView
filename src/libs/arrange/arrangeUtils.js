@@ -106,4 +106,46 @@ export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
 	return res;
 };
 
-export const buildTreeData = () => {};
+export const getScore = (rect, maxHWSum) => {
+	return (rect.width + rect.height) / maxHWSum;
+};
+
+export const assignScoreToFreeRects = (freeRects) => {
+	const len = freeRects.length;
+
+	let maxHWSum = 0;
+	let sum = 0;
+	for (let i = 0; i < len; i++) {
+		sum = freeRects[i].d.rect.width + freeRects[i].d.rect.height;
+		if (sum > maxHWSum) {
+			maxHWSum = sum;
+		}
+	}
+
+	let maxScore = 0;
+	for (let i = 0; i < len; i++) {
+		freeRects[i].d.score = getScore(freeRects[i].d.rect, maxHWSum);
+		if (freeRects[i].d.score > maxScore) {
+			maxScore = freeRects[i].d.score;
+		}
+	}
+	return { maxScore, maxHWSum };
+};
+
+export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
+	debugger;
+	const len = affectedItems.length;
+	let item;
+	let score;
+	// const scoreMap = {};
+	const scoreArr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		item = mpd[affectedItems[i]];
+		score = getScore(item, maxHWSum);
+		// scoreMap[affectedItems[i]] = score;
+		scoreArr[i] = { v: score, d: affectedItems[i] };
+	}
+
+	// return scoreMap;
+	return scoreArr;
+};

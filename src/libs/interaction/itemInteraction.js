@@ -75,7 +75,13 @@ export const resizeItem = function(index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems, modifiedItem.y + modifiedItem.height);
+	arrangeAffectedItems(
+		affectedItems,
+		modifiedItem.y + modifiedItem.height,
+		null,
+		null,
+		"resize"
+	);
 };
 
 export const resizeItemDemo = function(index, width, height) {
@@ -95,7 +101,13 @@ export const resizeItemDemo = function(index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems, modifiedItem.y + modifiedItem.height);
+	arrangeAffectedItems(
+		affectedItems,
+		modifiedItem.y + modifiedItem.height,
+		null,
+		null,
+		"resize"
+	);
 };
 
 export const moveItem = function(index, toX, toY) {
@@ -123,7 +135,13 @@ export const moveItem = function(index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems, null, toY, toY + pd[index].height);
+	arrangeAffectedItems(
+		affectedItems,
+		null,
+		toY,
+		toY + pd[index].height,
+		"move"
+	);
 
 	// const flipDetails = isFlippingPosPossible(index, toX, toY, affectedItems);
 	// if (flipDetails) {
@@ -159,7 +177,13 @@ export const moveItemDemo = function(index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(affectedItems, null, toY, toY + pd[index].height);
+	arrangeAffectedItems(
+		affectedItems,
+		null,
+		toY,
+		toY + pd[index].height,
+		"move"
+	);
 
 	// const flipDetails = isFlippingPosPossible(index, toX, toY, affectedItems);
 	// if (flipDetails) {
