@@ -1,4 +1,5 @@
 import { IntervalTreesIterative } from "interval-trees";
+import { ClosestBST } from "closest-bst";
 import { positionData as pd, DEBUG_MODE } from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
@@ -58,29 +59,39 @@ export const arrangeAffectedItems = (
 	const freeRectsArr = freeRectsItY.getDataInArray();
 	shuffle(freeRectsArr);
 
-	const itXDataLen = freeRectsArr.length;
-	const itXData = new Array(itXDataLen);
+	const itYDataLen = freeRectsArr.length;
+	// const itXData = new Array(itXDataLen);
 
-	let tempRect;
-	for (let i = 0; i < itXDataLen; i++) {
+	// let tempRect;
+	for (let i = 0; i < itYDataLen; i++) {
 		freeRectsArr[i].d.id = i;
-		tempRect = getCoordinates(freeRectsArr[i].d.rect);
-		itXData[i] = {
-			low: tempRect.tl.x,
-			high: tempRect.tr.x,
-			d: freeRectsArr[i].d,
-		};
+		// tempRect = getCoordinates(freeRectsArr[i].d.rect);
+		// itXData[i] = {
+		// 	low: tempRect.tl.x,
+		// 	high: tempRect.tr.x,
+		// 	d: freeRectsArr[i].d,
+		// };
 	}
 
-	const freeRectsItX = new IntervalTreesIterative({ data: itXData });
+	// const freeRectsItX = new IntervalTreesIterative({ data: itXData });
+	// assignAdjacentRects(freeRectsItY, freeRectsItX);
 
-	assignAdjacentRects(freeRectsItY, freeRectsItX);
+	assignAdjacentRects(freeRectsItY);
 
 	if (DEBUG_MODE) printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 
 	const mergedRects = mergeFreeRects(freeRectsArr);
 
 	if (DEBUG_MODE) printMergedFreeRects(mergedRects.map((o) => o.d));
+
+	const overlappedRectsIt = findOverlapped(mergedRects);
+
+	console.log("overlappedRectsIt", overlappedRectsIt.getDataInArray());
+
+	if (DEBUG_MODE)
+		printMergedFreeRects(
+			overlappedRectsIt.getDataInArray().map((o) => o.d)
+		);
 };
 
 export const sweepLine = (area, areaCo, items) => {
@@ -93,7 +104,7 @@ export const sweepLine = (area, areaCo, items) => {
 	it.insert({
 		low: areaCo.tl.y,
 		high: areaCo.bl.y,
-		d: { rect: area, a: {}, ref: null },
+		d: { rect: area, a: {}, o: {}, ref: null },
 	});
 
 	let tempItem;
@@ -128,6 +139,7 @@ export const sweepLine = (area, areaCo, items) => {
 						d: {
 							rect: getRectObjectFromCo(diff[k]),
 							a: {},
+							o: {},
 							ref: null,
 						},
 					});
@@ -143,9 +155,9 @@ export const sweepLine = (area, areaCo, items) => {
 
 export const assignAdjacentRects = (rectsItY, rectsItX) => {
 	const rectItYArr = rectsItY.getDataInArray();
-	const rectItXArr = rectsItX.getDataInArray();
+	// const rectItXArr = rectsItX.getDataInArray();
 
-	let len = rectItYArr.length;
+	const len = rectItYArr.length;
 	let resY, resX, lenY, lenX;
 
 	for (let i = 0; i < len; i++) {
@@ -164,11 +176,8 @@ export const mergeFreeRects = (freeRectsArr) => {
 	const resultStack = new Stack();
 	const stackMap = {};
 
-	// const visited = {};
 	let adjacents,
 		adj,
-		// adjacentsKeys,
-		// adjacentsKeysLen,
 		top,
 		keys,
 		keyslen,
@@ -179,9 +188,8 @@ export const mergeFreeRects = (freeRectsArr) => {
 	let breakSig = false;
 	let idCount = freeRectsArr.length;
 	const freeRectsLen = idCount;
-	debugger;
+
 	for (let k = 0; k < freeRectsLen; k++) {
-		debugger;
 		if (freeRectsArr[k].d.ref !== null) {
 			continue;
 		}
@@ -189,7 +197,6 @@ export const mergeFreeRects = (freeRectsArr) => {
 		stack.push(freeRectsArr[k]);
 		while (!stack.isEmpty()) {
 			top = stack.pop();
-			debugger;
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
@@ -202,12 +209,6 @@ export const mergeFreeRects = (freeRectsArr) => {
 				while (adj?.d?.ref) {
 					adj = adj.d.ref;
 				}
-
-				console.log("====");
-				console.log("top", top.d.id);
-				console.log("adj", adj.d.id);
-				console.log("adj", adj);
-				debugger;
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
 				mergeRectsLen = mergedRects?.length || 0;
 				if (mergeRectsLen) {
@@ -224,12 +225,12 @@ export const mergeFreeRects = (freeRectsArr) => {
 									id: idCount++,
 									rect: mergedRect,
 									a: adjacents,
+									o: {},
 									ref: null,
 								},
 							};
 
 							filterAdjacents(mergedObject);
-							debugger;
 							stack.push(mergedObject);
 
 							delete top.d.a[keys[i]];
@@ -237,38 +238,21 @@ export const mergeFreeRects = (freeRectsArr) => {
 
 							if (isRectInside(mergedRect, adj.d.rect)) {
 								adj.d.ref = mergedObject;
-								// adj.d.a = {};
 							}
 
 							if (isRectInside(mergedRect, top.d.rect)) {
 								top.d.ref = mergedObject;
-								// top.d.a = {};
 								breakSig = true;
 								break;
 							}
-
-							debugger;
-							if (DEBUG_MODE)
-								printMergedFreeRects([
-									...stack.getData().map((o) => o.d),
-									...resultStack.getData().map((o) => o.d),
-								]);
-							debugger;
 						}
 					}
 					if (breakSig) break;
 				}
 			}
-			// keys = Object.keys(top.d.a);
-			// keyslen = keys.length;
-			// if (!keyslen && !breakSig) {
+
 			if (!breakSig) {
 				resultStack.push(top);
-				if (DEBUG_MODE)
-					printMergedFreeRects([
-						...resultStack.getData().map((o) => o.d),
-						...stack.getData().map((o) => o.d),
-					]);
 				continue;
 			}
 		}
@@ -278,7 +262,6 @@ export const mergeFreeRects = (freeRectsArr) => {
 };
 
 export const filterAdjacents = (mergedObject, visited) => {
-	// debugger;
 	const mergedRect = mergedObject.d.rect;
 	const adjs = mergedObject.d.a;
 	let adj;
@@ -286,10 +269,6 @@ export const filterAdjacents = (mergedObject, visited) => {
 	const adjsKeysLen = adjsKeys.length;
 	for (let j = 0; j < adjsKeysLen; j++) {
 		adj = adjs[adjsKeys[j]];
-		// console.log(
-		// 	"areRectsAdjacent",
-		// 	areRectsAdjacent(mergedRect, adj.d.rect)
-		// );
 		if (!areRectsAdjacent(mergedRect, adj.d.rect)) {
 			delete adjs[adjsKeys[j]];
 		} else {
@@ -299,21 +278,33 @@ export const filterAdjacents = (mergedObject, visited) => {
 	}
 };
 
-export const filterOverlapped = (mergedObject, visited) => {
-	// debugger;
-	const mergedRect = mergedObject.d.rect;
-	const olpds = mergedObject.d.o;
-	let olpd;
-	const olpdsKeys = Object.keys(olpds);
-	const olpdsKeysLen = olpdsKeys.length;
-	for (let j = 0; j < olpdsKeysLen; j++) {
-		olpd = olpds[olpdsKeys[j]];
-		// console.log("doRectsOverlap", doRectsOverlap(mergedRect, olpd.d.rect));
-		if (!doRectsOverlap(mergedRect, olpd.d.rect) || visited[olpd.d.id]) {
-			delete olpds[olpdsKeys[j]];
-		} else {
-			// Hey! you guys! Hey! you guys! I'm your neighbour!
-			olpd.d.o[mergedObject.d.id] = mergedObject;
+export const findOverlapped = (mergedRects) => {
+	const it = new IntervalTreesIterative();
+
+	const len = mergedRects.length;
+	for (let i = 0; i < len; i++) {
+		mergedRects[i].low = mergedRects[i].d.rect.y;
+		mergedRects[i].high =
+			mergedRects[i].d.rect.y + mergedRects[i].d.rect.height;
+		it.insert(mergedRects[i]);
+	}
+
+	const itArr = it.getDataInArray();
+
+	const alen = itArr.length;
+	let res, rlen;
+
+	for (let i = 0; i < alen; i++) {
+		res = it.findAll(itArr[i].interval);
+		rlen = res.length;
+		for (let j = 0; j < rlen; j++) {
+			if (
+				doRectsOverlap(itArr[i].d.rect, res[j].d.rect) &&
+				itArr[i].d.id !== res[j].d.id
+			) {
+				itArr[i].d.o[res[j].d.id] = res[j];
+			}
 		}
 	}
+	return it;
 };

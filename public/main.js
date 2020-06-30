@@ -535,8 +535,29 @@ var main = function() {
 		const els = document.getElementsByClassName(
 			"limberGridViewDebugMergedRect"
 		);
+
+		let state = "";
+		if (window.toggleMerged.display === "") {
+			window.toggleMerged.display = "none";
+			state = "none";
+		} else {
+			window.toggleMerged.display = "";
+			state = "";
+		}
+
 		for (let i = 0; i < els.length; i++) {
 			const el = els[i];
+			el.style.display = state;
+		}
+	};
+	window.toggleMerged.display = "";
+
+	window.toggleMergedById = function(id) {
+		const el = document.getElementById(
+			"limberGridViewDebugMergedRect-" + id
+		);
+
+		if (el) {
 			if (el.style.display === "") {
 				el.style.display = "none";
 			} else {
@@ -545,12 +566,33 @@ var main = function() {
 		}
 	};
 
-	window.toggleUmnergedMerged = function() {
+	window.toggleUnmerged = function() {
 		const els = document.getElementsByClassName(
 			"limberGridViewDebugUnmergedRect"
 		);
+
+		let state = "";
+		if (window.toggleUnmerged.display === "") {
+			window.toggleUnmerged.display = "none";
+			state = "none";
+		} else {
+			window.toggleUnmerged.display = "";
+			state = "";
+		}
+
 		for (let i = 0; i < els.length; i++) {
 			const el = els[i];
+			el.style.display = state;
+		}
+	};
+	window.toggleUnmerged.display = "";
+
+	window.toggleUnmergedById = function(id) {
+		const el = document.getElementById(
+			"limberGridViewDebugUnmergedRect-" + id
+		);
+
+		if (el) {
 			if (el.style.display === "") {
 				el.style.display = "none";
 			} else {

@@ -26,6 +26,7 @@ export const printUnmergedFreeRects = (arr) => {
 			"class",
 			"limberGridViewDebugRect limberGridViewDebugUnmergedRect"
 		);
+		node.setAttribute("id", `limberGridViewDebugUnmergedRect-${arr[i].id}`);
 
 		node.setAttribute(
 			"title",
@@ -34,9 +35,7 @@ export const printUnmergedFreeRects = (arr) => {
 			)}`
 		);
 		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${
-			arr[i].rect.y
-		}px)`;
+		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 		node.style.width = arr[i].rect.width + "px";
 		node.style.height = arr[i].rect.height + "px";
 		e.$limberGridView[0].appendChild(node);
@@ -67,17 +66,19 @@ export const printMergedFreeRects = (arr) => {
 		node = document.createElement("div");
 		node.setAttribute(
 			"class",
-			"limberGridViewDebugRect limberGridViewDebugMergedRect"
+			`limberGridViewDebugRect limberGridViewDebugMergedRect`
+		);
+		node.setAttribute("id", `limberGridViewDebugMergedRect-${arr[i].id}`);
+
+		node.setAttribute(
+			"title",
+			`${arr[i].id}: ${Object.keys(arr[i].o).map(
+				(o) => arr[i].o[o]?.d?.id || ""
+			)}`
 		);
 
-		// node.setAttribute(
-		// 	"title",
-		// 	`${arr[i].id}: ${Object.keys(arr[i].o).map((o) => arr[i].o[o].id)}`
-		// );
 		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${
-			arr[i].rect.y
-		}px)`;
+		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 		node.style.width = arr[i].rect.width + "px";
 		node.style.height = arr[i].rect.height + "px";
 		e.$limberGridView[0].appendChild(node);
