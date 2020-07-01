@@ -78,8 +78,8 @@ export const resizeItem = function (index, width, height) {
 	arrangeAffectedItems(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
-		null,
-		null,
+		undefined,
+		undefined,
 		"resize"
 	);
 };
@@ -104,8 +104,8 @@ export const resizeItemDemo = function (index, width, height) {
 	arrangeAffectedItems(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
-		null,
-		null,
+		undefined,
+		undefined,
 		"resize"
 	);
 };
@@ -137,7 +137,7 @@ export const moveItem = function (index, toX, toY) {
 
 	arrangeAffectedItems(
 		affectedItems,
-		null,
+		undefined,
 		toY,
 		toY + pd[index].height,
 		"move"
@@ -179,7 +179,7 @@ export const moveItemDemo = function (index, toX, toY) {
 
 	arrangeAffectedItems(
 		affectedItems,
-		null,
+		undefined,
 		toY,
 		toY + pd[index].height,
 		"move"

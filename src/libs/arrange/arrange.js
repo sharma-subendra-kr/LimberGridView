@@ -9,6 +9,7 @@ import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
 import {
 	getMinMaxY,
+	getTopBottomWS,
 	fixMinYMaxY,
 	getItemsInWorkSpace,
 	getAffectedItemsScore,
@@ -22,6 +23,7 @@ import {
 	getCoordinates,
 	mergeRects,
 	isRectInside,
+	areRectsOnSameYAxisExPath,
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
 import Stack from "../stack/stack";
@@ -42,19 +44,28 @@ export const arrangeAffectedItems = (
 	);
 
 	const workSpaceRectCo = {
-		tl: { x: publicConstants.MARGIN, y: minY },
+		tl: { x: /* publicConstants.MARGIN */ 0, y: minY },
 		tr: { x: privateConstants.WIDTH, y: minY },
 		br: { x: privateConstants.WIDTH, y: maxY },
-		bl: { x: publicConstants.MARGIN, y: maxY },
+		bl: { x: /* publicConstants.MARGIN */ 0, y: maxY },
 	};
+
+	// const { arrangeTopY, arrangeBottomY } = fixMinYMaxY(workSpaceRectCo);
+	// workSpaceRectCo.tl.y = arrangeTopY;
+	// workSpaceRectCo.tr.y = arrangeTopY;
+	// workSpaceRectCo.br.y = arrangeBottomY;
+	// workSpaceRectCo.bl.y = arrangeBottomY;
 	const workSpaceRect = getRectObjectFromCo(workSpaceRectCo);
-	const { arrangeTopY, arrangeBottomY } = fixMinYMaxY(workSpaceRectCo);
 	/*
-		* 	if a item's top has to be placed at workSpaceRect.tl.y then it should be 
+		Skipping these for simplicity for now
+		* 	if a item's top has to be placed at workSpaceRect.tl.y then it should be
 			adjusted to arrangeTopY without margin, resize item if necessary
-		*	if a item's bottom has to be placed at workSpaceRect.bl.y then it should be 
+		*	if a item's bottom has to be placed at workSpaceRect.bl.y then it should be
 			adjusted to arrangeBottomY without margin resize item if necessary
 	*/
+
+	let { topWorkSpace, bottomWorkSpace } = getTopBottomWS();
+	shrinkTopBottomWS();
 
 	const itemsInWorkSpace = getItemsInWorkSpace(workSpaceRect);
 
@@ -129,6 +140,116 @@ export const arrangeAffectedItems = (
 		overlappedRectsArr,
 		arrangeFor
 	);
+};
+
+export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
+	let topWSItems, bottomWSItems;
+	let res = { integrateTop: false, integrateBottom: false };
+	if (topWorkSpace) {
+		topWSItems = getItemsInWorkSpace(topWorkSpace);
+		const res = sweepLineTop(topWorkSpace, topWSItems);
+
+		if (res < topWorkSpace.bl.y) {
+			topWorkSpace.tl.y = res;
+			topWorkSpace.tr.y = res;
+
+			res.integrateTop = true;
+		}
+	}
+
+	if (bottomWorkSpace) {
+		bottomWSItems = getItemsInWorkSpace(bottomWorkSpace);
+		const res = sweepLineBottom(bottomWorkSpace, bottomWSItems);
+
+		if (res > bottomWorkSpace.tl.y) {
+			bottomWorkSpace.bl.y = res;
+			bottomWorkSpace.br.y = res;
+
+			res.integrateBottom = true;
+		}
+	}
+
+	return res;
+};
+
+export const sweepLineTop = (area, items) => {
+	const len = items.length;
+	const it = new IntervalTreesIterative();
+
+	for (let i = 0; i < len; i++) {
+		it.insert({
+			low: items[i].y,
+			high: items[i].y + items[i].height,
+			d: {
+				rect: getRectObjectFromCo(items[i]),
+			},
+		});
+	}
+
+	let resultPoint = area.bl.y;
+	let res, rLen;
+	let breakSig = false;
+	for (let i = 0; i < len; i++) {
+		res = it.findAll({ low: items[i].y + items[i].height, high: area.bl.y });
+		rLen = res.length;
+		breakSig = false;
+		for (let j = 0; j < rLen; j++) {
+			if (
+				areRectsOnSameYAxisExPath(
+					getCoordinates(items[i]),
+					getCoordinates(res[j].d.rect)
+				)
+			) {
+				breakSig = true;
+				break;
+			}
+		}
+		if (!breakSig && items[i].y + items[i].height < resultPoint) {
+			resultPoint = items[i].y + items[i].height;
+		}
+	}
+
+	return resultPoint;
+};
+
+export const sweepLineBottom = (area, items) => {
+	const len = items.length;
+	const it = new IntervalTreesIterative();
+
+	for (let i = 0; i < len; i++) {
+		it.insert({
+			low: items[i].y,
+			high: items[i].y + items[i].height,
+			d: {
+				rect: getRectObjectFromCo(items[i]),
+			},
+		});
+	}
+
+	let resultPoint = area.tl.y;
+	let res, rLen;
+	let breakSig = false;
+	for (let i = 0; i < len; i++) {
+		res = it.findAll({ low: area.tl.y, high: items[i].y });
+		rLen = res.length;
+		breakSig = false;
+		for (let j = 0; j < rLen; j++) {
+			if (
+				areRectsOnSameYAxisExPath(
+					getCoordinates(items[i]),
+					getCoordinates(res[j].d.rect)
+				)
+			) {
+				breakSig = true;
+				break;
+			}
+		}
+		if (!breakSig && items[i].y > resultPoint) {
+			resultPoint = items[i].y;
+		}
+	}
+
+	return resultPoint;
 };
 
 export const sweepLine = (area, areaCo, items) => {

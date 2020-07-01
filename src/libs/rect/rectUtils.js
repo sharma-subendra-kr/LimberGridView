@@ -414,7 +414,7 @@ const verticalSubtract = (rectA, rectB) => {
 	return result;
 };
 
-export const isValidRectCoForm = function(rect) {
+export const isValidRectCoForm = function (rect) {
 	try {
 		let top, right, bottom, left;
 		top = rect.tr.x - rect.tl.x;
@@ -431,7 +431,7 @@ export const isValidRectCoForm = function(rect) {
 	}
 };
 
-export const getCoordinates = function(rect) {
+export const getCoordinates = function (rect) {
 	const tl = { x: rect.x, y: rect.y };
 	const tr = { x: rect.x + rect.width, y: rect.y };
 	const br = { x: rect.x + rect.width, y: rect.y + rect.height };
@@ -440,7 +440,7 @@ export const getCoordinates = function(rect) {
 	return { tl, tr, br, bl };
 };
 
-export const getRectObjectFromCo = function(rect) {
+export const getRectObjectFromCo = function (rect) {
 	if (!isValidRectCoForm(rect)) return null;
 	return {
 		x: rect.tl.x,
@@ -660,4 +660,16 @@ export const isRectInside = (rectA, rectB) => {
 	}
 
 	return false;
+};
+
+export const areRectsOnSameYAxisExPath = (rectA, rectB) => {
+	// ExPath: Exclusive Path (in Exclusive and Inclusive)
+	if (!(rectA?.tl?.x && rectA?.tr?.x && rectB?.tl?.x && rectA?.tr?.x)) {
+		return null;
+	}
+
+	if (rectA.tl.x >= rectB.tr.x || rectB.tl.x >= rectA.tr.x) {
+		return false;
+	}
+	return true;
 };

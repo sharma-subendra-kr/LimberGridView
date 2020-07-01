@@ -44,6 +44,80 @@ export const getMinMaxY = (
 	return { minY, maxY };
 };
 
+export const getBottomMax = () => {
+	let max = 0;
+	const len = pd.length;
+
+	for (let i = 0; i < len; i++) {
+		if (pd[i].y + pd[i].height > max) {
+			max = pd[i].y + pd[i].height;
+		}
+
+		if (mpd[i].y + mpd[i].height > max) {
+			max = mpd[i].y + mpd[i].height;
+		}
+	}
+
+	return max;
+};
+
+export const getTopBottomWS = (workSpaceRectCo) => {
+	let topWorkSpace, bottomWorkSpace;
+	if (workSpaceRectCo.tl.y > 0) {
+		topWorkSpace = {
+			tl: { x: 0, y: 0 },
+			tr: { x: privateConstants.WIDTH, y: 0 },
+			br: { x: privateConstants.WIDTH, y: workSpaceRectCo.tr.y },
+			bl: { x: 0, y: workSpaceRectCo.tl.y },
+		};
+	}
+
+	const bottomMax = getBottomMax();
+
+	if (bottomMax > workSpaceRectCo.bl.y) {
+		bottomWorkSpace = {
+			tl: { x: 0, y: workSpaceRectCo.bl.y },
+			tr: { x: privateConstants.WIDTH, y: workSpaceRectCo.bl.y },
+			br: { x: privateConstants.WIDTH, y: bottomMax },
+			bl: { x: 0, y: bottomMax },
+		};
+	}
+
+	// if (topWorkSpace || bottomWorkSpace) {
+	// 	if (topWorkSpace && !bottomWorkSpace) {
+	// 		combinedWorkSpace = {
+	// 			tl: { x: 0, y: 0 },
+	// 			tr: { x: privateConstants.WIDTH, y: 0 },
+	// 			br: { x: privateConstants.WIDTH, y: workSpaceRectCo.br.y },
+	// 			bl: { x: 0, y: workSpaceRectCo.bl.y },
+	// 		};
+	// 	} else if (!topWorkSpace && bottomWorkSpace) {
+	// 		combinedWorkSpace = {
+	// 			tl: { x: 0, y: workSpaceRectCo.tl.y },
+	// 			tr: { x: privateConstants.WIDTH, y: workSpaceRectCo.tr.y },
+	// 			br: { x: privateConstants.WIDTH, y: bottomMax },
+	// 			bl: { x: 0, y: bottomMax },
+	// 		};
+	// 	} else {
+	// 		combinedWorkSpace = {
+	// 			tl: { x: 0, y: 0 },
+	// 			tr: { x: privateConstants.WIDTH, y: 0 },
+	// 			br: { x: privateConstants.WIDTH, y: bottomMax },
+	// 			bl: { x: 0, y: bottomMax },
+	// 		};
+	// 	}
+	// } else {
+	// 	combinedWorkSpace = {
+	// 		tl: { ...workSpaceRectCo.tl },
+	// 		tr: { ...workSpaceRectCo.tr },
+	// 		br: { ...workSpaceRectCo.br },
+	// 		bl: { ...workSpaceRectCo.bl },
+	// 	};
+	// }
+
+	return { topWorkSpace, bottomWorkSpace };
+};
+
 export const fixMinYMaxY = (rectCo) => {
 	const cMinY = rectCo.tl.y,
 		cMaxY = rectCo.bl.y; // current minY and maxY
@@ -133,7 +207,6 @@ export const assignScoreToFreeRects = (freeRects) => {
 };
 
 export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
-	debugger;
 	const len = affectedItems.length;
 	let item;
 	let score;
