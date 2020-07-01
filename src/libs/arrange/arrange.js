@@ -102,9 +102,8 @@ export const arrangeAffectedItems = (
 	// DEBUG:
 	printMergedFreeRects(overlappedRectsIt.getDataInArray().map((o) => o.d));
 
-	const { maxScore, maxHWSum } = assignScoreToFreeRects(
-		overlappedRectsIt.getDataInArray()
-	);
+	const overlappedRectsArr = overlappedRectsIt.getDataInArray();
+	const { maxScore, maxHWSum } = assignScoreToFreeRects(overlappedRectsArr);
 	console.log("overlappedRectsIt", overlappedRectsIt);
 
 	const afItemsScoreArr = getAffectedItemsScore(affectedItems, maxHWSum);
@@ -122,6 +121,14 @@ export const arrangeAffectedItems = (
 	} else if (affectedItems.length === 2 && arrangeFor === "move") {
 		// try replacing first
 	}
+
+	arrange(
+		affectedItems,
+		scoreCBST,
+		overlappedRectsIt,
+		overlappedRectsArr,
+		arrangeFor
+	);
 };
 
 export const sweepLine = (area, areaCo, items) => {
@@ -338,3 +345,11 @@ export const findOverlapped = (mergedRects) => {
 	}
 	return it;
 };
+
+export const arrange = (
+	affectedItems,
+	scoreCBST,
+	overlappedRectsIt,
+	overlappedRectsArr,
+	arrangeFor
+) => {};

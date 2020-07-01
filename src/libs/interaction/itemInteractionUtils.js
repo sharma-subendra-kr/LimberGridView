@@ -61,6 +61,8 @@ export const getResizeAffectedItems = (item, index) => {
 			i !== index
 		) {
 			affectedArr[count++] = i;
+			mpd[i].x = null;
+			mpd[i].y = null;
 		}
 	}
 

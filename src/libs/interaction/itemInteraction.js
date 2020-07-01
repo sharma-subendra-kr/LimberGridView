@@ -59,7 +59,7 @@ import e from "../../variables/elements";
 
 // import { renderItems } from "../renderers/renderers";
 
-export const resizeItem = function(index, width, height) {
+export const resizeItem = function (index, width, height) {
 	index = parseInt(index);
 	if (!resizeItemInitialChecks(index, width, height)) return false;
 
@@ -84,7 +84,7 @@ export const resizeItem = function(index, width, height) {
 	);
 };
 
-export const resizeItemDemo = function(index, width, height) {
+export const resizeItemDemo = function (index, width, height) {
 	index = parseInt(index);
 	if (!resizeItemInitialChecks(index, width, height)) return false;
 	resetDemoUIChanges();
@@ -110,7 +110,7 @@ export const resizeItemDemo = function(index, width, height) {
 	);
 };
 
-export const moveItem = function(index, toX, toY) {
+export const moveItem = function (index, toX, toY) {
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {
@@ -151,7 +151,7 @@ export const moveItem = function(index, toX, toY) {
 	// return flipDetails;
 };
 
-export const moveItemDemo = function(index, toX, toY) {
+export const moveItemDemo = function (index, toX, toY) {
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {

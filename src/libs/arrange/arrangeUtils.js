@@ -137,6 +137,8 @@ export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
 	const len = affectedItems.length;
 	let item;
 	let score;
+	let maxHeight = 0;
+	let maxWidth = 0;
 	// const scoreMap = {};
 	const scoreArr = new Array(len);
 	for (let i = 0; i < len; i++) {
@@ -144,6 +146,14 @@ export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
 		score = getScore(item, maxHWSum);
 		// scoreMap[affectedItems[i]] = score;
 		scoreArr[i] = { v: score, d: affectedItems[i] };
+
+		if (item.width > maxWidth) {
+			maxWidth = item.width;
+		}
+
+		if (item.height > maxHeight) {
+			maxHeight = item.height;
+		}
 	}
 
 	// return scoreMap;

@@ -28,10 +28,10 @@ var fs = require("fs");
 var path = require("path");
 
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var miniCssExtractPlugin = new MiniCssExtractPlugin({ filename: "index.css" });
+var miniCssExtractPlugin = new MiniCssExtractPlugin({ filename: "limberGridView-" + process.env.VERSION  + ".css" });
 var WebpackNotifierPlugin = require("webpack-notifier");
 var webpackNotifierPlugin = new WebpackNotifierPlugin({
-    title: "plainES6BoilerPlate",
+    title: "LimberGridView",
     alwaysNotify: true,
 });
 
@@ -42,10 +42,15 @@ module.exports = {
             ? "inline-source-map"
             : "source-map",
     entry: __dirname + "/src/index.js",
+    optimization: {
+        minimize: process.env.MINIMIZE === "true" ? true : false
+    },
     output: {
-        path: __dirname + "/public/assets",
+        path: process.env.NODE_ENV === "development" ? __dirname + "/public/assets" : __dirname + "/dist",
         publicPath: "assets",
-        filename: "bundle.js",
+        filename: "limberGridView-" + process.env.VERSION  + ".js",
+        // library: "LimberGridView",
+        // libraryTarget: "umd"
     },
     devServer: {
         inline: true,
