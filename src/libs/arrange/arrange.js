@@ -36,6 +36,7 @@ export const arrangeAffectedItems = (
 	movedBottomY,
 	arrangeFor
 ) => {
+	console.log("affectedItems", affectedItems);
 	const { minY, maxY } = getMinMaxY(
 		affectedItems,
 		resizedBottomY,
@@ -44,10 +45,10 @@ export const arrangeAffectedItems = (
 	);
 
 	const workSpaceRectCo = {
-		tl: { x: /* publicConstants.MARGIN */ 0, y: minY },
-		tr: { x: privateConstants.WIDTH, y: minY },
-		br: { x: privateConstants.WIDTH, y: maxY },
-		bl: { x: /* publicConstants.MARGIN */ 0, y: maxY },
+		tl: { x: publicConstants.MARGIN, y: minY },
+		tr: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: minY },
+		br: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: maxY },
+		bl: { x: publicConstants.MARGIN, y: maxY },
 	};
 
 	// const { arrangeTopY, arrangeBottomY } = fixMinYMaxY(workSpaceRectCo);
@@ -55,7 +56,7 @@ export const arrangeAffectedItems = (
 	// workSpaceRectCo.tr.y = arrangeTopY;
 	// workSpaceRectCo.br.y = arrangeBottomY;
 	// workSpaceRectCo.bl.y = arrangeBottomY;
-	const workSpaceRect = getRectObjectFromCo(workSpaceRectCo);
+	// const workSpaceRect = getRectObjectFromCo(workSpaceRectCo);
 	/*
 		Skipping these for simplicity for now
 		* 	if a item's top has to be placed at workSpaceRect.tl.y then it should be
@@ -64,17 +65,33 @@ export const arrangeAffectedItems = (
 			adjusted to arrangeBottomY without margin resize item if necessary
 	*/
 
-	let { topWorkSpace, bottomWorkSpace } = getTopBottomWS();
-	shrinkTopBottomWS();
+	const combinedWorkSpaceRectCo = {
+		tl: { ...workSpaceRectCo.tl },
+		tr: { ...workSpaceRectCo.tr },
+		br: { ...workSpaceRectCo.br },
+		bl: { ...workSpaceRectCo.bl },
+	};
+	const { topWorkSpace, bottomWorkSpace } = getTopBottomWS(workSpaceRectCo);
+	const shrinkRes = shrinkTopBottomWS();
+	console.log("shrinkRes", shrinkRes);
+	if (shrinkRes.integrateTop) {
+		combinedWorkSpaceRectCo.tl = { ...topWorkSpace.tl };
+		combinedWorkSpaceRectCo.tr = { ...topWorkSpace.tr };
+	}
+	if (shrinkRes.integrateBottom) {
+		combinedWorkSpaceRectCo.br = { ...bottomWorkSpace.br };
+		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpace.bl };
+	}
 
-	const itemsInWorkSpace = getItemsInWorkSpace(workSpaceRect);
+	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+	const itemsInWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
 
 	// sort items in workspace by lt.x  i.e horizontally
 	itemsInWorkSpace.sort((a, b) => a.x - b.x);
 
 	const freeRectsItY = sweepLine(
-		workSpaceRect,
-		workSpaceRectCo,
+		combinedWorkSpaceRect,
+		combinedWorkSpaceRectCo,
 		itemsInWorkSpace
 	);
 
@@ -114,15 +131,16 @@ export const arrangeAffectedItems = (
 	printMergedFreeRects(overlappedRectsIt.getDataInArray().map((o) => o.d));
 
 	const overlappedRectsArr = overlappedRectsIt.getDataInArray();
-	const { maxScore, maxHWSum } = assignScoreToFreeRects(overlappedRectsArr);
-	console.log("overlappedRectsIt", overlappedRectsIt);
+	shuffle(overlappedRectsArr);
+	assignAdjacentItems(overlappedRectsArr);
 
-	const afItemsScoreArr = getAffectedItemsScore(affectedItems, maxHWSum);
-	shuffle(afItemsScoreArr);
-	console.log("afItemsScoreArr", afItemsScoreArr);
-	const scoreCBST = new ClosestBST({ data: afItemsScoreArr });
+	// const wCBST = new ClosestBST();
+	// const hCBST = new ClosestBST();
 
-	console.log(scoreCBST);
+	// const { maxScore, maxHWSum } = assignScoreToFreeRects(overlappedRectsArr);
+	// const afItemsScoreArr = getAffectedItemsScore(affectedItems, maxHWSum);
+	// shuffle(afItemsScoreArr);
+	// const scoreCBST = new ClosestBST({ data: afItemsScoreArr });
 
 	if (affectedItems.length === 1) {
 		// resize or move to the desired coordinates
@@ -133,13 +151,7 @@ export const arrangeAffectedItems = (
 		// try replacing first
 	}
 
-	arrange(
-		affectedItems,
-		scoreCBST,
-		overlappedRectsIt,
-		overlappedRectsArr,
-		arrangeFor
-	);
+	arrange(affectedItems, overlappedRectsIt, overlappedRectsArr, arrangeFor);
 };
 
 export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
@@ -256,7 +268,6 @@ export const sweepLine = (area, areaCo, items) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
-
 	const it = new IntervalTreesIterative();
 
 	it.insert({
@@ -415,7 +426,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 			}
 		}
 	}
-	console.log("resultStack.getData()", resultStack.getData());
+
 	return resultStack.getData();
 };
 
@@ -467,9 +478,13 @@ export const findOverlapped = (mergedRects) => {
 	return it;
 };
 
+export const assignAdjacentItems = (freeRects) => {
+	const mpdLen = mpd.length;
+	const frLen = freeRects.length;
+};
+
 export const arrange = (
 	affectedItems,
-	scoreCBST,
 	overlappedRectsIt,
 	overlappedRectsArr,
 	arrangeFor

@@ -1,30 +1,24 @@
-window.onload = function() {
+window.onload = function () {
 	main();
 };
 
-var main = function() {
+var main = function () {
 	var body = document.getElementsByTagName("body");
 	var $toggleModeButton = document.getElementsByClassName(
 		"toggleAddOrCutSpaceButton"
 	);
 	var $addButtonIcon = document.getElementsByClassName("addButtonIcon");
 
-	var onToggleModeClick = function(event) {
+	var onToggleModeClick = function (event) {
 		// console.log(event);
 		if (event.currentTarget.classList.contains("activateAddMode")) {
-			event.currentTarget.classList.remove(
-				"toggleAddOrCutSpaceButtonActive"
-			);
+			event.currentTarget.classList.remove("toggleAddOrCutSpaceButtonActive");
 			event.currentTarget.parentNode.childNodes[1].classList.add(
 				"toggleAddOrCutSpaceButtonActive"
 			);
 			window.limberGridView.setAddOrCutSpace("ADD");
-		} else if (
-			event.currentTarget.classList.contains("activateCutSpaceMode")
-		) {
-			event.currentTarget.classList.remove(
-				"toggleAddOrCutSpaceButtonActive"
-			);
+		} else if (event.currentTarget.classList.contains("activateCutSpaceMode")) {
+			event.currentTarget.classList.remove("toggleAddOrCutSpaceButtonActive");
 			event.currentTarget.parentNode.childNodes[3].classList.add(
 				"toggleAddOrCutSpaceButtonActive"
 			);
@@ -32,7 +26,7 @@ var main = function() {
 		}
 	};
 
-	var onAddButtonIconClick = function(event) {
+	var onAddButtonIconClick = function (event) {
 		// console.log(event);
 		window.limberGridView.addItems(1);
 	};
@@ -41,12 +35,10 @@ var main = function() {
 	$toggleModeButton[1].addEventListener("click", onToggleModeClick);
 	$addButtonIcon[0].addEventListener("click", onAddButtonIconClick);
 
-	var charts = [0, 1, 2, 0, 1, 2, 0, 1, 2, 0];
-
 	var layoutHtml =
 		'<div class = "itemLayout"><span>Title</span><div class = "itemDropDownButton">:::<div class = "itemDropDown"><div class = "itemDropDownItem">add</div><div class = "itemDropDownItem">remove</div></div></div></div>';
 
-	var kpi = function(width, height) {
+	var kpi = function (width, height) {
 		var rand = Math.random();
 		if (rand > 0.5) {
 			var stockUpDown = "stockUp";
@@ -94,7 +86,7 @@ var main = function() {
 		return div;
 	};
 
-	var piechart = function(width, height) {
+	var piechart = function (width, height) {
 		var data = [10, 20, 100];
 
 		var margin = { top: 20, right: 20, bottom: 30, left: 40 };
@@ -118,7 +110,7 @@ var main = function() {
 		var pie = d3
 			.pie()
 			.sort(null)
-			.value(function(d) {
+			.value(function (d) {
 				return d;
 			});
 
@@ -133,10 +125,7 @@ var main = function() {
 			.attr("height", height);
 		var gForMargin = svg
 			.append("g")
-			.attr(
-				"transform",
-				"translate(" + margin.left + "," + margin.top + ")"
-			)
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 			.attr("width", chartWidth)
 			.attr("height", chartHeight);
 		var g = gForMargin
@@ -153,7 +142,7 @@ var main = function() {
 			.attr("class", "arc");
 		g2.append("path")
 			.attr("d", arc)
-			.style("fill", function(d) {
+			.style("fill", function (d) {
 				return color(d.data);
 			});
 
@@ -166,7 +155,7 @@ var main = function() {
 		return div;
 	};
 
-	var barchart = function(width, height) {
+	var barchart = function (width, height) {
 		var data = [
 			{ label: "A", value: 10 },
 			{ label: "B", value: 5 },
@@ -184,20 +173,17 @@ var main = function() {
 		var chartWidth = width - margin.left - margin.right;
 		var chartHeight = height - margin.top - margin.bottom;
 
-		var x = d3
-			.scaleBand()
-			.rangeRound([0, chartWidth])
-			.paddingInner(0.1);
+		var x = d3.scaleBand().rangeRound([0, chartWidth]).paddingInner(0.1);
 		var y = d3.scaleLinear().rangeRound([chartHeight, 0]);
 		var z = d3.scaleOrdinal().range(["#992600", "#004d00", "#003366"]);
 		x.domain(
-			data.map(function(d) {
+			data.map(function (d) {
 				return d.label;
 			})
 		);
 		y.domain([
 			0,
-			d3.max(data, function(d) {
+			d3.max(data, function (d) {
 				return d.value;
 			}),
 		]);
@@ -213,10 +199,7 @@ var main = function() {
 			.attr("height", height);
 		var g = svg
 			.append("g")
-			.attr(
-				"transform",
-				"translate(" + margin.left + "," + margin.top + ")"
-			)
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 			.attr("width", chartWidth)
 			.attr("height", chartHeight);
 		g.selectAll(".bar")
@@ -224,17 +207,17 @@ var main = function() {
 			.enter()
 			.append("rect")
 			.attr("class", "bar")
-			.attr("x", function(d) {
+			.attr("x", function (d) {
 				return x(d.label);
 			})
 			.attr("width", x.bandwidth())
-			.attr("y", function(d) {
+			.attr("y", function (d) {
 				return y(d.value);
 			})
-			.attr("height", function(d) {
+			.attr("height", function (d) {
 				return chartHeight - y(d.value);
 			})
-			.attr("fill", function(d) {
+			.attr("fill", function (d) {
 				return z(d.label);
 			});
 
@@ -248,17 +231,13 @@ var main = function() {
 	};
 
 	function remove(event) {
-		debugger;
 		var index = event.currentTarget.attributes["data-index"].value;
-		// console.log(index);
+
 		var indices = [index];
-		indices.sort(function(a, b) {
+		indices.sort(function (a, b) {
 			return Number(a) - Number(b);
 		});
-		var length_0 = indices.length - 1;
-		for (var i = length_0; i >= 0; i--) {
-			charts.splice(indices[i], 1);
-		}
+
 		window.limberGridView.removeItems(indices);
 	}
 
@@ -268,7 +247,6 @@ var main = function() {
 	}
 
 	function getItemRenderDataCallback(index, width, height, processType) {
-		// console.log(index);
 		// console.log(width);
 		// console.log(height);
 		// console.log(processType);
@@ -277,25 +255,30 @@ var main = function() {
 		div.style.width = width + "px";
 		div.style.height = 25 + "px";
 		div.classList.add("itemLayoutParent");
+		var layoutHtml =
+			`<div class = "itemLayout"><span>Title ` +
+			index +
+			`</span><div class = "itemDropDownButton">:::<div class = "itemDropDown"><div class = "itemDropDownItem">add</div><div class = "itemDropDownItem">remove</div></div></div></div>`;
 		div.innerHTML = layoutHtml;
 
 		if (
-			processType == "render" ||
-			processType == "onDemand" ||
-			processType == "removeItems" ||
-			processType == "resizeItems"
+			processType === "render" ||
+			processType === "onDemand" ||
+			processType === "removeItems" ||
+			processType === "resizeItems"
 		) {
-			if (charts[index] == 0) {
+			var random = Math.floor(Math.random() * 3);
+			if (random === 0) {
 				var chart = barchart(width, height - 25);
 				div.appendChild(chart);
 				// return div;
 				return div.outerHTML;
-			} else if (charts[index] == 1) {
+			} else if (random === 1) {
 				var chart = piechart(width, height - 25);
 				div.appendChild(chart);
 				// return div;
 				return div.outerHTML;
-			} else if (charts[index] == 2) {
+			} else if (random === 2) {
 				var chart = kpi(width, height - 25);
 				div.appendChild(chart);
 				// return div;
@@ -305,19 +288,12 @@ var main = function() {
 			processType == "addItems" ||
 			processType == "addItemInteractive"
 		) {
-			if (index % 2 == 0) {
-				charts.push(0);
-			} else if (index % 3 == 0) {
-				charts.push(2);
-			} else {
-				charts.push(1);
-			}
-			// return div;
+			var random = Math.floor(Math.random() * 3);
 			return div.outerHTML;
 		}
 	}
 
-	var onItemClickCallback = function(event) {
+	var onItemClickCallback = function (event) {
 		if (event.target.classList.contains("itemDropDownButton")) {
 			event.target.childNodes[1].classList.toggle("itemDropDownActive");
 		}
@@ -333,30 +309,30 @@ var main = function() {
 		}
 	};
 
-	var renderComplete = function() {
+	var renderComplete = function () {
 		// console.log("renderComplete");
 	};
 
-	var itemsRenderComplete = function(indices, scale, processType) {
+	var itemsRenderComplete = function (indices, scale, processType) {
 		// console.log("itemsRenderComplete");
 		// console.log(event);
 	};
 
-	var resizeCompleteCallback = function(index, width, height) {
+	var resizeCompleteCallback = function (index, width, height) {
 		// console.log("resizeCompleteCallback");
 		// console.log(index);
 		// console.log(width);
 		// console.log(height);
 	};
 
-	var moveCompleteCallback = function(status, index, coordinatesOrEvent) {
+	var moveCompleteCallback = function (status, index, coordinatesOrEvent) {
 		// console.log("moveCompleteCallback");
 		// console.log(status);
 		// console.log(index);
 		// console.log(coordinatesOrEvent);
 	};
 
-	var addCompleteCallback = function(indices, width, height, processType) {
+	var addCompleteCallback = function (indices, width, height, processType) {
 		// console.log("addCompleteCallback");
 		// console.log(indices);
 		// console.log(width);
@@ -364,7 +340,7 @@ var main = function() {
 		// console.log(processType);
 	};
 
-	var removeCompleteCallback = function(indices) {
+	var removeCompleteCallback = function (indices) {
 		// console.log("removeCompleteCallback");
 		// console.log(indices);
 	};
@@ -395,25 +371,26 @@ var main = function() {
 			gridWidth: 999,
 			margin: 3.830521472392638,
 			initialPositionData: [
-				{
-					x: 50,
-					y: 100,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 270,
-					y: 100,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 590,
-					y: 100,
-					width: 200,
-					height: 200,
-				},
-
+				// set 1
+				// {
+				// 	x: 50,
+				// 	y: 100,
+				// 	width: 200,
+				// 	height: 200,
+				// },
+				// {
+				// 	x: 270,
+				// 	y: 100,
+				// 	width: 200,
+				// 	height: 200,
+				// },
+				// {
+				// 	x: 590,
+				// 	y: 100,
+				// 	width: 200,
+				// 	height: 200,
+				// },
+				// set 2
 				// {
 				// 	x: 0 + 5,
 				// 	y: 0 + 5,
@@ -474,6 +451,158 @@ var main = function() {
 				// 	height: 438.1580291411043,
 				// 	width: 718.6058282208588 - 5,
 				// },
+
+				// set 3
+				{
+					x: 5,
+					y: 0,
+					width: 195,
+					height: 200,
+				},
+				{
+					x: 215,
+					y: 0,
+					width: 200,
+					height: 300,
+				},
+				{
+					x: 430,
+					y: 0,
+					width: 200,
+					height: 400,
+				},
+				{
+					x: 650,
+					y: 0,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 865,
+					y: 0,
+					width: 140,
+					height: 200,
+				},
+				{
+					x: 5,
+					y: 210,
+					width: 195,
+					height: 200,
+				},
+				{
+					x: 215,
+					y: 310,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 430,
+					y: 420,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 650,
+					y: 210,
+					width: 200,
+					height: 400,
+				},
+				{
+					x: 865,
+					y: 210,
+					width: 140,
+					height: 300,
+				},
+				{
+					x: 5,
+					y: 420,
+					width: 195,
+					height: 300,
+				},
+				{
+					x: 215,
+					y: 520,
+					width: 200,
+					height: 300,
+				},
+				{
+					x: 430,
+					y: 630,
+					width: 200,
+					height: 250,
+				},
+				{
+					x: 650,
+					y: 620,
+					width: 200,
+					height: 300,
+				},
+				{
+					x: 865,
+					y: 520,
+					width: 140,
+					height: 200,
+				},
+				{
+					x: 5,
+					y: 730,
+					width: 195,
+					height: 200,
+				},
+				{
+					x: 215,
+					y: 830,
+					width: 200,
+					height: 300,
+				},
+				{
+					x: 430,
+					y: 890,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 650,
+					y: 950,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 865,
+					y: 820,
+					width: 140,
+					height: 300,
+				},
+				{
+					x: 5,
+					y: 960,
+					width: 195,
+					height: 200,
+				},
+				{
+					x: 215,
+					y: 1140,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 430,
+					y: 1100,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 650,
+					y: 1160,
+					width: 200,
+					height: 200,
+				},
+				{
+					x: 865,
+					y: 1130,
+					width: 140,
+					height: 200,
+				},
 			],
 		},
 
@@ -531,7 +660,7 @@ var main = function() {
 	// });
 	window.limberGridView.render();
 
-	window.toggleMerged = function() {
+	window.toggleMerged = function () {
 		const els = document.getElementsByClassName(
 			"limberGridViewDebugMergedRect"
 		);
@@ -552,10 +681,8 @@ var main = function() {
 	};
 	window.toggleMerged.display = "";
 
-	window.toggleMergedById = function(id) {
-		const el = document.getElementById(
-			"limberGridViewDebugMergedRect-" + id
-		);
+	window.toggleMergedById = function (id) {
+		const el = document.getElementById("limberGridViewDebugMergedRect-" + id);
 
 		if (el) {
 			if (el.style.display === "") {
@@ -566,7 +693,7 @@ var main = function() {
 		}
 	};
 
-	window.toggleUnmerged = function() {
+	window.toggleUnmerged = function () {
 		const els = document.getElementsByClassName(
 			"limberGridViewDebugUnmergedRect"
 		);
@@ -587,10 +714,8 @@ var main = function() {
 	};
 	window.toggleUnmerged.display = "";
 
-	window.toggleUnmergedById = function(id) {
-		const el = document.getElementById(
-			"limberGridViewDebugUnmergedRect-" + id
-		);
+	window.toggleUnmergedById = function (id) {
+		const el = document.getElementById("limberGridViewDebugUnmergedRect-" + id);
 
 		if (el) {
 			if (el.style.display === "") {

@@ -78,14 +78,14 @@ export const doesPointTouchRect = (rect, point) => {
 export const doRectsOverlap = (rectA, rectB) => {
 	try {
 		if (
-			!rectA.x ||
-			!rectA.y ||
-			!rectA.width ||
-			!rectA.height ||
-			!rectB.x ||
-			!rectB.y ||
-			!rectB.width ||
-			!rectB.height
+			isNaN(rectA.x) ||
+			isNaN(rectA.y) ||
+			isNaN(rectA.width) ||
+			isNaN(rectA.height) ||
+			isNaN(rectB.x) ||
+			isNaN(rectB.y) ||
+			isNaN(rectB.width) ||
+			isNaN(rectB.height)
 		) {
 			return null;
 		}
@@ -112,14 +112,14 @@ export const doRectsOverlap = (rectA, rectB) => {
 export const doRectsOnlyTouch = (rectA, rectB) => {
 	try {
 		if (
-			!rectA.x ||
-			!rectA.y ||
-			!rectA.width ||
-			!rectA.height ||
-			!rectB.x ||
-			!rectB.y ||
-			!rectB.width ||
-			!rectB.height
+			isNaN(rectA.x) ||
+			isNaN(rectA.y) ||
+			isNaN(rectA.width) ||
+			isNaN(rectA.height) ||
+			isNaN(rectB.x) ||
+			isNaN(rectB.y) ||
+			isNaN(rectB.width) ||
+			isNaN(rectB.height)
 		) {
 			return null;
 		}
