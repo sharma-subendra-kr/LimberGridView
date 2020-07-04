@@ -24,6 +24,7 @@ import {
 	mergeRects,
 	isRectInside,
 	areRectsOnSameYAxisExPath,
+	areRectsIdentical,
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
 import Stack from "../stack/stack";
@@ -36,7 +37,6 @@ export const arrangeAffectedItems = (
 	movedBottomY,
 	arrangeFor
 ) => {
-	console.log("affectedItems", affectedItems);
 	const { minY, maxY } = getMinMaxY(
 		affectedItems,
 		resizedBottomY,
@@ -72,8 +72,8 @@ export const arrangeAffectedItems = (
 		bl: { ...workSpaceRectCo.bl },
 	};
 	const { topWorkSpace, bottomWorkSpace } = getTopBottomWS(workSpaceRectCo);
-	const shrinkRes = shrinkTopBottomWS();
-	console.log("shrinkRes", shrinkRes);
+	const shrinkRes = shrinkTopBottomWS(topWorkSpace, bottomWorkSpace);
+
 	if (shrinkRes.integrateTop) {
 		combinedWorkSpaceRectCo.tl = { ...topWorkSpace.tl };
 		combinedWorkSpaceRectCo.tr = { ...topWorkSpace.tr };
@@ -158,24 +158,24 @@ export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
 	let res = { integrateTop: false, integrateBottom: false };
 	if (topWorkSpace) {
-		topWSItems = getItemsInWorkSpace(topWorkSpace);
-		const res = sweepLineTop(topWorkSpace, topWSItems);
+		topWSItems = getItemsInWorkSpace(getRectObjectFromCo(topWorkSpace));
+		const sweepRes = sweepLineTop(topWorkSpace, topWSItems);
 
-		if (res < topWorkSpace.bl.y) {
-			topWorkSpace.tl.y = res;
-			topWorkSpace.tr.y = res;
+		if (sweepRes < topWorkSpace.bl.y) {
+			topWorkSpace.tl.y = sweepRes;
+			topWorkSpace.tr.y = sweepRes;
 
 			res.integrateTop = true;
 		}
 	}
 
 	if (bottomWorkSpace) {
-		bottomWSItems = getItemsInWorkSpace(bottomWorkSpace);
-		const res = sweepLineBottom(bottomWorkSpace, bottomWSItems);
+		bottomWSItems = getItemsInWorkSpace(getRectObjectFromCo(bottomWorkSpace));
+		const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems);
 
-		if (res > bottomWorkSpace.tl.y) {
-			bottomWorkSpace.bl.y = res;
-			bottomWorkSpace.br.y = res;
+		if (sweepRes > bottomWorkSpace.tl.y) {
+			bottomWorkSpace.bl.y = sweepRes;
+			bottomWorkSpace.br.y = sweepRes;
 
 			res.integrateBottom = true;
 		}
@@ -193,7 +193,7 @@ export const sweepLineTop = (area, items) => {
 			low: items[i].y,
 			high: items[i].y + items[i].height,
 			d: {
-				rect: getRectObjectFromCo(items[i]),
+				rect: items[i],
 			},
 		});
 	}
@@ -201,6 +201,7 @@ export const sweepLineTop = (area, items) => {
 	let resultPoint = area.bl.y;
 	let res, rLen;
 	let breakSig = false;
+
 	for (let i = 0; i < len; i++) {
 		res = it.findAll({ low: items[i].y + items[i].height, high: area.bl.y });
 		rLen = res.length;
@@ -208,6 +209,10 @@ export const sweepLineTop = (area, items) => {
 		for (let j = 0; j < rLen; j++) {
 			if (
 				areRectsOnSameYAxisExPath(
+					getCoordinates(items[i]),
+					getCoordinates(res[j].d.rect)
+				) &&
+				!areRectsIdentical(
 					getCoordinates(items[i]),
 					getCoordinates(res[j].d.rect)
 				)
@@ -233,7 +238,7 @@ export const sweepLineBottom = (area, items) => {
 			low: items[i].y,
 			high: items[i].y + items[i].height,
 			d: {
-				rect: getRectObjectFromCo(items[i]),
+				rect: items[i],
 			},
 		});
 	}
@@ -248,6 +253,10 @@ export const sweepLineBottom = (area, items) => {
 		for (let j = 0; j < rLen; j++) {
 			if (
 				areRectsOnSameYAxisExPath(
+					getCoordinates(items[i]),
+					getCoordinates(res[j].d.rect)
+				) &&
+				!areRectsIdentical(
 					getCoordinates(items[i]),
 					getCoordinates(res[j].d.rect)
 				)

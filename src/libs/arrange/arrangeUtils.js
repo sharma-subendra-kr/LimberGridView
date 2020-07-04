@@ -65,10 +65,16 @@ export const getTopBottomWS = (workSpaceRectCo) => {
 	let topWorkSpace, bottomWorkSpace;
 	if (workSpaceRectCo.tl.y > 0) {
 		topWorkSpace = {
-			tl: { x: 0, y: 0 },
-			tr: { x: privateConstants.WIDTH, y: 0 },
-			br: { x: privateConstants.WIDTH, y: workSpaceRectCo.tr.y },
-			bl: { x: 0, y: workSpaceRectCo.tl.y },
+			tl: { x: publicConstants.MARGIN, y: publicConstants.MARGIN },
+			tr: {
+				x: privateConstants.WIDTH - publicConstants.MARGIN,
+				y: publicConstants.MARGIN,
+			},
+			br: {
+				x: privateConstants.WIDTH - publicConstants.MARGIN,
+				y: workSpaceRectCo.tr.y,
+			},
+			bl: { x: publicConstants.MARGIN, y: workSpaceRectCo.tl.y },
 		};
 	}
 
@@ -76,10 +82,13 @@ export const getTopBottomWS = (workSpaceRectCo) => {
 
 	if (bottomMax > workSpaceRectCo.bl.y) {
 		bottomWorkSpace = {
-			tl: { x: 0, y: workSpaceRectCo.bl.y },
-			tr: { x: privateConstants.WIDTH, y: workSpaceRectCo.bl.y },
-			br: { x: privateConstants.WIDTH, y: bottomMax },
-			bl: { x: 0, y: bottomMax },
+			tl: { x: publicConstants.MARGIN, y: workSpaceRectCo.bl.y },
+			tr: {
+				x: privateConstants.WIDTH - publicConstants.MARGIN,
+				y: workSpaceRectCo.bl.y,
+			},
+			br: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: bottomMax },
+			bl: { x: publicConstants.MARGIN, y: bottomMax },
 		};
 	}
 

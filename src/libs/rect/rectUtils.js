@@ -673,3 +673,19 @@ export const areRectsOnSameYAxisExPath = (rectA, rectB) => {
 	}
 	return true;
 };
+
+export const areRectsIdentical = (rectA, rectB) => {
+	if (
+		rectA.tl.x === rectB.tl.x &&
+		rectA.tl.y === rectB.tl.y &&
+		rectA.tr.x === rectB.tr.x &&
+		rectA.tr.y === rectB.tr.y &&
+		rectA.br.x === rectB.br.x &&
+		rectA.br.y === rectB.br.y &&
+		rectA.bl.x === rectB.bl.x &&
+		rectA.bl.y === rectB.bl.y
+	) {
+		return true;
+	}
+	return false;
+};

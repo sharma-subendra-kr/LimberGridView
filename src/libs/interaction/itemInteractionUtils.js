@@ -61,8 +61,8 @@ export const getResizeAffectedItems = (item, index) => {
 			i !== index
 		) {
 			affectedArr[count++] = i;
-			mpd[i].x = null;
-			mpd[i].y = null;
+			mpd[i].x = undefined;
+			mpd[i].y = undefined;
 		}
 	}
 
@@ -95,8 +95,8 @@ export const getMoveAffectedItems = (item, index) => {
 		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
 			if (i !== index) {
 				affectedArr[count++] = i;
-				mpd[i].x = null;
-				mpd[i].y = null;
+				mpd[i].x = undefined;
+				mpd[i].y = undefined;
 			}
 		}
 	}
@@ -139,10 +139,7 @@ export const moveItemInitialChecks = (index, toX, toY) => {
 		return false;
 	}
 
-	if (
-		toX + pd[index].width + publicConstants.MARGIN >
-		privateConstants.WIDTH
-	) {
+	if (toX + pd[index].width + publicConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
 		return false;
 	}

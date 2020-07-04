@@ -489,12 +489,12 @@ var main = function () {
 					width: 195,
 					height: 200,
 				},
-				{
-					x: 215,
-					y: 310,
-					width: 200,
-					height: 200,
-				},
+				// {
+				// 	x: 215,
+				// 	y: 310,
+				// 	width: 200,
+				// 	height: 200,
+				// },
 				{
 					x: 430,
 					y: 420,
@@ -555,12 +555,12 @@ var main = function () {
 					width: 200,
 					height: 300,
 				},
-				{
-					x: 430,
-					y: 890,
-					width: 200,
-					height: 200,
-				},
+				// {
+				// 	x: 430,
+				// 	y: 890,
+				// 	width: 200,
+				// 	height: 200,
+				// },
 				{
 					x: 650,
 					y: 950,

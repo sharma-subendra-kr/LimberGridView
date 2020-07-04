@@ -29,7 +29,7 @@ import privateConstants from "../../constants/privateConstants";
 
 let isMobileFunction;
 
-export const emptyObject = function(obj) {
+export const emptyObject = function (obj) {
 	let keys = Object.keys(obj);
 	let length = keys.length;
 	for (let i = 0; i < length; i++) {
@@ -37,7 +37,7 @@ export const emptyObject = function(obj) {
 	}
 };
 
-export let isMobile = function() {
+export let isMobile = function () {
 	if (isMobileFunction) {
 		return isMobileFunction();
 	}
@@ -52,6 +52,10 @@ export let isMobile = function() {
 	// return true;
 };
 
-export const setIsMobileFunction = function(f) {
+export const setIsMobileFunction = function (f) {
 	isMobileFunction = f;
+};
+
+export const fixTo = (num, to = 6) => {
+	return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
 };
