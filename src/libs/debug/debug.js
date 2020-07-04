@@ -12,9 +12,7 @@ export const printUnmergedFreeRects = (arr) => {
 
 	let len = e.$limberGridViewDebugUnmergedRects.length;
 	for (let i = 0; i < len; i++) {
-		e.$limberGridView[0].removeChild(
-			e.$limberGridViewDebugUnmergedRects[i]
-		);
+		e.$limberGridView[0].removeChild(e.$limberGridViewDebugUnmergedRects[i]);
 	}
 	set$limberGridViewDebugUnmergedRects([]);
 
@@ -35,9 +33,7 @@ export const printUnmergedFreeRects = (arr) => {
 
 		node.setAttribute(
 			"title",
-			`${arr[i].id}: ${Object.keys(arr[i].a).map(
-				(o) => arr[i].a[o].d.id
-			)}`
+			`${arr[i].id}: ${Object.keys(arr[i].a).map((o) => arr[i].a[o].d.id)}`
 		);
 		node.innerHTML = arr[i].id;
 		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
@@ -47,9 +43,7 @@ export const printUnmergedFreeRects = (arr) => {
 	}
 
 	set$limberGridViewDebugUnmergedRects(
-		e.$limberGridView[0].querySelectorAll(
-			".limberGridViewDebugUnmergedRect"
-		)
+		e.$limberGridView[0].querySelectorAll(".limberGridViewDebugUnmergedRect")
 	);
 };
 

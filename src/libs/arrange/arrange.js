@@ -12,8 +12,9 @@ import {
 	getTopBottomWS,
 	fixMinYMaxY,
 	getItemsInWorkSpace,
-	getAffectedItemsScore,
-	assignScoreToFreeRects,
+	getItemDimenWithMargin,
+	// getAffectedItemsScore,
+	// assignScoreToFreeRects,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -299,8 +300,14 @@ export const sweepLine = (area, areaCo, items) => {
 		intervals = it.findAll(fInterval);
 		iLen = intervals.length;
 		for (let j = 0; j < iLen; j++) {
-			if (doRectsOverlap(intervals[j].d.rect, items[i])) {
-				diff = subtractRect(intervals[j].d.rect, items[i], true);
+			if (
+				doRectsOverlap(intervals[j].d.rect, getItemDimenWithMargin(items[i]))
+			) {
+				diff = subtractRect(
+					intervals[j].d.rect,
+					getItemDimenWithMargin(items[i]),
+					true
+				);
 
 				// DEBUG:
 				// printUnmergedFreeRects(

@@ -176,7 +176,7 @@ export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
 	const itemsInWorkSpace = new Array(len);
 	let count = 0;
 	for (let i = 0; i < len; i++) {
-		if (doRectsOverlap(workSpaceRect, mpd[i])) {
+		if (doRectsOverlap(workSpaceRect, getItemDimenWithMargin(mpd[i]))) {
 			itemsInWorkSpace[count++] = mpd[i];
 		}
 	}
@@ -189,55 +189,65 @@ export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
 	return res;
 };
 
-export const getScore = (rect, maxHWSum) => {
-	return (rect.width + rect.height) / maxHWSum;
+export const getItemDimenWithMargin = (item) => {
+	const _item = { ...item };
+	_item.x -= publicConstants.MARGIN;
+	_item.y -= publicConstants.MARGIN;
+	_item.width += publicConstants.MARGIN * 2;
+	_item.height += publicConstants.MARGIN * 2;
+
+	return _item;
 };
 
-export const assignScoreToFreeRects = (freeRects) => {
-	const len = freeRects.length;
+// export const getScore = (rect, maxHWSum) => {
+// 	return (rect.width + rect.height) / maxHWSum;
+// };
 
-	let maxHWSum = 0;
-	let sum = 0;
-	for (let i = 0; i < len; i++) {
-		sum = freeRects[i].d.rect.width + freeRects[i].d.rect.height;
-		if (sum > maxHWSum) {
-			maxHWSum = sum;
-		}
-	}
+// export const assignScoreToFreeRects = (freeRects) => {
+// 	const len = freeRects.length;
 
-	let maxScore = 0;
-	for (let i = 0; i < len; i++) {
-		freeRects[i].d.score = getScore(freeRects[i].d.rect, maxHWSum);
-		if (freeRects[i].d.score > maxScore) {
-			maxScore = freeRects[i].d.score;
-		}
-	}
-	return { maxScore, maxHWSum };
-};
+// 	let maxHWSum = 0;
+// 	let sum = 0;
+// 	for (let i = 0; i < len; i++) {
+// 		sum = freeRects[i].d.rect.width + freeRects[i].d.rect.height;
+// 		if (sum > maxHWSum) {
+// 			maxHWSum = sum;
+// 		}
+// 	}
 
-export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
-	const len = affectedItems.length;
-	let item;
-	let score;
-	let maxHeight = 0;
-	let maxWidth = 0;
-	// const scoreMap = {};
-	const scoreArr = new Array(len);
-	for (let i = 0; i < len; i++) {
-		item = mpd[affectedItems[i]];
-		score = getScore(item, maxHWSum);
-		// scoreMap[affectedItems[i]] = score;
-		scoreArr[i] = { v: score, d: affectedItems[i] };
+// 	let maxScore = 0;
+// 	for (let i = 0; i < len; i++) {
+// 		freeRects[i].d.score = getScore(freeRects[i].d.rect, maxHWSum);
+// 		if (freeRects[i].d.score > maxScore) {
+// 			maxScore = freeRects[i].d.score;
+// 		}
+// 	}
+// 	return { maxScore, maxHWSum };
+// };
 
-		if (item.width > maxWidth) {
-			maxWidth = item.width;
-		}
+// export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
+// 	const len = affectedItems.length;
+// 	let item;
+// 	let score;
+// 	let maxHeight = 0;
+// 	let maxWidth = 0;
+// 	// const scoreMap = {};
+// 	const scoreArr = new Array(len);
+// 	for (let i = 0; i < len; i++) {
+// 		item = mpd[affectedItems[i]];
+// 		score = getScore(item, maxHWSum);
+// 		// scoreMap[affectedItems[i]] = score;
+// 		scoreArr[i] = { v: score, d: affectedItems[i] };
 
-		if (item.height > maxHeight) {
-			maxHeight = item.height;
-		}
-	}
+// 		if (item.width > maxWidth) {
+// 			maxWidth = item.width;
+// 		}
 
-	// return scoreMap;
-	return scoreArr;
-};
+// 		if (item.height > maxHeight) {
+// 			maxHeight = item.height;
+// 		}
+// 	}
+
+// 	// return scoreMap;
+// 	return scoreArr;
+// };

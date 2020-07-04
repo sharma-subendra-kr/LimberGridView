@@ -480,7 +480,7 @@ var main = function () {
 				{
 					x: 865,
 					y: 0,
-					width: 140,
+					width: 130,
 					height: 200,
 				},
 				{
@@ -510,7 +510,7 @@ var main = function () {
 				{
 					x: 865,
 					y: 210,
-					width: 140,
+					width: 130,
 					height: 300,
 				},
 				{
@@ -540,7 +540,7 @@ var main = function () {
 				{
 					x: 865,
 					y: 520,
-					width: 140,
+					width: 130,
 					height: 200,
 				},
 				{
@@ -570,7 +570,7 @@ var main = function () {
 				{
 					x: 865,
 					y: 820,
-					width: 140,
+					width: 130,
 					height: 300,
 				},
 				{
@@ -600,7 +600,7 @@ var main = function () {
 				{
 					x: 865,
 					y: 1130,
-					width: 140,
+					width: 130,
 					height: 200,
 				},
 			],
