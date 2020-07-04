@@ -454,9 +454,22 @@ export const areRectsAdjacent = (rectA, rectB) => {
 	const rectACo = getCoordinates(rectA);
 	const rectBCo = getCoordinates(rectB);
 
-	if (!doRectsOnlyTouch(rectA, rectB)) {
+	// if (!doRectsOnlyTouch(rectA, rectB)) {
+	// 	return false;
+	// }
+
+	if (
+		!(
+			Math.abs(rectACo.tl.x - rectBCo.tr.x) < 1 ||
+			Math.abs(rectBCo.tl.x - rectACo.tr.x) < 1 ||
+			Math.abs(rectACo.tl.y - rectBCo.bl.y) < 1 ||
+			Math.abs(rectBCo.tl.y - rectACo.bl.y) < 1
+		)
+	) {
 		return false;
 	}
+
+	// below filters point of intersection touch
 	if (
 		(rectACo.tl.y >= rectBCo.tl.y && rectACo.tl.y < rectBCo.bl.y) ||
 		(rectBCo.tl.y >= rectACo.tl.y && rectBCo.tl.y < rectACo.bl.y) ||

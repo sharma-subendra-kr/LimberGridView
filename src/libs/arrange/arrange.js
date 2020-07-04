@@ -126,14 +126,14 @@ export const arrangeAffectedItems = (
 	// DEBUG:
 	printMergedFreeRects(mergedRects.map((o) => o.d));
 
-	const overlappedRectsIt = findOverlapped(mergedRects);
+	const overlappedRects = findOverlapped(mergedRects);
+	console.log("overlappedRects.length", overlappedRects.length);
 
 	// DEBUG:
-	printMergedFreeRects(overlappedRectsIt.getDataInArray().map((o) => o.d));
+	printMergedFreeRects(overlappedRects.map((o) => o.d));
 
-	const overlappedRectsArr = overlappedRectsIt.getDataInArray();
-	shuffle(overlappedRectsArr);
-	assignAdjacentItems(overlappedRectsArr);
+	// const overlappedRectsArr = overlappedRectsIt.getDataInArray();
+	// shuffle(overlappedRectsArr);
 
 	// const wCBST = new ClosestBST();
 	// const hCBST = new ClosestBST();
@@ -152,7 +152,7 @@ export const arrangeAffectedItems = (
 		// try replacing first
 	}
 
-	arrange(affectedItems, overlappedRectsIt, overlappedRectsArr, arrangeFor);
+	// arrange(affectedItems, overlappedRectsIt, overlappedRectsArr, arrangeFor);
 };
 
 export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
@@ -476,14 +476,22 @@ export const findOverlapped = (mergedRects) => {
 
 	const itArr = it.getDataInArray();
 
-	const alen = itArr.length;
 	let res, rlen;
 
-	for (let i = 0; i < alen; i++) {
+	for (let i = 0; i < len; i++) {
 		res = it.findAll(itArr[i].interval);
 		rlen = res.length;
 		for (let j = 0; j < rlen; j++) {
 			if (
+				itArr[i].d.rect &&
+				res[j].d.rect &&
+				isRectInside(itArr[i].d.rect, res[j].d.rect) &&
+				itArr[i].d.id !== res[j].d.id
+			) {
+				res[j].d.rect = null;
+			} else if (
+				itArr[i].d.rect &&
+				res[j].d.rect &&
 				doRectsOverlap(itArr[i].d.rect, res[j].d.rect) &&
 				itArr[i].d.id !== res[j].d.id
 			) {
@@ -491,12 +499,22 @@ export const findOverlapped = (mergedRects) => {
 			}
 		}
 	}
-	return it;
-};
 
-export const assignAdjacentItems = (freeRects) => {
-	const mpdLen = mpd.length;
-	const frLen = freeRects.length;
+	const resArr = new Array(len);
+	let count = 0;
+	for (let i = 0; i < len; i++) {
+		if (itArr[i].d.rect) {
+			resArr[count++] = itArr[i];
+		}
+	}
+
+	const filteredResArr = new Array(count);
+	for (let i = 0; i < count; i++) {
+		filteredResArr[i] = resArr[i];
+	}
+
+	return filteredResArr;
+	// return it.getDataInArray();
 };
 
 export const arrange = (
