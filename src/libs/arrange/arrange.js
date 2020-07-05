@@ -13,8 +13,13 @@ import {
 	fixMinYMaxY,
 	getItemsInWorkSpace,
 	getItemDimenWithMargin,
-	// getAffectedItemsScore,
+	getItemDimenWithRBMargin,
+	getAffectedItemsScore,
 	// assignScoreToFreeRects,
+	cBSTRectComparator,
+	cBSTLComp,
+	cBSTRComp,
+	getPerfectMatch,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -28,6 +33,7 @@ import {
 	areRectsIdentical,
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
+import { filter } from "../utils/utils";
 import Stack from "../stack/stack";
 import {
 	printUnmergedFreeRects,
@@ -93,15 +99,15 @@ export const arrangeAffectedItems = (
 	}
 
 	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
-	const itemsInWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
+	const itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
 
 	// sort items in workspace by lt.x  i.e horizontally
-	itemsInWorkSpace.sort((a, b) => a.x - b.x);
+	itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 	const freeRectsItY = sweepLine(
 		combinedWorkSpaceRect,
 		combinedWorkSpaceRectCo,
-		itemsInWorkSpace
+		itemsInCombinedWorkSpace
 	);
 
 	const freeRectsArr = freeRectsItY.getDataInArray();
@@ -140,17 +146,6 @@ export const arrangeAffectedItems = (
 	// DEBUG:
 	printMergedFreeRects(overlappedRects.map((o) => o.d));
 
-	// const overlappedRectsArr = overlappedRectsIt.getDataInArray();
-	// shuffle(overlappedRectsArr);
-
-	// const wCBST = new ClosestBST();
-	// const hCBST = new ClosestBST();
-
-	// const { maxScore, maxHWSum } = assignScoreToFreeRects(overlappedRectsArr);
-	// const afItemsScoreArr = getAffectedItemsScore(affectedItems, maxHWSum);
-	// shuffle(afItemsScoreArr);
-	// const scoreCBST = new ClosestBST({ data: afItemsScoreArr });
-
 	if (affectedItems.length === 1) {
 		// resize or move to the desired coordinates
 		// this condition should be on top
@@ -160,7 +155,15 @@ export const arrangeAffectedItems = (
 		// try replacing first
 	}
 
-	// arrange(affectedItems, overlappedRectsIt, overlappedRectsArr, arrangeFor);
+	arrange(
+		affectedItems,
+		overlappedRects,
+		topWorkSpace,
+		bottomWorkSpace,
+		combinedWorkSpaceRectCo,
+		itemsInCombinedWorkSpace,
+		arrangeFor
+	);
 
 	const p2 = performance.now();
 	console.log("arrange total: ", p2 - p1);
@@ -533,7 +536,62 @@ export const findOverlapped = (mergedRects) => {
 
 export const arrange = (
 	affectedItems,
-	overlappedRectsIt,
-	overlappedRectsArr,
+	overlappedRects,
+	topWorkSpace,
+	bottomWorkSpace,
+	combinedWorkSpaceRectCo,
 	arrangeFor
-) => {};
+) => {
+	console.log("overlappedRects", overlappedRects);
+
+	shuffle(overlappedRects);
+
+	const orLen = overlappedRects.length;
+	// last element is moved or resized item;
+	const aILen = affectedItems.length - 1;
+	const _affectedItems = new Array(aILen);
+	for (let i = 0; i < aILen; i++) {
+		_affectedItems[i] = affectedItems[i];
+	}
+
+	const wCBST = new ClosestBST();
+
+	for (let i = 0; i < orLen; i++) {
+		wCBST.insert({
+			v: overlappedRects[i].d.rect.width,
+			d: overlappedRects[i].d,
+		});
+	}
+
+	const affectedItemsStack = new Stack();
+	const laterAffectedItemsStack = new Stack();
+
+	const affectedItemsWithScore = getAffectedItemsScore(_affectedItems);
+	for (let i = 0; i < aILen; i++) {
+		affectedItemsStack.push(affectedItemsWithScore[i]);
+	}
+
+	let top;
+	let aItem;
+	let wCBSTRes;
+
+	while (!affectedItemsStack.isEmpty()) {
+		top = affectedItemsStack.pop();
+
+		aItem = mpd[top.d];
+
+		wCBSTRes = wCBST.findUsingComparator(
+			cBSTRectComparator(getItemDimenWithRBMargin(aItem)),
+			cBSTLComp(aItem.width),
+			cBSTRComp
+		);
+
+		const cBSTRes = filter([...wCBSTRes]);
+		const perfectMatch = getPerfectMatch(cBSTRes, aItem.width + aItem.height);
+
+		console.log("wCBSTRes", wCBSTRes);
+		console.log("cBSTRes", cBSTRes);
+		console.log("perfectMatch", perfectMatch);
+		break;
+	}
+};

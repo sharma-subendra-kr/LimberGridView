@@ -199,9 +199,39 @@ export const getItemDimenWithMargin = (item) => {
 	return _item;
 };
 
-// export const getScore = (rect, maxHWSum) => {
-// 	return (rect.width + rect.height) / maxHWSum;
-// };
+export const getItemDimenWithRBMargin = (item) => {
+	const _item = { ...item };
+	_item.width += publicConstants.MARGIN;
+	_item.height += publicConstants.MARGIN;
+
+	return _item;
+};
+
+export const cBSTRectComparator = function (item) {
+	return (node, v, d) => {
+		if (node.d.rect.width >= item.width && node.d.rect.height >= item.height) {
+			return true;
+		}
+		return false;
+	};
+};
+
+export const cBSTLComp = function (v) {
+	return (node) => {
+		if (node.v > v) {
+			return true;
+		}
+		return false;
+	};
+};
+
+export const cBSTRComp = function () {
+	return true;
+};
+
+export const getScore = (rect, maxHWSum) => {
+	return (rect.width + rect.height) / maxHWSum;
+};
 
 // export const assignScoreToFreeRects = (freeRects) => {
 // 	const len = freeRects.length;
@@ -225,29 +255,50 @@ export const getItemDimenWithMargin = (item) => {
 // 	return { maxScore, maxHWSum };
 // };
 
-// export const getAffectedItemsScore = (affectedItems, maxHWSum) => {
-// 	const len = affectedItems.length;
-// 	let item;
-// 	let score;
-// 	let maxHeight = 0;
-// 	let maxWidth = 0;
-// 	// const scoreMap = {};
-// 	const scoreArr = new Array(len);
-// 	for (let i = 0; i < len; i++) {
-// 		item = mpd[affectedItems[i]];
-// 		score = getScore(item, maxHWSum);
-// 		// scoreMap[affectedItems[i]] = score;
-// 		scoreArr[i] = { v: score, d: affectedItems[i] };
+export const getAffectedItemsScore = (affectedItems) => {
+	const len = affectedItems.length;
+	let item;
+	let maxHeight = 0;
+	let maxWidth = 0;
+	let maxHWSum = 0;
 
-// 		if (item.width > maxWidth) {
-// 			maxWidth = item.width;
-// 		}
+	let score;
 
-// 		if (item.height > maxHeight) {
-// 			maxHeight = item.height;
-// 		}
-// 	}
+	for (let i = 0; i < len; i++) {
+		item = mpd[affectedItems[i]];
 
-// 	// return scoreMap;
-// 	return scoreArr;
-// };
+		if (item.width > maxWidth) {
+			maxWidth = item.width;
+		}
+
+		if (item.height > maxHeight) {
+			maxHeight = item.height;
+		}
+	}
+
+	maxHWSum = maxWidth + maxHeight;
+
+	const scoreArr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		item = mpd[affectedItems[i]];
+
+		score = getScore(item, maxHWSum);
+		scoreArr[i] = { score, d: affectedItems[i] };
+	}
+
+	scoreArr.sort((a, b) => a.score - b.score);
+
+	return scoreArr;
+};
+
+export const getPerfectMatch = (arr, hwSum) => {
+	const len = arr.length;
+
+	for (let i = 0; i < len; i++) {
+		arr[i].d.score = getScore(arr[i].d.rect, hwSum);
+	}
+
+	arr.sort((a, b) => a.d.score - b.d.score);
+
+	return arr[0];
+};
