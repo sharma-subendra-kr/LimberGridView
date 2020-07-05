@@ -33,6 +33,10 @@ const e = {
 	$el: {},
 	$limberGridView: [],
 	$limberGridViewItems: [],
+	$limberGridViewDebugMergedTempRects: [],
+	$limberGridViewDebugStackTopRect: undefined,
+	$limberGridViewDebugResultStackRects: [],
+	$limberGridViewDebugStackRects: [],
 	$limberGridViewDebugUnmergedRects: [],
 	$limberGridViewDebugMergedRects: [],
 	$limberGridViewContainer: [],
@@ -44,63 +48,79 @@ const e = {
 	$limberGridViewAddItemOnTouchHoldGuide: [],
 };
 
-const set$body = function(elm) {
+const set$body = function (elm) {
 	e.$body = elm;
 };
 
-const set$bodyPseudoEl = function(elm) {
+const set$bodyPseudoEl = function (elm) {
 	e.$bodyPseudoEl = elm;
 };
 
-const set$limberGridViewBodyPseudoItems = function(elm) {
+const set$limberGridViewBodyPseudoItems = function (elm) {
 	e.$limberGridViewBodyPseudoItems = elm;
 };
 
-const set$el = function(elm) {
+const set$el = function (elm) {
 	e.$el = elm;
 };
 
-const set$limberGridView = function(elm) {
+const set$limberGridView = function (elm) {
 	e.$limberGridView = elm;
 };
 
-const set$limberGridViewItems = function(elm) {
+const set$limberGridViewItems = function (elm) {
 	e.$limberGridViewItems = elm;
 };
 
-const set$limberGridViewDebugUnmergedRects = function(elm) {
+const set$limberGridViewDebugMergedTempRects = function (elm) {
+	e.$limberGridViewDebugMergedTempRects = elm;
+};
+
+const set$limberGridViewDebugStackTopRect = function (elm) {
+	e.$limberGridViewDebugStackTopRect = elm;
+};
+
+const set$limberGridViewDebugStackRects = function (elm) {
+	e.$limberGridViewDebugStackRects = elm;
+};
+
+const set$limberGridViewDebugResultStackRects = function (elm) {
+	e.$limberGridViewDebugResultStackRects = elm;
+};
+
+const set$limberGridViewDebugUnmergedRects = function (elm) {
 	e.$limberGridViewDebugUnmergedRects = elm;
 };
 
-const set$limberGridViewDebugMergedRects = function(elm) {
+const set$limberGridViewDebugMergedRects = function (elm) {
 	e.$limberGridViewDebugMergedRects = elm;
 };
 
-const set$limberGridViewContainer = function(elm) {
+const set$limberGridViewContainer = function (elm) {
 	e.$limberGridViewContainer = elm;
 };
 
-const set$limberGridViewStyle = function(elm) {
+const set$limberGridViewStyle = function (elm) {
 	e.$limberGridViewStyle = elm;
 };
 
-const set$limberGridViewGridPseudoItems = function(elm) {
+const set$limberGridViewGridPseudoItems = function (elm) {
 	e.$limberGridViewGridPseudoItems = elm;
 };
 
-const set$limberGridViewMoveGuide = function(elm) {
+const set$limberGridViewMoveGuide = function (elm) {
 	e.$limberGridViewMoveGuide = elm;
 };
 
-const set$limberGridViewHeightAdjustGuide = function(elm) {
+const set$limberGridViewHeightAdjustGuide = function (elm) {
 	e.$limberGridViewHeightAdjustGuide = elm;
 };
 
-const set$limberGridViewAddItemGuide = function(elm) {
+const set$limberGridViewAddItemGuide = function (elm) {
 	e.$limberGridViewAddItemGuide = elm;
 };
 
-const set$limberGridViewAddItemOnTouchHoldGuide = function(elm) {
+const set$limberGridViewAddItemOnTouchHoldGuide = function (elm) {
 	e.$limberGridViewAddItemOnTouchHoldGuide = elm;
 };
 
@@ -112,6 +132,10 @@ export {
 	set$el,
 	set$limberGridView,
 	set$limberGridViewItems,
+	set$limberGridViewDebugMergedTempRects,
+	set$limberGridViewDebugStackTopRect,
+	set$limberGridViewDebugStackRects,
+	set$limberGridViewDebugResultStackRects,
 	set$limberGridViewDebugUnmergedRects,
 	set$limberGridViewDebugMergedRects,
 	set$limberGridViewContainer,

@@ -348,3 +348,79 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 	font-size: 30px;
 }
+
+.limberGridViewDebugResultStackRects {
+	border: solid 1px green;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: blue;
+	font-weight: 400;
+}
+
+.limberGridViewDebugResultStackRects:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
+
+.limberGridViewDebugStackRects {
+	border: solid 1px black;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: blue;
+	font-weight: 400;
+}
+
+.limberGridViewDebugStackRects:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
+
+.limberGridViewDebugMergedTempRects {
+	border: solid 1px saddlebrown;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: blue;
+	font-weight: 400;
+}
+
+.limberGridViewDebugMergedTempRects:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
+
+.limberGridViewDebugStackTopRect {
+	border: solid 3px aqua;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: blue;
+	font-weight: 400;
+}
+
+.limberGridViewDebugStackTopRect:hover {
+	border-width: 6px;
+	font-weight: 400;
+	font-size: 30px;
+}

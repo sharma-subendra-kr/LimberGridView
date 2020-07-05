@@ -29,7 +29,14 @@ import {
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
 import Stack from "../stack/stack";
-import { printUnmergedFreeRects, printMergedFreeRects } from "../debug/debug";
+import {
+	printUnmergedFreeRects,
+	printMergedFreeRects,
+	printResultStackRects,
+	printStackRects,
+	printMergedTempRects,
+	printStackTopRect,
+} from "../debug/debug";
 window.mergeRects = mergeRects;
 export const arrangeAffectedItems = (
 	affectedItems,
@@ -38,6 +45,7 @@ export const arrangeAffectedItems = (
 	movedBottomY,
 	arrangeFor
 ) => {
+	const p1 = performance.now();
 	const { minY, maxY } = getMinMaxY(
 		affectedItems,
 		resizedBottomY,
@@ -153,6 +161,9 @@ export const arrangeAffectedItems = (
 	}
 
 	// arrange(affectedItems, overlappedRectsIt, overlappedRectsArr, arrangeFor);
+
+	const p2 = performance.now();
+	console.log("arrange total: ", p2 - p1);
 };
 
 export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
@@ -359,7 +370,6 @@ export const assignAdjacentRects = (rectsItY, rectsItX) => {
 export const mergeFreeRects = (freeRectsArr) => {
 	const stack = new Stack();
 	const resultStack = new Stack();
-	const stackMap = {};
 
 	let adjacents,
 		adj,
@@ -382,6 +392,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 		stack.push(freeRectsArr[k]);
 		while (!stack.isEmpty()) {
 			top = stack.pop();
+			// printStackTopRect(top.d);
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
@@ -414,9 +425,11 @@ export const mergeFreeRects = (freeRectsArr) => {
 									ref: null,
 								},
 							};
+							// printMergedTempRects(mergedObject.d);
 
 							filterAdjacents(mergedObject);
 							stack.push(mergedObject);
+							// printStackRects(stack.getData().map((o) => o.d));
 
 							delete top.d.a[keys[i]];
 							delete adj.d.a[top.d.id];
@@ -438,6 +451,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 
 			if (!breakSig) {
 				resultStack.push(top);
+				// printResultStackRects(resultStack.getData().map((o) => o.d));
 				continue;
 			}
 		}
