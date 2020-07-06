@@ -62,9 +62,9 @@ export const getBottomMax = () => {
 };
 
 export const getTopBottomWS = (workSpaceRectCo) => {
-	let topWorkSpace, bottomWorkSpace;
+	let topWorkSpaceCo, bottomWorkSpaceCo;
 	if (workSpaceRectCo.tl.y > 0) {
-		topWorkSpace = {
+		topWorkSpaceCo = {
 			tl: { x: publicConstants.MARGIN, y: publicConstants.MARGIN },
 			tr: {
 				x: privateConstants.WIDTH - publicConstants.MARGIN,
@@ -81,7 +81,7 @@ export const getTopBottomWS = (workSpaceRectCo) => {
 	const bottomMax = getBottomMax();
 
 	if (bottomMax > workSpaceRectCo.bl.y) {
-		bottomWorkSpace = {
+		bottomWorkSpaceCo = {
 			tl: { x: publicConstants.MARGIN, y: workSpaceRectCo.bl.y },
 			tr: {
 				x: privateConstants.WIDTH - publicConstants.MARGIN,
@@ -124,7 +124,7 @@ export const getTopBottomWS = (workSpaceRectCo) => {
 	// 	};
 	// }
 
-	return { topWorkSpace, bottomWorkSpace };
+	return { topWorkSpaceCo, bottomWorkSpaceCo };
 };
 
 export const fixMinYMaxY = (rectCo) => {

@@ -85,16 +85,16 @@ export const arrangeAffectedItems = (
 		br: { ...workSpaceRectCo.br },
 		bl: { ...workSpaceRectCo.bl },
 	};
-	const { topWorkSpace, bottomWorkSpace } = getTopBottomWS(workSpaceRectCo);
-	const shrinkRes = shrinkTopBottomWS(topWorkSpace, bottomWorkSpace);
+	const { topWorkSpaceCo, bottomWorkSpaceCo } = getTopBottomWS(workSpaceRectCo);
+	const shrinkRes = shrinkTopBottomWS(topWorkSpaceCo, bottomWorkSpaceCo);
 
 	if (shrinkRes.integrateTop) {
-		combinedWorkSpaceRectCo.tl = { ...topWorkSpace.tl };
-		combinedWorkSpaceRectCo.tr = { ...topWorkSpace.tr };
+		combinedWorkSpaceRectCo.tl = { ...topWorkSpaceCo.tl };
+		combinedWorkSpaceRectCo.tr = { ...topWorkSpaceCo.tr };
 	}
 	if (shrinkRes.integrateBottom) {
-		combinedWorkSpaceRectCo.br = { ...bottomWorkSpace.br };
-		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpace.bl };
+		combinedWorkSpaceRectCo.br = { ...bottomWorkSpaceCo.br };
+		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpaceCo.bl };
 	}
 
 	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
@@ -157,8 +157,8 @@ export const arrangeAffectedItems = (
 	arrange(
 		affectedItems,
 		overlappedRects,
-		topWorkSpace,
-		bottomWorkSpace,
+		getRectObjectFromCo(topWorkSpaceCo),
+		getRectObjectFromCo(bottomWorkSpaceCo),
 		combinedWorkSpaceRectCo,
 		itemsInCombinedWorkSpace,
 		arrangeFor
@@ -505,7 +505,16 @@ export const findOverlapped = (mergedRects) => {
 				itArr[i].d.id !== res[j].d.id
 			) {
 				res[j].d.rect = null;
-			} else if (
+				delete itArr[i].d.o[res[j].d.id];
+			}
+		}
+	}
+
+	for (let i = 0; i < len; i++) {
+		res = it.findAll(itArr[i].interval);
+		rlen = res.length;
+		for (let j = 0; j < rlen; j++) {
+			if (
 				itArr[i].d.rect &&
 				res[j].d.rect &&
 				doRectsOverlap(itArr[i].d.rect, res[j].d.rect) &&
@@ -573,9 +582,30 @@ export const arrange = (
 	let top;
 	let aItem;
 	let wCBSTRes;
+	let updatedItem;
+	let diff;
+	let diffLen;
+	let diffStack;
+	let diffObj;
+
+	// overlapped
+	let olpd;
+	// overlapping keys
+	let oKeys;
+	let oKeysLen;
+	// indirect operlapped
+	let iolpd;
+	// indirect overlapping keys
+	let ioKeys;
+	let ioKeysLen;
+
+	let directOverlaps;
+	let indirectOverlaps;
 
 	while (!affectedItemsStack.isEmpty()) {
 		top = affectedItemsStack.pop();
+		directOverlaps = {};
+		indirectOverlaps = {};
 
 		aItem = mpd[top.d];
 
@@ -586,11 +616,90 @@ export const arrange = (
 		);
 
 		const cBSTRes = filter([...wCBSTRes]);
-		const perfectMatch = getPerfectMatch(cBSTRes, aItem.width + aItem.height);
+		const pm = getPerfectMatch(cBSTRes, aItem.width + aItem.height);
+
+		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
+			console.log("skipped for last");
+			laterAffectedItemsStack.push(top);
+		} else {
+			diffStack = new Stack();
+
+			updatedItem = {
+				...aItem,
+				x: pm.d.rect.x,
+				y: pm.d.rect.y,
+			};
+			wCBST.remove(pm.v, pm.d);
+
+			diff = subtractRect(pm.d.rect, updatedItem);
+			diffLen = diff?.length || 0;
+			for (let i = 0; i < diffLen; i++) {
+				diffObj = {
+					v: diff[i].width,
+					d: {
+						rect: diff[i],
+						o: {},
+					},
+				};
+
+				diffStack.push(diffObj);
+			}
+
+			directOverlaps = { ...pm.d.o };
+			oKeys = Object.keys(pm.d.o);
+			oKeysLen = oKeys.length;
+			for (let j = 0; j < oKeysLen; j++) {
+				olpd = pm.d.o[oKeys[j]];
+				delete olpd.d.o[pm.d.id];
+
+				// if diffLen is 0, this overlapping rect will be put back later after operations
+				wCBST.remove(olpd.v, olpd.d);
+
+				if (doRectsOverlap(olpd.d.rect, updatedItem)) {
+					diff = subtractRect(olpd.d.rect, updatedItem);
+					diffLen = diff?.length || 0;
+
+					if (diffLen) {
+						for (let k = 0; k < diffLen; k++) {
+							diffObj = {
+								v: diff[k].width,
+								d: {
+									rect: diff[k],
+									o: {},
+								},
+							};
+
+							diffStack.push(diffObj);
+						}
+					}
+				} else {
+					diffStack.push(diffObj);
+				}
+
+				ioKeys = Object.keys(olpd.d.o);
+				ioKeysLen = ioKeys.length;
+				for (let k = 0; k < ioKeysLen; k++) {
+					iolpd = olpd.d.o[ioKeys[k]];
+					if (!directOverlaps[ioKeys[k]]) {
+						indirectOverlaps[ioKeys[k]] = iolpd;
+					}
+				}
+			}
+
+			// now merge the rects in diff stack and put the merged rects in wCBST tree
+
+			console.log("directOverlaps", directOverlaps);
+			console.log("indirectOverlaps", indirectOverlaps);
+			console.log("diffStack", diffStack.getData());
+		}
 
 		// console.log("wCBSTRes", wCBSTRes);
 		// console.log("cBSTRes", cBSTRes);
-		// console.log("perfectMatch", perfectMatch);
-		break;
+		console.log("perfect match", pm);
+		// break;
+	}
+
+	while (!laterAffectedItemsStack.isEmpty()) {
+		top = laterAffectedItemsStack.pop();
 	}
 };
