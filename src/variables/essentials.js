@@ -36,48 +36,43 @@ const initialPositionData = [];
 const initialGridData = {};
 let callbacks = {};
 const serializedPositionData = {};
-let DEBUG_MODE = true;
 
-const setElementId = function(id) {
+const setElementId = function (id) {
 	ev.elementID = id;
 };
 
-const setPseudoElementID = function(id) {
+const setPseudoElementID = function (id) {
 	ev.pseudoElementID = id;
 };
 
-const setPositionData = function(pos) {
+const setPositionData = function (pos) {
 	positionData.length = 0;
 	Object.assign(positionData, JSON.parse(JSON.stringify(pos)));
 };
 
-const setModifiedPositionData = function(pos) {
+const setModifiedPositionData = function (pos) {
 	modifiedPositionData.length = 0;
 	Object.assign(modifiedPositionData, JSON.parse(JSON.stringify(pos)));
 };
 
-const setInitialPositionData = function(pos) {
+const setInitialPositionData = function (pos) {
 	initialPositionData.length = 0;
 	Object.assign(initialPositionData, JSON.parse(JSON.stringify(pos)));
 };
 
-const setInitialGridData = function(grid) {
+const setInitialGridData = function (grid) {
 	emptyObject(initialGridData);
 	Object.assign(initialGridData, JSON.parse(JSON.stringify(grid)));
 };
 
-const setCallbacks = function(cbs) {
+const setCallbacks = function (cbs) {
 	emptyObject(callbacks);
 	Object.assign(callbacks, cbs);
 };
 
-const setSerializedPositionData = function(serPos) {
+const setSerializedPositionData = function (serPos) {
 	emptyObject(serializedPositionData);
 	Object.assign(serializedPositionData, serPos);
-};
-
-const setDebugMode = function(flag) {
-	DEBUG_MODE = flag;
 };
 
 export {
@@ -88,7 +83,6 @@ export {
 	initialGridData,
 	callbacks,
 	serializedPositionData,
-	DEBUG_MODE,
 };
 export {
 	setElementId,
@@ -99,5 +93,4 @@ export {
 	setInitialGridData,
 	setCallbacks,
 	setSerializedPositionData,
-	setDebugMode,
 };

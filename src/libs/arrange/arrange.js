@@ -3,7 +3,6 @@ import { ClosestBST } from "closest-bst";
 import {
 	positionData as pd,
 	modifiedPositionData as mpd,
-	DEBUG_MODE,
 } from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
@@ -589,9 +588,9 @@ export const arrange = (
 		const cBSTRes = filter([...wCBSTRes]);
 		const perfectMatch = getPerfectMatch(cBSTRes, aItem.width + aItem.height);
 
-		console.log("wCBSTRes", wCBSTRes);
-		console.log("cBSTRes", cBSTRes);
-		console.log("perfectMatch", perfectMatch);
+		// console.log("wCBSTRes", wCBSTRes);
+		// console.log("cBSTRes", cBSTRes);
+		// console.log("perfectMatch", perfectMatch);
 		break;
 	}
 };
