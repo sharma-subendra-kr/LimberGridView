@@ -35,7 +35,9 @@ export const printUnmergedFreeRects = (arr) => {
 
 			node.setAttribute(
 				"title",
-				`${arr[i].id}: ${Object.keys(arr[i].a).map((o) => arr[i].a[o].d.id)}`
+				`${arr[i].id}: ${Object.keys(arr[i]?.a || []).map(
+					(o) => arr[i].a[o].d.id
+				)}`
 			);
 			node.innerHTML = arr[i].id;
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;

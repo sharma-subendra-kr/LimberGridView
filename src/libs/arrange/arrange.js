@@ -58,6 +58,8 @@ export const arrangeAffectedItems = (
 		movedBottomY
 	);
 
+	const idCount = { idCount: 0 };
+
 	const workSpaceRectCo = {
 		tl: { x: publicConstants.MARGIN, y: minY },
 		tr: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: minY },
@@ -103,11 +105,13 @@ export const arrangeAffectedItems = (
 	// sort items in workspace by lt.x  i.e horizontally
 	itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
-	const freeRectsItY = sweepLine(
+	const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
 		combinedWorkSpaceRect,
 		combinedWorkSpaceRectCo,
-		itemsInCombinedWorkSpace
+		itemsInCombinedWorkSpace,
+		idCount.idCount
 	);
+	idCount.idCount = lastId1;
 
 	const freeRectsArr = freeRectsItY.getDataInArray();
 	shuffle(freeRectsArr);
@@ -134,7 +138,11 @@ export const arrangeAffectedItems = (
 	// DEBUG:
 	printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 
-	const mergedRects = mergeFreeRects(freeRectsArr);
+	const { mergedRects, idCount: lastId2 } = mergeFreeRects(
+		freeRectsArr,
+		idCount.idCount
+	);
+	idCount.idCount = lastId2;
 
 	// DEBUG:
 	printMergedFreeRects(mergedRects.map((o) => o.d));
@@ -160,7 +168,7 @@ export const arrangeAffectedItems = (
 		getRectObjectFromCo(topWorkSpaceCo),
 		getRectObjectFromCo(bottomWorkSpaceCo),
 		combinedWorkSpaceRectCo,
-		itemsInCombinedWorkSpace,
+		idCount.idCount,
 		arrangeFor
 	);
 
@@ -287,16 +295,19 @@ export const sweepLineBottom = (area, items) => {
 	return resultPoint;
 };
 
-export const sweepLine = (area, areaCo, items) => {
+export const sweepLine = (area, areaCo, items, lastId) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
+
+	let idCount = lastId;
+
 	const it = new IntervalTreesIterative();
 
 	it.insert({
 		low: areaCo.tl.y,
 		high: areaCo.bl.y,
-		d: { rect: area, a: {}, o: {}, ref: null },
+		d: { id: idCount++, rect: area, a: {}, o: {}, ref: null },
 	});
 
 	let tempItem;
@@ -335,6 +346,7 @@ export const sweepLine = (area, areaCo, items) => {
 						low: diff[k].tl.y,
 						high: diff[k].bl.y,
 						d: {
+							id: idCount++,
 							rect: getRectObjectFromCo(diff[k]),
 							a: {},
 							o: {},
@@ -348,7 +360,7 @@ export const sweepLine = (area, areaCo, items) => {
 		}
 	}
 
-	return it;
+	return { it, idCount };
 };
 
 export const assignAdjacentRects = (rectsItY, rectsItX) => {
@@ -369,7 +381,7 @@ export const assignAdjacentRects = (rectsItY, rectsItX) => {
 	}
 };
 
-export const mergeFreeRects = (freeRectsArr) => {
+export const mergeFreeRects = (freeRectsArr, lastId) => {
 	const stack = new Stack();
 	const resultStack = new Stack();
 
@@ -383,8 +395,8 @@ export const mergeFreeRects = (freeRectsArr) => {
 		mergedRects,
 		mergeRectsLen;
 	let breakSig = false;
-	let idCount = freeRectsArr.length;
-	const freeRectsLen = idCount;
+	let idCount = lastId;
+	const freeRectsLen = freeRectsArr.length;
 
 	for (let k = 0; k < freeRectsLen; k++) {
 		if (freeRectsArr[k].d.ref !== null) {
@@ -407,6 +419,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 				while (adj?.d?.ref) {
 					adj = adj.d.ref;
 				}
+
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
 				mergeRectsLen = mergedRects?.length || 0;
 				if (mergeRectsLen) {
@@ -459,7 +472,7 @@ export const mergeFreeRects = (freeRectsArr) => {
 		}
 	}
 
-	return resultStack.getData();
+	return { mergedRects: resultStack.getData(), idCount };
 };
 
 export const filterAdjacents = (mergedObject, visited) => {
@@ -548,9 +561,11 @@ export const arrange = (
 	topWorkSpace,
 	bottomWorkSpace,
 	combinedWorkSpaceRectCo,
+	lastId,
 	arrangeFor
 ) => {
 	console.log("overlappedRects", overlappedRects);
+	let idCount = lastId;
 
 	shuffle(overlappedRects);
 
@@ -585,8 +600,11 @@ export const arrange = (
 	let updatedItem;
 	let diff;
 	let diffLen;
-	let diffStack;
 	let diffObj;
+	let diffStack;
+	let diffStackData;
+	let diffStackDataLen;
+	let it;
 
 	// overlapped
 	let olpd;
@@ -615,11 +633,16 @@ export const arrange = (
 			cBSTRComp
 		);
 
+		if (!wCBSTRes.length) {
+			laterAffectedItemsStack.push(top);
+			continue;
+		}
+
 		const cBSTRes = filter([...wCBSTRes]);
 		const pm = getPerfectMatch(cBSTRes, aItem.width + aItem.height);
 
 		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
-			console.log("skipped for last");
+			// skipped for later
 			laterAffectedItemsStack.push(top);
 		} else {
 			diffStack = new Stack();
@@ -637,8 +660,11 @@ export const arrange = (
 				diffObj = {
 					v: diff[i].width,
 					d: {
+						id: idCount++,
 						rect: diff[i],
+						a: {},
 						o: {},
+						ref: null,
 					},
 				};
 
@@ -664,8 +690,11 @@ export const arrange = (
 							diffObj = {
 								v: diff[k].width,
 								d: {
+									id: idCount++,
 									rect: diff[k],
+									a: {},
 									o: {},
+									ref: null,
 								},
 							};
 
@@ -673,7 +702,8 @@ export const arrange = (
 						}
 					}
 				} else {
-					diffStack.push(diffObj);
+					diffStack.push(olpd);
+					olpd.d.a = {};
 				}
 
 				ioKeys = Object.keys(olpd.d.o);
@@ -687,7 +717,25 @@ export const arrange = (
 			}
 
 			// now merge the rects in diff stack and put the merged rects in wCBST tree
+			diffStackData = diffStack.getData();
+			diffStackDataLen = diffStackData.length;
+			it = new IntervalTreesIterative();
+			for (let i = 0; i < diffStackDataLen; i++) {
+				it.insert({
+					low: diffStackData[i].d.rect.y,
+					high: diffStackData[i].d.rect.y + diffStackData[i].d.rect.height,
+					d: diffStackData[i].d,
+				});
+			}
 
+			assignAdjacentRects(it);
+			const { mergedRects, idCount: lastId1 } = mergeFreeRects(
+				diffStack.getData(),
+				idCount
+			);
+
+			printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
+			printMergedFreeRects(mergedRects.map((o) => o.d));
 			console.log("directOverlaps", directOverlaps);
 			console.log("indirectOverlaps", indirectOverlaps);
 			console.log("diffStack", diffStack.getData());
