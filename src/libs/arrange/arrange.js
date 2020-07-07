@@ -1,3 +1,29 @@
+/*
+
+This is a release of LimberGridView 0.0.0, brought to you by Subendra Kumar Sharma.
+This software is released under the GNU General Public License version 3, or (at your option) any later version.
+
+LimberGridView, a powerful JavaScript Libary that gives you flexible, movable, resizable(any size) and auto-arranging grids. 
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (sharma.subendra.kr@gmail.com, sharma.subendrakr@yahoo.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
 import { IntervalTreesIterative } from "interval-trees";
 import { ClosestBST } from "closest-bst";
 import {
@@ -597,38 +623,38 @@ export const arrange = (
 	let top;
 	let aItem;
 	let wCBSTRes;
-	let updatedItem;
-	let diff;
-	let diffLen;
-	let diffObj;
-	let diffStack;
-	let diffStackData;
-	let diffStackDataLen;
-	let it;
+	// let updatedItem;
+	// let diff;
+	// let diffLen;
+	// let diffObj;
+	// let diffStack;
+	// let diffStackData;
+	// let diffStackDataLen;
+	// let it;
 
-	// overlapped
-	let olpd;
-	// overlapping keys
-	let oKeys;
-	let oKeysLen;
-	// indirect operlapped
-	let iolpd;
-	// indirect overlapping keys
-	let ioKeys;
-	let ioKeysLen;
+	// // overlapped
+	// let olpd;
+	// // overlapping keys
+	// let oKeys;
+	// let oKeysLen;
+	// // indirect operlapped
+	// let iolpd;
+	// // indirect overlapping keys
+	// let ioKeys;
+	// let ioKeysLen;
 
-	let directOverlaps;
-	let indirectOverlaps;
+	// let directOverlaps;
+	// let indirectOverlaps;
 
 	while (!affectedItemsStack.isEmpty()) {
 		top = affectedItemsStack.pop();
-		directOverlaps = {};
-		indirectOverlaps = {};
+		// directOverlaps = {};
+		// indirectOverlaps = {};
 
 		aItem = mpd[top.d];
 
 		wCBSTRes = wCBST.findUsingComparator(
-			cBSTRectComparator(getItemDimenWithRBMargin(aItem)),
+			cBSTRectComparator(getItemDimenWithMargin(aItem)),
 			cBSTLComp(aItem.width),
 			cBSTRComp
 		);
@@ -645,100 +671,92 @@ export const arrange = (
 			// skipped for later
 			laterAffectedItemsStack.push(top);
 		} else {
-			diffStack = new Stack();
+			aItem.x = pm.d.rect.x + publicConstants.MARGIN;
+			aItem.y = pm.d.rect.y + publicConstants.MARGIN;
+			arrangeCleanUp(aItem, pm, wCBST, idCount);
 
-			updatedItem = {
-				...aItem,
-				x: pm.d.rect.x,
-				y: pm.d.rect.y,
-			};
-			wCBST.remove(pm.v, pm.d);
-
-			diff = subtractRect(pm.d.rect, updatedItem);
-			diffLen = diff?.length || 0;
-			for (let i = 0; i < diffLen; i++) {
-				diffObj = {
-					v: diff[i].width,
-					d: {
-						id: idCount++,
-						rect: diff[i],
-						a: {},
-						o: {},
-						ref: null,
-					},
-				};
-
-				diffStack.push(diffObj);
-			}
-
-			directOverlaps = { ...pm.d.o };
-			oKeys = Object.keys(pm.d.o);
-			oKeysLen = oKeys.length;
-			for (let j = 0; j < oKeysLen; j++) {
-				olpd = pm.d.o[oKeys[j]];
-				delete olpd.d.o[pm.d.id];
-
-				// if diffLen is 0, this overlapping rect will be put back later after operations
-				wCBST.remove(olpd.v, olpd.d);
-
-				if (doRectsOverlap(olpd.d.rect, updatedItem)) {
-					diff = subtractRect(olpd.d.rect, updatedItem);
-					diffLen = diff?.length || 0;
-
-					if (diffLen) {
-						for (let k = 0; k < diffLen; k++) {
-							diffObj = {
-								v: diff[k].width,
-								d: {
-									id: idCount++,
-									rect: diff[k],
-									a: {},
-									o: {},
-									ref: null,
-								},
-							};
-
-							diffStack.push(diffObj);
-						}
-					}
-				} else {
-					diffStack.push(olpd);
-					olpd.d.a = {};
-				}
-
-				ioKeys = Object.keys(olpd.d.o);
-				ioKeysLen = ioKeys.length;
-				for (let k = 0; k < ioKeysLen; k++) {
-					iolpd = olpd.d.o[ioKeys[k]];
-					if (!directOverlaps[ioKeys[k]]) {
-						indirectOverlaps[ioKeys[k]] = iolpd;
-					}
-				}
-			}
-
-			// now merge the rects in diff stack and put the merged rects in wCBST tree
-			diffStackData = diffStack.getData();
-			diffStackDataLen = diffStackData.length;
-			it = new IntervalTreesIterative();
-			for (let i = 0; i < diffStackDataLen; i++) {
-				it.insert({
-					low: diffStackData[i].d.rect.y,
-					high: diffStackData[i].d.rect.y + diffStackData[i].d.rect.height,
-					d: diffStackData[i].d,
-				});
-			}
-
-			assignAdjacentRects(it);
-			const { mergedRects, idCount: lastId1 } = mergeFreeRects(
-				diffStack.getData(),
-				idCount
-			);
-
-			printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
-			printMergedFreeRects(mergedRects.map((o) => o.d));
-			console.log("directOverlaps", directOverlaps);
-			console.log("indirectOverlaps", indirectOverlaps);
-			console.log("diffStack", diffStack.getData());
+			// diffStack = new Stack();
+			// updatedItem = {
+			// 	...aItem,
+			// 	x: pm.d.rect.x,
+			// 	y: pm.d.rect.y,
+			// };
+			// wCBST.remove(pm.v, pm.d);
+			// diff = subtractRect(pm.d.rect, updatedItem);
+			// diffLen = diff?.length || 0;
+			// for (let i = 0; i < diffLen; i++) {
+			// 	diffObj = {
+			// 		v: diff[i].width,
+			// 		d: {
+			// 			id: idCount++,
+			// 			rect: diff[i],
+			// 			a: {},
+			// 			o: {},
+			// 			ref: null,
+			// 		},
+			// 	};
+			// 	diffStack.push(diffObj);
+			// }
+			// directOverlaps = { ...pm.d.o };
+			// oKeys = Object.keys(pm.d.o);
+			// oKeysLen = oKeys.length;
+			// for (let j = 0; j < oKeysLen; j++) {
+			// 	olpd = pm.d.o[oKeys[j]];
+			// 	delete olpd.d.o[pm.d.id];
+			// 	// if diffLen is 0, this overlapping rect will be put back later after operations
+			// 	wCBST.remove(olpd.v, olpd.d);
+			// 	if (doRectsOverlap(olpd.d.rect, updatedItem)) {
+			// 		diff = subtractRect(olpd.d.rect, updatedItem);
+			// 		diffLen = diff?.length || 0;
+			// 		if (diffLen) {
+			// 			for (let k = 0; k < diffLen; k++) {
+			// 				diffObj = {
+			// 					v: diff[k].width,
+			// 					d: {
+			// 						id: idCount++,
+			// 						rect: diff[k],
+			// 						a: {},
+			// 						o: {},
+			// 						ref: null,
+			// 					},
+			// 				};
+			// 				diffStack.push(diffObj);
+			// 			}
+			// 		}
+			// 	} else {
+			// 		diffStack.push(olpd);
+			// 		olpd.d.a = {};
+			// 	}
+			// 	ioKeys = Object.keys(olpd.d.o);
+			// 	ioKeysLen = ioKeys.length;
+			// 	for (let k = 0; k < ioKeysLen; k++) {
+			// 		iolpd = olpd.d.o[ioKeys[k]];
+			// 		if (!directOverlaps[ioKeys[k]]) {
+			// 			indirectOverlaps[ioKeys[k]] = iolpd;
+			// 		}
+			// 	}
+			// }
+			// // now merge the rects in diff stack and put the merged rects in wCBST tree
+			// diffStackData = diffStack.getData();
+			// diffStackDataLen = diffStackData.length;
+			// it = new IntervalTreesIterative();
+			// for (let i = 0; i < diffStackDataLen; i++) {
+			// 	it.insert({
+			// 		low: diffStackData[i].d.rect.y,
+			// 		high: diffStackData[i].d.rect.y + diffStackData[i].d.rect.height,
+			// 		d: diffStackData[i].d,
+			// 	});
+			// }
+			// assignAdjacentRects(it);
+			// const { mergedRects, idCount: lastId1 } = mergeFreeRects(
+			// 	diffStack.getData(),
+			// 	idCount
+			// );
+			// printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
+			// printMergedFreeRects(mergedRects.map((o) => o.d));
+			// console.log("directOverlaps", directOverlaps);
+			// console.log("indirectOverlaps", indirectOverlaps);
+			// console.log("diffStack", diffStack.getData());
 		}
 
 		// console.log("wCBSTRes", wCBSTRes);
@@ -750,4 +768,155 @@ export const arrange = (
 	while (!laterAffectedItemsStack.isEmpty()) {
 		top = laterAffectedItemsStack.pop();
 	}
+};
+
+export const arrangeCleanUp = (aItem, pm, wCBST, idCount) => {
+	// let updatedItem;
+	let diff;
+	let diffLen;
+	let diffObj;
+	// let diffStack;
+	// let diffStackData;
+	// let diffStackDataLen;
+	// let it;
+
+	// overlapped
+	let olpd;
+	// overlapping keys
+	// let oKeys;
+	// let oKeysLen;
+	// indirect operlapped
+	let iolpd;
+	// indirect overlapping keys
+	let ioKeys;
+	let ioKeysLen;
+
+	// let directOverlaps;
+	const indirectOverlaps = {};
+
+	const diffStack = new Stack();
+
+	const itemWithMargins = {
+		x: aItem.x - publicConstants.MARGIN,
+		y: aItem.y - publicConstants.MARGIN,
+		width: aItem.width + publicConstants.MARGIN * 2,
+		height: aItem.height + publicConstants.MARGIN * 2,
+	};
+	wCBST.remove(pm.v, pm.d);
+
+	diff = subtractRect(pm.d.rect, itemWithMargins);
+	diffLen = diff?.length || 0;
+	for (let i = 0; i < diffLen; i++) {
+		diffObj = {
+			v: diff[i].width,
+			d: {
+				id: idCount++,
+				rect: diff[i],
+				a: {},
+				o: {},
+				ref: null,
+			},
+		};
+
+		diffStack.push(diffObj);
+	}
+
+	const directOverlaps = { ...pm.d.o };
+	const oKeys = Object.keys(pm.d.o);
+	const oKeysLen = oKeys.length;
+	for (let j = 0; j < oKeysLen; j++) {
+		olpd = pm.d.o[oKeys[j]];
+		delete olpd.d.o[pm.d.id];
+
+		// if diffLen is 0, this overlapping rect will be put back later after operations
+		wCBST.remove(olpd.v, olpd.d);
+
+		if (doRectsOverlap(olpd.d.rect, itemWithMargins)) {
+			diff = subtractRect(olpd.d.rect, itemWithMargins);
+			diffLen = diff?.length || 0;
+
+			if (diffLen) {
+				for (let k = 0; k < diffLen; k++) {
+					diffObj = {
+						v: diff[k].width,
+						d: {
+							id: idCount++,
+							rect: diff[k],
+							a: {},
+							o: {},
+							ref: null,
+						},
+					};
+
+					diffStack.push(diffObj);
+				}
+			}
+		} else {
+			diffStack.push(olpd);
+			olpd.d.a = {};
+		}
+
+		ioKeys = Object.keys(olpd.d.o);
+		ioKeysLen = ioKeys.length;
+		for (let k = 0; k < ioKeysLen; k++) {
+			iolpd = olpd.d.o[ioKeys[k]];
+			if (!directOverlaps[ioKeys[k]]) {
+				indirectOverlaps[ioKeys[k]] = iolpd;
+			}
+		}
+	}
+
+	// now merge the rects in diff stack and put the merged rects in wCBST tree
+	printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
+	const diffStackData = diffStack.getData();
+	const diffStackDataLen = diffStackData.length;
+	const it = new IntervalTreesIterative();
+	for (let i = 0; i < diffStackDataLen; i++) {
+		it.insert({
+			low: diffStackData[i].d.rect.y,
+			high: diffStackData[i].d.rect.y + diffStackData[i].d.rect.height,
+			d: diffStackData[i].d,
+		});
+	}
+
+	assignAdjacentRects(it);
+	const { mergedRects, idCount: lastId1 } = mergeFreeRects(
+		diffStack.getData(),
+		idCount
+	);
+	console.log("**mergedRects", mergedRects);
+	console.log("**indirectOverlaps", indirectOverlaps);
+	const _overlappedRects = findOverlapped([
+		...mergedRects,
+		...Object.values(indirectOverlaps),
+	]);
+
+	const _overlappedRectsLen = _overlappedRects.length;
+	const overlappedRects = new Array(_overlappedRectsLen);
+	let count = 0;
+	for (let i = 0; i < _overlappedRectsLen; i++) {
+		if (!indirectOverlaps[_overlappedRects[i].d.id]) {
+			overlappedRects[count++] = _overlappedRects[i];
+		}
+	}
+
+	const filteredOverlappedRects = filter(overlappedRects);
+
+	// const indirectOverlapsKeys = Object.keys(indirectOverlaps);
+	// const indirectOverlapsKeysLen = indirectOverlapsKeys.length;
+	// for (let i = 0; i < indirectOverlapsKeysLen; i++) {
+	// 	iolpd = indirectOverlaps[indirectOverlapsKeys[i]];
+	// 	for (let j = 0; j < overlappedRects.length; j++) {
+	// 		if (doRectsOverlap(overlappedRects[j].d.rect, iolpd.d.rect)) {
+	// 			iolpd.d.o[]
+	// 		}
+	// 	}
+	// }
+
+	printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
+	console.log("directOverlaps", directOverlaps);
+	console.log("indirectOverlaps", indirectOverlaps);
+	console.log("diffStack", diffStack.getData());
+
+	return { lastId1: idCount, result: filteredOverlappedRects };
 };
