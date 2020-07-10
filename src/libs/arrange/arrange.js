@@ -91,8 +91,8 @@ export const arrangeAffectedItems = (
 
 	// last element is moved or resized item;
 	const itemsToArrange = new Array(affectedItems.length - 1);
-	const aILen = affectedItems.length - 1;
-	for (let i = 0; i < aILen; i++) {
+	const iToALen = affectedItems.length - 1;
+	for (let i = 0; i < iToALen; i++) {
 		itemsToArrange[i] = affectedItems[i];
 	}
 
@@ -121,52 +121,91 @@ export const arrangeAffectedItems = (
 		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpaceCo.bl };
 	}
 
-	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
-	const itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
+	let combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
 
-	// sort items in workspace by lt.x  i.e horizontally
-	itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+	const shiftHeight =
+		(getPublicConstantByName("MIN_HEIGHT_AND_WIDTH") -
+			publicConstants.MARGIN * 2) /
+		2;
+	let arranged = {};
+	let arrangedCount = 0;
+	let workSpaceResizeCount = 0;
 
-	const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
-		combinedWorkSpaceRect,
-		combinedWorkSpaceRectCo,
-		itemsInCombinedWorkSpace,
-		idCount.idCount
-	);
-	idCount.idCount = lastId1;
+	while (arrangedCount !== iToALen) {
+		// sort items in workspace by lt.x  i.e horizontally
+		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
-	const freeRectsArr = freeRectsItY.getDataInArray();
-	shuffle(freeRectsArr);
+		const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
+			combinedWorkSpaceRect,
+			combinedWorkSpaceRectCo,
+			itemsInCombinedWorkSpace,
+			idCount.idCount
+		);
+		idCount.idCount = lastId1;
 
-	assignAdjacentRects(freeRectsItY);
+		const freeRectsArr = freeRectsItY.getDataInArray();
+		shuffle(freeRectsArr);
 
-	// DEBUG:
-	printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+		assignAdjacentRects(freeRectsItY);
 
-	const { mergedRects, idCount: lastId2 } = mergeFreeRects(
-		freeRectsArr,
-		idCount.idCount
-	);
-	idCount.idCount = lastId2;
+		// DEBUG:
+		printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 
-	// DEBUG:
-	printMergedFreeRects(mergedRects.map((o) => o.d));
+		const { mergedRects, idCount: lastId2 } = mergeFreeRects(
+			freeRectsArr,
+			idCount.idCount
+		);
+		idCount.idCount = lastId2;
 
-	const overlappedRects = findOverlapped(mergedRects);
-	console.log("overlappedRects.length", overlappedRects.length);
+		// DEBUG:
+		printMergedFreeRects(mergedRects.map((o) => o.d));
 
-	// DEBUG:
-	printMergedFreeRects(overlappedRects.map((o) => o.d));
+		const overlappedRects = findOverlapped(mergedRects);
+		console.log("overlappedRects.length", overlappedRects.length);
 
-	arrange(
-		itemsToArrange,
-		overlappedRects,
-		getRectObjectFromCo(topWorkSpaceCo),
-		getRectObjectFromCo(bottomWorkSpaceCo),
-		combinedWorkSpaceRectCo,
-		idCount.idCount,
-		arrangeFor
-	);
+		// DEBUG:
+		printMergedFreeRects(overlappedRects.map((o) => o.d));
+
+		const { arranged: _arranged, idCount: lastId3 } = arrange(
+			itemsToArrange.filter((id) => !arranged[id]),
+			overlappedRects,
+			getRectObjectFromCo(topWorkSpaceCo),
+			getRectObjectFromCo(bottomWorkSpaceCo),
+			combinedWorkSpaceRectCo,
+			idCount.idCount,
+			arrangeFor
+		);
+		idCount.idCount = lastId3;
+
+		arranged = { ...arranged, ..._arranged };
+
+		const _arrangedArr = Object.values(_arranged);
+
+		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
+
+		arrangedCount += _arrangedArr.length;
+
+		if (arrangedCount !== iToALen) {
+			// resize workSpace and push bottom workspace down
+			workSpaceResizeCount++;
+
+			workSpaceRectCo.br.y += shiftHeight;
+			workSpaceRectCo.bl.y += shiftHeight;
+			bottomWorkSpaceCo.tl.y += shiftHeight;
+			bottomWorkSpaceCo.tr.y += shiftHeight;
+			bottomWorkSpaceCo.br.y += shiftHeight;
+			bottomWorkSpaceCo.bl.y += shiftHeight;
+			combinedWorkSpaceRectCo.br.y += shiftHeight;
+			combinedWorkSpaceRectCo.bl.y += shiftHeight;
+
+			combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+		}
+	}
+
+	if (workSpaceResizeCount > 0) {
+		// push items in bottom workspace and below bottom workspace below
+	}
 
 	const p2 = performance.now();
 	console.log("arrange total: ", p2 - p1);
@@ -560,6 +599,7 @@ export const arrange = (
 	arrangeFor
 ) => {
 	let idCount = lastId;
+	const arranged = {};
 	console.log("overlappedRects", overlappedRects);
 
 	// construct closest bst
@@ -577,7 +617,6 @@ export const arrange = (
 
 	const itemsToArrangeStack = new Stack();
 	const itemsToArrangeLaterStack = new Stack();
-	const undoStack = new Stack();
 	const laterResult = new Stack();
 
 	const itemsToArrangeWithScore = getItemsToArrangeScore(itemsToArrange);
@@ -602,7 +641,6 @@ export const arrange = (
 
 		if (!wCBSTRes.length) {
 			itemsToArrangeLaterStack.push(top);
-			undoStack.push(top);
 			continue;
 		}
 
@@ -611,10 +649,13 @@ export const arrange = (
 		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
 			// skipped for later
 			itemsToArrangeLaterStack.push(top);
-			undoStack.push(top);
+			continue;
 		} else {
 			aItem.x = pm.d.rect.x + publicConstants.MARGIN;
 			aItem.y = pm.d.rect.y + publicConstants.MARGIN;
+
+			arranged[top.d] = aItem;
+
 			const { result, idCount: lastId1 } = arrangeCleanUp(
 				aItem,
 				pm,
@@ -633,6 +674,8 @@ export const arrange = (
 
 		console.log("perfect match", pm);
 	}
+
+	let breakSig = false;
 
 	while (!itemsToArrangeLaterStack.isEmpty()) {
 		top = itemsToArrangeLaterStack.pop();
@@ -647,22 +690,29 @@ export const arrange = (
 
 		if (!wCBSTRes.length) {
 			// increase workspace height
+			breakSig = true;
+			break;
 		}
 
 		const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
 
 		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
 			// increase workspace height
+			breakSig = true;
+			break;
 		} else {
-			laterResult.push({
+			const tempItem = {
 				...aItem,
 				x: pm.d.rect.x + publicConstants.MARGIN,
 				y: pm.d.rect.y + publicConstants.MARGIN,
+			};
+			laterResult.push({
+				i: top.d,
+				d: tempItem,
 			});
-			// aItem.x = pm.d.rect.x + publicConstants.MARGIN;
-			// aItem.y = pm.d.rect.y + publicConstants.MARGIN;
+
 			const { result, idCount: lastId1 } = arrangeCleanUp(
-				aItem,
+				tempItem,
 				pm,
 				wCBST,
 				idCount
@@ -679,6 +729,18 @@ export const arrange = (
 
 		console.log("perfect match", pm);
 	}
+
+	if (breakSig === false) {
+		while (!laterResult.isEmpty()) {
+			top = laterResult.pop();
+			mpd[top.i].x = mpd[top.i].d.x;
+			mpd[top.i].y = mpd[top.i].d.y;
+
+			arranged[top.i] = mpd[top.i];
+		}
+	}
+
+	return { arranged, idCount };
 };
 
 export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {

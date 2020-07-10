@@ -56,3 +56,4 @@ const getPublicConstantByName = function (name) {
 };
 
 export default constants;
+export { setPublicConstantByName, getPublicConstantByName };
