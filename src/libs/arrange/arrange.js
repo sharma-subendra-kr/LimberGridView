@@ -31,7 +31,9 @@ import {
 	modifiedPositionData as mpd,
 } from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+import publicConstants, {
+	getPublicConstantByName,
+} from "../../constants/publicConstants";
 import {
 	getMinMaxY,
 	getTopBottomWS,
@@ -39,7 +41,7 @@ import {
 	getItemsInWorkSpace,
 	getItemDimenWithMargin,
 	getItemDimenWithRBMargin,
-	getAffectedItemsScore,
+	getItemsToArrangeScore,
 	// assignScoreToFreeRects,
 	cBSTRectComparator,
 	cBSTLComp,
@@ -77,6 +79,9 @@ export const arrangeAffectedItems = (
 	arrangeFor
 ) => {
 	const p1 = performance.now();
+
+	const idCount = { idCount: 0 };
+
 	const { minY, maxY } = getMinMaxY(
 		affectedItems,
 		resizedBottomY,
@@ -84,7 +89,12 @@ export const arrangeAffectedItems = (
 		movedBottomY
 	);
 
-	const idCount = { idCount: 0 };
+	// last element is moved or resized item;
+	const itemsToArrange = new Array(affectedItems.length - 1);
+	const aILen = affectedItems.length - 1;
+	for (let i = 0; i < aILen; i++) {
+		itemsToArrange[i] = affectedItems[i];
+	}
 
 	const workSpaceRectCo = {
 		tl: { x: publicConstants.MARGIN, y: minY },
@@ -92,20 +102,6 @@ export const arrangeAffectedItems = (
 		br: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: maxY },
 		bl: { x: publicConstants.MARGIN, y: maxY },
 	};
-
-	// const { arrangeTopY, arrangeBottomY } = fixMinYMaxY(workSpaceRectCo);
-	// workSpaceRectCo.tl.y = arrangeTopY;
-	// workSpaceRectCo.tr.y = arrangeTopY;
-	// workSpaceRectCo.br.y = arrangeBottomY;
-	// workSpaceRectCo.bl.y = arrangeBottomY;
-	// const workSpaceRect = getRectObjectFromCo(workSpaceRectCo);
-	/*
-		Skipping these for simplicity for now
-		* 	if a item's top has to be placed at workSpaceRect.tl.y then it should be
-			adjusted to arrangeTopY without margin, resize item if necessary
-		*	if a item's bottom has to be placed at workSpaceRect.bl.y then it should be
-			adjusted to arrangeBottomY without margin resize item if necessary
-	*/
 
 	const combinedWorkSpaceRectCo = {
 		tl: { ...workSpaceRectCo.tl },
@@ -163,7 +159,7 @@ export const arrangeAffectedItems = (
 	printMergedFreeRects(overlappedRects.map((o) => o.d));
 
 	arrange(
-		affectedItems,
+		itemsToArrange,
 		overlappedRects,
 		getRectObjectFromCo(topWorkSpaceCo),
 		getRectObjectFromCo(bottomWorkSpaceCo),
@@ -555,7 +551,7 @@ export const findOverlapped = (mergedRects) => {
 };
 
 export const arrange = (
-	affectedItems,
+	itemsToArrange,
 	overlappedRects,
 	topWorkSpace,
 	bottomWorkSpace,
@@ -565,13 +561,6 @@ export const arrange = (
 ) => {
 	let idCount = lastId;
 	console.log("overlappedRects", overlappedRects);
-
-	// last element is moved or resized item;
-	const aILen = affectedItems.length - 1;
-	const _affectedItems = new Array(aILen);
-	for (let i = 0; i < aILen; i++) {
-		_affectedItems[i] = affectedItems[i];
-	}
 
 	// construct closest bst
 	shuffle(overlappedRects);
@@ -584,22 +573,24 @@ export const arrange = (
 		});
 	}
 
-	const affectedItemsStack = new Stack();
-	const laterAffectedItemsStack = new Stack();
+	const iToALen = itemsToArrange.length;
+
+	const itemsToArrangeStack = new Stack();
+	const itemsToArrangeLaterStack = new Stack();
 	const undoStack = new Stack();
 	const laterResult = new Stack();
 
-	const affectedItemsWithScore = getAffectedItemsScore(_affectedItems);
-	for (let i = 0; i < aILen; i++) {
-		affectedItemsStack.push(affectedItemsWithScore[i]);
+	const itemsToArrangeWithScore = getItemsToArrangeScore(itemsToArrange);
+	for (let i = 0; i < iToALen; i++) {
+		itemsToArrangeStack.push(itemsToArrangeWithScore[i]);
 	}
 
 	let top;
 	let aItem;
 	let wCBSTRes;
 
-	while (!affectedItemsStack.isEmpty()) {
-		top = affectedItemsStack.pop();
+	while (!itemsToArrangeStack.isEmpty()) {
+		top = itemsToArrangeStack.pop();
 
 		aItem = mpd[top.d];
 
@@ -610,7 +601,7 @@ export const arrange = (
 		);
 
 		if (!wCBSTRes.length) {
-			laterAffectedItemsStack.push(top);
+			itemsToArrangeLaterStack.push(top);
 			undoStack.push(top);
 			continue;
 		}
@@ -619,7 +610,7 @@ export const arrange = (
 
 		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
 			// skipped for later
-			laterAffectedItemsStack.push(top);
+			itemsToArrangeLaterStack.push(top);
 			undoStack.push(top);
 		} else {
 			aItem.x = pm.d.rect.x + publicConstants.MARGIN;
@@ -643,8 +634,8 @@ export const arrange = (
 		console.log("perfect match", pm);
 	}
 
-	while (!laterAffectedItemsStack.isEmpty()) {
-		top = laterAffectedItemsStack.pop();
+	while (!itemsToArrangeLaterStack.isEmpty()) {
+		top = itemsToArrangeLaterStack.pop();
 
 		aItem = mpd[top.d];
 

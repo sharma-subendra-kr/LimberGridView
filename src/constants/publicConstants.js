@@ -41,15 +41,17 @@ const constants = {
 	MOBILE_ASPECT_RATIO: 16 / 9,
 
 	ADD_OR_CUTSPACE_TOGGLE: "ADD",
+
+	MIN_HEIGHT_AND_WIDTH: 150,
 };
 
-const setPublicConstantByName = function(name, value) {
+const setPublicConstantByName = function (name, value) {
 	if (constants[name]) {
 		constants[name] = value;
 	}
 };
 
-const getPublicConstantByName = function(name) {
+const getPublicConstantByName = function (name) {
 	return constants[name];
 };
 

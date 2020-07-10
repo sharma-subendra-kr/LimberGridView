@@ -31,6 +31,7 @@ import {
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
 import { doRectsOverlap } from "../rect/rectUtils";
+import { filter } from "../utils/utils";
 
 export const isFlippingPosPossible = () => {
 	if (affectedItems.length === 2) {
@@ -68,6 +69,17 @@ export const getMinMaxY = (
 	if (movedBottomY > maxY) maxY = movedBottomY;
 
 	return { minY, maxY };
+};
+
+export const filterToArrange = (toArrangeItems, arranged) => {
+	const len = toArrangeItems.length;
+	const result = new Array(len);
+	for (let i = 0; i < len; i++) {
+		if (!arranged[toArrangeItems[i]]) {
+			result[i] = toArrangeItems[i];
+		}
+	}
+	return filter(result);
 };
 
 export const getBottomMax = () => {
@@ -281,7 +293,7 @@ export const getScore = (rect, maxHWSum) => {
 // 	return { maxScore, maxHWSum };
 // };
 
-export const getAffectedItemsScore = (affectedItems) => {
+export const getItemsToArrangeScore = (affectedItems) => {
 	const len = affectedItems.length;
 	let item;
 	let maxHeight = 0;
