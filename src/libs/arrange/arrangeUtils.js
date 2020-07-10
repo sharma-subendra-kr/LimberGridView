@@ -227,6 +227,25 @@ export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
 	return res;
 };
 
+export const getItemsBelowBottomWorkSpace = (workSpaceRect) => {
+	const len = mpd.length;
+	const items = new Array(len);
+	let count = 0;
+
+	for (let i = 0; i < len; i++) {
+		if (workSpaceRect.bl.y <= getItemDimenWithMargin(mpd[i]).y) {
+			items[count++] = mpd[i];
+		}
+	}
+
+	const res = new Array(count);
+	for (let i = 0; i < count; i++) {
+		res[i] = items[i];
+	}
+
+	return res;
+};
+
 export const getItemDimenWithMargin = (item) => {
 	const _item = { ...item };
 	_item.x -= publicConstants.MARGIN;
@@ -339,4 +358,12 @@ export const getPerfectMatch = (arr, hwSum) => {
 	arr.sort((a, b) => a.d.score - b.d.score);
 
 	return arr[0];
+};
+
+export const shiftItems = (items, height) => {
+	const len = items.length;
+
+	for (let i = 0; i < len; i++) {
+		items[i].y += height;
+	}
 };

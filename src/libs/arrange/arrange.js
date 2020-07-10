@@ -39,6 +39,7 @@ import {
 	getTopBottomWS,
 	fixMinYMaxY,
 	getItemsInWorkSpace,
+	getItemsBelowBottomWorkSpace,
 	getItemDimenWithMargin,
 	getItemDimenWithRBMargin,
 	getItemsToArrangeScore,
@@ -47,6 +48,7 @@ import {
 	cBSTLComp,
 	cBSTRComp,
 	getPerfectMatch,
+	shiftItems,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -121,6 +123,13 @@ export const arrangeAffectedItems = (
 		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpaceCo.bl };
 	}
 
+	const itemsInBottomWorkSpace = getItemsInWorkSpace(
+		getRectObjectFromCo(bottomWorkSpaceCo)
+	);
+	const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(
+		bottomWorkSpaceCo
+	);
+
 	let combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
 
@@ -135,6 +144,7 @@ export const arrangeAffectedItems = (
 	let DEBUG_COUNT = 0;
 
 	while (arrangedCount !== iToALen) {
+		debugger;
 		// sort items in workspace by lt.x  i.e horizontally
 		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
@@ -201,16 +211,19 @@ export const arrangeAffectedItems = (
 			combinedWorkSpaceRectCo.bl.y += shiftHeight;
 
 			combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+
+			shiftItems(itemsInBottomWorkSpace, shiftHeight);
 		}
 
 		DEBUG_COUNT++;
 		if (DEBUG_COUNT > 50) {
-			break;
+			throw "Arrange time out";
 		}
 	}
 
 	if (workSpaceResizeCount > 0) {
 		// push items in bottom workspace and below bottom workspace below
+		shiftItems(itemsBelowBottomWorkSpace, shiftHeight * workSpaceResizeCount);
 	}
 
 	const p2 = performance.now();
