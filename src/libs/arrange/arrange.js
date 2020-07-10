@@ -142,23 +142,6 @@ export const arrangeAffectedItems = (
 	const freeRectsArr = freeRectsItY.getDataInArray();
 	shuffle(freeRectsArr);
 
-	const itYDataLen = freeRectsArr.length;
-	// const itXData = new Array(itXDataLen);
-
-	// let tempRect;
-	for (let i = 0; i < itYDataLen; i++) {
-		freeRectsArr[i].d.id = i;
-		// tempRect = getCoordinates(freeRectsArr[i].d.rect);
-		// itXData[i] = {
-		// 	low: tempRect.tl.x,
-		// 	high: tempRect.tr.x,
-		// 	d: freeRectsArr[i].d,
-		// };
-	}
-
-	// const freeRectsItX = new IntervalTreesIterative({ data: itXData });
-	// assignAdjacentRects(freeRectsItY, freeRectsItX);
-
 	assignAdjacentRects(freeRectsItY);
 
 	// DEBUG:
@@ -178,15 +161,6 @@ export const arrangeAffectedItems = (
 
 	// DEBUG:
 	printMergedFreeRects(overlappedRects.map((o) => o.d));
-
-	if (affectedItems.length === 1) {
-		// resize or move to the desired coordinates
-		// this condition should be on top
-		// for development it is here
-		// shift to top after development
-	} else if (affectedItems.length === 2 && arrangeFor === "move") {
-		// try replacing first
-	}
 
 	arrange(
 		affectedItems,
@@ -389,12 +363,11 @@ export const sweepLine = (area, areaCo, items, lastId) => {
 	return { it, idCount };
 };
 
-export const assignAdjacentRects = (rectsItY, rectsItX) => {
+export const assignAdjacentRects = (rectsItY) => {
 	const rectItYArr = rectsItY.getDataInArray();
-	// const rectItXArr = rectsItX.getDataInArray();
 
 	const len = rectItYArr.length;
-	let resY, resX, lenY, lenX;
+	let resY, lenY;
 
 	for (let i = 0; i < len; i++) {
 		resY = rectsItY.findAll(rectItYArr[i].interval);
@@ -590,12 +563,9 @@ export const arrange = (
 	lastId,
 	arrangeFor
 ) => {
-	console.log("overlappedRects", overlappedRects);
 	let idCount = lastId;
+	console.log("overlappedRects", overlappedRects);
 
-	shuffle(overlappedRects);
-
-	const orLen = overlappedRects.length;
 	// last element is moved or resized item;
 	const aILen = affectedItems.length - 1;
 	const _affectedItems = new Array(aILen);
@@ -603,8 +573,10 @@ export const arrange = (
 		_affectedItems[i] = affectedItems[i];
 	}
 
+	// construct closest bst
+	shuffle(overlappedRects);
 	const wCBST = new ClosestBST();
-
+	const orLen = overlappedRects.length;
 	for (let i = 0; i < orLen; i++) {
 		wCBST.insert({
 			v: overlappedRects[i].d.rect.width,
@@ -614,6 +586,8 @@ export const arrange = (
 
 	const affectedItemsStack = new Stack();
 	const laterAffectedItemsStack = new Stack();
+	const undoStack = new Stack();
+	const laterResult = new Stack();
 
 	const affectedItemsWithScore = getAffectedItemsScore(_affectedItems);
 	for (let i = 0; i < aILen; i++) {
@@ -637,6 +611,7 @@ export const arrange = (
 
 		if (!wCBSTRes.length) {
 			laterAffectedItemsStack.push(top);
+			undoStack.push(top);
 			continue;
 		}
 
@@ -645,6 +620,7 @@ export const arrange = (
 		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
 			// skipped for later
 			laterAffectedItemsStack.push(top);
+			undoStack.push(top);
 		} else {
 			aItem.x = pm.d.rect.x + publicConstants.MARGIN;
 			aItem.y = pm.d.rect.y + publicConstants.MARGIN;
@@ -669,6 +645,48 @@ export const arrange = (
 
 	while (!laterAffectedItemsStack.isEmpty()) {
 		top = laterAffectedItemsStack.pop();
+
+		aItem = mpd[top.d];
+
+		wCBSTRes = wCBST.findUsingComparator(
+			cBSTRectComparator(getItemDimenWithMargin(aItem)),
+			cBSTLComp(aItem.width),
+			cBSTRComp
+		);
+
+		if (!wCBSTRes.length) {
+			// increase workspace height
+		}
+
+		const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
+
+		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
+			// increase workspace height
+		} else {
+			laterResult.push({
+				...aItem,
+				x: pm.d.rect.x + publicConstants.MARGIN,
+				y: pm.d.rect.y + publicConstants.MARGIN,
+			});
+			// aItem.x = pm.d.rect.x + publicConstants.MARGIN;
+			// aItem.y = pm.d.rect.y + publicConstants.MARGIN;
+			const { result, idCount: lastId1 } = arrangeCleanUp(
+				aItem,
+				pm,
+				wCBST,
+				idCount
+			);
+			idCount = lastId1;
+
+			const resLen = result.length;
+			for (let i = 0; i < resLen; i++) {
+				result[i].v = result[i].d.rect.width;
+				wCBST.insert(result[i]);
+			}
+			printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+		}
+
+		console.log("perfect match", pm);
 	}
 };
 
