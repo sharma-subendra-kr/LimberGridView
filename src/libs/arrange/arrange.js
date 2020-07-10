@@ -209,6 +209,8 @@ export const arrangeAffectedItems = (
 
 	const p2 = performance.now();
 	console.log("arrange total: ", p2 - p1);
+
+	return arranged;
 };
 
 export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {

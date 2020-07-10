@@ -135,7 +135,7 @@ export const moveItem = function (index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(
+	const arranged = arrangeAffectedItems(
 		affectedItems,
 		undefined,
 		toY,
@@ -143,12 +143,18 @@ export const moveItem = function (index, toX, toY) {
 		"move"
 	);
 
-	// const flipDetails = isFlippingPosPossible(index, toX, toY, affectedItems);
-	// if (flipDetails) {
-	// 	// flip positions
-	// 	flipPositions(toX, toY, flipDetails.moved, flipDetails.overlapped);
-	// }
-	// return flipDetails;
+	setPositionData(mpd);
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
 };
 
 export const moveItemDemo = function (index, toX, toY) {
@@ -177,7 +183,7 @@ export const moveItemDemo = function (index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(
+	const arranged = arrangeAffectedItems(
 		affectedItems,
 		undefined,
 		toY,
@@ -185,59 +191,16 @@ export const moveItemDemo = function (index, toX, toY) {
 		"move"
 	);
 
-	// const flipDetails = isFlippingPosPossible(index, toX, toY, affectedItems);
-	// if (flipDetails) {
-	// 	// flip positions
-	// 	flipPositions(toX, toY, flipDetails.moved, flipDetails.overlapped);
-	// }
-	// return flipDetails;
+	setPositionData(mpd);
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
 };
-
-// export const isFlippingPosPossible = (index, toX, toY, affectedItems) => {
-// 	if (affectedItems.length === 2) {
-// 		const diff = Math.abs(pd[affectedItems[0]].y - pd[affectedItems[1]].y);
-// 		if (diff > privateConstants.HEIGHT) {
-// 			// to check if both lie on th visible screen or viewport
-// 			return false;
-// 		}
-// 		// return true;
-
-// 		let overlapped, moved;
-// 		if (index === affectedItems[0]) {
-// 			overlapped = affectedItems[1];
-// 			moved = affectedItems[0];
-// 		} else {
-// 			overlapped = affectedItems[0];
-// 			moved = affectedItems[1];
-// 		}
-
-// 		if (
-// 			moved.x + pd[overlapped].width + publicConstants.MARGIN >
-// 			privateConstants.WIDTH
-// 		) {
-// 			// to make sure flipping doenst take items outside the width of the container
-// 			return false;
-// 		}
-
-// 		const modifiedItem = {
-// 			x: pd[index].x,
-// 			y: pd[index].y,
-// 			width: pd[overlapped].width,
-// 			heght: pd[overlapped].height,
-// 		};
-// 		const _affectedItems = getMoveAffectedItems(modifiedItem, overlapped);
-
-// 		if (_affectedItems.length === 2) {
-// 			return { moved, overlapped };
-// 		}
-// 		return false;
-// 	}
-// 	return false;
-// };
-
-// export const flipPositions = (toX, toY, moved, overlapped) => {
-// 	e.$limberGridViewItems[moved].style.transform =
-// 		"translate(" + toX + "px, " + toY + "px)";
-// 	e.$limberGridViewItems[overlapped].style.transform =
-// 		"translate(" + pd[moved].x + "px, " + pd[moved].y + "px)";
-// };
