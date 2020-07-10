@@ -623,33 +623,9 @@ export const arrange = (
 	let top;
 	let aItem;
 	let wCBSTRes;
-	// let updatedItem;
-	// let diff;
-	// let diffLen;
-	// let diffObj;
-	// let diffStack;
-	// let diffStackData;
-	// let diffStackDataLen;
-	// let it;
-
-	// // overlapped
-	// let olpd;
-	// // overlapping keys
-	// let oKeys;
-	// let oKeysLen;
-	// // indirect operlapped
-	// let iolpd;
-	// // indirect overlapping keys
-	// let ioKeys;
-	// let ioKeysLen;
-
-	// let directOverlaps;
-	// let indirectOverlaps;
 
 	while (!affectedItemsStack.isEmpty()) {
 		top = affectedItemsStack.pop();
-		// directOverlaps = {};
-		// indirectOverlaps = {};
 
 		aItem = mpd[top.d];
 
@@ -672,7 +648,12 @@ export const arrange = (
 		} else {
 			aItem.x = pm.d.rect.x + publicConstants.MARGIN;
 			aItem.y = pm.d.rect.y + publicConstants.MARGIN;
-			const { result, lastId1 } = arrangeCleanUp(aItem, pm, wCBST, idCount);
+			const { result, idCount: lastId1 } = arrangeCleanUp(
+				aItem,
+				pm,
+				wCBST,
+				idCount
+			);
 			idCount = lastId1;
 
 			const resLen = result.length;
@@ -691,21 +672,14 @@ export const arrange = (
 	}
 };
 
-export const arrangeCleanUp = (aItem, pm, wCBST, idCount) => {
-	// let updatedItem;
+export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {
+	let idCount = lastId;
 	let diff;
 	let diffLen;
 	let diffObj;
-	// let diffStack;
-	// let diffStackData;
-	// let diffStackDataLen;
-	// let it;
 
 	// overlapped
 	let olpd;
-	// overlapping keys
-	// let oKeys;
-	// let oKeysLen;
 	// indirect operlapped
 	let iolpd;
 	// indirect overlapping keys
@@ -805,8 +779,7 @@ export const arrangeCleanUp = (aItem, pm, wCBST, idCount) => {
 		diffStack.getData(),
 		idCount
 	);
-	console.log("**mergedRects", mergedRects);
-	console.log("**indirectOverlaps", indirectOverlaps);
+
 	const _overlappedRects = findOverlapped([
 		...mergedRects,
 		...Object.values(indirectOverlaps),
@@ -823,22 +796,11 @@ export const arrangeCleanUp = (aItem, pm, wCBST, idCount) => {
 
 	const filteredOverlappedRects = filter(overlappedRects);
 
-	// const indirectOverlapsKeys = Object.keys(indirectOverlaps);
-	// const indirectOverlapsKeysLen = indirectOverlapsKeys.length;
-	// for (let i = 0; i < indirectOverlapsKeysLen; i++) {
-	// 	iolpd = indirectOverlaps[indirectOverlapsKeys[i]];
-	// 	for (let j = 0; j < overlappedRects.length; j++) {
-	// 		if (doRectsOverlap(overlappedRects[j].d.rect, iolpd.d.rect)) {
-	// 			iolpd.d.o[]
-	// 		}
-	// 	}
-	// }
-
 	printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
 	console.log("filteredOverlappedRects", filteredOverlappedRects);
 	console.log("directOverlaps", directOverlaps);
 	console.log("indirectOverlaps", indirectOverlaps);
 	console.log("diffStack", diffStack.getData());
 
-	return { result: filteredOverlappedRects, lastId1: idCount };
+	return { result: filteredOverlappedRects, idCount: lastId1 };
 };
