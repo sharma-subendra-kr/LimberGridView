@@ -132,6 +132,8 @@ export const arrangeAffectedItems = (
 	let arrangedCount = 0;
 	let workSpaceResizeCount = 0;
 
+	let DEBUG_COUNT = 0;
+
 	while (arrangedCount !== iToALen) {
 		// sort items in workspace by lt.x  i.e horizontally
 		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
@@ -162,7 +164,6 @@ export const arrangeAffectedItems = (
 		printMergedFreeRects(mergedRects.map((o) => o.d));
 
 		const overlappedRects = findOverlapped(mergedRects);
-		console.log("overlappedRects.length", overlappedRects.length);
 
 		// DEBUG:
 		printMergedFreeRects(overlappedRects.map((o) => o.d));
@@ -200,6 +201,11 @@ export const arrangeAffectedItems = (
 			combinedWorkSpaceRectCo.bl.y += shiftHeight;
 
 			combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+		}
+
+		DEBUG_COUNT++;
+		if (DEBUG_COUNT > 50) {
+			break;
 		}
 	}
 
@@ -602,7 +608,6 @@ export const arrange = (
 ) => {
 	let idCount = lastId;
 	const arranged = {};
-	console.log("overlappedRects", overlappedRects);
 
 	// construct closest bst
 	shuffle(overlappedRects);
@@ -673,8 +678,6 @@ export const arrange = (
 			}
 			printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
 		}
-
-		console.log("perfect match", pm);
 	}
 
 	let breakSig = false;
@@ -728,8 +731,6 @@ export const arrange = (
 			}
 			printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
 		}
-
-		console.log("perfect match", pm);
 	}
 
 	if (breakSig === false) {
@@ -870,10 +871,6 @@ export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {
 	const filteredOverlappedRects = filter(overlappedRects);
 
 	printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
-	console.log("filteredOverlappedRects", filteredOverlappedRects);
-	console.log("directOverlaps", directOverlaps);
-	console.log("indirectOverlaps", indirectOverlaps);
-	console.log("diffStack", diffStack.getData());
 
 	return { result: filteredOverlappedRects, idCount: lastId1 };
 };

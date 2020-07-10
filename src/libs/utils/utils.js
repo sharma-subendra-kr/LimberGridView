@@ -44,7 +44,8 @@ export let isMobile = function () {
 
 	// production
 	return window.matchMedia(
-		"only screen and (max-width: 1033px) and (min-width : 1px)"
+		// "only screen and (max-width: 1033px) and (min-width : 1px)"
+		"only screen and (max-width: 989px) and (min-width : 1px)"
 	).matches;
 	// production END
 	// return window.matchMedia("only screen and (max-width: 900px) and (min-width : 1px)").matches;
