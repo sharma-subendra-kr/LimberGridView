@@ -557,12 +557,12 @@ var main = function () {
 					height: 300,
 				},
 				//
-				{
-					x: 430,
-					y: 890,
-					width: 200,
-					height: 200,
-				},
+				// {
+				// 	x: 430,
+				// 	y: 890,
+				// 	width: 200,
+				// 	height: 200,
+				// },
 				{
 					x: 650,
 					y: 950,

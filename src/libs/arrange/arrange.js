@@ -175,7 +175,7 @@ export const arrangeAffectedItems = (
 		// DEBUG:
 		printMergedFreeRects(mergedRects.map((o) => o.d));
 
-		const overlappedRects = findOverlapped(mergedRects);
+		const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
 		printMergedFreeRects(overlappedRects.map((o) => o.d));
@@ -209,6 +209,7 @@ export const arrangeAffectedItems = (
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down
 			workSpaceResizeCount++;
+			console.log("workSpaceResizeCount", workSpaceResizeCount);
 
 			workSpaceRectCo.br.y += shiftHeight;
 			workSpaceRectCo.bl.y += shiftHeight;
@@ -579,6 +580,7 @@ export const findOverlapped = (mergedRects) => {
 		it.insert(mergedRects[i]);
 	}
 
+	const completeOverlapped = {};
 	const itArr = it.getDataInArray();
 
 	let res, rlen;
@@ -593,6 +595,8 @@ export const findOverlapped = (mergedRects) => {
 				isRectInside(itArr[i].d.rect, res[j].d.rect) &&
 				itArr[i].d.id !== res[j].d.id
 			) {
+				completeOverlapped[res[j].d.id] = res[j];
+				res[j].d._rect = res[j].d.rect;
 				res[j].d.rect = null;
 				delete itArr[i].d.o[res[j].d.id];
 			}
@@ -627,7 +631,10 @@ export const findOverlapped = (mergedRects) => {
 		filteredResArr[i] = resArr[i];
 	}
 
-	return filteredResArr;
+	return {
+		overlappedRects: filteredResArr,
+		completeOverlapped: Object.values(completeOverlapped),
+	};
 	// return it.getDataInArray();
 };
 
@@ -701,6 +708,7 @@ export const arrange = (
 		if (isRectInside(bottomWorkSpace, pm.d.rect)) {
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top.d] = top.d;
+			console.log("item arranged in bottom WS", top.d);
 		}
 
 		const { result, idCount: lastId1 } = arrangeCleanUp(
@@ -898,10 +906,15 @@ export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {
 		idCount
 	);
 
-	const _overlappedRects = findOverlapped([
-		...mergedRects,
-		...Object.values(indirectOverlaps),
-	]);
+	const {
+		overlappedRects: _overlappedRects,
+		completeOverlapped,
+	} = findOverlapped([...mergedRects, ...Object.values(indirectOverlaps)]);
+
+	const completeOverlappedLen = completeOverlapped.length;
+	for (let i = 0; i < completeOverlappedLen; i++) {
+		wCBST.remove(completeOverlapped[i].d._rect.width, completeOverlapped[i].d);
+	}
 
 	const _overlappedRectsLen = _overlappedRects.length;
 	const overlappedRects = new Array(_overlappedRectsLen);
