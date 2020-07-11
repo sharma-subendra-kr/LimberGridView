@@ -721,11 +721,11 @@ export const onMouseUp = function(event) {
 			);
 			if (mousePositionOnLimberGrid != false) {
 				var updatedCoordinates = {};
-				// moveItem(
-				// 	 userActionData.itemIndex,
-				// 	 mousePositionOnLimberGrid.x,
-				//	 mousePositionOnLimberGrid.y
-				// );
+				moveItem(
+					 userActionData.itemIndex,
+					 mousePositionOnLimberGrid.x,
+					 mousePositionOnLimberGrid.y
+				);
 				updatedCoordinates.x = mousePositionOnLimberGrid.x;
 				updatedCoordinates.y = mousePositionOnLimberGrid.y;
 				itemMoveFlag = true;

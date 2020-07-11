@@ -209,13 +209,17 @@ export const fixMinYMaxY = (rectCo) => {
 	return { arrangeTopY, arrangeBottomY };
 };
 
-export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
+export const getItemsInWorkSpace = (workSpaceRect, getIndices = false) => {
 	const len = mpd.length;
 	const itemsInWorkSpace = new Array(len);
 	let count = 0;
 	for (let i = 0; i < len; i++) {
 		if (doRectsOverlap(workSpaceRect, getItemDimenWithMargin(mpd[i]))) {
-			itemsInWorkSpace[count++] = mpd[i];
+			if (!getIndices) {
+				itemsInWorkSpace[count++] = mpd[i];
+			} else {
+				itemsInWorkSpace[count++] = i;
+			}
 		}
 	}
 
@@ -227,14 +231,21 @@ export const getItemsInWorkSpace = (workSpaceRect, affectedItems) => {
 	return res;
 };
 
-export const getItemsBelowBottomWorkSpace = (workSpaceRect) => {
+export const getItemsBelowBottomWorkSpace = (
+	workSpaceRect,
+	getIndices = false
+) => {
 	const len = mpd.length;
 	const items = new Array(len);
 	let count = 0;
 
 	for (let i = 0; i < len; i++) {
 		if (workSpaceRect.bl.y <= getItemDimenWithMargin(mpd[i]).y) {
-			items[count++] = mpd[i];
+			if (!getIndices) {
+				items[count++] = mpd[i];
+			} else {
+				items[count++] = i;
+			}
 		}
 	}
 
@@ -364,6 +375,6 @@ export const shiftItems = (items, height) => {
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		items[i].y += height;
+		mpd[items[i]].y += height;
 	}
 };

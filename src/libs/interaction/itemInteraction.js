@@ -131,7 +131,7 @@ export const moveItem = function (index, toX, toY) {
 		x: toX,
 		y: toY,
 		width: pd[index].width,
-		heght: pd[index].height,
+		height: pd[index].height,
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
@@ -147,6 +147,11 @@ export const moveItem = function (index, toX, toY) {
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;
+
+	e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
+	e.$limberGridViewItems[
+		index
+	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
 
 	for (let i = 0; i < len; i++) {
 		const key = arrangedArr[i];
@@ -191,10 +196,10 @@ export const moveItemDemo = function (index, toX, toY) {
 		"move"
 	);
 
-	setPositionData(mpd);
-
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;
+
+	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
 
 	for (let i = 0; i < len; i++) {
 		const key = arrangedArr[i];

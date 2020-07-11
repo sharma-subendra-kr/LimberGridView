@@ -124,10 +124,12 @@ export const arrangeAffectedItems = (
 	}
 
 	const itemsInBottomWorkSpace = getItemsInWorkSpace(
-		getRectObjectFromCo(bottomWorkSpaceCo)
+		getRectObjectFromCo(bottomWorkSpaceCo),
+		true
 	);
 	const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(
-		bottomWorkSpaceCo
+		bottomWorkSpaceCo,
+		true
 	);
 
 	let combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
@@ -224,6 +226,17 @@ export const arrangeAffectedItems = (
 	if (workSpaceResizeCount > 0) {
 		// push items in bottom workspace and below bottom workspace below
 		shiftItems(itemsBelowBottomWorkSpace, shiftHeight * workSpaceResizeCount);
+
+		let len = itemsInBottomWorkSpace.length;
+		for (let i = 0; i < len; i++) {
+			arranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
+		}
+
+		len = itemsBelowBottomWorkSpace.length;
+		for (let i = 0; i < len; i++) {
+			arranged[itemsBelowBottomWorkSpace[i]] =
+				mpd[itemsBelowBottomWorkSpace[i]];
+		}
 	}
 
 	const p2 = performance.now();
