@@ -71,6 +71,8 @@ import {
 	printStackRects,
 	printMergedTempRects,
 	printStackTopRect,
+	printStackTopAdjRect,
+	printAdjRect,
 } from "../debug/debug";
 window.mergeRects = mergeRects;
 export const arrangeAffectedItems = (
@@ -474,7 +476,7 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 	let breakSig = false;
 	let idCount = lastId;
 	const freeRectsLen = freeRectsArr.length;
-
+	debugger;
 	for (let k = 0; k < freeRectsLen; k++) {
 		if (freeRectsArr[k].d.ref !== null) {
 			continue;
@@ -493,9 +495,17 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 					continue;
 				}
 				adj = top.d.a[keys[i]];
+				// printStackTopAdjRect(adj.d);
 				while (adj?.d?.ref) {
 					adj = adj.d.ref;
+					// printStackTopAdjRect(adj.d);
 				}
+
+				// DEBUG BEGIN
+				mergedRects = mergeRects(top.d.rect, adj.d.rect);
+				console.log("mergedRects.length", mergedRects.length);
+				mergedRects = mergeRects(top.d.rect, adj.d.rect);
+				// DEBUG ENDED
 
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
 				mergeRectsLen = mergedRects?.length || 0;
@@ -560,6 +570,8 @@ export const filterAdjacents = (mergedObject, visited) => {
 	const adjsKeysLen = adjsKeys.length;
 	for (let j = 0; j < adjsKeysLen; j++) {
 		adj = adjs[adjsKeys[j]];
+		debugger;
+		// printAdjRect(adj.d);
 		if (!areRectsAdjacent(mergedRect, adj.d.rect)) {
 			delete adjs[adjsKeys[j]];
 		} else {

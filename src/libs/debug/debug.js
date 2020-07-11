@@ -27,6 +27,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 import e, {
 	set$limberGridView,
 	set$limberGridViewDebugStackTopRect,
+	set$limberGridViewDebugStackTopAdjRect,
+	set$limberGridViewDebugAdjRect,
 	set$limberGridViewDebugMergedTempRects,
 	set$limberGridViewDebugStackRects,
 	set$limberGridViewDebugResultStackRects,
@@ -276,5 +278,72 @@ export const printStackTopRect = (obj) => {
 				".limberGridViewDebugStackTopRect"
 			)[0]
 		);
+		console.log(e.$limberGridViewDebugStackTopRect);
+	}
+};
+
+export const printStackTopAdjRect = (obj) => {
+	if (process.env.NODE_ENV === "development") {
+		if (e.$limberGridViewDebugStackTopAdjRect) {
+			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopAdjRect);
+		}
+
+		const node = document.createElement("div");
+		node.setAttribute(
+			"class",
+			`limberGridViewDebugRect limberGridViewDebugStackTopAdjRect`
+		);
+		node.setAttribute("id", `limberGridViewDebugStackTopAdjRect-${obj.id}`);
+		node.setAttribute("tabindex", -1);
+
+		node.setAttribute(
+			"title",
+			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
+		);
+
+		node.innerHTML = obj.id;
+		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
+		node.style.width = obj.rect.width + "px";
+		node.style.height = obj.rect.height + "px";
+		e.$limberGridView[0].appendChild(node);
+
+		set$limberGridViewDebugStackTopAdjRect(
+			e.$limberGridView[0].querySelectorAll(
+				".limberGridViewDebugStackTopAdjRect"
+			)[0]
+		);
+		console.log(e.$limberGridViewDebugStackTopAdjRect);
+	}
+};
+
+export const printAdjRect = (obj) => {
+	if (process.env.NODE_ENV === "development") {
+		if (e.$limberGridViewDebugAdjRect) {
+			e.$limberGridView[0].removeChild(e.$limberGridViewDebugAdjRect);
+		}
+
+		const node = document.createElement("div");
+		node.setAttribute(
+			"class",
+			`limberGridViewDebugRect limberGridViewDebugAdjRect`
+		);
+		node.setAttribute("id", `limberGridViewDebugAdjRect-${obj.id}`);
+		node.setAttribute("tabindex", -1);
+
+		node.setAttribute(
+			"title",
+			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
+		);
+
+		node.innerHTML = obj.id;
+		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
+		node.style.width = obj.rect.width + "px";
+		node.style.height = obj.rect.height + "px";
+		e.$limberGridView[0].appendChild(node);
+
+		set$limberGridViewDebugAdjRect(
+			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugAdjRect")[0]
+		);
+		console.log(e.$limberGridViewDebugAdjRect);
 	}
 };

@@ -424,3 +424,41 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 	font-size: 30px;
 }
+
+.limberGridViewDebugStackTopAdjRect {
+	border: solid 3px darkkhaki;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: blue;
+	font-weight: 400;
+}
+
+.limberGridViewDebugStackTopAdjRect:hover {
+	border-width: 6px;
+	font-weight: 400;
+	font-size: 30px;
+}
+
+.limberGridViewDebugAdjRect {
+	border: solid 3px coral;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: blue;
+	font-weight: 400;
+}
+
+.limberGridViewDebugAdjRect:hover {
+	border-width: 6px;
+	font-weight: 400;
+	font-size: 30px;
+}
