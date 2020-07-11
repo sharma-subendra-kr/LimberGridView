@@ -660,6 +660,7 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 };
 
 export const isRectInside = (rectA, rectB) => {
+	// is rectB inside rectA
 	const rectACo = getCoordinates(rectA);
 	const rectBCo = getCoordinates(rectB);
 

@@ -123,7 +123,7 @@ export const arrangeAffectedItems = (
 		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpaceCo.bl };
 	}
 
-	const itemsInBottomWorkSpace = getItemsInWorkSpace(
+	let itemsInBottomWorkSpace = getItemsInWorkSpace(
 		getRectObjectFromCo(bottomWorkSpaceCo),
 		true
 	);
@@ -180,7 +180,11 @@ export const arrangeAffectedItems = (
 		// DEBUG:
 		printMergedFreeRects(overlappedRects.map((o) => o.d));
 
-		const { arranged: _arranged, idCount: lastId3 } = arrange(
+		const {
+			arranged: _arranged,
+			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
+			idCount: lastId3,
+		} = arrange(
 			itemsToArrange.filter((id) => !arranged[id]),
 			overlappedRects,
 			getRectObjectFromCo(topWorkSpaceCo),
@@ -191,10 +195,13 @@ export const arrangeAffectedItems = (
 		);
 		idCount.idCount = lastId3;
 
+		itemsInBottomWorkSpace = [
+			...itemsInBottomWorkSpace,
+			...Object.keys(_itemsInBottomWorkSpace),
+		];
+
 		arranged = { ...arranged, ..._arranged };
-
 		const _arrangedArr = Object.values(_arranged);
-
 		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
 
 		arrangedCount += _arrangedArr.length;
@@ -224,9 +231,10 @@ export const arrangeAffectedItems = (
 	}
 
 	if (workSpaceResizeCount > 0) {
-		// push items in bottom workspace and below bottom workspace below
+		// push items in below bottom workspace below
 		shiftItems(itemsBelowBottomWorkSpace, shiftHeight * workSpaceResizeCount);
 
+		// put items in bottom workspace and below bottom workspace in arranged map
 		let len = itemsInBottomWorkSpace.length;
 		for (let i = 0; i < len; i++) {
 			arranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
@@ -634,6 +642,7 @@ export const arrange = (
 ) => {
 	let idCount = lastId;
 	const arranged = {};
+	const itemsInBottomWorkSpace = {};
 
 	// construct closest bst
 	shuffle(overlappedRects);
@@ -679,97 +688,106 @@ export const arrange = (
 
 		const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
 
-		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
-			// skipped for later
-			itemsToArrangeLaterStack.push(top);
-			continue;
-		} else {
-			aItem.x = pm.d.rect.x + publicConstants.MARGIN;
-			aItem.y = pm.d.rect.y + publicConstants.MARGIN;
+		// if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
+		// 	// skipped for later
+		// 	itemsToArrangeLaterStack.push(top);
+		// 	continue;
+		// } else {
+		aItem.x = pm.d.rect.x + publicConstants.MARGIN;
+		aItem.y = pm.d.rect.y + publicConstants.MARGIN;
 
-			arranged[top.d] = aItem;
+		arranged[top.d] = aItem;
 
-			const { result, idCount: lastId1 } = arrangeCleanUp(
-				aItem,
-				pm,
-				wCBST,
-				idCount
-			);
-			idCount = lastId1;
-
-			const resLen = result.length;
-			for (let i = 0; i < resLen; i++) {
-				result[i].v = result[i].d.rect.width;
-				wCBST.insert(result[i]);
-			}
-			printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+		if (isRectInside(bottomWorkSpace, pm.d.rect)) {
+			// put in bottom and combined workspace
+			itemsInBottomWorkSpace[top.d] = top.d;
 		}
-	}
 
-	let breakSig = false;
-
-	while (!itemsToArrangeLaterStack.isEmpty()) {
-		top = itemsToArrangeLaterStack.pop();
-
-		aItem = mpd[top.d];
-
-		wCBSTRes = wCBST.findUsingComparator(
-			cBSTRectComparator(getItemDimenWithMargin(aItem)),
-			cBSTLComp(aItem.width),
-			cBSTRComp
+		const { result, idCount: lastId1 } = arrangeCleanUp(
+			aItem,
+			pm,
+			wCBST,
+			idCount
 		);
+		idCount = lastId1;
 
-		if (!wCBSTRes.length) {
-			// increase workspace height
-			breakSig = true;
-			break;
+		const resLen = result.length;
+		for (let i = 0; i < resLen; i++) {
+			result[i].v = result[i].d.rect.width;
+			wCBST.insert(result[i]);
 		}
-
-		const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
-
-		if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
-			// increase workspace height
-			breakSig = true;
-			break;
-		} else {
-			const tempItem = {
-				...aItem,
-				x: pm.d.rect.x + publicConstants.MARGIN,
-				y: pm.d.rect.y + publicConstants.MARGIN,
-			};
-			laterResult.push({
-				i: top.d,
-				d: tempItem,
-			});
-
-			const { result, idCount: lastId1 } = arrangeCleanUp(
-				tempItem,
-				pm,
-				wCBST,
-				idCount
-			);
-			idCount = lastId1;
-
-			const resLen = result.length;
-			for (let i = 0; i < resLen; i++) {
-				result[i].v = result[i].d.rect.width;
-				wCBST.insert(result[i]);
-			}
-			printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
-		}
+		printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+		// }
 	}
 
-	if (breakSig === false) {
-		while (!laterResult.isEmpty()) {
-			top = laterResult.pop();
-			mpd[top.i].x = mpd[top.i].d.x;
-			mpd[top.i].y = mpd[top.i].d.y;
+	// let breakSig = false;
 
-			arranged[top.i] = mpd[top.i];
-		}
-	}
+	// while (!itemsToArrangeLaterStack.isEmpty()) {
+	// 	top = itemsToArrangeLaterStack.pop();
 
-	return { arranged, idCount };
+	// 	aItem = mpd[top.d];
+
+	// 	wCBSTRes = wCBST.findUsingComparator(
+	// 		cBSTRectComparator(getItemDimenWithMargin(aItem)),
+	// 		cBSTLComp(aItem.width),
+	// 		cBSTRComp
+	// 	);
+
+	// 	if (!wCBSTRes.length) {
+	// 		// increase workspace height
+	// 		breakSig = true;
+	// 		break;
+	// 	}
+
+	// 	const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
+
+	// 	if (doRectsOverlap(bottomWorkSpace, pm.d.rect)) {
+	// 		// increase workspace height
+	// 		breakSig = true;
+	// 		break;
+	// 	} else {
+	// 		const tempItem = {
+	// 			...aItem,
+	// 			x: pm.d.rect.x + publicConstants.MARGIN,
+	// 			y: pm.d.rect.y + publicConstants.MARGIN,
+	// 		};
+	// 		laterResult.push({
+	// 			i: top.d,
+	// 			d: tempItem,
+	// 		});
+
+	// 		const { result, idCount: lastId1 } = arrangeCleanUp(
+	// 			tempItem,
+	// 			pm,
+	// 			wCBST,
+	// 			idCount
+	// 		);
+	// 		idCount = lastId1;
+
+	// 		const resLen = result.length;
+	// 		for (let i = 0; i < resLen; i++) {
+	// 			result[i].v = result[i].d.rect.width;
+	// 			wCBST.insert(result[i]);
+	// 		}
+	// 		printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+	// 	}
+	// }
+
+	// if (breakSig === false) {
+	// 	while (!laterResult.isEmpty()) {
+	// 		top = laterResult.pop();
+	// 		mpd[top.i].x = mpd[top.i].d.x;
+	// 		mpd[top.i].y = mpd[top.i].d.y;
+
+	// 		arranged[top.i] = mpd[top.i];
+	// 	}
+	// }
+
+	return {
+		arranged,
+		itemsInBottomWorkSpace,
+		idCount,
+	};
 };
 
 export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {
