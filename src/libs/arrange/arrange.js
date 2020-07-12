@@ -148,7 +148,6 @@ export const arrangeAffectedItems = (
 	let DEBUG_COUNT = 0;
 
 	while (arrangedCount !== iToALen) {
-		debugger;
 		// sort items in workspace by lt.x  i.e horizontally
 		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
@@ -413,13 +412,6 @@ export const sweepLine = (area, areaCo, items, lastId) => {
 					true
 				);
 
-				// DEBUG:
-				// printUnmergedFreeRects(
-				// 	diff.map((o) => ({
-				// 		rect: getRectObjectFromCo(o),
-				// 	}))
-				// );
-
 				dLen = diff.length;
 				for (let k = 0; k < dLen; k++) {
 					it.insert({
@@ -476,7 +468,7 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 	let breakSig = false;
 	let idCount = lastId;
 	const freeRectsLen = freeRectsArr.length;
-	debugger;
+
 	for (let k = 0; k < freeRectsLen; k++) {
 		if (freeRectsArr[k].d.ref !== null) {
 			continue;
@@ -501,12 +493,6 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 					// printStackTopAdjRect(adj.d);
 				}
 
-				// DEBUG BEGIN
-				mergedRects = mergeRects(top.d.rect, adj.d.rect);
-				console.log("mergedRects.length", mergedRects.length);
-				mergedRects = mergeRects(top.d.rect, adj.d.rect);
-				// DEBUG ENDED
-
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
 				mergeRectsLen = mergedRects?.length || 0;
 				if (mergeRectsLen) {
@@ -527,14 +513,9 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 									ref: null,
 								},
 							};
-							// printMergedTempRects(mergedObject.d);
 
 							filterAdjacents(mergedObject);
 							stack.push(mergedObject);
-							// printStackRects(stack.getData().map((o) => o.d));
-
-							delete top.d.a[keys[i]];
-							delete adj.d.a[top.d.id];
 
 							if (isRectInside(mergedRect, adj.d.rect)) {
 								adj.d.ref = mergedObject;
@@ -548,12 +529,14 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 						}
 					}
 					if (breakSig) break;
+				} else if (isRectInside(adj.d.rect, top.d.rect)) {
+					breakSig = true;
+					break;
 				}
 			}
 
 			if (!breakSig) {
 				resultStack.push(top);
-				// printResultStackRects(resultStack.getData().map((o) => o.d));
 				continue;
 			}
 		}
@@ -570,8 +553,8 @@ export const filterAdjacents = (mergedObject, visited) => {
 	const adjsKeysLen = adjsKeys.length;
 	for (let j = 0; j < adjsKeysLen; j++) {
 		adj = adjs[adjsKeys[j]];
-		debugger;
 		// printAdjRect(adj.d);
+
 		if (!areRectsAdjacent(mergedRect, adj.d.rect)) {
 			delete adjs[adjsKeys[j]];
 		} else {
