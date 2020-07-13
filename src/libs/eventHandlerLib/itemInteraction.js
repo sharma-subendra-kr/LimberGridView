@@ -41,17 +41,19 @@ import privateConstants from "../../constants/privateConstants";
 import { callbacks, positionData as pd } from "../../variables/essentials";
 import e from "../../variables/elements";
 import {
-	getUserActionData,
-	getTouchUserActionData,
+	calculateMousePosOnLimberGrid,
 	calculateTouchPosOnLimberGrid,
 	calculateTouchPosOnLimberGridItem,
+} from "./eventHandlerUtils.js";
+import {
+	getUserActionData,
 	loadResizingState,
 	unloadResizingState,
 	loadMoveState,
 	unloadMoveState,
 	loadOnMoveState,
 	unloadOnMoveState,
-} from "./eventHandlerUtils.js";
+} from "./itemInteractionUtils.js";
 import { onLimberGridTouchStart } from "./addItemAndCutSpace";
 import {
 	moveItem,
@@ -202,7 +204,7 @@ export const onMouseMove = function (event) {
 
 			clearTimeout(showMoveDemoTimeOutVariable);
 
-			var mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
+			const mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
 
 			if (mousePositionOnLimberGrid !== false) {
 				const yMousePosition = mousePositionOnLimberGrid.y;
@@ -278,7 +280,7 @@ export const onTouchMove = function (event) {
 
 			clearTimeout(showMoveDemoTimeOutVariable);
 
-			var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
+			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
 			if (touchPositionOnLimberGrid !== false) {
 				const scrollTop = e.$limberGridView[0].scrollTop;
@@ -414,7 +416,7 @@ export const onMouseUp = function (event) {
 			unloadMoveState(userActionData);
 			unloadOnMoveState();
 
-			var mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
+			const mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
 			var updatedCoordinates = {};
 			try {
 				if (mousePositionOnLimberGrid !== false) {
@@ -505,7 +507,7 @@ export const onTouchEnd = function (event) {
 			unloadMoveState(userActionData);
 			unloadOnMoveState();
 
-			var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
+			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 			if (touchPositionOnLimberGrid !== false) {
 				var updatedCoordinates = {};
 				moveItem(
@@ -622,39 +624,6 @@ export const onTouchCancel = function (event) {
 	e.$limberGridView[0].addEventListener("touchstart", onLimberGridTouchStart);
 };
 
-export const calculateMousePosOnLimberGrid = function (event) {
-	var limberGridViewPosition = e.$limberGridView[0].getBoundingClientRect();
-	if (
-		event.clientX >= limberGridViewPosition.left &&
-		event.clientX <=
-			limberGridViewPosition.left + limberGridViewPosition.width &&
-		event.clientY >= limberGridViewPosition.top &&
-		event.clientY <= limberGridViewPosition.top + limberGridViewPosition.height
-	) {
-		var scrollTop = e.$limberGridView[0].scrollTop;
-		var scrollLeft = e.$limberGridView[0].scrollLeft;
-
-		var mouseXOnLimberGridView =
-			event.clientX -
-			limberGridViewPosition.left -
-			privateConstants.PADDING_LEFT +
-			scrollLeft;
-		var mouseYOnLimberGridView =
-			event.clientY -
-			limberGridViewPosition.top -
-			privateConstants.PADDING_TOP +
-			scrollTop;
-
-		if (mouseXOnLimberGridView < 0 || mouseYOnLimberGridView < 0) {
-			return false;
-		}
-		return { x: mouseXOnLimberGridView, y: mouseYOnLimberGridView };
-	} else {
-		// mouse pointer NOT inside limberGridView
-		return false;
-	}
-};
-
 export const showMoveDemo = function (index, mousePosition) {
 	try {
 		if (mousePosition !== false) {
@@ -701,18 +670,10 @@ export const showResizeDemo = function (index, width, height) {
 };
 
 export const revertShowMoveOrResizeDemo = function () {
-	var length_0 = e.$limberGridViewItems.length;
-	for (var i = 0; i < length_0; i++) {
+	const len = e.$limberGridViewItems.length;
+	for (let i = 0; i < len; i++) {
 		e.$limberGridViewItems[
 			i
 		].style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
-		// e.$limberGridViewItems[i].classList.remove(
-		// 	"limberGridViewItemDemo",
-		// 	"limberGridViewItemResizingState"
-		// );
-		// e.$limberGridViewGridPseudoItems[i].classList.remove(
-		// 	"limberGridViewGridPseudoItemResizingState",
-		// 	"limberGridViewGridPseudoItemActive"
-		// );
 	}
 };
