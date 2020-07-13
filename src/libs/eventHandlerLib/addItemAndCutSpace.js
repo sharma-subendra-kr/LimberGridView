@@ -35,9 +35,10 @@ import {
 } from "../calc/calcUtils";
 import publicConstants from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
-import { callbacks, positionData } from "../../variables/essentials";
+import { callbacks, positionData as pd } from "../../variables/essentials";
 import e from "../../variables/elements";
 import { calculateTouchPosOnLimberGrid } from "./eventHandlerUtils.js";
+import { loadInitState, unloadInitState } from "./addItemAndCutSpaceUtils.js";
 import {
 	initializeItemTouchEvents,
 	unInitializeItemTouchEvents,
@@ -54,14 +55,14 @@ let limberGridTouchStartCheckTimeOutVariable;
 let addItemAllowCheckTimeOutVariable;
 let cutSpaceAllowCheckTimeOutVariable;
 
-export const onLimberGridMouseDown = function(event) {
+export const onLimberGridMouseDown = function (event) {
 	if (event.target.classList.contains("limberGridView")) {
 		event.stopPropagation();
 	} else {
 		return;
 	}
 
-	if (event.which != 1) {
+	if (event.which !== 1) {
 		return;
 	}
 
@@ -70,12 +71,7 @@ export const onLimberGridMouseDown = function(event) {
 
 	clearTimeout(limberGridMouseDownCheckTimeOutVariable);
 	limberGridMouseDownCheckTimeOutVariable = setTimeout(
-		onLimberGridMouseDownCheck.bind(
-			this,
-			event,
-			event.offsetX,
-			event.offsetY
-		),
+		onLimberGridMouseDownCheck.bind(this, event, event.offsetX, event.offsetY),
 		publicConstants.MOUSE_DOWN_TIME
 	);
 
@@ -84,10 +80,14 @@ export const onLimberGridMouseDown = function(event) {
 	document.addEventListener("contextmenu", onLimberGridContextMenu);
 };
 
-export const onLimberGridTouchStart = function(event) {
+export const onLimberGridTouchStart = function (event) {
 	if (event.target.classList.contains("limberGridView")) {
 		event.stopPropagation();
 	} else {
+		return;
+	}
+
+	if (event.which !== 0) {
 		return;
 	}
 
@@ -109,27 +109,9 @@ export const onLimberGridTouchStart = function(event) {
 	event.stopPropagation();
 };
 
-export const onLimberGridMouseDownCheck = function(event, offsetX, offsetY) {
-	if (limberGridMouseDownCancel == false) {
+export const onLimberGridMouseDownCheck = function (event, offsetX, offsetY) {
+	if (limberGridMouseDownCancel === false) {
 		limberGridMouseDownTimerComplete = true;
-
-		e.$body[0].classList.add(
-			"limberGridViewBodyTagStateElementDraggingOrResizing",
-			"limberGridViewBodyTagStateElementAdding"
-		);
-		var length_0 = e.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
-			e.$limberGridViewItems[i].classList.add(
-				"limberGridViewItemResizingState"
-			);
-		}
-
-		var length_0 = e.$limberGridViewGridPseudoItems.length;
-		for (var i = 0; i < length_0; i++) {
-			e.$limberGridViewGridPseudoItems[i].classList.add(
-				"limberGridViewGridPseudoItemResizingState"
-			);
-		}
 
 		var scrollTop = e.$limberGridView[0].scrollTop;
 		var scrollLeft = e.$limberGridView[0].scrollLeft;
@@ -144,50 +126,17 @@ export const onLimberGridMouseDownCheck = function(event, offsetX, offsetY) {
 
 		e.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
 		e.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
-		e.$limberGridViewAddItemGuide[0].style.transform =
-			"translate(" + x + "px, " + y + "px)";
+		e.$limberGridViewAddItemGuide[0].style.transform = `translate(${x}px, ${y}px)`;
 
-		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-			e.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideActive"
-			);
-		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-			e.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideActive",
-				"limberGridViewAddItemGuideCutMode"
-			);
-		}
-
-		e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-		e.$limberGridViewHeightAdjustGuide[0].classList.add(
-			"limberGridViewHeightAdjustGuideActive"
-		);
+		loadInitState();
 	} else {
 		// mouseDown cancel before TimerComplete
 	}
 };
 
-export const onLimberGridTouchStartCheck = function(event) {
-	if (limberGridTouchStartCancel == false) {
+export const onLimberGridTouchStartCheck = function (event) {
+	if (limberGridTouchStartCancel === false) {
 		limberGridTouchStartTimerComplete = true;
-
-		e.$body[0].classList.add(
-			"limberGridViewBodyTagStateElementDraggingOrResizing",
-			"limberGridViewBodyTagStateElementAdding"
-		);
-		var length_0 = e.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
-			e.$limberGridViewItems[i].classList.add(
-				"limberGridViewItemResizingState"
-			);
-		}
-
-		var length_0 = e.$limberGridViewGridPseudoItems.length;
-		for (var i = 0; i < length_0; i++) {
-			e.$limberGridViewGridPseudoItems[i].classList.add(
-				"limberGridViewGridPseudoItemResizingState"
-			);
-		}
 
 		var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
@@ -200,7 +149,7 @@ export const onLimberGridTouchStartCheck = function(event) {
 			addPositionY: y,
 		};
 
-		var removeAddItemOnTouchHoldGuideFunction = function() {
+		var removeAddItemOnTouchHoldGuideFunction = function () {
 			e.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
 				"limberGridViewAddItemOnTouchHoldGuideActive"
 			);
@@ -209,28 +158,12 @@ export const onLimberGridTouchStartCheck = function(event) {
 
 		e.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
 		e.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
-		e.$limberGridViewAddItemGuide[0].style.transform =
-			"translate(" + x + "px, " + y + "px)";
+		e.$limberGridViewAddItemGuide[0].style.transform = `translate(${x}px, ${y}px)`;
 
-		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-			e.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideActive"
-			);
-		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-			e.$limberGridViewAddItemGuide[0].classList.add(
-				"limberGridViewAddItemGuideActive",
-				"limberGridViewAddItemGuideCutMode"
-			);
-		}
-
-		e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-		e.$limberGridViewHeightAdjustGuide[0].classList.add(
-			"limberGridViewHeightAdjustGuideActive"
-		);
+		loadInitState();
 
 		insertAddItemOnTouchHoldGuideStyles(x, y);
-		e.$limberGridViewAddItemOnTouchHoldGuide[0].style.transform =
-			"translate(" + x + "px, " + y + "px)";
+		e.$limberGridViewAddItemOnTouchHoldGuide[0].style.transform = `translate(${x}px, ${y}px)`;
 		e.$limberGridViewAddItemOnTouchHoldGuide[0].classList.add(
 			"limberGridViewAddItemOnTouchHoldGuideActive"
 		);
@@ -241,37 +174,28 @@ export const onLimberGridTouchStartCheck = function(event) {
 	}
 };
 
-export const onLimberGridMouseMove = function(event) {
-	if (limberGridMouseDownTimerComplete == true) {
-		if (
-			e.$limberGridViewAddItemGuide[0].classList.contains(
-				"limberGridViewAddItemGuideAddAllow"
-			) ||
-			e.$limberGridViewAddItemGuide[0].classList.contains(
-				"limberGridViewAddItemGuideAddDisallow"
-			)
-		) {
-			e.$limberGridViewAddItemGuide[0].classList.remove(
-				"limberGridViewAddItemGuideAddAllow",
-				"limberGridViewAddItemGuideAddDisallow"
-			);
-		}
+export const onLimberGridMouseMove = function (event) {
+	if (limberGridMouseDownTimerComplete === true) {
+		e.$limberGridViewAddItemGuide[0].classList.remove(
+			"limberGridViewAddItemGuideAddAllow",
+			"limberGridViewAddItemGuideAddDisallow"
+		);
 
-		var scrollTop = e.$limberGridView[0].scrollTop;
-		var scrollLeft = e.$limberGridView[0].scrollLeft;
+		const scrollTop = e.$limberGridView[0].scrollTop;
+		const scrollLeft = e.$limberGridView[0].scrollLeft;
 
-		var x = userActionData.addPositionX;
-		var y = userActionData.addPositionY;
+		const x = userActionData.addPositionX;
+		const y = userActionData.addPositionY;
 
-		var newWidth =
+		const newWidth =
 			event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
-		var newHeight =
+		const newHeight =
 			event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
 
 		userActionData.newWidth = newWidth;
 		userActionData.newHeight = newHeight;
 
-		var yMousePosition = event.offsetY + scrollTop;
+		const yMousePosition = event.offsetY + scrollTop;
 		adjustHeight(yMousePosition);
 
 		if (newWidth > 0 && newHeight > 0) {
@@ -279,7 +203,7 @@ export const onLimberGridMouseMove = function(event) {
 			e.$limberGridViewAddItemGuide[0].style.height = newHeight + "px";
 		}
 
-		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
 			clearTimeout(addItemAllowCheckTimeOutVariable);
 			addItemAllowCheckTimeOutVariable = setTimeout(
 				addItemAllowCheckTimeOut.bind(
@@ -291,7 +215,7 @@ export const onLimberGridMouseMove = function(event) {
 				),
 				publicConstants.DEMO_WAIT_TIME
 			);
-		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "CUTSPACE") {
 			clearTimeout(cutSpaceAllowCheckTimeOutVariable);
 			cutSpaceAllowCheckTimeOutVariable = setTimeout(
 				cutSpaceAllowCheckTimeOut.bind(
@@ -306,6 +230,7 @@ export const onLimberGridMouseMove = function(event) {
 		}
 	} else {
 		clearTimeout(limberGridMouseDownCheckTimeOutVariable);
+
 		e.$limberGridView[0].removeEventListener(
 			"mousemove",
 			onLimberGridMouseMove
@@ -316,124 +241,109 @@ export const onLimberGridMouseMove = function(event) {
 	event.stopPropagation();
 };
 
-export const onLimberGridTouchMove = function(event) {
-	if (limberGridTouchStartTimerComplete == true) {
-		console.log("limberGridTouchStartTimerComplete");
-		if (
-			e.$limberGridViewAddItemGuide[0].classList.contains(
-				"limberGridViewAddItemGuideAddAllow"
-			) ||
-			e.$limberGridViewAddItemGuide[0].classList.contains(
-				"limberGridViewAddItemGuideAddDisallow"
-			)
-		) {
-			e.$limberGridViewAddItemGuide[0].classList.remove(
-				"limberGridViewAddItemGuideAddAllow",
-				"limberGridViewAddItemGuideAddDisallow"
-			);
-		}
+export const onLimberGridTouchMove = function (event) {
+	if (limberGridTouchStartTimerComplete === true) {
+		e.$limberGridViewAddItemGuide[0].classList.remove(
+			"limberGridViewAddItemGuideAddAllow",
+			"limberGridViewAddItemGuideAddDisallow"
+		);
 
-		var scrollTop = e.$limberGridView[0].scrollTop;
-		var scrollLeft = e.$limberGridView[0].scrollLeft;
+		const scrollTop = e.$limberGridView[0].scrollTop;
+		const scrollLeft = e.$limberGridView[0].scrollLeft;
 
-		var x = userActionData.addPositionX;
-		var y = userActionData.addPositionY;
+		const x = userActionData.addPositionX;
+		const y = userActionData.addPositionY;
 
-		var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
+		const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
-		if (touchPositionOnLimberGrid != false) {
-			var newWidth = touchPositionOnLimberGrid.x - x;
-			var newHeight = touchPositionOnLimberGrid.y - y;
+		const newWidth = touchPositionOnLimberGrid.x - x;
+		const newHeight = touchPositionOnLimberGrid.y - y;
 
+		if (touchPositionOnLimberGrid !== false) {
 			userActionData.newWidth = newWidth;
 			userActionData.newHeight = newHeight;
 
 			if (newWidth > 0 && newHeight > 0) {
 				e.$limberGridViewAddItemGuide[0].style.width = newWidth + "px";
-				e.$limberGridViewAddItemGuide[0].style.height =
-					newHeight + "px";
+				e.$limberGridViewAddItemGuide[0].style.height = newHeight + "px";
 			}
 		}
 
-		if (touchPositionOnLimberGrid != false) {
-			var limberGridViewBoundingClientRect = e.$limberGridView[0].getBoundingClientRect();
-			var limberGridViewWidthVisibleWidth =
+		if (touchPositionOnLimberGrid !== false) {
+			const limberGridViewBoundingClientRect = e.$limberGridView[0].getBoundingClientRect();
+			const limberGridViewWidthVisibleWidth =
 				e.$limberGridView[0].offsetWidth -
 				limberGridViewBoundingClientRect.left;
-			var limberGridViewHeightVisibleHeight =
+			const limberGridViewHeightVisibleHeight =
 				e.$limberGridView[0].offsetHeight -
 				limberGridViewBoundingClientRect.top;
-			var limberGridViewOnVisibleAreaX =
+			const limberGridViewOnVisibleAreaX =
 				touchPositionOnLimberGrid.x +
 				privateConstants.PADDING_LEFT -
 				scrollLeft;
-			var limberGridViewOnVisibleAreaY =
-				touchPositionOnLimberGrid.y +
-				privateConstants.PADDING_TOP -
-				scrollTop;
+			const limberGridViewOnVisibleAreaY =
+				touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
 
-			var yTouchPosition = touchPositionOnLimberGrid.y;
+			const yTouchPosition = touchPositionOnLimberGrid.y;
 			adjustHeight(yTouchPosition);
 
-			var programScrolled = adjustScroll(
+			const programScrolled = adjustScroll(
 				limberGridViewOnVisibleAreaY,
 				limberGridViewHeightVisibleHeight
 			);
-		}
 
-		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-			clearTimeout(addItemAllowCheckTimeOutVariable);
-			if (programScrolled != true) {
-				addItemAllowCheckTimeOutVariable = setTimeout(
-					addItemAllowCheckTimeOut.bind(
-						this,
-						userActionData.addPositionX,
-						userActionData.addPositionY,
-						newWidth,
-						newHeight
-					),
-					publicConstants.DEMO_WAIT_TIME
-				);
-			}
-		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-			clearTimeout(cutSpaceAllowCheckTimeOutVariable);
-			if (programScrolled != true) {
-				cutSpaceAllowCheckTimeOutVariable = setTimeout(
-					cutSpaceAllowCheckTimeOut.bind(
-						this,
-						userActionData.addPositionX,
-						userActionData.addPositionY,
-						newWidth,
-						newHeight
-					),
-					publicConstants.DEMO_WAIT_TIME
-				);
+			if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
+				clearTimeout(addItemAllowCheckTimeOutVariable);
+				if (programScrolled !== true) {
+					addItemAllowCheckTimeOutVariable = setTimeout(
+						addItemAllowCheckTimeOut.bind(
+							this,
+							userActionData.addPositionX,
+							userActionData.addPositionY,
+							newWidth,
+							newHeight
+						),
+						publicConstants.DEMO_WAIT_TIME
+					);
+				}
+			} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "CUTSPACE") {
+				clearTimeout(cutSpaceAllowCheckTimeOutVariable);
+				if (programScrolled !== true) {
+					cutSpaceAllowCheckTimeOutVariable = setTimeout(
+						cutSpaceAllowCheckTimeOut.bind(
+							this,
+							userActionData.addPositionX,
+							userActionData.addPositionY,
+							newWidth,
+							newHeight
+						),
+						publicConstants.DEMO_WAIT_TIME
+					);
+				}
 			}
 		}
 		event.preventDefault();
 	} else {
 		clearTimeout(limberGridTouchStartCheckTimeOutVariable);
+
 		e.$limberGridView[0].removeEventListener(
 			"touchmove",
 			onLimberGridTouchMove
 		);
 		document.removeEventListener("touchend", onLimberGridTouchEnd);
 		document.removeEventListener("touchcancel", onLimberGridTouchCancel);
-		document.removeEventListener(
-			"contextmenu",
-			onLimberGridTouchContextMenu
-		);
+		document.removeEventListener("contextmenu", onLimberGridTouchContextMenu);
 		initializeItemTouchEvents();
 	}
 
 	event.stopPropagation();
 };
 
-export const onLimberGridMouseUp = function(event) {
+export const onLimberGridMouseUp = function (event) {
 	clearTimeout(addItemAllowCheckTimeOutVariable);
 	clearTimeout(limberGridMouseDownCheckTimeOutVariable);
 	var itemAddedFlag = false;
-	if (limberGridMouseDownTimerComplete == true) {
+	if (limberGridMouseDownTimerComplete === true) {
 		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
 			if (
 				addItemAllowCheck(
@@ -461,7 +371,7 @@ export const onLimberGridMouseUp = function(event) {
 
 				e.$limberGridView[0].scrollTop = scrollTop;
 			}
-		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "CUTSPACE") {
 			if (
 				cutSpaceAllowCheck(
 					userActionData.addPositionX,
@@ -470,10 +380,7 @@ export const onLimberGridMouseUp = function(event) {
 					userActionData.newHeight
 				)
 			) {
-				shiftItemsUp(
-					userActionData.addPositionY,
-					userActionData.newHeight
-				);
+				shiftItemsUp(userActionData.addPositionY, userActionData.newHeight);
 			}
 		}
 	} else {
@@ -497,12 +404,12 @@ export const onLimberGridMouseUp = function(event) {
 	}
 };
 
-export const onLimberGridTouchEnd = function(event) {
+export const onLimberGridTouchEnd = function (event) {
 	clearTimeout(addItemAllowCheckTimeOutVariable);
 	clearTimeout(limberGridTouchStartCheckTimeOutVariable);
 	var itemAddedFlag = false;
-	if (limberGridTouchStartTimerComplete == true) {
-		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	if (limberGridTouchStartTimerComplete === true) {
+		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
 			if (
 				addItemAllowCheck(
 					userActionData.addPositionX,
@@ -528,10 +435,8 @@ export const onLimberGridTouchEnd = function(event) {
 				itemAddedFlag = true;
 
 				e.$limberGridView[0].scrollTop = scrollTop;
-
-				limberGridTouchStartTimerComplete = false;
 			}
-		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "CUTSPACE") {
 			if (
 				cutSpaceAllowCheck(
 					userActionData.addPositionX,
@@ -540,10 +445,7 @@ export const onLimberGridTouchEnd = function(event) {
 					userActionData.newHeight
 				)
 			) {
-				shiftItemsUp(
-					userActionData.addPositionY,
-					userActionData.newHeight
-				);
+				shiftItemsUp(userActionData.addPositionY, userActionData.newHeight);
 			}
 		}
 	} else {
@@ -570,7 +472,7 @@ export const onLimberGridTouchEnd = function(event) {
 	}
 };
 
-export const onLimberGridTouchCancel = function(event) {
+export const onLimberGridTouchCancel = function (event) {
 	clearTimeout(addItemAllowCheckTimeOutVariable);
 	clearTimeout(limberGridTouchStartCheckTimeOutVariable);
 	limberGridTouchStartCancel = false;
@@ -581,66 +483,29 @@ export const onLimberGridTouchCancel = function(event) {
 	event.stopPropagation();
 };
 
-export const onLimberGridTouchContextMenu = function(event) {
+export const onLimberGridTouchContextMenu = function (event) {
 	event.preventDefault();
 };
 
-export const onLimberGridContextMenu = function(event) {
-	if (event != undefined) {
+export const onLimberGridContextMenu = function (event) {
+	if (event) {
 		event.preventDefault();
 		event.stopPropagation();
 	}
 
-	e.$limberGridViewAddItemGuide[0].classList.remove(
-		"limberGridViewAddItemGuideActive",
-		"limberGridViewAddItemGuideCutMode",
-		"limberGridViewAddItemGuideAddAllow",
-		"limberGridViewAddItemGuideAddDisallow"
-	);
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
-	);
-	e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
+	unloadInitState();
 
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing",
-		"limberGridViewBodyTagStateElementAdding"
-	);
-	var length_0 = e.$limberGridViewItems.length;
-	for (var i = 0; i < length_0; i++) {
-		e.$limberGridViewItems[i].classList.remove(
-			"limberGridViewItemResizingState"
-		);
-	}
-
-	var length_0 = e.$limberGridViewGridPseudoItems.length;
-	for (var i = 0; i < length_0; i++) {
-		e.$limberGridViewGridPseudoItems[i].classList.remove(
-			"limberGridViewGridPseudoItemResizingState"
-		);
-	}
-
-	e.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
-		"limberGridViewAddItemOnTouchHoldGuideActive"
-	);
-
-	e.$limberGridView[0].removeEventListener(
-		"mousemove",
-		onLimberGridMouseMove
-	);
+	e.$limberGridView[0].removeEventListener("mousemove", onLimberGridMouseMove);
 	document.removeEventListener("mouseup", onLimberGridMouseUp);
 	document.removeEventListener("contextmenu", onLimberGridContextMenu);
 
-	e.$limberGridView[0].removeEventListener(
-		"touchmove",
-		onLimberGridTouchMove
-	);
+	e.$limberGridView[0].removeEventListener("touchmove", onLimberGridTouchMove);
 	document.removeEventListener("touchend", onLimberGridTouchEnd);
 	document.removeEventListener("touchcancel", onLimberGridTouchCancel);
 	document.removeEventListener("contextmenu", onLimberGridTouchContextMenu);
 };
 
-export const addItemAllowCheckTimeOut = function(x, y, width, height) {
+export const addItemAllowCheckTimeOut = function (x, y, width, height) {
 	if (addItemAllowCheck(x, y, width, height) == false) {
 		e.$limberGridViewAddItemGuide[0].classList.remove(
 			"limberGridViewAddItemGuideAddAllow"
@@ -658,7 +523,7 @@ export const addItemAllowCheckTimeOut = function(x, y, width, height) {
 	}
 };
 
-export const addItemAllowCheck = function(x, y, width, height) {
+export const addItemAllowCheck = function (x, y, width, height) {
 	var tempPlane = {
 		x: x,
 		y: y,
@@ -670,7 +535,7 @@ export const addItemAllowCheck = function(x, y, width, height) {
 		return false;
 	}
 
-	if (typeof width != "number" || typeof height != "number") {
+	if (typeof width !== "number" || typeof height !== "number") {
 		return false;
 	}
 
@@ -682,24 +547,15 @@ export const addItemAllowCheck = function(x, y, width, height) {
 		return false;
 	}
 
-	var length_0 = positionData.length;
-	for (var i = 0; i < length_0; i++) {
+	const len = pd.length;
+	for (var i = 0; i < len; i++) {
 		var iterItem = {
-			x: positionData[i].x - getMarginAtPoint(positionData[i].x),
-			y: positionData[i].y - getMarginAtPoint(positionData[i].y),
-			width:
-				positionData[i].width +
-				getMarginAtPoint(positionData[i].x) +
-				publicConstants.MARGIN,
-			height:
-				positionData[i].height +
-				getMarginAtPoint(positionData[i].y) +
-				publicConstants.MARGIN,
+			x: pd[i].x - getMarginAtPoint(pd[i].x),
+			y: pd[i].y - getMarginAtPoint(pd[i].y),
+			width: pd[i].width + getMarginAtPoint(pd[i].x) + publicConstants.MARGIN,
+			height: pd[i].height + getMarginAtPoint(pd[i].y) + publicConstants.MARGIN,
 		};
-		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
-			iterItem,
-			tempPlane
-		);
+		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(iterItem, tempPlane);
 
 		if (isInside) {
 			return false;
@@ -708,8 +564,8 @@ export const addItemAllowCheck = function(x, y, width, height) {
 	return true;
 };
 
-export const cutSpaceAllowCheckTimeOut = function(x, y, width, height) {
-	if (cutSpaceAllowCheck(x, y, width, height) == false) {
+export const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
+	if (cutSpaceAllowCheck(x, y, width, height) === false) {
 		e.$limberGridViewAddItemGuide[0].classList.remove(
 			"limberGridViewAddItemGuideAddAllow"
 		);
@@ -726,7 +582,7 @@ export const cutSpaceAllowCheckTimeOut = function(x, y, width, height) {
 	}
 };
 
-export const cutSpaceAllowCheck = function(x, y, width, height) {
+export const cutSpaceAllowCheck = function (x, y, width, height) {
 	var tempPlane = {
 		x: 0,
 		y: y - publicConstants.MARGIN / 2,
@@ -734,16 +590,13 @@ export const cutSpaceAllowCheck = function(x, y, width, height) {
 		height: height + publicConstants.MARGIN / 2,
 	};
 
-	if (typeof width != "number" || typeof height != "number") {
+	if (typeof width !== "number" || typeof height !== "number") {
 		return false;
 	}
 
-	var length_0 = positionData.length;
-	for (var i = 0; i < length_0; i++) {
-		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(
-			tempPlane,
-			positionData[i]
-		);
+	const len = pd.length;
+	for (var i = 0; i < len; i++) {
+		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(tempPlane, pd[i]);
 
 		if (isInside) {
 			return false;
@@ -752,34 +605,22 @@ export const cutSpaceAllowCheck = function(x, y, width, height) {
 	return true;
 };
 
-export const insertAddItemOnTouchHoldGuideStyles = function(x, y) {
+export const insertAddItemOnTouchHoldGuideStyles = function (x, y) {
 	var ripple = [];
 	ripple[0] = "@keyframes limberGridViewAddItemOnTouchHoldRipple {";
 	ripple[1] = "0% {";
 	ripple[2] =
-		"transform: translate(" +
-		(x - 5) +
-		"px, " +
-		(y - 5) +
-		"px) scale(0, 0);";
+		"transform: translate(" + (x - 5) + "px, " + (y - 5) + "px) scale(0, 0);";
 	ripple[3] = "opacity: 1;";
 	ripple[4] = "}";
 	ripple[5] = "20% {";
 	ripple[6] =
-		"transform: translate(" +
-		(x - 5) +
-		"px, " +
-		(y - 5) +
-		"px) scale(25, 25);";
+		"transform: translate(" + (x - 5) + "px, " + (y - 5) + "px) scale(25, 25);";
 	ripple[7] = "opacity: 1;";
 	ripple[8] = "}";
 	ripple[9] = "100% {";
 	ripple[10] =
-		"transform: translate(" +
-		(x - 5) +
-		"px, " +
-		(y - 5) +
-		"px) scale(50, 50);";
+		"transform: translate(" + (x - 5) + "px, " + (y - 5) + "px) scale(50, 50);";
 	ripple[11] = "opacity: 0;";
 	ripple[12] = "}";
 	ripple[13] = "}";
