@@ -232,19 +232,34 @@ export const loadResizingState = (userActionData) => {
 	}
 };
 
-export const unloadResizingState = () => {
-	// const itemsLen = e.$limberGridViewItems.length;
-	// for (let i = 0; i < itemsLen; i++) {
-	// 	e.$limberGridViewItems[i].classList.remove(
-	// 		"limberGridViewItemResizingState"
-	// 	);
-	// }
-	// const pseudoItemsLen = e.$limberGridViewGridPseudoItems.length;
-	// for (let i = 0; i < pseudoItemsLen; i++) {
-	// 	e.$limberGridViewGridPseudoItems[i].classList.remove(
-	// 		"limberGridViewGridPseudoItemResizingState"
-	// 	);
-	// }
+export const unloadResizingState = (userActionData) => {
+	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
+		"limberGridViewHeightAdjustGuideActive"
+	);
+
+	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.remove(
+		"limberGridViewGridPseudoItemActive"
+	);
+	e.$limberGridViewGridPseudoItems[
+		userActionData.itemIndex
+	].style.transform = `translate(0px, 0px)`;
+
+	e.$body[0].classList.remove(
+		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	);
+
+	const itemsLen = e.$limberGridViewItems.length;
+	for (let i = 0; i < itemsLen; i++) {
+		e.$limberGridViewItems[i].classList.remove(
+			"limberGridViewItemResizingState"
+		);
+	}
+	const pseudoItemsLen = e.$limberGridViewGridPseudoItems.length;
+	for (let i = 0; i < pseudoItemsLen; i++) {
+		e.$limberGridViewGridPseudoItems[i].classList.remove(
+			"limberGridViewGridPseudoItemResizingState"
+		);
+	}
 };
 
 export const loadMoveState = (userActionData, event) => {
@@ -275,4 +290,57 @@ export const loadMoveState = (userActionData, event) => {
 	);
 };
 
-export const unloadMoveState = (userActionData) => {};
+export const unloadMoveState = (userActionData) => {
+	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
+		"limberGridViewHeightAdjustGuideActive"
+	);
+
+	e.$limberGridViewItems[userActionData.itemIndex].classList.remove(
+		"limberGridViewItemDemo"
+	);
+
+	e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].classList.remove(
+		"limberGridViewBodyPseudoItemActive"
+	);
+	e.$limberGridViewBodyPseudoItems[
+		userActionData.itemIndex
+	].style.transform = `translate(0px, 0px)`;
+
+	e.$body[0].classList.remove(
+		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	);
+};
+
+export const loadOnMoveState = (userActionData, event, type) => {
+	if (type === "move") {
+		e.$limberGridViewMoveGuide[0].classList.remove(
+			"limberGridViewMoveGuideActive"
+		);
+
+		e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].classList.remove(
+			"limberGridViewBodyPseudoItemMoveAllow",
+			"limberGridViewBodyPseudoItemMoveDisallow"
+		);
+
+		if (event.which === 1) {
+			e.$limberGridViewBodyPseudoItems[
+				userActionData.itemIndex
+			].style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+		} else if (event.which === 0) {
+			e.$limberGridViewBodyPseudoItems[
+				userActionData.itemIndex
+			].style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+		}
+	} else if (type === "resize") {
+		e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.remove(
+			"limberGridViewGridPseudoItemResizeAllow",
+			"limberGridViewGridPseudoItemResizeDisallow"
+		);
+	}
+};
+
+export const unloadOnMoveState = () => {
+	e.$limberGridViewMoveGuide[0].classList.remove(
+		"limberGridViewMoveGuideActive"
+	);
+};

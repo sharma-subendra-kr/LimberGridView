@@ -49,6 +49,8 @@ import {
 	unloadResizingState,
 	loadMoveState,
 	unloadMoveState,
+	loadOnMoveState,
+	unloadOnMoveState,
 } from "./eventHandlerUtils.js";
 import { onLimberGridTouchStart } from "./addItemAndCutSpace";
 import {
@@ -196,44 +198,29 @@ export const tapHoldCheck = function (event) {
 export const onMouseMove = function (event) {
 	if (mouseDownTimerComplete === true) {
 		if (userActionData.type === "move") {
-			e.$limberGridViewMoveGuide[0].classList.remove(
-				"limberGridViewMoveGuideActive"
-			);
+			loadOnMoveState(userActionData, event, "move");
 
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].classList.remove(
-				"limberGridViewBodyPseudoItemMoveAllow",
-				"limberGridViewBodyPseudoItemMoveDisallow"
-			);
-
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+			clearTimeout(showMoveDemoTimeOutVariable);
 
 			var mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
 
 			if (mousePositionOnLimberGrid !== false) {
 				const yMousePosition = mousePositionOnLimberGrid.y;
 				adjustHeight(yMousePosition);
-			}
 
-			clearTimeout(showMoveDemoTimeOutVariable);
-			showMoveDemoTimeOutVariable = setTimeout(
-				showMoveDemo.bind(
-					this,
-					userActionData.itemIndex,
-					mousePositionOnLimberGrid
-				),
-				publicConstants.DEMO_WAIT_TIME
-			);
+				showMoveDemoTimeOutVariable = setTimeout(
+					showMoveDemo.bind(
+						this,
+						userActionData.itemIndex,
+						mousePositionOnLimberGrid
+					),
+					publicConstants.DEMO_WAIT_TIME
+				);
+			}
 		} else {
-			e.$limberGridViewGridPseudoItems[
-				userActionData.itemIndex
-			].classList.remove(
-				"limberGridViewGridPseudoItemResizeAllow",
-				"limberGridViewGridPseudoItemResizeDisallow"
-			);
+			loadOnMoveState(userActionData, event, "resize");
+
+			clearTimeout(showResizeDemoTimeOutVariable);
 
 			const scrollTop = e.$limberGridView[0].scrollTop;
 			const scrollLeft = e.$limberGridView[0].scrollLeft;
@@ -260,7 +247,6 @@ export const onMouseMove = function (event) {
 				].style.height = newHeight + "px";
 			}
 
-			clearTimeout(showResizeDemoTimeOutVariable);
 			showResizeDemoTimeOutVariable = setTimeout(
 				showResizeDemo.bind(
 					this,
@@ -288,22 +274,9 @@ export const onMouseMove = function (event) {
 export const onTouchMove = function (event) {
 	if (tapHoldTimerComplete === true) {
 		if (userActionData.type === "move") {
+			loadOnMoveState(userActionData, event, "move");
+
 			clearTimeout(showMoveDemoTimeOutVariable);
-
-			e.$limberGridViewMoveGuide[0].classList.remove(
-				"limberGridViewMoveGuideActive"
-			);
-
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].classList.remove(
-				"limberGridViewBodyPseudoItemMoveAllow",
-				"limberGridViewBodyPseudoItemMoveDisallow"
-			);
-
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
 
 			var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
@@ -347,27 +320,19 @@ export const onTouchMove = function (event) {
 				}
 			}
 		} else {
+			loadOnMoveState(userActionData, event, "resize");
+
 			clearTimeout(showResizeDemoTimeOutVariable);
-
-			e.$limberGridViewGridPseudoItems[
-				userActionData.itemIndex
-			].classList.remove(
-				"limberGridViewGridPseudoItemResizeAllow",
-				"limberGridViewGridPseudoItemResizeDisallow"
-			);
-
-			const scrollTop = e.$limberGridView[0].scrollTop;
-			const scrollLeft = e.$limberGridView[0].scrollLeft;
 
 			const x = userActionData.itemX;
 			const y = userActionData.itemY;
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
-			if (touchPositionOnLimberGrid !== false) {
-				const newWidth = touchPositionOnLimberGrid.x - x;
-				const newHeight = touchPositionOnLimberGrid.y - y;
+			const newWidth = touchPositionOnLimberGrid.x - x;
+			const newHeight = touchPositionOnLimberGrid.y - y;
 
+			if (touchPositionOnLimberGrid !== false) {
 				userActionData.newWidth = newWidth;
 				userActionData.newHeight = newHeight;
 
@@ -382,6 +347,9 @@ export const onTouchMove = function (event) {
 			}
 
 			if (touchPositionOnLimberGrid !== false) {
+				const scrollTop = e.$limberGridView[0].scrollTop;
+				const scrollLeft = e.$limberGridView[0].scrollLeft;
+
 				const limberGridViewBoundingClientRect = e.$limberGridView[0].getBoundingClientRect();
 				const limberGridViewWidthVisibleWidth =
 					e.$limberGridView[0].offsetWidth -
@@ -443,12 +411,8 @@ export const onMouseUp = function (event) {
 	var itemMoveFlag = false;
 	if (mouseDownTimerComplete === true) {
 		if (userActionData.type === "move") {
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].classList.remove("limberGridViewBodyPseudoItemActive");
+			unloadMoveState(userActionData);
+			unloadOnMoveState();
 
 			var mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
 			var updatedCoordinates = {};
@@ -469,12 +433,8 @@ export const onMouseUp = function (event) {
 				revertShowMoveOrResizeDemo();
 			}
 		} else {
-			e.$limberGridViewGridPseudoItems[
-				userActionData.itemIndex
-			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-			e.$limberGridViewGridPseudoItems[
-				userActionData.itemIndex
-			].classList.remove("limberGridViewGridPseudoItemActive");
+			unloadResizingState(userActionData);
+			unloadOnMoveState();
 
 			try {
 				var newWidth = userActionData.newWidth;
@@ -496,17 +456,6 @@ export const onMouseUp = function (event) {
 	e.$limberGridView[0].removeEventListener("mousemove", onMouseMove);
 	document.removeEventListener("mouseup", onMouseUp);
 	document.removeEventListener("contextmenu", onContextMenu);
-
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
-	);
-	e.$limberGridViewMoveGuide[0].classList.remove(
-		"limberGridViewMoveGuideActive"
-	);
-
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
-	);
 
 	event.preventDefault();
 	event.stopPropagation();
@@ -553,12 +502,8 @@ export const onTouchEnd = function (event) {
 	var itemMoveFlag = false;
 	if (tapHoldTimerComplete === true) {
 		if (userActionData.type === "move") {
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].classList.remove("limberGridViewBodyPseudoItemActive");
+			unloadMoveState(userActionData);
+			unloadOnMoveState();
 
 			var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 			if (touchPositionOnLimberGrid !== false) {
@@ -576,12 +521,8 @@ export const onTouchEnd = function (event) {
 				throw "Touch position outside grid area.";
 			}
 		} else {
-			e.$limberGridViewGridPseudoItems[
-				userActionData.itemIndex
-			].style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-			e.$limberGridViewGridPseudoItems[
-				userActionData.itemIndex
-			].classList.remove("limberGridViewGridPseudoItemActive");
+			unloadResizingState(userActionData);
+			unloadOnMoveState();
 
 			try {
 				var newWidth = userActionData.newWidth;
@@ -606,17 +547,6 @@ export const onTouchEnd = function (event) {
 	document.removeEventListener("contextmenu", onItemTouchContextMenu);
 	document.removeEventListener("touchcancel", onTouchCancel);
 	e.$limberGridView[0].addEventListener("touchstart", onLimberGridTouchStart);
-
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
-	);
-	e.$limberGridViewMoveGuide[0].classList.remove(
-		"limberGridViewMoveGuideActive"
-	);
-
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
-	);
 
 	event.stopPropagation();
 
@@ -659,17 +589,10 @@ export const onContextMenu = function (event) {
 	clearTimeout(showMoveDemoTimeOutVariable);
 	clearTimeout(showResizeDemoTimeOutVariable);
 
+	unloadResizingState();
+	unloadMoveState();
+	unloadOnMoveState();
 	revertShowMoveOrResizeDemo();
-
-	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.remove(
-		"limberGridViewGridPseudoItemActive"
-	);
-
-	e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].classList.remove(
-		"limberGridViewBodyPseudoItemActive"
-	);
-	e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].style.transform =
-		"translate(" + 0 + "px, " + 0 + "px)";
 
 	document.removeEventListener("mousemove", onMouseMove);
 	e.$limberGridView[0].removeEventListener("mousemove", onMouseMove);
@@ -682,17 +605,6 @@ export const onContextMenu = function (event) {
 	document.removeEventListener("touchcancel", onTouchCancel);
 
 	document.removeEventListener("contextmenu", onContextMenu);
-
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
-	);
-	e.$limberGridViewMoveGuide[0].classList.remove(
-		"limberGridViewMoveGuideActive"
-	);
-
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
-	);
 
 	userActionData = null;
 
@@ -791,15 +703,16 @@ export const showResizeDemo = function (index, width, height) {
 export const revertShowMoveOrResizeDemo = function () {
 	var length_0 = e.$limberGridViewItems.length;
 	for (var i = 0; i < length_0; i++) {
-		e.$limberGridViewItems[i].style.transform =
-			"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-		e.$limberGridViewItems[i].classList.remove(
-			"limberGridViewItemDemo",
-			"limberGridViewItemResizingState"
-		);
-		e.$limberGridViewGridPseudoItems[i].classList.remove(
-			"limberGridViewGridPseudoItemResizingState",
-			"limberGridViewGridPseudoItemActive"
-		);
+		e.$limberGridViewItems[
+			i
+		].style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
+		// e.$limberGridViewItems[i].classList.remove(
+		// 	"limberGridViewItemDemo",
+		// 	"limberGridViewItemResizingState"
+		// );
+		// e.$limberGridViewGridPseudoItems[i].classList.remove(
+		// 	"limberGridViewGridPseudoItemResizingState",
+		// 	"limberGridViewGridPseudoItemActive"
+		// );
 	}
 };
