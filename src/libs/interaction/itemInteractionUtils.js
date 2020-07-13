@@ -30,7 +30,9 @@ import {
 	isPointInsideRect,
 	doesPointTouchRect,
 } from "../rect/rectUtils";
-import publicConstants from "../../constants/publicConstants";
+import publicConstants, {
+	getPublicConstantByName,
+} from "../../constants/publicConstants";
 import privateConstants from "../../constants/privateConstants";
 import {
 	positionData as pd,
@@ -113,16 +115,18 @@ export const getMoveAffectedItems = (item, index) => {
 export const resizeItemInitialChecks = (index, width, height) => {
 	if (pd[index].x + width + publicConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
-		return false;
+		throw "Right edges falls outside the grid area.";
 	}
 
-	if (typeof width != "number" || typeof height != "number") {
-		return false;
+	if (typeof width !== "number" || typeof height !== "number") {
+		throw "Width or Height is not a number.";
 	}
 
 	if (width < 50 || height < 50) {
 		// very small. TO DO: let the developers decide the smallest item size but can tbe less than 50
-		return false;
+		throw `Width or height less the min height or width ${getPublicConstantByName(
+			"MIN_HEIGHT_AND_WIDTH"
+		)}.`;
 	}
 
 	return true;
@@ -131,17 +135,17 @@ export const resizeItemInitialChecks = (index, width, height) => {
 export const moveItemInitialChecks = (index, toX, toY) => {
 	if (index < 0 || index >= pd.length) {
 		// invalid index
-		return false;
+		throw "Index out of bounds.";
 	}
 
 	if (toX < publicConstants.MARGIN || toY < publicConstants.MARGIN) {
 		// falls outside
-		return false;
+		throw "Left edges falls outside the grid area.";
 	}
 
 	if (toX + pd[index].width + publicConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
-		return false;
+		throw "Right edges falls outside the grid area.";
 	}
 
 	return true;

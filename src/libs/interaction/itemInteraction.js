@@ -40,6 +40,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 // 	subtractPlanes,
 // } from "./calcUtils";
 import {
+	getResizeAffectedItems,
 	getMoveAffectedItems,
 	resizeItemInitialChecks,
 	moveItemInitialChecks,
@@ -61,17 +62,17 @@ import e from "../../variables/elements";
 
 export const resizeItem = function (index, width, height) {
 	index = parseInt(index);
-	if (!resizeItemInitialChecks(index, width, height)) return false;
+	resizeItemInitialChecks(index, width, height);
 
 	setModifiedPositionData(pd);
 	mpd[index].width = width;
-	mpd[index].heigt = heigt;
+	mpd[index].height = height;
 
 	const modifiedItem = {
 		x: pd[index].x,
 		y: pd[index].y,
 		width: width,
-		heght: height,
+		height: height,
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
@@ -86,18 +87,19 @@ export const resizeItem = function (index, width, height) {
 
 export const resizeItemDemo = function (index, width, height) {
 	index = parseInt(index);
-	if (!resizeItemInitialChecks(index, width, height)) return false;
+	resizeItemInitialChecks(index, width, height);
+
 	resetDemoUIChanges();
 
 	setModifiedPositionData(pd);
 	mpd[index].width = width;
-	mpd[index].heigt = heigt;
+	mpd[index].height = height;
 
 	const modifiedItem = {
 		x: pd[index].x,
 		y: pd[index].y,
 		width: width,
-		heght: height,
+		height: height,
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
@@ -121,7 +123,7 @@ export const moveItem = function (index, toX, toY) {
 		toY = adjustedPt.toY;
 	}
 
-	if (!moveItemInitialChecks(index, toX, toY)) return false;
+	moveItemInitialChecks(index, toX, toY);
 
 	setModifiedPositionData(pd);
 	mpd[index].x = toX;
@@ -173,7 +175,8 @@ export const moveItemDemo = function (index, toX, toY) {
 		toY = adjustedPt.toY;
 	}
 
-	if (!moveItemInitialChecks(index, toX, toY)) return false;
+	moveItemInitialChecks(index, toX, toY);
+
 	resetDemoUIChanges();
 
 	setModifiedPositionData(pd);
