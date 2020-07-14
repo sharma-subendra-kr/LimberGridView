@@ -432,6 +432,7 @@ export const onMouseUp = function (event) {
 					throw "Mouse position outside grid area.";
 				}
 			} catch (error) {
+				console.error(error);
 				revertShowMoveOrResizeDemo();
 			}
 		} else {
@@ -508,19 +509,23 @@ export const onTouchEnd = function (event) {
 			unloadOnMoveState();
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
-			if (touchPositionOnLimberGrid !== false) {
-				var updatedCoordinates = {};
-				moveItem(
-					userActionData.itemIndex,
-					touchPositionOnLimberGrid.x,
-					touchPositionOnLimberGrid.y
-				);
-				updatedCoordinates.x = touchPositionOnLimberGrid.x;
-				updatedCoordinates.y = touchPositionOnLimberGrid.y;
-				itemMoveFlag = true;
-			} else {
+			var updatedCoordinates = {};
+			try {
+				if (touchPositionOnLimberGrid !== false) {
+					moveItem(
+						userActionData.itemIndex,
+						touchPositionOnLimberGrid.x,
+						touchPositionOnLimberGrid.y
+					);
+					updatedCoordinates.x = touchPositionOnLimberGrid.x;
+					updatedCoordinates.y = touchPositionOnLimberGrid.y;
+					itemMoveFlag = true;
+				} else {
+					throw "Touch position outside grid area.";
+				}
+			} catch (error) {
+				console.error(error);
 				revertShowMoveOrResizeDemo();
-				throw "Touch position outside grid area.";
 			}
 		} else {
 			unloadResizingState(userActionData);
