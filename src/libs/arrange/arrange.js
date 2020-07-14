@@ -455,8 +455,9 @@ export const assignAdjacentRects = (rectsItY) => {
 
 export const mergeFreeRects = (freeRectsArr, lastId) => {
 	const stack = new Stack();
-	let refStack;
+	const stackIt = new IntervalTreesIterative();
 	const resultStack = new Stack();
+	const resultIt = new IntervalTreesIterative();
 
 	let adjacents,
 		adj,
@@ -467,7 +468,7 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 		mergedRect,
 		mergedRects,
 		mergeRectsLen;
-	let breakSig = false;
+	let atLeastOneFullMerge = false;
 	let idCount = lastId;
 	const freeRectsLen = freeRectsArr.length;
 
@@ -477,14 +478,13 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 		}
 
 		stack.push(freeRectsArr[k]);
-		refStack = new Stack();
 		while (!stack.isEmpty()) {
 			top = stack.pop();
 			// printStackTopRect(top.d);
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
-			breakSig = false;
+			atLeastOneFullMerge = false;
 			for (let i = 0; i < keyslen; i++) {
 				if (!top.d.a[keys[i]]) {
 					continue;
@@ -519,36 +519,27 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 							// printMergedRect(mergedObject.d);
 
 							filterAdjacents(mergedObject);
+							if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
+								stack.push(mergedObject);
+							}
 
-							if (
-								isRectInside(mergedRect, adj.d.rect) &&
-								isRectInside(mergedRect, top.d.rect)
-							) {
-								refStack.push(adj);
+							if (isRectInside(mergedRect, adj.d.rect)) {
+								adj.d.ref = mergedObject;
 							}
 
 							if (isRectInside(mergedRect, top.d.rect)) {
-								refStack.push(top);
-								stack.push(mergedObject);
-
-								breakSig = true;
-								break;
+								top.d.ref = mergedObject;
+								atLeastOneFullMerge = true;
 							}
 						}
 					}
-					if (breakSig) break;
 				}
 			}
 
-			if (!breakSig) {
-				while (!refStack.isEmpty()) {
-					const rTop = refStack.pop();
-					if (areRectsAdjacent(top.d.rect, rTop.d.rect)) {
-						rTop.d.ref = top;
-					}
+			if (!atLeastOneFullMerge) {
+				if (!isRectIdenticalOrInside(resultIt, top)) {
+					resultStack.push(top);
 				}
-
-				resultStack.push(top);
 			}
 		}
 	}
@@ -575,6 +566,15 @@ export const isRectIdenticalOrInside = (it, obj) => {
 			isIdenticalOrInside = true;
 		}
 	}
+
+	if (!isIdenticalOrInside) {
+		it.insert({
+			low: obj.d.rect.y,
+			high: obj.d.rect.y + obj.d.rect.height,
+			d: obj.d,
+		});
+	}
+
 	return isIdenticalOrInside;
 };
 
