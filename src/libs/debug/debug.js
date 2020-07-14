@@ -38,6 +38,12 @@ import e, {
 } from "../../variables/elements";
 import { DEBUG_MODE } from "../../variables/essentials";
 
+export const sleep = (ms) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(resolve, ms);
+	});
+};
+
 export const printUnmergedFreeRects = (arr) => {
 	if (process.env.NODE_ENV === "development") {
 		let len = e.$limberGridViewDebugUnmergedRects.length;
@@ -251,6 +257,14 @@ export const printMergedTempRects = (obj) => {
 
 export const printStackTopRect = (obj) => {
 	if (process.env.NODE_ENV === "development") {
+		if (!obj) {
+			if (e.$limberGridViewDebugStackTopRect) {
+				e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopRect);
+				set$limberGridViewDebugStackTopRect(undefined);
+			}
+			return;
+		}
+
 		if (e.$limberGridViewDebugStackTopRect) {
 			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopRect);
 		}
@@ -285,7 +299,16 @@ export const printStackTopRect = (obj) => {
 
 export const printStackTopAdjRect = (obj) => {
 	if (process.env.NODE_ENV === "development") {
+		if (!obj) {
+			if (e.$limberGridViewDebugStackTopAdjRect) {
+				e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopAdjRect);
+				set$limberGridViewDebugStackTopAdjRect(undefined);
+			}
+			return;
+		}
+
 		if (e.$limberGridViewDebugStackTopAdjRect) {
+			console.log(e.$limberGridViewDebugStackTopAdjRect);
 			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopAdjRect);
 		}
 
@@ -319,6 +342,14 @@ export const printStackTopAdjRect = (obj) => {
 
 export const printMergedRect = (obj) => {
 	if (process.env.NODE_ENV === "development") {
+		if (!obj) {
+			if (e.$limberGridViewDebugMergedRect) {
+				e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRect);
+				set$limberGridViewDebugMergedRect(undefined);
+			}
+			return;
+		}
+
 		if (e.$limberGridViewDebugMergedRect) {
 			e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRect);
 		}
@@ -351,6 +382,14 @@ export const printMergedRect = (obj) => {
 
 export const printAdjRect = (obj) => {
 	if (process.env.NODE_ENV === "development") {
+		if (!obj) {
+			if (e.$limberGridViewDebugAdjRect) {
+				e.$limberGridView[0].removeChild(e.$limberGridViewDebugAdjRect);
+				set$limberGridViewDebugAdjRect(undefined);
+			}
+			return;
+		}
+
 		if (e.$limberGridViewDebugAdjRect) {
 			e.$limberGridView[0].removeChild(e.$limberGridViewDebugAdjRect);
 		}

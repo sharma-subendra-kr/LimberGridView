@@ -65,6 +65,7 @@ import { shuffle } from "../array/arrayUtils";
 import { filter } from "../utils/utils";
 import Stack from "../stack/stack";
 import {
+	sleep,
 	printUnmergedFreeRects,
 	printMergedFreeRects,
 	printResultStackRects,
@@ -453,7 +454,7 @@ export const assignAdjacentRects = (rectsItY) => {
 	}
 };
 
-export const mergeFreeRects = (freeRectsArr, lastId) => {
+export const mergeFreeRects = async (freeRectsArr, lastId) => {
 	const stack = new Stack();
 	const stackIt = new IntervalTreesIterative();
 	const resultStack = new Stack();
@@ -480,7 +481,10 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 		stack.push(freeRectsArr[k]);
 		while (!stack.isEmpty()) {
 			top = stack.pop();
-			// printStackTopRect(top.d);
+			printStackTopAdjRect();
+			printMergedRect();
+			printStackTopRect(top.d);
+			await sleep(1000);
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
@@ -490,10 +494,13 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 					continue;
 				}
 				adj = top.d.a[keys[i]];
-				// printStackTopAdjRect(adj.d);
+				printMergedRect();
+				printStackTopAdjRect(adj.d);
+				await sleep(1000);
 				while (adj?.d?.ref) {
 					adj = adj.d.ref;
-					// printStackTopAdjRect(adj.d);
+					printStackTopAdjRect(adj.d);
+					await sleep(1000);
 				}
 
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
@@ -516,12 +523,13 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 									ref: null,
 								},
 							};
-							// printMergedRect(mergedObject.d);
+							printMergedRect(mergedObject.d);
+							await sleep(1000);
 
 							filterAdjacents(mergedObject);
-							if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
-								stack.push(mergedObject);
-							}
+							// if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
+							stack.push(mergedObject);
+							// }
 
 							if (isRectInside(mergedRect, adj.d.rect)) {
 								adj.d.ref = mergedObject;
@@ -536,10 +544,16 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 				}
 			}
 
+			for (let i = 0; i < keyslen; i++) {
+				const adj = top.d.a[keys[i]];
+				delete adj.d.a[top.d.id];
+			}
+			top.d.a = {};
+
 			if (!atLeastOneFullMerge) {
-				if (!isRectIdenticalOrInside(resultIt, top)) {
-					resultStack.push(top);
-				}
+				// if (!isRectIdenticalOrInside(resultIt, top)) {
+				resultStack.push(top);
+				// }
 			}
 		}
 	}

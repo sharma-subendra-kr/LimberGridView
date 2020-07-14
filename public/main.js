@@ -455,33 +455,33 @@ var main = function () {
 				// set 3
 				{
 					x: 5,
-					y: 0,
+					y: 5,
 					width: 195,
-					height: 200,
+					height: 195,
 				},
 				{
 					x: 215,
-					y: 0,
+					y: 5,
 					width: 200,
-					height: 300,
+					height: 295,
 				},
 				{
 					x: 430,
-					y: 0,
+					y: 5,
 					width: 200,
-					height: 400,
+					height: 395,
 				},
 				{
 					x: 650,
-					y: 0,
+					y: 5,
 					width: 200,
-					height: 200,
+					height: 195,
 				},
 				{
 					x: 865,
-					y: 0,
+					y: 5,
 					width: 130,
-					height: 200,
+					height: 195,
 				},
 				{
 					x: 5,
