@@ -454,7 +454,8 @@ export const assignAdjacentRects = (rectsItY) => {
 
 export const mergeFreeRects = (freeRectsArr, lastId) => {
 	const stack = new Stack();
-	const resultStack = new Stack();
+	let tempStack;
+	const resultIt = new IntervalTreesIterative();
 
 	let adjacents,
 		adj,
@@ -477,6 +478,7 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 		stack.push(freeRectsArr[k]);
 		while (!stack.isEmpty()) {
 			top = stack.pop();
+			tempStack = new Stack();
 			// printStackTopRect(top.d);
 
 			keys = Object.keys(top.d.a);
@@ -515,7 +517,7 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 							};
 
 							filterAdjacents(mergedObject);
-							stack.push(mergedObject);
+							tempStack.push(mergedObject);
 
 							if (isRectInside(mergedRect, adj.d.rect)) {
 								adj.d.ref = mergedObject;
@@ -523,6 +525,7 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 
 							if (isRectInside(mergedRect, top.d.rect)) {
 								top.d.ref = mergedObject;
+								stack.push(mergedObject);
 								breakSig = true;
 								break;
 							}
@@ -536,13 +539,42 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 			}
 
 			if (!breakSig) {
-				resultStack.push(top);
-				continue;
+				while (!tempStack.isEmpty()) {
+					stack.push(tempStack.pop());
+				}
+
+				const res = resultIt.findAll(
+					{
+						low: top.d.rect.y,
+						high: top.d.rect.y + top.d.rect.height,
+					},
+					undefined,
+					true
+				);
+				let isIdentical = false;
+				const len = res?.length || 0;
+				for (let i = 0; i < len; i++) {
+					if (
+						areRectsIdentical(
+							getCoordinates(top.d.rect),
+							getCoordinates(res[i].d.rect)
+						)
+					) {
+						isIdentical = true;
+					}
+				}
+				if (!isIdentical) {
+					resultIt.insert({
+						low: top.d.rect.y,
+						high: top.d.rect.y + top.d.rect.height,
+						d: top.d,
+					});
+				}
 			}
 		}
 	}
 
-	return { mergedRects: resultStack.getData(), idCount };
+	return { mergedRects: resultIt.getDataInArray(), idCount };
 };
 
 export const filterAdjacents = (mergedObject, visited) => {
