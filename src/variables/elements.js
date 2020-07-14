@@ -36,6 +36,7 @@ const e = {
 	$limberGridViewDebugMergedTempRects: [],
 	$limberGridViewDebugStackTopRect: undefined,
 	$limberGridViewDebugStackTopAdjRect: undefined,
+	$limberGridViewDebugMergedRect: undefined,
 	$limberGridViewDebugAdjRect: undefined,
 	$limberGridViewDebugResultStackRects: [],
 	$limberGridViewDebugStackRects: [],
@@ -84,6 +85,10 @@ const set$limberGridViewDebugStackTopRect = function (elm) {
 
 const set$limberGridViewDebugStackTopAdjRect = function (elm) {
 	e.$limberGridViewDebugStackTopAdjRect = elm;
+};
+
+const set$limberGridViewDebugMergedRect = function (elm) {
+	e.$limberGridViewDebugMergedRect = elm;
 };
 
 const set$limberGridViewDebugAdjRect = function (elm) {
@@ -145,6 +150,7 @@ export {
 	set$limberGridViewDebugMergedTempRects,
 	set$limberGridViewDebugStackTopRect,
 	set$limberGridViewDebugStackTopAdjRect,
+	set$limberGridViewDebugMergedRect,
 	set$limberGridViewDebugAdjRect,
 	set$limberGridViewDebugStackRects,
 	set$limberGridViewDebugResultStackRects,

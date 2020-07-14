@@ -5,7 +5,7 @@
 
 */
 
-const Stack = function() {
+const Stack = function () {
 	this.length = 100;
 	this.stack = new Array(this.length);
 	this.ptr = -1;
@@ -13,7 +13,7 @@ const Stack = function() {
 
 Stack.prototype.constructor = Stack;
 
-Stack.prototype.push = function(data) {
+Stack.prototype.push = function (data) {
 	if (data === null || data === undefined) {
 		return false;
 	}
@@ -26,7 +26,15 @@ Stack.prototype.push = function(data) {
 	return true;
 };
 
-Stack.prototype.pop = function() {
+Stack.prototype.pop = function () {
+	if (this.ptr >= 0) {
+		const top = this.stack[this.ptr];
+		this.ptr--;
+		return top;
+	}
+};
+
+Stack.prototype.wipePop = function () {
 	if (this.ptr >= 0) {
 		const top = this.stack[this.ptr];
 		this.stack[this.ptr] = undefined;
@@ -35,7 +43,7 @@ Stack.prototype.pop = function() {
 	}
 };
 
-Stack.prototype.resize = function() {
+Stack.prototype.resize = function () {
 	const oldlen = this.length;
 	const oldStack = this.stack;
 	this.length += 100;
@@ -46,26 +54,48 @@ Stack.prototype.resize = function() {
 	}
 };
 
-Stack.prototype.getTop = function() {
+Stack.prototype.getTop = function () {
 	if (this.ptr >= 0) {
 		return this.stack[this.ptr];
 	}
 	return null;
 };
 
-Stack.prototype.isEmpty = function() {
+Stack.prototype.isEmpty = function () {
 	if (this.ptr < 0) {
 		return true;
 	}
 	return false;
 };
 
-Stack.prototype.getData = function() {
+Stack.prototype.getData = function () {
 	const arr = new Array(this.ptr + 1);
 	for (let i = 0; i <= this.ptr; i++) {
 		arr[i] = this.stack[i];
 	}
 	return arr;
+};
+
+Stack.prototype.getAllData = function () {
+	const arr = new Array(this.length);
+	for (let i = 0; i < this.length; i++) {
+		arr[i] = this.stack[i];
+	}
+	return arr;
+};
+
+Stack.prototype.getSize = function () {
+	return this.ptr + 1;
+};
+
+Stack.prototype.empty = function () {
+	this.ptr = -1;
+};
+
+Stack.prototype.wipe = function () {
+	this.length = 100;
+	this.stack = new Array(this.length);
+	this.ptr = -1;
 };
 
 export default Stack;

@@ -28,6 +28,7 @@ import e, {
 	set$limberGridView,
 	set$limberGridViewDebugStackTopRect,
 	set$limberGridViewDebugStackTopAdjRect,
+	set$limberGridViewDebugMergedRect,
 	set$limberGridViewDebugAdjRect,
 	set$limberGridViewDebugMergedTempRects,
 	set$limberGridViewDebugStackRects,
@@ -259,7 +260,7 @@ export const printStackTopRect = (obj) => {
 			"class",
 			`limberGridViewDebugRect limberGridViewDebugStackTopRect`
 		);
-		node.setAttribute("id", `limberGridViewDebugStackTopRect-${obj.id}`);
+		node.setAttribute("id", `limberGridViewDebugStackTopRect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -293,7 +294,7 @@ export const printStackTopAdjRect = (obj) => {
 			"class",
 			`limberGridViewDebugRect limberGridViewDebugStackTopAdjRect`
 		);
-		node.setAttribute("id", `limberGridViewDebugStackTopAdjRect-${obj.id}`);
+		node.setAttribute("id", `limberGridViewDebugStackTopAdjRect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -316,6 +317,38 @@ export const printStackTopAdjRect = (obj) => {
 	}
 };
 
+export const printMergedRect = (obj) => {
+	if (process.env.NODE_ENV === "development") {
+		if (e.$limberGridViewDebugMergedRect) {
+			e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRect);
+		}
+
+		const node = document.createElement("div");
+		node.setAttribute(
+			"class",
+			`limberGridViewDebugRect limberGridViewDebugMergedRect limberGridViewDebugMergedRect-thick`
+		);
+		node.setAttribute("id", `limberGridViewDebugMergedRect`);
+		node.setAttribute("tabindex", -1);
+
+		node.setAttribute(
+			"title",
+			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
+		);
+
+		node.innerHTML = obj.id;
+		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
+		node.style.width = obj.rect.width + "px";
+		node.style.height = obj.rect.height + "px";
+		e.$limberGridView[0].appendChild(node);
+
+		set$limberGridViewDebugMergedRect(
+			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugMergedRect")[0]
+		);
+		console.log(e.$limberGridViewDebugMergedRect);
+	}
+};
+
 export const printAdjRect = (obj) => {
 	if (process.env.NODE_ENV === "development") {
 		if (e.$limberGridViewDebugAdjRect) {
@@ -327,7 +360,7 @@ export const printAdjRect = (obj) => {
 			"class",
 			`limberGridViewDebugRect limberGridViewDebugAdjRect`
 		);
-		node.setAttribute("id", `limberGridViewDebugAdjRect-${obj.id}`);
+		node.setAttribute("id", `limberGridViewDebugAdjRect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(

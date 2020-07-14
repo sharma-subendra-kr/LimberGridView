@@ -72,6 +72,7 @@ import {
 	printMergedTempRects,
 	printStackTopRect,
 	printStackTopAdjRect,
+	printMergedRect,
 	printAdjRect,
 } from "../debug/debug";
 window.mergeRects = mergeRects;
@@ -454,8 +455,8 @@ export const assignAdjacentRects = (rectsItY) => {
 
 export const mergeFreeRects = (freeRectsArr, lastId) => {
 	const stack = new Stack();
-	let tempStack;
-	const resultIt = new IntervalTreesIterative();
+	let refStack;
+	const resultStack = new Stack();
 
 	let adjacents,
 		adj,
@@ -476,9 +477,9 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 		}
 
 		stack.push(freeRectsArr[k]);
+		refStack = new Stack();
 		while (!stack.isEmpty()) {
 			top = stack.pop();
-			tempStack = new Stack();
 			// printStackTopRect(top.d);
 
 			keys = Object.keys(top.d.a);
@@ -515,66 +516,66 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 									ref: null,
 								},
 							};
+							// printMergedRect(mergedObject.d);
 
 							filterAdjacents(mergedObject);
-							tempStack.push(mergedObject);
 
-							if (isRectInside(mergedRect, adj.d.rect)) {
-								adj.d.ref = mergedObject;
+							if (
+								isRectInside(mergedRect, adj.d.rect) &&
+								isRectInside(mergedRect, top.d.rect)
+							) {
+								refStack.push(adj);
 							}
 
 							if (isRectInside(mergedRect, top.d.rect)) {
-								top.d.ref = mergedObject;
+								refStack.push(top);
 								stack.push(mergedObject);
+
 								breakSig = true;
 								break;
 							}
 						}
 					}
 					if (breakSig) break;
-				} else if (isRectInside(adj.d.rect, top.d.rect)) {
-					breakSig = true;
-					break;
 				}
 			}
 
 			if (!breakSig) {
-				while (!tempStack.isEmpty()) {
-					stack.push(tempStack.pop());
-				}
-
-				const res = resultIt.findAll(
-					{
-						low: top.d.rect.y,
-						high: top.d.rect.y + top.d.rect.height,
-					},
-					undefined,
-					true
-				);
-				let isIdentical = false;
-				const len = res?.length || 0;
-				for (let i = 0; i < len; i++) {
-					if (
-						areRectsIdentical(
-							getCoordinates(top.d.rect),
-							getCoordinates(res[i].d.rect)
-						)
-					) {
-						isIdentical = true;
+				while (!refStack.isEmpty()) {
+					const rTop = refStack.pop();
+					if (areRectsAdjacent(top.d.rect, rTop.d.rect)) {
+						rTop.d.ref = top;
 					}
 				}
-				if (!isIdentical) {
-					resultIt.insert({
-						low: top.d.rect.y,
-						high: top.d.rect.y + top.d.rect.height,
-						d: top.d,
-					});
-				}
+
+				resultStack.push(top);
 			}
 		}
 	}
 
-	return { mergedRects: resultIt.getDataInArray(), idCount };
+	return { mergedRects: resultStack.getData(), idCount };
+};
+
+export const isRectIdenticalOrInside = (it, obj) => {
+	const res = it.findAll({
+		low: obj.d.rect.y,
+		high: obj.d.rect.y + obj.d.rect.height,
+	});
+
+	let isIdenticalOrInside = false;
+	const len = res?.length || 0;
+	for (let i = 0; i < len; i++) {
+		if (
+			areRectsIdentical(
+				getCoordinates(obj.d.rect),
+				getCoordinates(res[i].d.rect)
+			) ||
+			isRectInside(res[i].d.rect, obj.d.rect)
+		) {
+			isIdenticalOrInside = true;
+		}
+	}
+	return isIdenticalOrInside;
 };
 
 export const filterAdjacents = (mergedObject, visited) => {
@@ -591,7 +592,6 @@ export const filterAdjacents = (mergedObject, visited) => {
 			delete adjs[adjsKeys[j]];
 		} else {
 			// Hey! you guys! Hey! you guys! I'm your neighbour!
-			adj.d.a[mergedObject.d.id] = mergedObject;
 		}
 	}
 };
@@ -735,7 +735,6 @@ export const arrange = (
 		if (isRectInside(bottomWorkSpace, pm.d.rect)) {
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top.d] = top.d;
-			console.log("item arranged in bottom WS", top.d);
 		}
 
 		const { result, idCount: lastId1 } = arrangeCleanUp(

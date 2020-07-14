@@ -695,6 +695,10 @@ var main = function () {
 		}
 	};
 
+	window.getMergedElementById = function (id) {
+		return document.getElementById("limberGridViewDebugMergedRect-" + id);
+	};
+
 	window.toggleUnmerged = function () {
 		const els = document.getElementsByClassName(
 			"limberGridViewDebugUnmergedRect"
@@ -726,6 +730,26 @@ var main = function () {
 				el.style.display = "";
 			}
 		}
+	};
+
+	window.getUnmergedElementById = function (id) {
+		return document.getElementById("limberGridViewDebugUnmergedRect-" + id);
+	};
+
+	window.getStackTopRect = function (id) {
+		return document.getElementById("limberGridViewDebugStackTopRect");
+	};
+
+	window.getStackTopAdjRect = function (id) {
+		return document.getElementById("limberGridViewDebugStackTopAdjRect");
+	};
+
+	window.getMergedRect = function (id) {
+		return document.getElementById("limberGridViewDebugMergedRect");
+	};
+
+	window.getAdjRect = function (id) {
+		return document.getElementById("limberGridViewDebugAdjRect");
 	};
 };
 

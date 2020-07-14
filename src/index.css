@@ -343,6 +343,10 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
+.limberGridViewDebugMergedRect-thick {
+	border: solid 3px red;
+}
+
 .limberGridViewDebugMergedRect:hover {
 	border-width: 3px;
 	font-weight: 400;
@@ -426,7 +430,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limberGridViewDebugStackTopAdjRect {
-	border: solid 3px darkkhaki;
+	border: solid 3px fuchsia;
 	position: absolute;
 	user-select: none;
 	background: transparent;
@@ -445,7 +449,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limberGridViewDebugAdjRect {
-	border: solid 3px coral;
+	border: solid 3px lawngreen;
 	position: absolute;
 	user-select: none;
 	background: transparent;
