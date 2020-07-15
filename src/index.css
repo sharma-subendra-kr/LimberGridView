@@ -329,6 +329,26 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-size: 30px;
 }
 
+.limberGridViewDebugMergedFreeRect {
+	border: solid 1px red;
+
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	color: red;
+	font-weight: 400;
+}
+
+.limberGridViewDebugMergedFreeRect:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
+
 .limberGridViewDebugMergedRect {
 	border: solid 1px red;
 

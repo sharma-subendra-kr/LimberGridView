@@ -664,7 +664,7 @@ var main = function () {
 
 	window.toggleMerged = function () {
 		const els = document.getElementsByClassName(
-			"limberGridViewDebugMergedRect"
+			"limberGridViewDebugMergedFreeRect"
 		);
 
 		let state = "";
@@ -684,7 +684,9 @@ var main = function () {
 	window.toggleMerged.display = "";
 
 	window.toggleMergedById = function (id) {
-		const el = document.getElementById("limberGridViewDebugMergedRect-" + id);
+		const el = document.getElementById(
+			"limberGridViewDebugMergedFreeRect-" + id
+		);
 
 		if (el) {
 			if (el.style.display === "") {
@@ -696,7 +698,7 @@ var main = function () {
 	};
 
 	window.getMergedElementById = function (id) {
-		return document.getElementById("limberGridViewDebugMergedRect-" + id);
+		return document.getElementById("limberGridViewDebugMergedFreeRect-" + id);
 	};
 
 	window.toggleUnmerged = function () {

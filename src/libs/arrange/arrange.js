@@ -454,7 +454,7 @@ export const assignAdjacentRects = (rectsItY) => {
 	}
 };
 
-export const mergeFreeRects = async (freeRectsArr, lastId) => {
+export const mergeFreeRects = (freeRectsArr, lastId) => {
 	const stack = new Stack();
 	const stackIt = new IntervalTreesIterative();
 	const resultStack = new Stack();
@@ -484,7 +484,7 @@ export const mergeFreeRects = async (freeRectsArr, lastId) => {
 			printStackTopAdjRect();
 			printMergedRect();
 			printStackTopRect(top.d);
-			await sleep(1000);
+			sleep(1000);
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
@@ -496,11 +496,11 @@ export const mergeFreeRects = async (freeRectsArr, lastId) => {
 				adj = top.d.a[keys[i]];
 				printMergedRect();
 				printStackTopAdjRect(adj.d);
-				await sleep(1000);
+				sleep(1000);
 				while (adj?.d?.ref) {
 					adj = adj.d.ref;
 					printStackTopAdjRect(adj.d);
-					await sleep(1000);
+					sleep(1000);
 				}
 
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
@@ -524,7 +524,7 @@ export const mergeFreeRects = async (freeRectsArr, lastId) => {
 								},
 							};
 							printMergedRect(mergedObject.d);
-							await sleep(1000);
+							sleep(1000);
 
 							filterAdjacents(mergedObject);
 							// if (!isRectIdenticalOrInside(stackIt, mergedObject)) {

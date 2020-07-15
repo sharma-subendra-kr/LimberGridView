@@ -34,14 +34,19 @@ import e, {
 	set$limberGridViewDebugStackRects,
 	set$limberGridViewDebugResultStackRects,
 	set$limberGridViewDebugUnmergedRects,
-	set$limberGridViewDebugMergedRects,
+	set$limberGridViewDebugMergedFreeRects,
 } from "../../variables/elements";
 import { DEBUG_MODE } from "../../variables/essentials";
 
 export const sleep = (ms) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(resolve, ms);
-	});
+	// return new Promise((resolve, reject) => {
+	// 	setTimeout(resolve, ms);
+	// });
+
+	if (window.DEBUG) {
+		const now = new Date().getTime();
+		while (new Date().getTime() < now + ms) {}
+	}
 };
 
 export const printUnmergedFreeRects = (arr) => {
@@ -89,11 +94,13 @@ export const printUnmergedFreeRects = (arr) => {
 
 export const printMergedFreeRects = (arr) => {
 	if (process.env.NODE_ENV === "development") {
-		let len = e.$limberGridViewDebugMergedRects.length;
+		let len = e.$limberGridViewDebugMergedFreeRects.length;
 		for (let i = 0; i < len; i++) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRects[i]);
+			e.$limberGridView[0].removeChild(
+				e.$limberGridViewDebugMergedFreeRects[i]
+			);
 		}
-		set$limberGridViewDebugMergedRects([]);
+		set$limberGridViewDebugMergedFreeRects([]);
 
 		// USE it to hide items
 		// e.$limberGridView[0].innerHTML = "";
@@ -106,9 +113,9 @@ export const printMergedFreeRects = (arr) => {
 			node = document.createElement("div");
 			node.setAttribute(
 				"class",
-				`limberGridViewDebugRect limberGridViewDebugMergedRect`
+				`limberGridViewDebugRect limberGridViewDebugMergedFreeRect`
 			);
-			node.setAttribute("id", `limberGridViewDebugMergedRect-${arr[i].id}`);
+			node.setAttribute("id", `limberGridViewDebugMergedFreeRect-${arr[i].id}`);
 			node.setAttribute("tabindex", -1);
 
 			node.setAttribute(
@@ -125,8 +132,10 @@ export const printMergedFreeRects = (arr) => {
 			e.$limberGridView[0].appendChild(node);
 		}
 
-		set$limberGridViewDebugMergedRects(
-			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugMergedRect")
+		set$limberGridViewDebugMergedFreeRects(
+			e.$limberGridView[0].querySelectorAll(
+				".limberGridViewDebugMergedFreeRect"
+			)
 		);
 	}
 };
