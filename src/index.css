@@ -64,6 +64,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	vertical-align: top;
 	border: solid 1px #c0c0c0;
 	box-sizing: border-box;
+
+	transition: transform 0.25s linear;
 }
 
 .limberGridViewItemDemo {
@@ -131,6 +133,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 	top: 0px;
 	left: 0px;
+
+	cursor: grabbing;
 }
 
 .limberGridViewGridPseudoItem {
@@ -179,6 +183,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 .limberGridViewBodyTagStateElementDraggingOrResizing {
 	user-select: none;
+	cursor: grabbing;
 }
 
 .limberGridViewBodyTagStateElementAdding {
@@ -196,6 +201,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	display: none;
 	vertical-align: top;
 	box-sizing: border-box;
+
+	cursor: grabbing;
 }
 
 .limberGridViewMoveGuideActive {

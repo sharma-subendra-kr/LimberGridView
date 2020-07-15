@@ -126,10 +126,6 @@ export const resizeItemDemo = async function (index, width, height) {
 		"resize"
 	);
 
-	e.$limberGridViewItems[
-		index
-	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
-
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;
 	for (let i = 0; i < len; i++) {
@@ -180,6 +176,13 @@ export const moveItem = async function (index, toX, toY) {
 	e.$limberGridViewItems[
 		index
 	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+	if (true) {
+		// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
+		e.$limberGridViewItems[index].style.transition = "none";
+		setTimeout(() => {
+			e.$limberGridViewItems[index].style.transition = "";
+		}, 500);
+	}
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;
