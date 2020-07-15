@@ -60,7 +60,7 @@ import e from "../../variables/elements";
 
 // import { renderItems } from "../renderers/renderers";
 
-export const resizeItem = function (index, width, height) {
+export const resizeItem = async function (index, width, height) {
 	index = parseInt(index);
 	resizeItemInitialChecks(index, width, height);
 
@@ -76,16 +76,31 @@ export const resizeItem = function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(
+	const arranged = await arrangeAffectedItems(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
 		undefined,
 		undefined,
 		"resize"
 	);
+
+	setPositionData(mpd);
+
+	e.$limberGridViewItems[index].style.width = mpd[index].width;
+	e.$limberGridViewItems[index].style.height = mpd[index].height;
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
 };
 
-export const resizeItemDemo = function (index, width, height) {
+export const resizeItemDemo = async function (index, width, height) {
 	index = parseInt(index);
 	resizeItemInitialChecks(index, width, height);
 
@@ -103,13 +118,27 @@ export const resizeItemDemo = function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	arrangeAffectedItems(
+	const arranged = await arrangeAffectedItems(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
 		undefined,
 		undefined,
 		"resize"
 	);
+
+	e.$limberGridViewItems[
+		index
+	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
 };
 
 export const moveItem = async function (index, toX, toY) {
@@ -147,14 +176,13 @@ export const moveItem = async function (index, toX, toY) {
 
 	setPositionData(mpd);
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-
 	e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
 	e.$limberGridViewItems[
 		index
 	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
 
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
 	for (let i = 0; i < len; i++) {
 		const key = arrangedArr[i];
 		const item = arranged[key];
@@ -199,11 +227,10 @@ export const moveItemDemo = async function (index, toX, toY) {
 		"move"
 	);
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-
 	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
 
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
 	for (let i = 0; i < len; i++) {
 		const key = arrangedArr[i];
 		const item = arranged[key];

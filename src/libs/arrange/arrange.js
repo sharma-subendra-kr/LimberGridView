@@ -167,7 +167,7 @@ export const arrangeAffectedItems = async (
 		assignAdjacentRects(freeRectsItY);
 
 		// DEBUG:
-		printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+		// printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 
 		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
 			freeRectsArr,
@@ -176,12 +176,12 @@ export const arrangeAffectedItems = async (
 		idCount.idCount = lastId2;
 
 		// DEBUG:
-		printMergedFreeRects(mergedRects.map((o) => o.d));
+		// printMergedFreeRects(mergedRects.map((o) => o.d));
 
 		const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
-		printMergedFreeRects(overlappedRects.map((o) => o.d));
+		// printMergedFreeRects(overlappedRects.map((o) => o.d));
 
 		const {
 			arranged: _arranged,
@@ -730,7 +730,7 @@ export const arrange = async (
 			result[i].v = result[i].d.rect.width;
 			wCBST.insert(result[i]);
 		}
-		printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+		// printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
 	}
 
 	return {
@@ -830,7 +830,7 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 	}
 
 	// now merge the rects in diff stack and put the merged rects in wCBST tree
-	printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
+	// printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
 	const diffStackData = diffStack.getData();
 	const diffStackDataLen = diffStackData.length;
 	const it = new IntervalTreesIterative();
@@ -869,7 +869,7 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 
 	const filteredOverlappedRects = filter(overlappedRects);
 
-	printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
+	// printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
 
 	return { result: filteredOverlappedRects, idCount: lastId1 };
 };
