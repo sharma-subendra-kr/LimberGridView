@@ -39,14 +39,9 @@ import e, {
 import { DEBUG_MODE } from "../../variables/essentials";
 
 export const sleep = (ms) => {
-	// return new Promise((resolve, reject) => {
-	// 	setTimeout(resolve, ms);
-	// });
-
-	if (window.DEBUG) {
-		const now = new Date().getTime();
-		while (new Date().getTime() < now + ms) {}
-	}
+	return new Promise((resolve, reject) => {
+		setTimeout(resolve, ms);
+	});
 };
 
 export const printUnmergedFreeRects = (arr) => {
@@ -302,7 +297,7 @@ export const printStackTopRect = (obj) => {
 				".limberGridViewDebugStackTopRect"
 			)[0]
 		);
-		console.log(e.$limberGridViewDebugStackTopRect);
+		// console.log(e.$limberGridViewDebugStackTopRect);
 	}
 };
 
@@ -317,7 +312,6 @@ export const printStackTopAdjRect = (obj) => {
 		}
 
 		if (e.$limberGridViewDebugStackTopAdjRect) {
-			console.log(e.$limberGridViewDebugStackTopAdjRect);
 			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopAdjRect);
 		}
 
@@ -345,7 +339,7 @@ export const printStackTopAdjRect = (obj) => {
 				".limberGridViewDebugStackTopAdjRect"
 			)[0]
 		);
-		console.log(e.$limberGridViewDebugStackTopAdjRect);
+		// console.log(e.$limberGridViewDebugStackTopAdjRect);
 	}
 };
 
@@ -385,7 +379,7 @@ export const printMergedRect = (obj) => {
 		set$limberGridViewDebugMergedRect(
 			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugMergedRect")[0]
 		);
-		console.log(e.$limberGridViewDebugMergedRect);
+		// console.log(e.$limberGridViewDebugMergedRect);
 	}
 };
 
@@ -425,6 +419,6 @@ export const printAdjRect = (obj) => {
 		set$limberGridViewDebugAdjRect(
 			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugAdjRect")[0]
 		);
-		console.log(e.$limberGridViewDebugAdjRect);
+		// console.log(e.$limberGridViewDebugAdjRect);
 	}
 };

@@ -77,7 +77,7 @@ import {
 	printAdjRect,
 } from "../debug/debug";
 window.mergeRects = mergeRects;
-export const arrangeAffectedItems = (
+export const arrangeAffectedItems = async (
 	affectedItems,
 	resizedBottomY,
 	toY,
@@ -169,7 +169,7 @@ export const arrangeAffectedItems = (
 		// DEBUG:
 		printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
 
-		const { mergedRects, idCount: lastId2 } = mergeFreeRects(
+		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
 			freeRectsArr,
 			idCount.idCount
 		);
@@ -187,7 +187,7 @@ export const arrangeAffectedItems = (
 			arranged: _arranged,
 			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
 			idCount: lastId3,
-		} = arrange(
+		} = await arrange(
 			itemsToArrange.filter((id) => !arranged[id]),
 			overlappedRects,
 			getRectObjectFromCo(topWorkSpaceCo),
@@ -454,7 +454,7 @@ export const assignAdjacentRects = (rectsItY) => {
 	}
 };
 
-export const mergeFreeRects = (freeRectsArr, lastId) => {
+export const mergeFreeRects = async (freeRectsArr, lastId) => {
 	const stack = new Stack();
 	const stackIt = new IntervalTreesIterative();
 	const resultStack = new Stack();
@@ -478,13 +478,18 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 			continue;
 		}
 
+		let DEBUG_COUNT = 0;
 		stack.push(freeRectsArr[k]);
 		while (!stack.isEmpty()) {
+			DEBUG_COUNT++;
 			top = stack.pop();
-			printStackTopAdjRect();
-			printMergedRect();
-			printStackTopRect(top.d);
-			sleep(1000);
+
+			if (DEBUG_COUNT > 1000) {
+				printStackTopAdjRect();
+				printMergedRect();
+				printStackTopRect(top.d);
+				await sleep(1000);
+			}
 
 			keys = Object.keys(top.d.a);
 			keyslen = keys.length;
@@ -494,61 +499,68 @@ export const mergeFreeRects = (freeRectsArr, lastId) => {
 					continue;
 				}
 				adj = top.d.a[keys[i]];
-				printMergedRect();
-				printStackTopAdjRect(adj.d);
-				sleep(1000);
+
+				if (DEBUG_COUNT > 1000) {
+					printMergedRect();
+					printStackTopAdjRect(adj.d);
+					await sleep(1000);
+				}
+
 				while (adj?.d?.ref) {
 					adj = adj.d.ref;
-					printStackTopAdjRect(adj.d);
-					sleep(1000);
+
+					if (DEBUG_COUNT > 1000) {
+						printStackTopAdjRect(adj.d);
+						await sleep(1000);
+					}
 				}
 
 				mergedRects = mergeRects(top.d.rect, adj.d.rect);
 				mergeRectsLen = mergedRects?.length || 0;
-				if (mergeRectsLen) {
-					for (let j = 0; j < mergeRectsLen; j++) {
-						mergedRect = mergedRects[j];
+				if (mergeRectsLen === 1) {
+					mergedRect = mergedRects[0];
 
-						if (mergedRect) {
-							adjacents = { ...top.d.a, ...adj.d.a };
-							delete adjacents[top.d.id];
-							delete adjacents[adj.d.id];
+					if (mergedRect) {
+						adjacents = { ...top.d.a, ...adj.d.a };
+						delete adjacents[top.d.id];
+						delete adjacents[adj.d.id];
 
-							mergedObject = {
-								d: {
-									id: idCount++,
-									rect: mergedRect,
-									a: adjacents,
-									o: {},
-									ref: null,
-								},
-							};
+						mergedObject = {
+							d: {
+								id: idCount++,
+								rect: mergedRect,
+								a: adjacents,
+								o: {},
+								ref: null,
+							},
+						};
+						if (DEBUG_COUNT > 1000) {
 							printMergedRect(mergedObject.d);
-							sleep(1000);
+							await sleep(1000);
+						}
 
-							filterAdjacents(mergedObject);
-							// if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
-							stack.push(mergedObject);
-							// }
+						filterAdjacents(mergedObject);
+						// if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
+						stack.push(mergedObject);
+						// }
 
-							if (isRectInside(mergedRect, adj.d.rect)) {
-								adj.d.ref = mergedObject;
-							}
+						if (isRectInside(mergedRect, adj.d.rect)) {
+							adj.d.ref = mergedObject;
+						}
 
-							if (isRectInside(mergedRect, top.d.rect)) {
-								top.d.ref = mergedObject;
-								atLeastOneFullMerge = true;
-							}
+						if (isRectInside(mergedRect, top.d.rect)) {
+							top.d.ref = mergedObject;
+							atLeastOneFullMerge = true;
 						}
 					}
 				}
 			}
 
-			for (let i = 0; i < keyslen; i++) {
-				const adj = top.d.a[keys[i]];
-				delete adj.d.a[top.d.id];
-			}
-			top.d.a = {};
+			// for (let i = 0; i < keyslen; i++) {
+			// 	const adj = top.d.a[keys[i]];
+			// 	delete adj.d.a[top.d.id];
+			// }
+			// top.d.a = {};
 
 			if (!atLeastOneFullMerge) {
 				// if (!isRectIdenticalOrInside(resultIt, top)) {
@@ -679,7 +691,7 @@ export const findOverlapped = (mergedRects) => {
 	// return it.getDataInArray();
 };
 
-export const arrange = (
+export const arrange = async (
 	itemsToArrange,
 	overlappedRects,
 	topWorkSpace,
@@ -751,7 +763,7 @@ export const arrange = (
 			itemsInBottomWorkSpace[top.d] = top.d;
 		}
 
-		const { result, idCount: lastId1 } = arrangeCleanUp(
+		const { result, idCount: lastId1 } = await arrangeCleanUp(
 			aItem,
 			pm,
 			wCBST,
@@ -838,7 +850,7 @@ export const arrange = (
 	};
 };
 
-export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {
+export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 	let idCount = lastId;
 	let diff;
 	let diffLen;
@@ -941,7 +953,7 @@ export const arrangeCleanUp = (aItem, pm, wCBST, lastId) => {
 	}
 
 	assignAdjacentRects(it);
-	const { mergedRects, idCount: lastId1 } = mergeFreeRects(
+	const { mergedRects, idCount: lastId1 } = await mergeFreeRects(
 		diffStack.getData(),
 		idCount
 	);

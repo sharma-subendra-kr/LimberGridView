@@ -112,7 +112,7 @@ export const resizeItemDemo = function (index, width, height) {
 	);
 };
 
-export const moveItem = function (index, toX, toY) {
+export const moveItem = async function (index, toX, toY) {
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {
@@ -137,7 +137,7 @@ export const moveItem = function (index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	const arranged = arrangeAffectedItems(
+	const arranged = await arrangeAffectedItems(
 		affectedItems,
 		undefined,
 		toY,
@@ -164,7 +164,7 @@ export const moveItem = function (index, toX, toY) {
 	}
 };
 
-export const moveItemDemo = function (index, toX, toY) {
+export const moveItemDemo = async function (index, toX, toY) {
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {
@@ -191,7 +191,7 @@ export const moveItemDemo = function (index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	const arranged = arrangeAffectedItems(
+	const arranged = await arrangeAffectedItems(
 		affectedItems,
 		undefined,
 		toY,

@@ -406,7 +406,7 @@ export const onTouchMove = function (event) {
 	event.stopPropagation();
 };
 
-export const onMouseUp = function (event) {
+export const onMouseUp = async function (event) {
 	clearTimeout(showMoveDemoTimeOutVariable);
 	clearTimeout(showResizeDemoTimeOutVariable);
 	var itemResizeFlag = false;
@@ -420,7 +420,7 @@ export const onMouseUp = function (event) {
 			var updatedCoordinates = {};
 			try {
 				if (mousePositionOnLimberGrid !== false) {
-					moveItem(
+					await moveItem(
 						userActionData.itemIndex,
 						mousePositionOnLimberGrid.x,
 						mousePositionOnLimberGrid.y
@@ -498,7 +498,7 @@ export const onMouseUp = function (event) {
 	userActionData = null;
 };
 
-export const onTouchEnd = function (event) {
+export const onTouchEnd = async function (event) {
 	clearTimeout(showMoveDemoTimeOutVariable);
 	clearTimeout(showResizeDemoTimeOutVariable);
 	var itemResizeFlag = false;
@@ -512,7 +512,7 @@ export const onTouchEnd = function (event) {
 			var updatedCoordinates = {};
 			try {
 				if (touchPositionOnLimberGrid !== false) {
-					moveItem(
+					await moveItem(
 						userActionData.itemIndex,
 						touchPositionOnLimberGrid.x,
 						touchPositionOnLimberGrid.y
@@ -629,10 +629,10 @@ export const onTouchCancel = function (event) {
 	e.$limberGridView[0].addEventListener("touchstart", onLimberGridTouchStart);
 };
 
-export const showMoveDemo = function (index, mousePosition) {
+export const showMoveDemo = async function (index, mousePosition) {
 	try {
 		if (mousePosition !== false) {
-			moveItemDemo(index, mousePosition.x, mousePosition.y);
+			await moveItemDemo(index, mousePosition.x, mousePosition.y);
 
 			e.$limberGridViewMoveGuide[0].style.transform =
 				"translate(" + mousePosition.x + "px, " + mousePosition.y + "px)";
