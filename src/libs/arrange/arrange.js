@@ -331,7 +331,12 @@ export const arrangeResize = async (
 	const {
 		topWorkSpaceCo: _topWorkSpaceCo,
 		bottomWorkSpaceCo: _bottomWorkSpaceCo,
-	} = getTopBottomWS(_workSpaceRectCo, minX, maxX);
+	} = getTopBottomWS(
+		_workSpaceRectCo,
+		minX - publicConstants.MARGIN,
+		maxX + publicConstants.MARGIN
+	);
+
 	const _shrinkRes = shrinkTopBottomWS(_topWorkSpaceCo);
 
 	if (_shrinkRes.integrateTop) {
@@ -817,24 +822,18 @@ export const findOverlapped = (mergedRects) => {
 				completeOverlapped[res[j].d.id] = res[j];
 				res[j].d._rect = res[j].d.rect;
 				res[j].d.rect = null;
-				delete itArr[i].d.o[res[j].d.id];
-			}
-		}
-	}
 
-	for (let i = 0; i < len; i++) {
-		res = it.findAll(itArr[i].interval);
-		rlen = res.length;
-		for (let j = 0; j < rlen; j++) {
-			if (
-				itArr[i].d.rect &&
-				res[j].d.rect &&
-				doRectsOverlap(itArr[i].d.rect, res[j].d.rect) &&
-				itArr[i].d.id !== res[j].d.id
-			) {
+				const olpds = Object.values(res[j].d.o);
+				const oLen = olpds.length;
+				for (let k = 0; k < oLen; k++) {
+					// Hey everyone I'm done.
+					const olpd = olpds[k];
+					delete olpd.d.o[res[j].d.id];
+				}
+				res[j].d.o = {};
+			} else if (doRectsOverlap(itArr[i].d.rect, res[j].d.rect)) {
 				itArr[i].d.o[res[j].d.id] = res[j];
-			} else if (res[j].d.rect === null) {
-				delete itArr[i].d.o[res[j].d.id];
+				res[j].d.o[itArr[i].d.id] = itArr[i];
 			}
 		}
 	}
@@ -935,6 +934,9 @@ export const arrange = async (
 			itemsInBottomWorkSpace[top.d] = top.d;
 		}
 
+		// DEBUG:
+		// printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+
 		const { result, idCount: lastId1 } = await arrangeCleanUp(
 			aItem,
 			pm,
@@ -948,6 +950,7 @@ export const arrange = async (
 			result[i].v = result[i].d.rect.width;
 			wCBST.insert(result[i]);
 		}
+		// DEBUG:
 		// printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
 	}
 
@@ -1002,10 +1005,10 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 	}
 
 	const directOverlaps = { ...pm.d.o };
-	const oKeys = Object.keys(pm.d.o);
-	const oKeysLen = oKeys.length;
-	for (let j = 0; j < oKeysLen; j++) {
-		olpd = pm.d.o[oKeys[j]];
+	const pmOlps = Object.values(pm.d.o);
+	const pmOlapsLen = pmOlps.length;
+	for (let j = 0; j < pmOlapsLen; j++) {
+		olpd = pmOlps[j];
 		delete olpd.d.o[pm.d.id];
 
 		// if diffLen is 0, this overlapping rect will be put back later after operations
