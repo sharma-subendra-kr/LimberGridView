@@ -311,7 +311,7 @@ export const arrangeResize = async (
 		combinedWorkSpaceRectCo.br = { ...bottomWorkSpaceCo.br };
 		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpaceCo.bl };
 	}
-	debugger;
+
 	const _workSpaceRectCo = {
 		// can safely do these operations
 		// work space width should be greather than or equal to "DEFINED_MIN_HEIGHT_AND_WIDTH + (MARGIN * 2)"
@@ -341,15 +341,6 @@ export const arrangeResize = async (
 	_combinedWorkSpaceRectCo.br = { ..._bottomWorkSpaceCo.br };
 	_combinedWorkSpaceRectCo.bl = { ..._bottomWorkSpaceCo.bl };
 
-	// let itemsInBottomWorkSpace = getItemsInWorkSpace(
-	// 	getRectObjectFromCo(bottomWorkSpaceCo),
-	// 	true
-	// );
-	// const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(
-	// 	bottomWorkSpaceCo,
-	// 	true
-	// );
-
 	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
 
@@ -365,7 +356,6 @@ export const arrangeResize = async (
 	let DEBUG_COUNT = 0;
 
 	while (arrangedCount !== iToALen) {
-		debugger;
 		let freeRectsItY;
 		if (passCount === 0) {
 			// sort items in workspace by lt.x  i.e horizontally
@@ -432,11 +422,7 @@ export const arrangeResize = async (
 		// DEBUG:
 		// printMergedFreeRects(overlappedRects.map((o) => o.d));
 
-		const {
-			arranged: _arranged,
-			// itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
-			idCount: lastId3,
-		} = await arrange(
+		const { arranged: _arranged, idCount: lastId3 } = await arrange(
 			itemsToArrange.filter((id) => !arranged[id]),
 			overlappedRects,
 			getRectObjectFromCo(topWorkSpaceCo),
@@ -445,11 +431,6 @@ export const arrangeResize = async (
 			idCount.idCount
 		);
 		idCount.idCount = lastId3;
-
-		// itemsInBottomWorkSpace = [
-		// 	...itemsInBottomWorkSpace,
-		// 	...Object.keys(_itemsInBottomWorkSpace),
-		// ];
 
 		arranged = { ...arranged, ..._arranged };
 		const _arrangedArr = Object.values(_arranged);
@@ -474,23 +455,6 @@ export const arrangeResize = async (
 			throw "Arrange time out";
 		}
 	}
-
-	// if (workSpaceResizeCount > 0) {
-	// 	// push items in below bottom workspace below
-	// 	shiftItems(itemsBelowBottomWorkSpace, shiftHeight * workSpaceResizeCount);
-
-	// 	// put items in bottom workspace and below bottom workspace in arranged map
-	// 	let len = itemsInBottomWorkSpace.length;
-	// 	for (let i = 0; i < len; i++) {
-	// 		arranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
-	// 	}
-
-	// 	len = itemsBelowBottomWorkSpace.length;
-	// 	for (let i = 0; i < len; i++) {
-	// 		arranged[itemsBelowBottomWorkSpace[i]] =
-	// 			mpd[itemsBelowBottomWorkSpace[i]];
-	// 	}
-	// }
 
 	const p2 = performance.now();
 	console.log("arrange total: ", p2 - p1);
@@ -1008,7 +972,6 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 	let ioKeys;
 	let ioKeysLen;
 
-	// let directOverlaps;
 	const indirectOverlaps = {};
 
 	const diffStack = new Stack();
