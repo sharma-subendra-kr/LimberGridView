@@ -1,29 +1,28 @@
-*{
+* {
 	box-sizing: border-box;
 }
 
-body{
+body {
 	margin: 0px;
 	height: 100%;
 
 	overflow: hidden;
 }
 
-.navBar{
+.navBar {
 	width: 100%;
 	height: 50px;
 
 	background-color: #404040;
-	color : #f2f2f2;
+	color: #f2f2f2;
 
 	padding: 10px;
 
 	font-size: 25px;
 	font-family: "Helvetica";
-
 }
 
-.limberGridControls{
+.limberGridControls {
 	width: 100%;
 	height: 30px;
 	display: inline-block;
@@ -33,7 +32,7 @@ body{
 	padding-right: 15px;
 }
 
-.toggleAddOrCutSpace{
+.toggleAddOrCutSpace {
 	width: 30px;
 	height: 25px;
 	display: inline-block;
@@ -47,23 +46,23 @@ body{
 	cursor: pointer;
 }
 
-.activateCutSpaceMode{
+.activateCutSpaceMode {
 	width: 100%;
 	height: 100%;
 	display: none;
 }
 
-.activateAddMode{
+.activateAddMode {
 	width: 100%;
 	height: 100%;
 	display: none;
 }
 
-.toggleAddOrCutSpaceButtonActive{
+.toggleAddOrCutSpaceButtonActive {
 	display: inline-block;
 }
 
-.addButton{
+.addButton {
 	width: 30px;
 	height: 25px;
 	display: inline-block;
@@ -77,10 +76,10 @@ body{
 	cursor: pointer;
 }
 
-.addButtonIcon{
+.addButtonIcon {
 }
 
-.footer{
+.footer {
 	width: 100%;
 	height: 20px;
 	text-align: right;
@@ -89,43 +88,37 @@ body{
 	padding-right: 15px;
 }
 
-
-#limberGridViewImplement{
+#limberGridViewImplement {
 	width: 100%;
 	height: calc(100% - 100px);
 	overflow: hidden;
 	padding: 5px;
 }
 
-
-
-
-#limberGridViewImplement .limberGridViewContainer .limberGridView{
+#limberGridViewImplement .limberGridViewContainer .limberGridView {
 	padding: 20px;
 	border: solid 1px #c0c0c0;
 	width: 100%;
-
-	background-color: #f1f3f6;
 }
 
-.limberGridView::-webkit-scrollbar{
+.limberGridView::-webkit-scrollbar {
 	width: 10px;
 	height: 0px;
 }
 
 .limberGridView::-webkit-scrollbar-track {
-    background: #f9f9f9; 
+	background: #f9f9f9;
 }
 
 .limberGridView::-webkit-scrollbar-thumb {
-    background: #737373; 
+	background: #737373;
 }
 
-.limberGridViewItem{
+.limberGridViewItem {
 	background-color: #f5f4f5;
 	border: solid 1px #e0e0e0;
 
-	box-shadow: 3px 3px 5px #a6a6a6;
+	/*box-shadow: 3px 3px 5px #a6a6a6;*/
 }
 
 /*.limberGridViewItem.limberGridViewItemEditable::before{
@@ -148,12 +141,7 @@ body{
     left: calc(100% - 15px);
 }*/
 
-
-
-
-
-
-.itemLayout{
+.itemLayout {
 	width: 100%;
 	height: 25px;
 	border-bottom: solid 1px #c0c0c0;
@@ -163,7 +151,7 @@ body{
 	padding-top: 2px;
 }
 
-.itemDropDownButton{
+.itemDropDownButton {
 	width: 25px;
 	height: 25px;
 	float: right;
@@ -172,7 +160,7 @@ body{
 	font-weight: 900;
 }
 
-.itemDropDown{
+.itemDropDown {
 	display: none;
 	width: 55px;
 	height: 50px;
@@ -182,14 +170,13 @@ body{
 
 	background-color: white;
 	border: solid 1px #c0c0c0;
-
 }
 
-.itemDropDownActive{
+.itemDropDownActive {
 	display: inline-block;
 }
 
-.itemDropDownItem{
+.itemDropDownItem {
 	width: 55px;
 	height: 25px;
 	cursor: pointer;
@@ -202,69 +189,69 @@ body{
 	border-bottom: solid 1px #e0e0e0;
 }
 
-.itemDropDownItem:hover{
+.itemDropDownItem:hover {
 	background-color: #c0c0c0;
 }
 
-.kpi{
+.kpi {
 	display: inline-block;
 	white-space: nowrap;
 }
 
-.kpiLeft{
-	display: inline-block;	
+.kpiLeft {
+	display: inline-block;
 	vertical-align: top;
 	position: relative;
 }
 
-.kpiRight{
+.kpiRight {
 	display: inline-block;
 	vertical-align: top;
 }
 
-.kpiRightTop{
+.kpiRightTop {
 	display: table-cell;
-    vertical-align: bottom;
+	vertical-align: bottom;
 	font-family: "Helvetica";
 	text-align: center;
 }
 
-.kpiRightBottom{
+.kpiRightBottom {
 	display: block;
 	font-family: "Helvetica";
 	text-align: center;
 }
 
-.stockUp{
-	width: 0; 
-	height: 0; 
+.stockUp {
+	width: 0;
+	height: 0;
 	border-left: 20px solid transparent;
 	border-right: 20px solid transparent;
 
 	border-bottom: 20px solid green;
 
 	top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	position: absolute;
 
-    transform: translate(0px, -20px);
+	transform: translate(0px, -20px);
 }
 
-.stockDown{
-	width: 0; 
-	height: 0; 
+.stockDown {
+	width: 0;
+	height: 0;
 	border-left: 20px solid transparent;
 	border-right: 20px solid transparent;
 
 	border-top: 20px solid #f00;
 
 	top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	position: absolute;
 }

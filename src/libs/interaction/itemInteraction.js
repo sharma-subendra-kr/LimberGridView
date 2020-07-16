@@ -143,6 +143,7 @@ export const moveItem = async function (index, toX, toY) {
 	if (true) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
+		// maybe "LATCH_MOVED_ITEM"
 		const adjustedPt = movePointAdjust(toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
