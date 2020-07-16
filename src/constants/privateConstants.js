@@ -32,40 +32,44 @@ const constants = {
 	PADDING_TOP: 0,
 	PADDING_BOTTOM: 0,
 	WIDTH_SCALE_FACTOR: 0,
+
+	MIN_HEIGHT_AND_WIDTH: 150,
 };
 
-const setPrivateConstantByName = function(name, value) {
+const setPrivateConstantByName = function (name, value) {
 	if (constants[name]) {
 		constants[name] = value;
 	}
 };
 
-const getPrivateConstantByName = function(name) {
+const getPrivateConstantByName = function (name) {
 	return constants[name];
 };
 
-const setPaddingLeft = function(val) {
+const setPaddingLeft = function (val) {
 	constants.PADDING_LEFT = val;
 };
 
-const setPaddingRight = function(val) {
+const setPaddingRight = function (val) {
 	constants.PADDING_RIGHT = val;
 };
 
-const setPaddingTop = function(val) {
+const setPaddingTop = function (val) {
 	constants.PADDING_TOP = val;
 };
 
-const setPaddingBottom = function(val) {
+const setPaddingBottom = function (val) {
 	constants.PADDING_BOTTOM = val;
 };
 
-const setWidthScaleFactor = function(val) {
+const setWidthScaleFactor = function (val) {
 	constants.WIDTH_SCALE_FACTOR = val;
 };
 
 export default constants;
 export {
+	setPrivateConstantByName,
+	getPrivateConstantByName,
 	setPaddingLeft,
 	setPaddingRight,
 	setPaddingTop,

@@ -113,19 +113,27 @@ export const getMoveAffectedItems = (item, index) => {
 };
 
 export const resizeItemInitialChecks = (index, width, height) => {
-	if (pd[index].x + width + publicConstants.MARGIN > privateConstants.WIDTH) {
-		// falls outside
-		throw "Right edges falls outside the grid area.";
+	if (index < 0 || index >= pd.length) {
+		// invalid index
+		throw "Index out of bounds.";
 	}
 
 	if (typeof width !== "number" || typeof height !== "number") {
 		throw "Width or Height is not a number.";
 	}
 
-	if (width < 50 || height < 50) {
-		// very small. TO DO: let the developers decide the smallest item size but can tbe less than 50
-		throw `Width or height less the min height or width ${getPublicConstantByName(
-			"MIN_HEIGHT_AND_WIDTH"
+	if (pd[index].x + width + publicConstants.MARGIN > privateConstants.WIDTH) {
+		// falls outside
+		throw "Right edges falls outside the grid area.";
+	}
+
+	if (
+		width < getPublicConstantByName("DEFINED_MIN_HEIGHT_AND_WIDTH") ||
+		height < getPublicConstantByName("DEFINED_MIN_HEIGHT_AND_WIDTH")
+	) {
+		// very small. TO DO: let the developers decide the smallest item size but can't be less than 150
+		throw `Width or height less than min height or width ${getPublicConstantByName(
+			"DEFINED_MIN_HEIGHT_AND_WIDTH"
 		)}.`;
 	}
 
@@ -136,6 +144,10 @@ export const moveItemInitialChecks = (index, toX, toY) => {
 	if (index < 0 || index >= pd.length) {
 		// invalid index
 		throw "Index out of bounds.";
+	}
+
+	if (typeof toX !== "number" || typeof toY !== "number") {
+		throw "toX or toY is not a number.";
 	}
 
 	if (toX < publicConstants.MARGIN || toY < publicConstants.MARGIN) {

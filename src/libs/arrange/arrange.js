@@ -30,12 +30,14 @@ import {
 	positionData as pd,
 	modifiedPositionData as mpd,
 } from "../../variables/essentials";
-import privateConstants from "../../constants/privateConstants";
+import privateConstants, {
+	getPrivateConstantByName,
+} from "../../constants/privateConstants";
 import publicConstants, {
 	getPublicConstantByName,
 } from "../../constants/publicConstants";
 import {
-	getMinMaxY,
+	getMinMaxXY,
 	getTopBottomWS,
 	fixMinYMaxY,
 	getItemsInWorkSpace,
@@ -49,6 +51,7 @@ import {
 	cBSTRComp,
 	getPerfectMatch,
 	shiftItems,
+	getResizeWSItemsDetail,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -76,21 +79,16 @@ import {
 	printMergedRect,
 	printAdjRect,
 } from "../debug/debug";
-window.mergeRects = mergeRects;
-export const arrangeAffectedItems = async (
-	affectedItems,
-	resizedBottomY,
-	toY,
-	movedBottomY,
-	arrangeFor
-) => {
+
+export const arrangeMove = async (affectedItems, toY, movedBottomY) => {
 	const p1 = performance.now();
 
 	const idCount = { idCount: 0 };
 
-	const { minY, maxY } = getMinMaxY(
+	const { minY, maxY } = getMinMaxXY(
 		affectedItems,
-		resizedBottomY,
+		undefined,
+		undefined,
 		toY,
 		movedBottomY
 	);
@@ -103,10 +101,10 @@ export const arrangeAffectedItems = async (
 	}
 
 	const workSpaceRectCo = {
-		tl: { x: publicConstants.MARGIN, y: minY },
-		tr: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: minY },
-		br: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: maxY },
-		bl: { x: publicConstants.MARGIN, y: maxY },
+		tl: { x: 0, y: minY },
+		tr: { x: privateConstants.WIDTH, y: minY },
+		br: { x: privateConstants.WIDTH, y: maxY },
+		bl: { x: 0, y: maxY },
 	};
 
 	const combinedWorkSpaceRectCo = {
@@ -115,7 +113,11 @@ export const arrangeAffectedItems = async (
 		br: { ...workSpaceRectCo.br },
 		bl: { ...workSpaceRectCo.bl },
 	};
-	const { topWorkSpaceCo, bottomWorkSpaceCo } = getTopBottomWS(workSpaceRectCo);
+	const { topWorkSpaceCo, bottomWorkSpaceCo } = getTopBottomWS(
+		workSpaceRectCo,
+		0,
+		privateConstants.WIDTH
+	);
 	const shrinkRes = shrinkTopBottomWS(topWorkSpaceCo, bottomWorkSpaceCo);
 
 	if (shrinkRes.integrateTop) {
@@ -140,7 +142,7 @@ export const arrangeAffectedItems = async (
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
 
 	const shiftHeight =
-		(getPublicConstantByName("MIN_HEIGHT_AND_WIDTH") -
+		(getPrivateConstantByName("MIN_HEIGHT_AND_WIDTH") -
 			publicConstants.MARGIN * 2) /
 		2;
 	let arranged = {};
@@ -193,8 +195,7 @@ export const arrangeAffectedItems = async (
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			combinedWorkSpaceRectCo,
-			idCount.idCount,
-			arrangeFor
+			idCount.idCount
 		);
 		idCount.idCount = lastId3;
 
@@ -250,6 +251,246 @@ export const arrangeAffectedItems = async (
 				mpd[itemsBelowBottomWorkSpace[i]];
 		}
 	}
+
+	const p2 = performance.now();
+	console.log("arrange total: ", p2 - p1);
+
+	return arranged;
+};
+
+export const arrangeResize = async (
+	affectedItems,
+	resizedBottomY,
+	resizedRightX
+) => {
+	const p1 = performance.now();
+
+	const idCount = { idCount: 0 };
+
+	const { minX, maxX, minY, maxY } = getMinMaxXY(
+		affectedItems,
+		resizedRightX,
+		resizedBottomY,
+		undefined,
+		undefined
+	);
+
+	// last element is moved or resized item;
+	let itemsToArrange = new Array(affectedItems.length - 1);
+	let iToALen = affectedItems.length - 1;
+	for (let i = 0; i < iToALen; i++) {
+		itemsToArrange[i] = affectedItems[i];
+	}
+
+	const workSpaceRectCo = {
+		tl: { x: 0, y: minY },
+		tr: { x: privateConstants.WIDTH, y: minY },
+		br: { x: privateConstants.WIDTH, y: maxY },
+		bl: { x: 0, y: maxY },
+	};
+
+	const combinedWorkSpaceRectCo = {
+		tl: { ...workSpaceRectCo.tl },
+		tr: { ...workSpaceRectCo.tr },
+		br: { ...workSpaceRectCo.br },
+		bl: { ...workSpaceRectCo.bl },
+	};
+
+	const { topWorkSpaceCo, bottomWorkSpaceCo } = getTopBottomWS(
+		workSpaceRectCo,
+		0,
+		privateConstants.WIDTH
+	);
+	const shrinkRes = shrinkTopBottomWS(topWorkSpaceCo, bottomWorkSpaceCo);
+
+	if (shrinkRes.integrateTop) {
+		combinedWorkSpaceRectCo.tl = { ...topWorkSpaceCo.tl };
+		combinedWorkSpaceRectCo.tr = { ...topWorkSpaceCo.tr };
+	}
+	if (shrinkRes.integrateBottom) {
+		combinedWorkSpaceRectCo.br = { ...bottomWorkSpaceCo.br };
+		combinedWorkSpaceRectCo.bl = { ...bottomWorkSpaceCo.bl };
+	}
+	debugger;
+	const _workSpaceRectCo = {
+		// can safely do these operations
+		// work space width should be greather than or equal to "DEFINED_MIN_HEIGHT_AND_WIDTH + (MARGIN * 2)"
+		tl: { x: minX - publicConstants.MARGIN, y: minY },
+		tr: { x: maxX + publicConstants.MARGIN, y: minY },
+		br: { x: maxX + publicConstants.MARGIN, y: maxY },
+		bl: { x: minX - publicConstants.MARGIN, y: maxY },
+	};
+
+	const _combinedWorkSpaceRectCo = {
+		tl: { ..._workSpaceRectCo.tl },
+		tr: { ..._workSpaceRectCo.tr },
+		br: { ..._workSpaceRectCo.br },
+		bl: { ..._workSpaceRectCo.bl },
+	};
+
+	const {
+		topWorkSpaceCo: _topWorkSpaceCo,
+		bottomWorkSpaceCo: _bottomWorkSpaceCo,
+	} = getTopBottomWS(_workSpaceRectCo, minX, maxX);
+	const _shrinkRes = shrinkTopBottomWS(_topWorkSpaceCo);
+
+	if (_shrinkRes.integrateTop) {
+		_combinedWorkSpaceRectCo.tl = { ..._topWorkSpaceCo.tl };
+		_combinedWorkSpaceRectCo.tr = { ..._topWorkSpaceCo.tr };
+	}
+	_combinedWorkSpaceRectCo.br = { ..._bottomWorkSpaceCo.br };
+	_combinedWorkSpaceRectCo.bl = { ..._bottomWorkSpaceCo.bl };
+
+	// let itemsInBottomWorkSpace = getItemsInWorkSpace(
+	// 	getRectObjectFromCo(bottomWorkSpaceCo),
+	// 	true
+	// );
+	// const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(
+	// 	bottomWorkSpaceCo,
+	// 	true
+	// );
+
+	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
+
+	let _combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
+
+	const incrementHeight = getPrivateConstantByName("MIN_HEIGHT_AND_WIDTH") * 2;
+
+	let passCount = 0;
+	let arranged = {};
+	let arrangedCount = 0;
+	let workSpaceResizeCount = 0;
+
+	let DEBUG_COUNT = 0;
+
+	while (arrangedCount !== iToALen) {
+		debugger;
+		let freeRectsItY;
+		if (passCount === 0) {
+			// sort items in workspace by lt.x  i.e horizontally
+			itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+
+			const { it: _freeRectsItY, idCount: lastId1 } = sweepLine(
+				combinedWorkSpaceRect,
+				combinedWorkSpaceRectCo,
+				itemsInCombinedWorkSpace,
+				idCount.idCount
+			);
+			freeRectsItY = _freeRectsItY;
+			idCount.idCount = lastId1;
+		} else if (passCount === 1) {
+			const {
+				itemsInWorkSpace: _itemsInCombinedWorkSpace,
+				updatedItemsToArrange,
+			} = getResizeWSItemsDetail(
+				_workSpaceRectCo,
+				_topWorkSpaceCo,
+				_bottomWorkSpaceCo,
+				_combinedWorkSpaceRectCo,
+				arranged,
+				itemsToArrange
+			);
+			itemsInCombinedWorkSpace = _itemsInCombinedWorkSpace;
+			itemsToArrange = updatedItemsToArrange;
+			iToALen = updatedItemsToArrange.length;
+			passCount++;
+			continue;
+		} else if (passCount >= 2) {
+			// sort items in workspace by lt.x  i.e horizontally
+			itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+
+			const { it: _freeRectsItY, idCount: lastId1 } = sweepLine(
+				_combinedWorkSpaceRect,
+				_combinedWorkSpaceRectCo,
+				itemsInCombinedWorkSpace,
+				idCount.idCount
+			);
+			freeRectsItY = _freeRectsItY;
+			idCount.idCount = lastId1;
+		}
+
+		const freeRectsArr = freeRectsItY.getDataInArray();
+		shuffle(freeRectsArr);
+
+		assignAdjacentRects(freeRectsItY);
+
+		// DEBUG:
+		// printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+
+		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
+			freeRectsArr,
+			idCount.idCount
+		);
+		idCount.idCount = lastId2;
+
+		// DEBUG:
+		// printMergedFreeRects(mergedRects.map((o) => o.d));
+
+		const { overlappedRects } = findOverlapped(mergedRects);
+
+		// DEBUG:
+		// printMergedFreeRects(overlappedRects.map((o) => o.d));
+
+		const {
+			arranged: _arranged,
+			// itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
+			idCount: lastId3,
+		} = await arrange(
+			itemsToArrange.filter((id) => !arranged[id]),
+			overlappedRects,
+			getRectObjectFromCo(topWorkSpaceCo),
+			getRectObjectFromCo(bottomWorkSpaceCo),
+			passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo,
+			idCount.idCount
+		);
+		idCount.idCount = lastId3;
+
+		// itemsInBottomWorkSpace = [
+		// 	...itemsInBottomWorkSpace,
+		// 	...Object.keys(_itemsInBottomWorkSpace),
+		// ];
+
+		arranged = { ...arranged, ..._arranged };
+		const _arrangedArr = Object.values(_arranged);
+		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
+
+		arrangedCount += _arrangedArr.length;
+
+		if (arrangedCount !== iToALen && passCount >= 2) {
+			// resize combined workSpace
+			workSpaceResizeCount++;
+			console.log("workSpaceResizeCount", workSpaceResizeCount);
+
+			_combinedWorkSpaceRectCo.br.y += incrementHeight;
+			_combinedWorkSpaceRectCo.bl.y += incrementHeight;
+			_combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
+		}
+
+		passCount++;
+
+		DEBUG_COUNT++;
+		if (DEBUG_COUNT > 50) {
+			throw "Arrange time out";
+		}
+	}
+
+	// if (workSpaceResizeCount > 0) {
+	// 	// push items in below bottom workspace below
+	// 	shiftItems(itemsBelowBottomWorkSpace, shiftHeight * workSpaceResizeCount);
+
+	// 	// put items in bottom workspace and below bottom workspace in arranged map
+	// 	let len = itemsInBottomWorkSpace.length;
+	// 	for (let i = 0; i < len; i++) {
+	// 		arranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
+	// 	}
+
+	// 	len = itemsBelowBottomWorkSpace.length;
+	// 	for (let i = 0; i < len; i++) {
+	// 		arranged[itemsBelowBottomWorkSpace[i]] =
+	// 			mpd[itemsBelowBottomWorkSpace[i]];
+	// 	}
+	// }
 
 	const p2 = performance.now();
 	console.log("arrange total: ", p2 - p1);
@@ -628,6 +869,8 @@ export const findOverlapped = (mergedRects) => {
 				itArr[i].d.id !== res[j].d.id
 			) {
 				itArr[i].d.o[res[j].d.id] = res[j];
+			} else if (res[j].d.rect === null) {
+				delete itArr[i].d.o[res[j].d.id];
 			}
 		}
 	}
@@ -651,15 +894,26 @@ export const findOverlapped = (mergedRects) => {
 	};
 };
 
+/**
+ * [description]
+ * @param  {number[]} itemsToArrange          Array of items to arrange
+ * @param  {object[]} overlappedRects         Array of overlapping rects
+ * @param  {object} topWorkSpace            Top work space object in object form
+ * @param  {object} bottomWorkSpace         Bottom work space object in object form
+ * @param  {object} combinedWorkSpaceRectCo combined work space object in object form
+ * @param  {number} lastId                  next id available
+ * @return {object}                         arranged{object}: key is index in position data array, value is the object; itemsInbottomworkSpace{object}: key is index in position data array, value is also the index; idCount: next available id
+ */
 export const arrange = async (
 	itemsToArrange,
 	overlappedRects,
 	topWorkSpace,
 	bottomWorkSpace,
 	combinedWorkSpaceRectCo,
-	lastId,
-	arrangeFor
+	lastId
 ) => {
+	// this function updates the modified position data
+	// so no need to update the modified position data later
 	let idCount = lastId;
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};

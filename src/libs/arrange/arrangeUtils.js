@@ -30,7 +30,11 @@ import {
 } from "../../variables/essentials";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
-import { doRectsOverlap } from "../rect/rectUtils";
+import {
+	doRectsOverlap,
+	isRectInside,
+	getRectObjectFromCo,
+} from "../rect/rectUtils";
 import { filter } from "../utils/utils";
 
 export const isFlippingPosPossible = () => {
@@ -44,15 +48,18 @@ export const isFlippingPosPossible = () => {
 	}
 };
 
-export const getMinMaxY = (
+export const getMinMaxXY = (
 	affectedItems,
+	resizedRightX,
 	resizedBottomY,
 	toY,
 	movedBottomY
 ) => {
-	let minY = Number.MAX_SAFE_INTEGER,
-		maxY = 0;
-	let len = affectedItems.length;
+	let minY = Number.MAX_SAFE_INTEGER;
+	let maxY = 0;
+	let minX = Number.MAX_SAFE_INTEGER;
+	let maxX = 0;
+	const len = affectedItems.length;
 	for (let i = 0; i < len; i++) {
 		if (pd[affectedItems[i]].y < minY) {
 			minY = pd[affectedItems[i]].y;
@@ -60,15 +67,25 @@ export const getMinMaxY = (
 		if (pd[affectedItems[i]].y + pd[affectedItems[i]].height > maxY) {
 			maxY = pd[affectedItems[i]].y + pd[affectedItems[i]].height;
 		}
+
+		if (pd[affectedItems[i]].x < minX) {
+			minX = pd[affectedItems[i]].x;
+		}
+
+		if (pd[affectedItems[i]].x + pd[affectedItems[i]].width > maxX) {
+			maxX = pd[affectedItems[i]].x + pd[affectedItems[i]].width;
+		}
 	}
 
 	if (resizedBottomY > maxY) maxY = resizedBottomY;
+
+	if (resizedRightX > maxX) maxX = resizedRightX;
 
 	if (toY < minY) minY = toY;
 
 	if (movedBottomY > maxY) maxY = movedBottomY;
 
-	return { minY, maxY };
+	return { minX, maxX, minY, maxY };
 };
 
 export const filterToArrange = (toArrangeItems, arranged) => {
@@ -82,16 +99,27 @@ export const filterToArrange = (toArrangeItems, arranged) => {
 	return filter(result);
 };
 
-export const getBottomMax = () => {
+export const getBottomMax = (minX, maxX) => {
 	let max = 0;
+	let item, mItem;
 	const len = pd.length;
 
 	for (let i = 0; i < len; i++) {
-		if (pd[i].y + pd[i].height > max) {
+		item = getItemDimenWithMargin(pd[i]);
+		mItem = getItemDimenWithMargin(mpd[i]);
+		if (
+			pd[i].y + pd[i].height > max &&
+			item.x < maxX &&
+			item.x + item.width > minX
+		) {
 			max = pd[i].y + pd[i].height;
 		}
 
-		if (mpd[i].y + mpd[i].height > max) {
+		if (
+			mpd[i].y + mpd[i].height > max &&
+			mItem.x < maxX &&
+			mItem.x + mItem.width > minX
+		) {
 			max = mpd[i].y + mpd[i].height;
 		}
 	}
@@ -99,68 +127,27 @@ export const getBottomMax = () => {
 	return max;
 };
 
-export const getTopBottomWS = (workSpaceRectCo) => {
+export const getTopBottomWS = (workSpaceRectCo, minX, maxX) => {
 	let topWorkSpaceCo, bottomWorkSpaceCo;
 	if (workSpaceRectCo.tl.y > 0) {
 		topWorkSpaceCo = {
-			tl: { x: publicConstants.MARGIN, y: publicConstants.MARGIN },
-			tr: {
-				x: privateConstants.WIDTH - publicConstants.MARGIN,
-				y: publicConstants.MARGIN,
-			},
-			br: {
-				x: privateConstants.WIDTH - publicConstants.MARGIN,
-				y: workSpaceRectCo.tr.y,
-			},
-			bl: { x: publicConstants.MARGIN, y: workSpaceRectCo.tl.y },
+			tl: { x: minX, y: 0 },
+			tr: { x: maxX, y: 0 },
+			br: { x: maxX, y: workSpaceRectCo.tr.y },
+			bl: { x: minX, y: workSpaceRectCo.tl.y },
 		};
 	}
 
-	const bottomMax = getBottomMax();
+	const bottomMax = getBottomMax(minX, maxX);
 
 	if (bottomMax > workSpaceRectCo.bl.y) {
 		bottomWorkSpaceCo = {
-			tl: { x: publicConstants.MARGIN, y: workSpaceRectCo.bl.y },
-			tr: {
-				x: privateConstants.WIDTH - publicConstants.MARGIN,
-				y: workSpaceRectCo.bl.y,
-			},
-			br: { x: privateConstants.WIDTH - publicConstants.MARGIN, y: bottomMax },
-			bl: { x: publicConstants.MARGIN, y: bottomMax },
+			tl: { x: minX, y: workSpaceRectCo.bl.y },
+			tr: { x: maxX, y: workSpaceRectCo.bl.y },
+			br: { x: maxX, y: bottomMax },
+			bl: { x: minX, y: bottomMax },
 		};
 	}
-
-	// if (topWorkSpace || bottomWorkSpace) {
-	// 	if (topWorkSpace && !bottomWorkSpace) {
-	// 		combinedWorkSpace = {
-	// 			tl: { x: 0, y: 0 },
-	// 			tr: { x: privateConstants.WIDTH, y: 0 },
-	// 			br: { x: privateConstants.WIDTH, y: workSpaceRectCo.br.y },
-	// 			bl: { x: 0, y: workSpaceRectCo.bl.y },
-	// 		};
-	// 	} else if (!topWorkSpace && bottomWorkSpace) {
-	// 		combinedWorkSpace = {
-	// 			tl: { x: 0, y: workSpaceRectCo.tl.y },
-	// 			tr: { x: privateConstants.WIDTH, y: workSpaceRectCo.tr.y },
-	// 			br: { x: privateConstants.WIDTH, y: bottomMax },
-	// 			bl: { x: 0, y: bottomMax },
-	// 		};
-	// 	} else {
-	// 		combinedWorkSpace = {
-	// 			tl: { x: 0, y: 0 },
-	// 			tr: { x: privateConstants.WIDTH, y: 0 },
-	// 			br: { x: privateConstants.WIDTH, y: bottomMax },
-	// 			bl: { x: 0, y: bottomMax },
-	// 		};
-	// 	}
-	// } else {
-	// 	combinedWorkSpace = {
-	// 		tl: { ...workSpaceRectCo.tl },
-	// 		tr: { ...workSpaceRectCo.tr },
-	// 		br: { ...workSpaceRectCo.br },
-	// 		bl: { ...workSpaceRectCo.bl },
-	// 	};
-	// }
 
 	return { topWorkSpaceCo, bottomWorkSpaceCo };
 };
@@ -255,6 +242,93 @@ export const getItemsBelowBottomWorkSpace = (
 	}
 
 	return res;
+};
+
+export const getResizeWSItemsDetail = (
+	wsCo,
+	topWsCo,
+	bottomWsCo,
+	cWsCo,
+	arranged,
+	itemsToArrange,
+	getIndices = false
+) => {
+	debugger;
+	const wsPlusTopWsCo = {
+		tl: { ...topWsCo.tl },
+		tr: { ...topWsCo.tr },
+		br: { ...wsCo.br },
+		bl: { ...wsCo.bl },
+	};
+	const wsPlusTopWs = getRectObjectFromCo(wsPlusTopWsCo);
+	const bottomWs = getRectObjectFromCo(bottomWsCo);
+	const cWs = getRectObjectFromCo(cWsCo);
+
+	// const itemsToArrangeMap = {};
+	// const iToALen = itemsToArrange.length;
+	// for (let i = 0; i < iToALen; i++) {
+	// 	itemsToArrangeMap[itemsToArrange[i]] = true;
+	// }
+
+	let count = 0;
+	const iToALen = itemsToArrange.length;
+	const _itemsToArrange = new Array(iToALen);
+	for (let i = 0; i < iToALen; i++) {
+		if (!arranged[itemsToArrange[i]]) {
+			_itemsToArrange[count++] = itemsToArrange[i];
+		}
+	}
+	const filteredItemsToArrange = filter(_itemsToArrange);
+
+	const len = mpd.length;
+	const updatedItemsToArrange = new Array(len);
+	let uCount = 0;
+	const itemsInWorkSpace = new Array(len);
+	let iCount = 0;
+
+	for (let i = 0; i < len; i++) {
+		const _item = getItemDimenWithMargin(mpd[i]);
+		if (doRectsOverlap(cWs, _item)) {
+			if (arranged[i]) {
+				if (!getIndices) {
+					itemsInWorkSpace[iCount++] = mpd[i];
+				} else {
+					itemsInWorkSpace[iCount++] = i;
+				}
+			} else if (doRectsOverlap(wsPlusTopWs, _item)) {
+				if (!getIndices) {
+					itemsInWorkSpace[iCount++] = mpd[i];
+				} else {
+					itemsInWorkSpace[iCount++] = i;
+				}
+			} else if (
+				doRectsOverlap(bottomWs, _item) &&
+				!isRectInside(bottomWs, _item)
+			) {
+				if (!getIndices) {
+					itemsInWorkSpace[iCount++] = mpd[i];
+				} else {
+					itemsInWorkSpace[iCount++] = i;
+				}
+			} else if (
+				doRectsOverlap(bottomWs, _item) &&
+				isRectInside(bottomWs, _item) &&
+				!arranged[i]
+			) {
+				updatedItemsToArrange[uCount++] = i;
+				mpd[i].x = undefined;
+				mpd[i].y = undefined;
+			}
+		}
+	}
+
+	return {
+		updatedItemsToArrange: filter([
+			...filteredItemsToArrange,
+			...updatedItemsToArrange,
+		]),
+		itemsInWorkSpace: filter(itemsInWorkSpace),
+	};
 };
 
 export const getItemDimenWithMargin = (item) => {

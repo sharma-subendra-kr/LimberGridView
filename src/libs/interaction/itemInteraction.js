@@ -47,7 +47,7 @@ import {
 	resetDemoUIChanges,
 	movePointAdjust,
 } from "./itemInteractionUtils";
-import { arrangeAffectedItems } from "../arrange/arrange";
+import { arrangeMove, arrangeResize } from "../arrange/arrange";
 import privateConstants from "../../constants/privateConstants";
 import publicConstants from "../../constants/publicConstants";
 import {
@@ -76,12 +76,10 @@ export const resizeItem = async function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	const arranged = await arrangeAffectedItems(
+	const arranged = await arrangeResize(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
-		undefined,
-		undefined,
-		"resize"
+		modifiedItem.x + modifiedItem.width
 	);
 
 	setPositionData(mpd);
@@ -118,12 +116,10 @@ export const resizeItemDemo = async function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(modifiedItem, index);
 
-	const arranged = await arrangeAffectedItems(
+	const arranged = await arrangeResize(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
-		undefined,
-		undefined,
-		"resize"
+		modifiedItem.x + modifiedItem.width
 	);
 
 	const arrangedArr = Object.keys(arranged);
@@ -163,12 +159,10 @@ export const moveItem = async function (index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	const arranged = await arrangeAffectedItems(
+	const arranged = await arrangeMove(
 		affectedItems,
-		undefined,
 		toY,
-		toY + pd[index].height,
-		"move"
+		toY + pd[index].height
 	);
 
 	setPositionData(mpd);
@@ -223,12 +217,10 @@ export const moveItemDemo = async function (index, toX, toY) {
 	};
 	const affectedItems = getMoveAffectedItems(modifiedItem, index);
 
-	const arranged = await arrangeAffectedItems(
+	const arranged = await arrangeMove(
 		affectedItems,
-		undefined,
 		toY,
-		toY + pd[index].height,
-		"move"
+		toY + pd[index].height
 	);
 
 	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");

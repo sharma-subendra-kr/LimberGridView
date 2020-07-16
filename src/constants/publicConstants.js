@@ -24,6 +24,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import privateConstants from "./privateConstants";
+
 const constants = {
 	MOVE_GUIDE_RADIUS: 10,
 	RESIZE_SQUARE_GUIDE_LENGTH: 10,
@@ -42,10 +44,17 @@ const constants = {
 
 	ADD_OR_CUTSPACE_TOGGLE: "ADD",
 
-	MIN_HEIGHT_AND_WIDTH: 150,
+	DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
 };
 
 const setPublicConstantByName = function (name, value) {
+	if (
+		name === "DEFINED_MIN_HEIGHT_AND_WIDTH" &&
+		value < privateConstants.MIN_HEIGHT_AND_WIDTH
+	) {
+		throw "DEFINED_MIN_HEIGHT_AND_WIDTH can't be less than MIN_HEIGHT_AND_WIDTH";
+	}
+
 	if (constants[name]) {
 		constants[name] = value;
 	}

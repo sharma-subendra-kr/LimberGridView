@@ -66,7 +66,7 @@ export const filter = (arr) => {
 	const temp = new Array(len);
 	let count = 0;
 	for (let i = 0; i < len; i++) {
-		if (arr[i]) {
+		if (arr[i] !== null && arr[i] !== undefined) {
 			temp[count++] = arr[i];
 		}
 	}
