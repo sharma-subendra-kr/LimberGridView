@@ -253,7 +253,6 @@ export const getResizeWSItemsDetail = (
 	itemsToArrange,
 	getIndices = false
 ) => {
-	debugger;
 	const wsPlusTopWsCo = {
 		tl: { ...topWsCo.tl },
 		tr: { ...topWsCo.tr },

@@ -753,6 +753,16 @@ var main = function () {
 	window.getAdjRect = function (id) {
 		return document.getElementById("limberGridViewDebugAdjRect");
 	};
+
+	window.scrollUp = function() {
+		const el = document.getElementsByClassName("limberGridView")[0];
+		el.scrollTop -= 100;
+	};
+
+	window.scrollDown = function() {
+		const el = document.getElementsByClassName("limberGridView")[0];
+		el.scrollTop += 100;
+	};
 };
 
 // gridHeight : 624,

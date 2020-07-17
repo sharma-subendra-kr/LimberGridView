@@ -253,6 +253,8 @@ export const arrangeMove = async (affectedItems, toY, movedBottomY) => {
 	}
 
 	const p2 = performance.now();
+	console.log("p1: ", p1);
+	console.log("p2: ", p2);
 	console.log("arrange total: ", p2 - p1);
 
 	return arranged;
@@ -462,6 +464,8 @@ export const arrangeResize = async (
 	}
 
 	const p2 = performance.now();
+	console.log("p1: ", p1);
+	console.log("p2: ", p2);
 	console.log("arrange total: ", p2 - p1);
 
 	return arranged;
@@ -1004,6 +1008,7 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 		diffStack.push(diffObj);
 	}
 
+	let subtractFlag = false;
 	const directOverlaps = { ...pm.d.o };
 	const pmOlps = Object.values(pm.d.o);
 	const pmOlapsLen = pmOlps.length;
@@ -1014,7 +1019,9 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 		// if diffLen is 0, this overlapping rect will be put back later after operations
 		wCBST.remove(olpd.d.rect.width, olpd.d);
 
+		subtractFlag = false;
 		if (doRectsOverlap(olpd.d.rect, itemWithMargins)) {
+			subtractFlag = true;
 			diff = subtractRect(olpd.d.rect, itemWithMargins);
 			diffLen = diff?.length || 0;
 
@@ -1045,6 +1052,9 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 			iolpd = olpd.d.o[ioKeys[k]];
 			if (!directOverlaps[ioKeys[k]]) {
 				indirectOverlaps[ioKeys[k]] = iolpd;
+			}
+			if (subtractFlag) {
+				delete iolpd.d.o[olpd.d.id];
 			}
 		}
 	}
