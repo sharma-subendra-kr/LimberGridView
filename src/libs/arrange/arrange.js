@@ -670,7 +670,9 @@ export const assignAdjacentRects = (rectsItY) => {
 
 export const mergeFreeRects = async (freeRectsArr, lastId) => {
 	const stack = new Stack();
+	const stackIt = new IntervalTreesIterative();
 	const resultStack = new Stack();
+	const resultIt = new IntervalTreesIterative();
 
 	let adjacents,
 		adj,
@@ -728,7 +730,9 @@ export const mergeFreeRects = async (freeRectsArr, lastId) => {
 						};
 
 						filterAdjacents(mergedObject);
-						stack.push(mergedObject);
+						if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
+							stack.push(mergedObject);
+						}
 
 						if (isRectInside(mergedRect, adj.d.rect)) {
 							adj.d.ref = mergedObject;
@@ -743,12 +747,12 @@ export const mergeFreeRects = async (freeRectsArr, lastId) => {
 			}
 
 			if (!atLeastOneFullMerge) {
-				resultStack.push(top);
+				isRectIdenticalOrInside(resultIt, top);
 			}
 		}
 	}
 
-	return { mergedRects: resultStack.getData(), idCount };
+	return { mergedRects: resultIt.getDataInArray(), idCount };
 };
 
 export const isRectIdenticalOrInside = (it, obj) => {
