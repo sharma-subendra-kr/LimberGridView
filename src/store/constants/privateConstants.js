@@ -35,9 +35,9 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 // 	WIDTH_SCALE_FACTOR: 0,
 
-// 	OUTPUT_WIDTH: 1080,
-// 	OUTPUT_HEIGHT: 1920,
-// 	OUTPUT_MARGIN: 5,
+// 	GRID_WIDTH: 1080,
+// 	GRID_HEIGHT: 1920,
+// 	GRID_MARGIN: 5,
 // 	MARGIN: 5,
 
 // 	MIN_HEIGHT_AND_WIDTH: 150,
@@ -59,6 +59,22 @@ const setPrivateConstantByName = function (context, name, value) {
 
 const getPrivateConstantByName = function (context, name) {
 	return context.store.constants.privateConstants[name];
+};
+
+const setWidth = function (context, val) {
+	context.store.constants.privateConstants.WIDTH = val;
+};
+
+const getWidth = function (context) {
+	return context.store.constants.privateConstants.WIDTH;
+};
+
+const setHeight = function (context, val) {
+	context.store.constants.privateConstants.HEIGHT = val;
+};
+
+const getHeight = function (context) {
+	return context.store.constants.privateConstants.HEIGHT;
 };
 
 const setPaddingLeft = function (context, val) {
@@ -103,27 +119,27 @@ const getWidthScaleFactor = function (context) {
 
 //
 const setOutputWidth = function (context, val) {
-	context.store.constants.privateConstants.OUTPUT_WIDTH = val;
+	context.store.constants.privateConstants.GRID_WIDTH = val;
 };
 
 const getOutputWidth = function (context) {
-	return context.store.constants.privateConstants.OUTPUT_WIDTH;
+	return context.store.constants.privateConstants.GRID_WIDTH;
 };
 
 const setOutputHeight = function (context, val) {
-	context.store.constants.privateConstants.OUTPUT_HEIGHT = val;
+	context.store.constants.privateConstants.GRID_HEIGHT = val;
 };
 
 const getOutputHeight = function (context) {
-	return context.store.constants.privateConstants.OUTPUT_HEIGHT;
+	return context.store.constants.privateConstants.GRID_HEIGHT;
 };
 
 const setOutputMargin = function (context, val) {
-	context.store.constants.privateConstants.OUTPUT_MARGIN = val;
+	context.store.constants.privateConstants.GRID_MARGIN = val;
 };
 
 const getOutputMargin = function (context) {
-	return context.store.constants.privateConstants.OUTPUT_MARGIN;
+	return context.store.constants.privateConstants.GRID_MARGIN;
 };
 
 const setMargin = function (context, val) {
@@ -142,11 +158,16 @@ const getMinHeightAndWidth = function (context) {
 	return context.store.constants.privateConstants.MIN_HEIGHT_AND_WIDTH;
 };
 
+export default getPrivateConstants;
 export {
 	setPrivateConstants,
 	getPrivateConstants,
 	setPrivateConstantByName,
 	getPrivateConstantByName,
+	setWidth,
+	getWidth,
+	setHeight,
+	getHeight,
 	setPaddingLeft,
 	getPaddingLeft,
 	setPaddingRight,

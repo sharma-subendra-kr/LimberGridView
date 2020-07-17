@@ -24,66 +24,71 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import options from "../variables/options";
+import { getOptions } from "../variables/options";
 import {
-	ev,
-	setElementId,
 	setPseudoElementId,
 	getPseudoElementId,
 	initialGridData,
-} from "../variables/essentials";
-import e, {
-	set$body,
-	set$el,
-	set$bodyPseudoEl,
-	set$limberGridViewContainer,
-	set$limberGridViewStyle,
-	set$limberGridView,
-} from "../variables/elements";
-import privateConstants, {
+	getPositionData,
+} from "../store/variables/essentials";
+import getElements from "../store/variables/elements";
+import getPrivateConstants, {
+	setWidth,
+	setHeight,
 	setPaddingLeft,
 	setPaddingRight,
 	setPaddingTop,
 	setPaddingBottom,
 	setWidthScaleFactor,
-} from "../constants/privateConstants";
-import publicConstants from "../constants/publicConstants";
-import { getRandomString } from "../libs/utils/utils";
+	setMargin,
+} from "../store/constants/privateConstants";
+import getPublicConstants from "../store/constants/publicConstants";
+import { checkPositionData } from "../libs/renderers/rendererUtils";
 
-export const init = function (initialGridWidth, autoArrange) {
-	if (typeof options.el === "string") {
-		const el = document.getElementById(options.el);
-		if (!el) {
-			throw `No for element found for id ${options.el}`;
-		}
-		set$el(el);
-	} else if (options.el instanceof Element) {
-		set$el(options.el);
-	} else {
-		throw "Valid DOM Element or Id required";
-	}
+export const init = function (context, initialGridWidth, autoArrange) {
+	// if (typeof options.el === "string") {
+	// 	const el = document.getElementById(options.el);
+	// 	if (!el) {
+	// 		throw `No for element found for id ${options.el}`;
+	// 	}
+	// 	set$el(el);
+	// } else if (options.el instanceof Element) {
+	// 	set$el(options.el);
+	// } else {
+	// 	throw "Valid DOM Element or Id required";
+	// }
 
-	set$body(document.getElementsByTagName("body")[0]);
-	setPseudoElementId(
-		this,
-		"limber-grid-view-pseudo-container-" + getRandomString()
-	);
-	e.$body[0].insertAdjacentHTML(
-		"beforeend",
-		`<div id = ${getPseudoElementId(
-			this
-		)} class = "limber-grid-view-pseudo-container"></div>`
-	);
-	set$bodyPseudoEl(document.getElementById(getPseudoElementId(this)));
+	// set$body(context, document.getElementsByTagName("body")[0]);
+	// setPseudoElementId(
+	// 	context,
+	// 	"limber-grid-view-pseudo-container-" + getRandomString()
+	// );
+	// e.$body[0].insertAdjacentHTML(
+	// 	"beforeend",
+	// 	`<div id = ${getPseudoElementId(
+	// 		context
+	// 	)} class = "limber-grid-view-pseudo-container"></div>`
+	// );
+	// set$bodyPseudoEl(
+	// 	context,
+	// 	document.getElementById(getPseudoElementId(context))
+	// );
 
-	e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
-	set$limberGridViewContainer(
-		e.$el.querySelectorAll(".limber-grid-view-container")[0]
-	);
-	set$limberGridViewStyle(e.$el.getElementsByTagName("style")[0]);
-	set$limberGridView(e.$el.querySelectorAll(".limber-grid-view")[0]);
+	// e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
+	// set$limberGridViewContainer(
+	// 	context,
+	// 	e.$el.querySelectorAll(".limber-grid-view-container")[0]
+	// );
+	// set$limberGridViewStyle(context, e.$el.getElementsByTagName("style")[0]);
+	// set$limberGridView(context, e.$el.querySelectorAll(".limber-grid-view")[0]);
+
+	const e = getElements(context);
+	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
+	const pd = getPositionData(context);
 
 	setPaddingLeft(
+		context,
 		parseInt(
 			window
 				.getComputedStyle(e.$limberGridView, null)
@@ -91,6 +96,7 @@ export const init = function (initialGridWidth, autoArrange) {
 		)
 	);
 	setPaddingRight(
+		context,
 		parseInt(
 			window
 				.getComputedStyle(e.$limberGridView, null)
@@ -98,6 +104,7 @@ export const init = function (initialGridWidth, autoArrange) {
 		)
 	);
 	setPaddingTop(
+		context,
 		parseInt(
 			window
 				.getComputedStyle(e.$limberGridView, null)
@@ -105,6 +112,7 @@ export const init = function (initialGridWidth, autoArrange) {
 		)
 	);
 	setPaddingBottom(
+		context,
 		parseInt(
 			window
 				.getComputedStyle(e.$limberGridView, null)
@@ -112,56 +120,57 @@ export const init = function (initialGridWidth, autoArrange) {
 		)
 	);
 
-	privateConstants.WIDTH =
+	setWidth(
+		context,
 		e.$limberGridView.clientWidth -
-		privateConstants.PADDING_LEFT -
-		privateConstants.PADDING_RIGHT;
-	privateConstants.HEIGHT =
+			privateConstants.PADDING_LEFT -
+			privateConstants.PADDING_RIGHT
+	);
+
+	setHeight(
+		context,
 		e.$limberGridView.clientHeight -
-		privateConstants.PADDING_TOP -
-		privateConstants.PADDING_BOTTOM;
+			privateConstants.PADDING_TOP -
+			privateConstants.PADDING_BOTTOM
+	);
 
-	if (
-		(initialGridWidth == undefined || initialGridWidth == null) &&
-		positionData.length == 0
-	) {
-		initialGridWidth = privateConstants.WIDTH;
-	}
+	// privateConstants.WIDTH =
+	// 	e.$limberGridView.clientWidth -
+	// 	privateConstants.PADDING_LEFT -
+	// 	privateConstants.PADDING_RIGHT;
+	// privateConstants.HEIGHT =
+	// 	e.$limberGridView.clientHeight -
+	// 	privateConstants.PADDING_TOP -
+	// 	privateConstants.PADDING_BOTTOM;
 
-	setWidthScaleFactor(privateConstants.WIDTH / initialGridWidth);
+	setWidthScaleFactor(
+		context,
+		privateConstants.WIDTH / privateConstants.GRID_WIDTH
+	);
 
-	if (autoArrange == true) {
-		var _positionData = JSON.parse(JSON.stringify(positionData));
-		var remainingItems = [];
-		var length_0 = _positionData.length;
-		for (var i = 0; i < length_0; i++) {
-			remainingItems.push(i);
-			_positionData[i].width =
-				_positionData[i].width * privateConstants.WIDTH_SCALE_FACTOR;
-			_positionData[i].height =
-				_positionData[i].height * privateConstants.WIDTH_SCALE_FACTOR;
-			if (_positionData[i].width > privateConstants.WIDTH) {
-				_positionData[i].width = privateConstants.WIDTH;
-			}
-		}
-		setPositionData(
-			fitRemainingItemsBelowDeepestLine(0, _positionData, remainingItems, [])
-				.positionData
-		);
-	} else {
-		if (initialGridData.margin != undefined && initialGridData.margin != null) {
-			if (
-				typeof initialGridData.margin == "number" &&
-				initialGridData.margin > 0
-			) {
-				publicConstants.MARGIN = initialGridData.margin;
-				publicConstants.MARGIN =
-					publicConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR;
-			} else {
-				throw "Margin is required for rendering with position coordinates";
-			}
-		} else {
-			throw "Margin is required for rendering with position coordinates";
-		}
+	setMargin(
+		context,
+		privateConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR
+	);
+
+	if (autoArrange === true || !checkPositionData(pd)) {
+		// var _positionData = JSON.parse(JSON.stringify(positionData));
+		// var remainingItems = [];
+		// var length_0 = _positionData.length;
+		// for (var i = 0; i < length_0; i++) {
+		// 	remainingItems.push(i);
+		// 	_positionData[i].width =
+		// 		_positionData[i].width * privateConstants.WIDTH_SCALE_FACTOR;
+		// 	_positionData[i].height =
+		// 		_positionData[i].height * privateConstants.WIDTH_SCALE_FACTOR;
+		// 	if (_positionData[i].width > privateConstants.WIDTH) {
+		// 		_positionData[i].width = privateConstants.WIDTH;
+		// 	}
+		// }
+		// setPositionData(
+		// 	this,
+		// 	fitRemainingItemsBelowDeepestLine(0, _positionData, remainingItems, [])
+		// 		.positionData
+		// );
 	}
 };

@@ -24,36 +24,4 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import getPublicConstants from "../../store/constants/publicConstants";
-// import getPrivateConstants from "../../store/constants/privateConstants";
-import getOptions from "../../store/variables/options";
-import { callbacks } from "../../variables/essentials";
-import { init } from "../../initializers/initializers";
-import { render } from "../renderers/renderers";
-
-export const onWindowResize = function (event) {
-	console.log("onWindowResize CALL", this);
-
-	const publicConstants = getPublicConstants(this);
-
-	setTimeout(
-		onWindowResizeTimerCallback.bind(this),
-		publicConstants.WINDOW_RESIZE_WAIT_TIME
-	);
-	window.removeEventListener("resize", onWindowResize);
-};
-
-export const onWindowResizeTimerCallback = function (event) {
-	init(this, false);
-	render();
-
-	const options = getOptions();
-
-	if (options.reRenderOnResize !== false) {
-		window.addEventListener("resize", onWindowResize.bind(this));
-	}
-};
-
-export const onItemClick = function (event) {
-	callbacks.onItemClickCallback(event);
-};
+export const DESK_INTERACTION_MODE = { ADD: true, CUT: true };

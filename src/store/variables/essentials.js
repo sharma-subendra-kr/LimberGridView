@@ -41,6 +41,14 @@ import { emptyObject } from "../libs/utils/utils";
 // 	ev.elementID = id;
 // };
 
+const setEssentialVariables = function (context, ev) {
+	context.store.variables.essentials = ev;
+};
+
+const getEssentialVariables = function (context) {
+	return context.store.variables.essentials;
+};
+
 const setPseudoElementId = function (context, id) {
 	context.store.variables.essentials.pseudoElementId = id;
 };
@@ -67,28 +75,28 @@ const getModifiedPositionData = function (context) {
 	return context.store.variables.essentials.modifiedPositionData;
 };
 
-const setInitialPositionData = function (context, pos) {
-	context.store.variables.essentials.initialPositionData.length = 0;
-	Object.assign(
-		context.store.variables.essentials.initialPositionData,
-		JSON.parse(JSON.stringify(pos))
-	);
-};
+// const setInitialPositionData = function (context, pos) {
+// 	context.store.variables.essentials.initialPositionData.length = 0;
+// 	Object.assign(
+// 		context.store.variables.essentials.initialPositionData,
+// 		JSON.parse(JSON.stringify(pos))
+// 	);
+// };
 
-const getInitialPositionData = function (context) {
-	return context.store.variables.essentials.initialPositionData;
-};
+// const getInitialPositionData = function (context) {
+// 	return context.store.variables.essentials.initialPositionData;
+// };
 
-const setInitialGridData = function (context, grid) {
-	emptyObject(context.store.variables.essentials.initialGridData);
+const setGridData = function (context, grid) {
+	emptyObject(context.store.variables.essentials.gridData);
 	Object.assign(
-		context.store.variables.essentials.initialGridData,
+		context.store.variables.essentials.gridData,
 		JSON.parse(JSON.stringify(grid))
 	);
 };
 
-const getInitialGridData = function (context) {
-	return context.store.variables.essentials.initialGridData;
+const getGridData = function (context) {
+	return context.store.variables.essentials.gridData;
 };
 
 const setCallbacks = function (context, cbs) {
@@ -112,18 +120,19 @@ const getSerializedPositionData = function (context) {
 	return context.store.variables.essentials.serializedPositionData;
 };
 
+export default getEssentialVariables;
 export {
 	// setElementId,
+	setEssentialVariables,
+	getEssentialVariables,
 	setPseudoElementId,
 	getPseudoElementId,
 	setPositionData,
 	getPositionData,
 	setModifiedPositionData,
 	getModifiedPositionData,
-	setInitialPositionData,
-	getInitialPositionData,
-	setInitialGridData,
-	getInitialGridData,
+	setGridData,
+	getGridData,
 	setCallbacks,
 	getCallbacks,
 	setSerializedPositionData,

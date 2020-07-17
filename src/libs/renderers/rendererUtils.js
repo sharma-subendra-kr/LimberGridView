@@ -24,14 +24,31 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-// SEE index.js for options format
+import { isValidRectCoForm, getCoordinates } from "../rect/rectUtils";
 
-const setOptions = function (context, options) {
-	context.options = options;
+export const checkPositionData = (pd) => {
+	if (Array.isArray(pd)) {
+		const len = pd.length;
+
+		for (let i = 0; i < len; i++) {
+			if (
+				!pd[i] ||
+				isNaN(pd[i].x) ||
+				pd[i].x < 0 ||
+				isNaN(pd[i].y) ||
+				pd[i].y < 0 ||
+				isNaN(pd[i].height) ||
+				pd[i].height <= 0 ||
+				isNaN(pd[i].width) ||
+				pd[i].width <= 0
+			) {
+				return false;
+			}
+			if (!isValidRectCoForm(getCoordinates(pd[i]))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
 };
-
-const getOptions = function (context) {
-	return context.options;
-};
-
-export { setOptions, getOptions };

@@ -24,7 +24,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import { getPrivateConstants } from "./privateConstants";
+import { getPrivateConstantsByName } from "./privateConstants";
 
 // const constants = {
 // 	MOVE_GUIDE_RADIUS: 10,
@@ -47,10 +47,18 @@ import { getPrivateConstants } from "./privateConstants";
 // 	DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
 // };
 
+const setPublicConstants = function (context, val) {
+	context.store.constants.publicConstants = val;
+};
+
+const getPublicConstants = function (context) {
+	return context.store.constants.publicConstants;
+};
+
 const setPublicConstantByName = function (context, name, value) {
 	if (
 		name === "DEFINED_MIN_HEIGHT_AND_WIDTH" &&
-		value < getPrivateConstants(context.MIN_HEIGHT_AND_WIDTH)
+		value < getPrivateConstantsByName(context, "MIN_HEIGHT_AND_WIDTH")
 	) {
 		throw "DEFINED_MIN_HEIGHT_AND_WIDTH can't be less than MIN_HEIGHT_AND_WIDTH";
 	}
@@ -64,4 +72,10 @@ const getPublicConstantByName = function (context, name) {
 	return context.store.constants.publicConstants[name];
 };
 
-export { setPublicConstantByName, getPublicConstantByName };
+export default getPublicConstants;
+export {
+	setPublicConstants,
+	getPublicConstants,
+	setPublicConstantByName,
+	getPublicConstantByName,
+};

@@ -233,6 +233,7 @@ const get$limberGridViewDebugMergedFreeRects = function (context) {
 	return context.store.variables.elements.$limberGridViewDebugMergedFreeRects;
 };
 
+export default getElements;
 export {
 	getElements,
 	set$body,
