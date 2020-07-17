@@ -119,7 +119,8 @@ export const resizeItemDemo = async function (index, width, height) {
 	const arranged = await arrangeResize(
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
-		modifiedItem.x + modifiedItem.width
+		modifiedItem.x + modifiedItem.width,
+		true
 	);
 
 	const arrangedArr = Object.keys(arranged);
@@ -220,7 +221,8 @@ export const moveItemDemo = async function (index, toX, toY) {
 	const arranged = await arrangeMove(
 		affectedItems,
 		toY,
-		toY + pd[index].height
+		toY + pd[index].height,
+		true
 	);
 
 	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");

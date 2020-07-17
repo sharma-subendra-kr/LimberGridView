@@ -78,7 +78,12 @@ import {
 	printAdjRect,
 } from "../debug/debug";
 
-export const arrangeMove = async (affectedItems, toY, movedBottomY) => {
+export const arrangeMove = async (
+	affectedItems,
+	toY,
+	movedBottomY,
+	isDemo = false
+) => {
 	const p1 = performance.now();
 
 	const idCount = { idCount: 0 };
@@ -143,6 +148,8 @@ export const arrangeMove = async (affectedItems, toY, movedBottomY) => {
 		(getPrivateConstantByName("MIN_HEIGHT_AND_WIDTH") -
 			publicConstants.MARGIN * 2) /
 		2;
+
+	let passCount = 0;
 	let arranged = {};
 	let arrangedCount = 0;
 	let workSpaceResizeCount = 0;
@@ -227,6 +234,8 @@ export const arrangeMove = async (affectedItems, toY, movedBottomY) => {
 			shiftItems(itemsInBottomWorkSpace, shiftHeight);
 		}
 
+		passCount++;
+
 		DEBUG_COUNT++;
 		if (DEBUG_COUNT > 50) {
 			throw "Arrange time out";
@@ -261,7 +270,8 @@ export const arrangeMove = async (affectedItems, toY, movedBottomY) => {
 export const arrangeResize = async (
 	affectedItems,
 	resizedBottomY,
-	resizedRightX
+	resizedRightX,
+	isDemo = false
 ) => {
 	const p1 = performance.now();
 
