@@ -32,7 +32,7 @@ import { onWindowResize } from "./libs/eventHandlerLib/miscellaneous";
 import { setIsMobileFunction as setIsMobileFunc } from "./libs/utils/utils";
 import publicConstants from "./constants/publicConstants";
 import privateConstants from "./constants/privateConstants";
-import options, { setOptions } from "./variables/options";
+import { setOptions, getOptions } from "./variables/options";
 import {
 	positionData,
 	initialGridData,
@@ -133,12 +133,13 @@ window.LimberGridView = (function () {
 
 	// ----------------------------------------------------------------------------------------- //
 
-	function LimberGridView(_options) {
-		setOptions(_options);
-		setCallbacks(_options.callbacks);
-		setInitialGridData(options.initialGridData);
-		setInitialPositionData(options.initialGridData.initialPositionData);
-		setPositionData(options.initialGridData.initialPositionData);
+	function LimberGridView(options) {
+		this.initializeStore();
+		setOptions(this, options);
+		setCallbacks(this, options.callbacks);
+		setInitialGridData(this, options.initialGridData);
+		setInitialPositionData(this, options.initialGridData.initialPositionData);
+		setPositionData(this, options.initialGridData.initialPositionData);
 
 		if (
 			options.initialGridData.mobileAspectRatio != undefined &&
@@ -187,6 +188,88 @@ window.LimberGridView = (function () {
 
 		init(initialGridData.gridWidth, options.autoArrange);
 	}
+
+	LimberGridView.prototype.initializeStore = function () {
+		this.options = undefined;
+		this.store = {
+			variables: {
+				elements: {
+					$body: undefined,
+					$bodyPseudoEl: undefined,
+					$limberGridViewBodyPseudoItem: undefined,
+					$el: undefined,
+					$limberGridView: undefined,
+					$limberGridViewItems: [],
+					$limberGridViewContainer: undefined,
+					$limberGridViewStyle: undefined,
+					$limberGridViewGridPseudoItem: undefined,
+					$limberGridViewMoveGuide: undefined,
+					$limberGridViewHeightAdjustGuide: undefined,
+					$limberGridViewAddItemGuide: undefined,
+					$limberGridViewAddItemOnTouchHoldGuide: undefined,
+					//  DEBUG elements:
+					$limberGridViewDebugMergedTempRects: [],
+					$limberGridViewDebugStackTopRect: undefined,
+					$limberGridViewDebugStackTopAdjRect: undefined,
+					$limberGridViewDebugMergedRect: undefined,
+					$limberGridViewDebugAdjRect: undefined,
+					$limberGridViewDebugResultStackRects: [],
+					$limberGridViewDebugStackRects: [],
+					$limberGridViewDebugUnmergedRects: [],
+					$limberGridViewDebugMergedFreeRects: [],
+				},
+				essentials: {
+					pseudoElementId: undefined,
+					positionData: [],
+					modifiedPositionData: [],
+					initialPositionData: [],
+					initialGridData: {},
+					callbacks: {},
+					serializedPositionData: {},
+				},
+			},
+			constants: {
+				privateConstants: {
+					WIDTH: 0,
+					HEIGHT: 0,
+
+					PADDING_LEFT: 0,
+					PADDING_RIGHT: 0,
+					PADDING_TOP: 0,
+					PADDING_BOTTOM: 0,
+
+					WIDTH_SCALE_FACTOR: 0,
+
+					OUTPUT_WIDTH: 1080,
+					OUTPUT_HEIGHT: 1920,
+					OUTPUT_MARGIN: 5,
+					MARGIN: 5,
+
+					MIN_HEIGHT_AND_WIDTH: 150,
+				},
+				publicConstants: {
+					MOVE_GUIDE_RADIUS: 10,
+					RESIZE_SQUARE_GUIDE_LENGTH: 10,
+					RESIZE_SQUARE_BORDER_GUIDE_WIDTH: 3,
+					AUTO_SCROLL_DISTANCE: 50,
+					AUTO_SCROLL_POINT: 50,
+					MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
+
+					MOUSE_DOWN_TIME: 500,
+					TOUCH_HOLD_TIME: 300,
+					DEMO_WAIT_TIME: 500,
+					WINDOW_RESIZE_WAIT_TIME: 1000,
+					MARGIN: 5,
+
+					MOBILE_ASPECT_RATIO: 16 / 9,
+
+					ADD_OR_CUTSPACE_TOGGLE: "ADD",
+
+					DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
+				},
+			},
+		};
+	};
 
 	LimberGridView.prototype.getGridData = function () {
 		var gridData = {

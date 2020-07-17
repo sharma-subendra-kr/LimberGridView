@@ -24,45 +24,44 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import privateConstants from "./privateConstants";
+import { getPrivateConstants } from "./privateConstants";
 
-const constants = {
-	MOVE_GUIDE_RADIUS: 10,
-	RESIZE_SQUARE_GUIDE_LENGTH: 10,
-	RESIZE_SQUARE_BORDER_GUIDE_WIDTH: 3,
-	AUTO_SCROLL_DISTANCE: 50,
-	AUTO_SCROLL_POINT: 50,
-	MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
+// const constants = {
+// 	MOVE_GUIDE_RADIUS: 10,
+// 	RESIZE_SQUARE_GUIDE_LENGTH: 10,
+// 	RESIZE_SQUARE_BORDER_GUIDE_WIDTH: 3,
+// 	AUTO_SCROLL_DISTANCE: 50,
+// 	AUTO_SCROLL_POINT: 50,
+// 	MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
 
-	MOUSE_DOWN_TIME: 500,
-	TOUCH_HOLD_TIME: 300,
-	DEMO_WAIT_TIME: 500,
-	WINDOW_RESIZE_WAIT_TIME: 1000,
-	MARGIN: 5,
+// 	MOUSE_DOWN_TIME: 500,
+// 	TOUCH_HOLD_TIME: 300,
+// 	DEMO_WAIT_TIME: 500,
+// 	WINDOW_RESIZE_WAIT_TIME: 1000,
+// 	MARGIN: 5,
 
-	MOBILE_ASPECT_RATIO: 16 / 9,
+// 	MOBILE_ASPECT_RATIO: 16 / 9,
 
-	ADD_OR_CUTSPACE_TOGGLE: "ADD",
+// 	ADD_OR_CUTSPACE_TOGGLE: "ADD",
 
-	DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
-};
+// 	DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
+// };
 
-const setPublicConstantByName = function (name, value) {
+const setPublicConstantByName = function (context, name, value) {
 	if (
 		name === "DEFINED_MIN_HEIGHT_AND_WIDTH" &&
-		value < privateConstants.MIN_HEIGHT_AND_WIDTH
+		value < getPrivateConstants(context.MIN_HEIGHT_AND_WIDTH)
 	) {
 		throw "DEFINED_MIN_HEIGHT_AND_WIDTH can't be less than MIN_HEIGHT_AND_WIDTH";
 	}
 
-	if (constants[name]) {
-		constants[name] = value;
+	if (context.store.constants.publicConstants[name]) {
+		context.store.constants.publicConstants[name] = value;
 	}
 };
 
-const getPublicConstantByName = function (name) {
-	return constants[name];
+const getPublicConstantByName = function (context, name) {
+	return context.store.constants.publicConstants[name];
 };
 
-export default constants;
 export { setPublicConstantByName, getPublicConstantByName };

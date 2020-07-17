@@ -346,7 +346,7 @@ var main = function () {
 	};
 
 	var obj = {
-		el: "#limberGridViewImplement",
+		el: "limberGridViewImplement",
 		editable: true,
 		enableInteractiveAddAndCut: true,
 		enableTouchInteraction: true,
@@ -754,12 +754,12 @@ var main = function () {
 		return document.getElementById("limberGridViewDebugAdjRect");
 	};
 
-	window.scrollUp = function() {
+	window.scrollUp = function () {
 		const el = document.getElementsByClassName("limberGridView")[0];
 		el.scrollTop -= 100;
 	};
 
-	window.scrollDown = function() {
+	window.scrollDown = function () {
 		const el = document.getElementsByClassName("limberGridView")[0];
 		el.scrollTop += 100;
 	};

@@ -24,143 +24,260 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import { emptyObject } from "../libs/utils/utils";
+// import { emptyObject } from "../libs/utils/utils";
 
-const e = {
-	$body: [],
-	$bodyPseudoEl: {},
-	$limberGridViewBodyPseudoItems: [],
-	$el: {},
-	$limberGridView: [],
-	$limberGridViewItems: [],
-	$limberGridViewDebugMergedTempRects: [],
-	$limberGridViewDebugStackTopRect: undefined,
-	$limberGridViewDebugStackTopAdjRect: undefined,
-	$limberGridViewDebugMergedRect: undefined,
-	$limberGridViewDebugAdjRect: undefined,
-	$limberGridViewDebugResultStackRects: [],
-	$limberGridViewDebugStackRects: [],
-	$limberGridViewDebugUnmergedRects: [],
-	$limberGridViewDebugMergedFreeRects: [],
-	$limberGridViewContainer: [],
-	$limberGridViewStyle: [],
-	$limberGridViewGridPseudoItems: undefined,
-	$limberGridViewMoveGuide: [],
-	$limberGridViewHeightAdjustGuide: [],
-	$limberGridViewAddItemGuide: [],
-	$limberGridViewAddItemOnTouchHoldGuide: [],
+// const e = {
+// 	$body: [],
+// 	$bodyPseudoEl: {},
+// 	$limberGridViewBodyPseudoItem: [],
+// 	$el: {},
+// 	$limberGridView: [],
+// 	$limberGridViewItems: [],
+// 	$limberGridViewDebugMergedTempRects: [],
+// 	$limberGridViewDebugStackTopRect: undefined,
+// 	$limberGridViewDebugStackTopAdjRect: undefined,
+// 	$limberGridViewDebugMergedRect: undefined,
+// 	$limberGridViewDebugAdjRect: undefined,
+// 	$limberGridViewDebugResultStackRects: [],
+// 	$limberGridViewDebugStackRects: [],
+// 	$limberGridViewDebugUnmergedRects: [],
+// 	$limberGridViewDebugMergedFreeRects: [],
+// 	$limberGridViewContainer: undefined,
+// 	$limberGridViewStyle: [],
+// 	$limberGridViewGridPseudoItem: undefined,
+// 	$limberGridViewMoveGuide: [],
+// 	$limberGridViewHeightAdjustGuide: [],
+// 	$limberGridViewAddItemGuide: [],
+// 	$limberGridViewAddItemOnTouchHoldGuide: [],
+// };
+
+const getElements = function (context) {
+	return context.store.variables.elements;
 };
 
-const set$body = function (elm) {
-	e.$body = elm;
+const set$body = function (context, elm) {
+	context.store.variables.elements.$body = elm;
 };
 
-const set$bodyPseudoEl = function (elm) {
-	e.$bodyPseudoEl = elm;
+const get$body = function (context) {
+	return context.store.variables.elements.$body;
 };
 
-const set$limberGridViewBodyPseudoItems = function (elm) {
-	e.$limberGridViewBodyPseudoItems = elm;
+const set$bodyPseudoEl = function (context, elm) {
+	context.store.variables.elements.$bodyPseudoEl = elm;
 };
 
-const set$el = function (elm) {
-	e.$el = elm;
+const get$bodyPseudoEl = function (context) {
+	return context.store.variables.elements.$bodyPseudoEl;
 };
 
-const set$limberGridView = function (elm) {
-	e.$limberGridView = elm;
+const set$limberGridViewBodyPseudoItem = function (context, elm) {
+	context.store.variables.elements.$limberGridViewBodyPseudoItem = elm;
 };
 
-const set$limberGridViewItems = function (elm) {
-	e.$limberGridViewItems = elm;
+const get$limberGridViewBodyPseudoItem = function (context) {
+	return context.store.variables.elements.$limberGridViewBodyPseudoItem;
 };
 
-const set$limberGridViewDebugMergedTempRects = function (elm) {
-	e.$limberGridViewDebugMergedTempRects = elm;
+const set$el = function (context, elm) {
+	context.store.variables.elements.$el = elm;
 };
 
-const set$limberGridViewDebugStackTopRect = function (elm) {
-	e.$limberGridViewDebugStackTopRect = elm;
+const get$el = function (context) {
+	return context.store.variables.elements.$el;
 };
 
-const set$limberGridViewDebugStackTopAdjRect = function (elm) {
-	e.$limberGridViewDebugStackTopAdjRect = elm;
+const set$limberGridView = function (context, elm) {
+	context.store.variables.elements.$limberGridView = elm;
 };
 
-const set$limberGridViewDebugMergedRect = function (elm) {
-	e.$limberGridViewDebugMergedRect = elm;
+const get$limberGridView = function (context) {
+	return context.store.variables.elements.$limberGridView;
 };
 
-const set$limberGridViewDebugAdjRect = function (elm) {
-	e.$limberGridViewDebugAdjRect = elm;
+const set$limberGridViewItems = function (context, elm) {
+	context.store.variables.elements.$limberGridViewItems = elm;
 };
 
-const set$limberGridViewDebugStackRects = function (elm) {
-	e.$limberGridViewDebugStackRects = elm;
+const get$limberGridViewItems = function (context) {
+	return context.store.variables.elements.$limberGridViewItems;
 };
 
-const set$limberGridViewDebugResultStackRects = function (elm) {
-	e.$limberGridViewDebugResultStackRects = elm;
+const set$limberGridViewContainer = function (context, elm) {
+	context.store.variables.elements.$limberGridViewContainer = elm;
 };
 
-const set$limberGridViewDebugUnmergedRects = function (elm) {
-	e.$limberGridViewDebugUnmergedRects = elm;
+const get$limberGridViewContainer = function (context) {
+	return context.store.variables.elements.$limberGridViewContainer;
 };
 
-const set$limberGridViewDebugMergedFreeRects = function (elm) {
-	e.$limberGridViewDebugMergedFreeRects = elm;
+const set$limberGridViewStyle = function (context, elm) {
+	context.store.variables.elements.$limberGridViewStyle = elm;
 };
 
-const set$limberGridViewContainer = function (elm) {
-	e.$limberGridViewContainer = elm;
+const get$limberGridViewStyle = function (context) {
+	return context.store.variables.elements.$limberGridViewStyle;
 };
 
-const set$limberGridViewStyle = function (elm) {
-	e.$limberGridViewStyle = elm;
+const set$limberGridViewGridPseudoItem = function (context, elm) {
+	context.store.variables.elements.$limberGridViewGridPseudoItem = elm;
 };
 
-const set$limberGridViewGridPseudoItems = function (elm) {
-	e.$limberGridViewGridPseudoItems = elm;
+const get$limberGridViewGridPseudoItem = function (context) {
+	return context.store.variables.elements.$limberGridViewGridPseudoItem;
 };
 
-const set$limberGridViewMoveGuide = function (elm) {
-	e.$limberGridViewMoveGuide = elm;
+const set$limberGridViewMoveGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewMoveGuide = elm;
 };
 
-const set$limberGridViewHeightAdjustGuide = function (elm) {
-	e.$limberGridViewHeightAdjustGuide = elm;
+const get$limberGridViewMoveGuide = function (context) {
+	return context.store.variables.elements.$limberGridViewMoveGuide;
 };
 
-const set$limberGridViewAddItemGuide = function (elm) {
-	e.$limberGridViewAddItemGuide = elm;
+const set$limberGridViewHeightAdjustGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewHeightAdjustGuide = elm;
 };
 
-const set$limberGridViewAddItemOnTouchHoldGuide = function (elm) {
-	e.$limberGridViewAddItemOnTouchHoldGuide = elm;
+const get$limberGridViewHeightAdjustGuide = function (context) {
+	return context.store.variables.elements.$limberGridViewHeightAdjustGuide;
 };
 
-export default e;
+const set$limberGridViewAddItemGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewAddItemGuide = elm;
+};
+
+const get$limberGridViewAddItemGuide = function (context) {
+	return context.store.variables.elements.$limberGridViewAddItemGuide;
+};
+
+const set$limberGridViewAddItemOnTouchHoldGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewAddItemOnTouchHoldGuide = elm;
+};
+
+const get$limberGridViewAddItemOnTouchHoldGuide = function (context) {
+	return context.store.variables.elements
+		.$limberGridViewAddItemOnTouchHoldGuide;
+};
+
+// DEBUG Elements
+const set$limberGridViewDebugMergedTempRects = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugMergedTempRects = elm;
+};
+
+const get$limberGridViewDebugMergedTempRects = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugMergedTempRects;
+};
+
+const set$limberGridViewDebugStackTopRect = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugStackTopRect = elm;
+};
+
+const get$limberGridViewDebugStackTopRect = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugStackTopRect;
+};
+
+const set$limberGridViewDebugStackTopAdjRect = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugStackTopAdjRect = elm;
+};
+
+const get$limberGridViewDebugStackTopAdjRect = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugStackTopAdjRect;
+};
+
+const set$limberGridViewDebugMergedRect = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugMergedRect = elm;
+};
+
+const get$limberGridViewDebugMergedRect = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugMergedRect;
+};
+
+const set$limberGridViewDebugAdjRect = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugAdjRect = elm;
+};
+
+const get$limberGridViewDebugAdjRect = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugAdjRect;
+};
+
+const set$limberGridViewDebugStackRects = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugStackRects = elm;
+};
+
+const get$limberGridViewDebugStackRects = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugStackRects;
+};
+
+const set$limberGridViewDebugResultStackRects = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugResultStackRects = elm;
+};
+
+const get$limberGridViewDebugResultStackRects = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugResultStackRects;
+};
+
+const set$limberGridViewDebugUnmergedRects = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugUnmergedRects = elm;
+};
+
+const get$limberGridViewDebugUnmergedRects = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugUnmergedRects;
+};
+
+const set$limberGridViewDebugMergedFreeRects = function (context, elm) {
+	context.store.variables.elements.$limberGridViewDebugMergedFreeRects = elm;
+};
+
+const get$limberGridViewDebugMergedFreeRects = function (context) {
+	return context.store.variables.elements.$limberGridViewDebugMergedFreeRects;
+};
+
 export {
+	getElements,
 	set$body,
+	get$body,
 	set$bodyPseudoEl,
-	set$limberGridViewBodyPseudoItems,
+	get$bodyPseudoEl,
+	set$limberGridViewBodyPseudoItem,
+	get$limberGridViewBodyPseudoItem,
 	set$el,
+	get$el,
 	set$limberGridView,
+	get$limberGridView,
 	set$limberGridViewItems,
-	set$limberGridViewDebugMergedTempRects,
-	set$limberGridViewDebugStackTopRect,
-	set$limberGridViewDebugStackTopAdjRect,
-	set$limberGridViewDebugMergedRect,
-	set$limberGridViewDebugAdjRect,
-	set$limberGridViewDebugStackRects,
-	set$limberGridViewDebugResultStackRects,
-	set$limberGridViewDebugUnmergedRects,
-	set$limberGridViewDebugMergedFreeRects,
+	get$limberGridViewItems,
 	set$limberGridViewContainer,
+	get$limberGridViewContainer,
 	set$limberGridViewStyle,
-	set$limberGridViewGridPseudoItems,
+	get$limberGridViewStyle,
+	set$limberGridViewGridPseudoItem,
+	get$limberGridViewGridPseudoItem,
 	set$limberGridViewMoveGuide,
+	get$limberGridViewMoveGuide,
 	set$limberGridViewHeightAdjustGuide,
+	get$limberGridViewHeightAdjustGuide,
 	set$limberGridViewAddItemGuide,
+	get$limberGridViewAddItemGuide,
 	set$limberGridViewAddItemOnTouchHoldGuide,
+	get$limberGridViewAddItemOnTouchHoldGuide,
+	// DEBUG Elements
+	set$limberGridViewDebugMergedTempRects,
+	get$limberGridViewDebugMergedTempRects,
+	set$limberGridViewDebugStackTopRect,
+	get$limberGridViewDebugStackTopRect,
+	set$limberGridViewDebugStackTopAdjRect,
+	get$limberGridViewDebugStackTopAdjRect,
+	set$limberGridViewDebugMergedRect,
+	get$limberGridViewDebugMergedRect,
+	set$limberGridViewDebugAdjRect,
+	get$limberGridViewDebugAdjRect,
+	set$limberGridViewDebugStackRects,
+	get$limberGridViewDebugStackRects,
+	set$limberGridViewDebugResultStackRects,
+	get$limberGridViewDebugResultStackRects,
+	set$limberGridViewDebugUnmergedRects,
+	get$limberGridViewDebugUnmergedRects,
+	set$limberGridViewDebugMergedFreeRects,
+	get$limberGridViewDebugMergedFreeRects,
 };

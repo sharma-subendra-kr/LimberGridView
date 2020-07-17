@@ -26,71 +26,106 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 import { emptyObject } from "../libs/utils/utils";
 
-const ev = {
-	elementID: "",
-	pseudoElementID: "",
-};
-const positionData = [];
-const modifiedPositionData = [];
-const initialPositionData = [];
-const initialGridData = {};
-let callbacks = {};
-const serializedPositionData = {};
+// const ev = {
+// 	// elementID: "",
+// 	pseudoElementId: "",
+// };
+// const positionData = [];
+// const modifiedPositionData = [];
+// const initialPositionData = [];
+// const initialGridData = {};
+// let callbacks = {};
+// const serializedPositionData = {};
 
-const setElementId = function (id) {
-	ev.elementID = id;
-};
+// const setElementId = function (id) {
+// 	ev.elementID = id;
+// };
 
-const setPseudoElementID = function (id) {
-	ev.pseudoElementID = id;
-};
-
-const setPositionData = function (pos) {
-	positionData.length = 0;
-	Object.assign(positionData, JSON.parse(JSON.stringify(pos)));
+const setPseudoElementId = function (context, id) {
+	context.store.variables.essentials.pseudoElementId = id;
 };
 
-const setModifiedPositionData = function (pos) {
-	modifiedPositionData.length = 0;
-	Object.assign(modifiedPositionData, JSON.parse(JSON.stringify(pos)));
+const getPseudoElementId = function (context) {
+	return context.store.variables.essentials.pseudoElementId;
 };
 
-const setInitialPositionData = function (pos) {
-	initialPositionData.length = 0;
-	Object.assign(initialPositionData, JSON.parse(JSON.stringify(pos)));
+const setPositionData = function (context, pos) {
+	context.store.variables.essentials.positionData.length = 0;
+	Object.assign(context.store.variables.essentials.positionData, pos);
 };
 
-const setInitialGridData = function (grid) {
-	emptyObject(initialGridData);
-	Object.assign(initialGridData, JSON.parse(JSON.stringify(grid)));
+const getPositionData = function (context) {
+	return context.store.variables.essentials.positionData;
 };
 
-const setCallbacks = function (cbs) {
-	emptyObject(callbacks);
-	Object.assign(callbacks, cbs);
+const setModifiedPositionData = function (context, pos) {
+	context.store.variables.essentials.modifiedPositionData.length = 0;
+	Object.assign(context.store.variables.essentials.modifiedPositionData, pos);
 };
 
-const setSerializedPositionData = function (serPos) {
-	emptyObject(serializedPositionData);
-	Object.assign(serializedPositionData, serPos);
+const getModifiedPositionData = function (context) {
+	return context.store.variables.essentials.modifiedPositionData;
+};
+
+const setInitialPositionData = function (context, pos) {
+	context.store.variables.essentials.initialPositionData.length = 0;
+	Object.assign(
+		context.store.variables.essentials.initialPositionData,
+		JSON.parse(JSON.stringify(pos))
+	);
+};
+
+const getInitialPositionData = function (context) {
+	return context.store.variables.essentials.initialPositionData;
+};
+
+const setInitialGridData = function (context, grid) {
+	emptyObject(context.store.variables.essentials.initialGridData);
+	Object.assign(
+		context.store.variables.essentials.initialGridData,
+		JSON.parse(JSON.stringify(grid))
+	);
+};
+
+const getInitialGridData = function (context) {
+	return context.store.variables.essentials.initialGridData;
+};
+
+const setCallbacks = function (context, cbs) {
+	emptyObject(context.store.variables.essentials.callbacks);
+	Object.assign(context.store.variables.essentials.callbacks, cbs);
+};
+
+const getCallbacks = function (context) {
+	return context.store.variables.essentials.callbacks;
+};
+
+const setSerializedPositionData = function (context, serPos) {
+	emptyObject(context.store.variables.essentials.serializedPositionData);
+	Object.assign(
+		context.store.variables.essentials.serializedPositionData,
+		serPos
+	);
+};
+
+const getSerializedPositionData = function (context) {
+	return context.store.variables.essentials.serializedPositionData;
 };
 
 export {
-	ev,
-	positionData,
-	modifiedPositionData,
-	initialPositionData,
-	initialGridData,
-	callbacks,
-	serializedPositionData,
-};
-export {
-	setElementId,
-	setPseudoElementID,
+	// setElementId,
+	setPseudoElementId,
+	getPseudoElementId,
 	setPositionData,
+	getPositionData,
 	setModifiedPositionData,
+	getModifiedPositionData,
 	setInitialPositionData,
+	getInitialPositionData,
 	setInitialGridData,
+	getInitialGridData,
 	setCallbacks,
+	getCallbacks,
 	setSerializedPositionData,
+	getSerializedPositionData,
 };

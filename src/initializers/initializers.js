@@ -28,7 +28,8 @@ import options from "../variables/options";
 import {
 	ev,
 	setElementId,
-	setPseudoElementID,
+	setPseudoElementId,
+	getPseudoElementId,
 	initialGridData,
 } from "../variables/essentials";
 import e, {
@@ -47,70 +48,76 @@ import privateConstants, {
 	setWidthScaleFactor,
 } from "../constants/privateConstants";
 import publicConstants from "../constants/publicConstants";
+import { getRandomString } from "../libs/utils/utils";
 
-export const init = function(initialGridWidth, autoArrange) {
-	if (options.el.indexOf("#") != 0) {
-		throw "DOM Element with Id required";
+export const init = function (initialGridWidth, autoArrange) {
+	if (typeof options.el === "string") {
+		const el = document.getElementById(options.el);
+		if (!el) {
+			throw `No for element found for id ${options.el}`;
+		}
+		set$el(el);
+	} else if (options.el instanceof Element) {
+		set$el(options.el);
 	} else {
-		set$body(document.getElementsByTagName("body"));
-		setElementId(options.el.substring(1, options.el.length));
-		setPseudoElementID("limberGridViewPseudoContainer_" + ev.elementID);
-		set$el(
-			document.getElementById(options.el.substring(1, options.el.length))
-		);
-		// console.log(e);
-		e.$body[0].insertAdjacentHTML(
-			"beforeend",
-			'<div id = "' +
-				ev.pseudoElementID +
-				'" class = "limberGridViewPseudoContainer"></div>'
-		);
-		set$bodyPseudoEl(document.getElementById(ev.pseudoElementID));
+		throw "Valid DOM Element or Id required";
 	}
 
-	e.$el.innerHTML =
-		'<div class = "limberGridViewContainer"><style></style><div class = "limberGridView"></div><div class = "limberGridViewLicense"><div class = "limberGridViewLicenseIcon">i</div><div class = "limberGridViewLicenseDetails">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>';
-	set$limberGridViewContainer(
-		e.$el.querySelectorAll(".limberGridViewContainer")
+	set$body(document.getElementsByTagName("body")[0]);
+	setPseudoElementId(
+		this,
+		"limber-grid-view-pseudo-container-" + getRandomString()
 	);
-	set$limberGridViewStyle(e.$el.getElementsByTagName("style"));
-	set$limberGridView(e.$el.querySelectorAll(".limberGridView"));
+	e.$body[0].insertAdjacentHTML(
+		"beforeend",
+		`<div id = ${getPseudoElementId(
+			this
+		)} class = "limber-grid-view-pseudo-container"></div>`
+	);
+	set$bodyPseudoEl(document.getElementById(getPseudoElementId(this)));
+
+	e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
+	set$limberGridViewContainer(
+		e.$el.querySelectorAll(".limber-grid-view-container")[0]
+	);
+	set$limberGridViewStyle(e.$el.getElementsByTagName("style")[0]);
+	set$limberGridView(e.$el.querySelectorAll(".limber-grid-view")[0]);
 
 	setPaddingLeft(
 		parseInt(
 			window
-				.getComputedStyle(e.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView, null)
 				.getPropertyValue("padding-left")
 		)
 	);
 	setPaddingRight(
 		parseInt(
 			window
-				.getComputedStyle(e.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView, null)
 				.getPropertyValue("padding-right")
 		)
 	);
 	setPaddingTop(
 		parseInt(
 			window
-				.getComputedStyle(e.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView, null)
 				.getPropertyValue("padding-top")
 		)
 	);
 	setPaddingBottom(
 		parseInt(
 			window
-				.getComputedStyle(e.$limberGridView[0], null)
+				.getComputedStyle(e.$limberGridView, null)
 				.getPropertyValue("padding-bottom")
 		)
 	);
 
 	privateConstants.WIDTH =
-		e.$limberGridView[0].clientWidth -
+		e.$limberGridView.clientWidth -
 		privateConstants.PADDING_LEFT -
 		privateConstants.PADDING_RIGHT;
 	privateConstants.HEIGHT =
-		e.$limberGridView[0].clientHeight -
+		e.$limberGridView.clientHeight -
 		privateConstants.PADDING_TOP -
 		privateConstants.PADDING_BOTTOM;
 
@@ -138,26 +145,18 @@ export const init = function(initialGridWidth, autoArrange) {
 			}
 		}
 		setPositionData(
-			fitRemainingItemsBelowDeepestLine(
-				0,
-				_positionData,
-				remainingItems,
-				[]
-			).positionData
+			fitRemainingItemsBelowDeepestLine(0, _positionData, remainingItems, [])
+				.positionData
 		);
 	} else {
-		if (
-			initialGridData.margin != undefined &&
-			initialGridData.margin != null
-		) {
+		if (initialGridData.margin != undefined && initialGridData.margin != null) {
 			if (
 				typeof initialGridData.margin == "number" &&
 				initialGridData.margin > 0
 			) {
 				publicConstants.MARGIN = initialGridData.margin;
 				publicConstants.MARGIN =
-					publicConstants.MARGIN *
-					privateConstants.WIDTH_SCALE_FACTOR;
+					publicConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR;
 			} else {
 				throw "Margin is required for rendering with position coordinates";
 			}

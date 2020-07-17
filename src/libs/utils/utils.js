@@ -78,3 +78,13 @@ export const filter = (arr) => {
 
 	return res;
 };
+
+export const getRandomString = (len = 22) => {
+	const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = alpNum[Math.floor(Math.random() * 36)];
+	}
+	return arr.join();
+};

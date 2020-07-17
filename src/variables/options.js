@@ -26,15 +26,12 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 // SEE index.js for options format
 
-import { emptyObject } from "../libs/utils/utils";
-
-const options = {};
-
-const setOptions = function(_options) {
-	emptyObject(options);
-	Object.assign(options, JSON.parse(JSON.stringify(_options)));
-	options.callbacks = _options.callbacks;
+const setOptions = function (context, options) {
+	context.options = options;
 };
 
-export default options;
-export { setOptions };
+const getOptions = function (context) {
+	return context.options;
+};
+
+export { setOptions, getOptions };
