@@ -85,7 +85,12 @@ export const getMinMaxXY = (
 
 	if (movedBottomY > maxY) maxY = movedBottomY;
 
-	return { minX, maxX, minY, maxY };
+	return {
+		minX: minX - publicConstants.MARGIN,
+		maxX: maxX + publicConstants.MARGIN,
+		minY: minY - publicConstants.MARGIN,
+		maxY: maxY + publicConstants.MARGIN,
+	};
 };
 
 export const filterToArrange = (toArrangeItems, arranged) => {
@@ -150,50 +155,6 @@ export const getTopBottomWS = (workSpaceRectCo, minX, maxX) => {
 	}
 
 	return { topWorkSpaceCo, bottomWorkSpaceCo };
-};
-
-export const fixMinYMaxY = (rectCo) => {
-	const cMinY = rectCo.tl.y,
-		cMaxY = rectCo.bl.y; // current minY and maxY
-	const len = pd.length;
-
-	let itemBottomY,
-		itemTopY,
-		topDiff,
-		bottomDiff,
-		minTopDiff = publicConstants.MARGIN,
-		minBottomDiff = publicConstants.MARGIN;
-	for (let i = 0; i < len; i++) {
-		itemTopY = pd[i].y;
-		itemBottomY = pd[i].y + pd[i].height;
-
-		if (itemBottomY <= cMinY) {
-			topDiff = cMinY - itemBottomY;
-			if (topDiff < minTopDiff) {
-				minTopDiff = topDiff;
-			}
-		} else if (itemTopY >= cMaxY) {
-			bottomDiff = itemTopY - cMaxY;
-			if (bottomDiff < minBottomDiff) {
-				minBottomDiff = bottomDiff;
-			}
-		}
-	}
-
-	const adjustTop = publicConstants.MARGIN - minTopDiff;
-	const adjustBottom = publicConstants.MARGIN - minBottomDiff;
-	let arrangeTopY = rectCo.tl.y;
-	let arrangeBottomY = rectCo.br.y;
-
-	if (adjustTop !== 0) {
-		arrangeTopY = rectCo.tl.y + adjustTop;
-	}
-
-	if (adjustBottom !== 0) {
-		arrangeBottomY = rectCo.br.y - adjustBottom;
-	}
-
-	return { arrangeTopY, arrangeBottomY };
 };
 
 export const getItemsInWorkSpace = (workSpaceRect, getIndices = false) => {
@@ -336,14 +297,6 @@ export const getItemDimenWithMargin = (item) => {
 	_item.y -= publicConstants.MARGIN;
 	_item.width += publicConstants.MARGIN * 2;
 	_item.height += publicConstants.MARGIN * 2;
-
-	return _item;
-};
-
-export const getItemDimenWithRBMargin = (item) => {
-	const _item = { ...item };
-	_item.width += publicConstants.MARGIN;
-	_item.height += publicConstants.MARGIN;
 
 	return _item;
 };

@@ -39,11 +39,9 @@ import publicConstants, {
 import {
 	getMinMaxXY,
 	getTopBottomWS,
-	fixMinYMaxY,
 	getItemsInWorkSpace,
 	getItemsBelowBottomWorkSpace,
 	getItemDimenWithMargin,
-	getItemDimenWithRBMargin,
 	getItemsToArrangeScore,
 	// assignScoreToFreeRects,
 	cBSTRectComparator,
@@ -317,10 +315,13 @@ export const arrangeResize = async (
 	const _workSpaceRectCo = {
 		// can safely do these operations
 		// work space width should be greather than or equal to "DEFINED_MIN_HEIGHT_AND_WIDTH + (MARGIN * 2)"
-		tl: { x: minX - publicConstants.MARGIN, y: minY },
-		tr: { x: maxX + publicConstants.MARGIN, y: minY },
-		br: { x: maxX + publicConstants.MARGIN, y: maxY },
-		bl: { x: minX - publicConstants.MARGIN, y: maxY },
+		// minX - publicConstants.MARGIN
+		// maxX + publicConstants.MARGIN
+		// above two operations are already done in getMinMaxXY
+		tl: { x: minX, y: minY },
+		tr: { x: maxX, y: minY },
+		br: { x: maxX, y: maxY },
+		bl: { x: minX, y: maxY },
 	};
 
 	const _combinedWorkSpaceRectCo = {
