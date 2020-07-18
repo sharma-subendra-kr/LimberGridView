@@ -5,22 +5,28 @@ window.onload = function () {
 var main = function () {
 	var body = document.getElementsByTagName("body");
 	var $toggleModeButton = document.getElementsByClassName(
-		"toggleAddOrCutSpaceButton"
+		"toggle-add-or-cut-space-button"
 	);
-	var $addButtonIcon = document.getElementsByClassName("addButtonIcon");
+	var $addButtonIcon = document.getElementsByClassName("add-button-icon");
 
 	var onToggleModeClick = function (event) {
 		// console.log(event);
-		if (event.currentTarget.classList.contains("activateAddMode")) {
-			event.currentTarget.classList.remove("toggleAddOrCutSpaceButtonActive");
+		if (event.currentTarget.classList.contains("activate-add-mode")) {
+			event.currentTarget.classList.remove(
+				"toggle-add-or-cut-space-button-active"
+			);
 			event.currentTarget.parentNode.childNodes[1].classList.add(
-				"toggleAddOrCutSpaceButtonActive"
+				"toggle-add-or-cut-space-button-active"
 			);
 			window.limberGridView.setAddOrCutSpace("ADD");
-		} else if (event.currentTarget.classList.contains("activateCutSpaceMode")) {
-			event.currentTarget.classList.remove("toggleAddOrCutSpaceButtonActive");
+		} else if (
+			event.currentTarget.classList.contains("activate-cut-space-mode")
+		) {
+			event.currentTarget.classList.remove(
+				"toggle-add-or-cut-space-button-active"
+			);
 			event.currentTarget.parentNode.childNodes[3].classList.add(
-				"toggleAddOrCutSpaceButtonActive"
+				"toggle-add-or-cut-space-button-active"
 			);
 			window.limberGridView.setAddOrCutSpace("CUTSPACE");
 		}
@@ -36,14 +42,14 @@ var main = function () {
 	$addButtonIcon[0].addEventListener("click", onAddButtonIconClick);
 
 	var layoutHtml =
-		'<div class = "itemLayout"><span>Title</span><div class = "itemDropDownButton">:::<div class = "itemDropDown"><div class = "itemDropDownItem">add</div><div class = "itemDropDownItem">remove</div></div></div></div>';
+		'<div class = "item-layout"><span>Title</span><div class = "item-drop-down-button">:::<div class = "item-drop-down"><div class = "item-drop-down-item">add</div><div class = "item-drop-down-item">remove</div></div></div></div>';
 
 	var kpi = function (width, height) {
 		var rand = Math.random();
 		if (rand > 0.5) {
-			var stockUpDown = "stockUp";
+			var stockUpDown = "stock-up";
 		} else {
-			var stockUpDown = "stockDown";
+			var stockUpDown = "stock-down";
 		}
 
 		var div = document.createElement("div");
@@ -54,7 +60,7 @@ var main = function () {
 		var divLeft = document.createElement("div");
 		divLeft.style.width = width * 0.25 + "px";
 		divLeft.style.height = height + "px";
-		divLeft.classList.add("kpiLeft");
+		divLeft.classList.add("kpi-left");
 
 		var divLeftArrow = document.createElement("div");
 		divLeftArrow.classList.add(stockUpDown);
@@ -65,18 +71,18 @@ var main = function () {
 		var divRight = document.createElement("div");
 		divRight.style.width = width * 0.75 + "px";
 		divRight.style.height = height + "px";
-		divRight.classList.add("kpiRight");
+		divRight.classList.add("kpi-right");
 
 		var divRightTop = document.createElement("div");
 		divRightTop.style.width = width * 0.75 + "px";
 		divRightTop.style.height = height / 2 + "px";
-		divRightTop.classList.add("kpiRightTop");
+		divRightTop.classList.add("kpi-right-top");
 		divRightTop.innerHTML = "FAKESTOK";
 
 		var divRightBottom = document.createElement("div");
 		divRightBottom.style.width = width * 0.75 + "px";
 		divRightBottom.style.height = height / 2 + "px";
-		divRightBottom.classList.add("kpiRightBottom");
+		divRightBottom.classList.add("kpi-right-bottom");
 		divRightBottom.innerHTML = rand.toFixed(2);
 
 		divRight.appendChild(divRightTop);
@@ -254,11 +260,11 @@ var main = function () {
 		var div = document.createElement("div");
 		div.style.width = width + "px";
 		div.style.height = 25 + "px";
-		div.classList.add("itemLayoutParent");
+		div.classList.add("item-layout-parent");
 		var layoutHtml =
-			`<div class = "itemLayout"><span>Title ` +
+			`<div class = "item-layout"><span>Title ` +
 			index +
-			`</span><div class = "itemDropDownButton">:::<div class = "itemDropDown"><div class = "itemDropDownItem">add</div><div class = "itemDropDownItem">remove</div></div></div></div>`;
+			`</span><div class = "item-drop-down-button">:::<div class = "item-drop-down"><div class = "item-drop-down-item">add</div><div class = "item-drop-down-item">remove</div></div></div></div>`;
 		div.innerHTML = layoutHtml;
 
 		if (
@@ -294,16 +300,16 @@ var main = function () {
 	}
 
 	var onItemClickCallback = function (event) {
-		if (event.target.classList.contains("itemDropDownButton")) {
-			event.target.childNodes[1].classList.toggle("itemDropDownActive");
+		if (event.target.classList.contains("item-drop-down-button")) {
+			event.target.childNodes[1].classList.toggle("item-drop-down-active");
 		}
 
-		if (event.target.classList.contains("itemDropDownItem")) {
+		if (event.target.classList.contains("item-drop-down-item")) {
 			if (event.target.innerHTML == "add") {
-				event.target.parentNode.classList.remove("itemDropDownActive");
+				event.target.parentNode.classList.remove("item-drop-down-active");
 				add(event);
 			} else if (event.target.innerHTML == "remove") {
-				event.target.parentNode.classList.remove("itemDropDownActive");
+				event.target.parentNode.classList.remove("item-drop-down-active");
 				remove(event);
 			}
 		}
@@ -346,7 +352,7 @@ var main = function () {
 	};
 
 	var obj = {
-		el: "limberGridViewImplement",
+		el: "limber-grid-view-implement",
 		editable: true,
 		enableInteractiveAddAndCut: true,
 		enableTouchInteraction: true,

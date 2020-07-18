@@ -9,7 +9,7 @@ body {
 	overflow: hidden;
 }
 
-.navBar {
+.nav-bar {
 	width: 100%;
 	height: 50px;
 
@@ -22,7 +22,7 @@ body {
 	font-family: "Helvetica";
 }
 
-.limberGridControls {
+.limber-grid-controls {
 	width: 100%;
 	height: 30px;
 	display: inline-block;
@@ -32,7 +32,7 @@ body {
 	padding-right: 15px;
 }
 
-.toggleAddOrCutSpace {
+.toggle-add-or-cut-space {
 	width: 30px;
 	height: 25px;
 	display: inline-block;
@@ -46,23 +46,23 @@ body {
 	cursor: pointer;
 }
 
-.activateCutSpaceMode {
+.activate-cut-space-mode {
 	width: 100%;
 	height: 100%;
 	display: none;
 }
 
-.activateAddMode {
+.activate-add-mode {
 	width: 100%;
 	height: 100%;
 	display: none;
 }
 
-.toggleAddOrCutSpaceButtonActive {
+.toggle-add-or-cut-space-button-active {
 	display: inline-block;
 }
 
-.addButton {
+.add-button {
 	width: 30px;
 	height: 25px;
 	display: inline-block;
@@ -76,7 +76,7 @@ body {
 	cursor: pointer;
 }
 
-.addButtonIcon {
+.add-button-icon {
 }
 
 .footer {
@@ -88,33 +88,33 @@ body {
 	padding-right: 15px;
 }
 
-#limberGridViewImplement {
+#limber-grid-view-implement {
 	width: 100%;
 	height: calc(100% - 100px);
 	overflow: hidden;
 	padding: 5px;
 }
 
-#limberGridViewImplement .limberGridViewContainer .limberGridView {
+#limber-grid-view-implement .limber-grid-view-container .limber-grid-view {
 	padding: 20px;
 	border: solid 1px #c0c0c0;
 	width: 100%;
 }
 
-.limberGridView::-webkit-scrollbar {
+.limber-grid-view::-webkit-scrollbar {
 	width: 10px;
 	height: 0px;
 }
 
-.limberGridView::-webkit-scrollbar-track {
+.limber-grid-view::-webkit-scrollbar-track {
 	background: #f9f9f9;
 }
 
-.limberGridView::-webkit-scrollbar-thumb {
+.limber-grid-view::-webkit-scrollbar-thumb {
 	background: #737373;
 }
 
-.limberGridViewItem {
+.limber-grid-view-item {
 	background-color: #f5f4f5;
 	border: solid 1px #e0e0e0;
 
@@ -141,7 +141,7 @@ body {
     left: calc(100% - 15px);
 }*/
 
-.itemLayout {
+.item-layout {
 	width: 100%;
 	height: 25px;
 	border-bottom: solid 1px #c0c0c0;
@@ -151,7 +151,7 @@ body {
 	padding-top: 2px;
 }
 
-.itemDropDownButton {
+.item-drop-down-button {
 	width: 25px;
 	height: 25px;
 	float: right;
@@ -160,7 +160,7 @@ body {
 	font-weight: 900;
 }
 
-.itemDropDown {
+.item-drop-down {
 	display: none;
 	width: 55px;
 	height: 50px;
@@ -172,11 +172,11 @@ body {
 	border: solid 1px #c0c0c0;
 }
 
-.itemDropDownActive {
+.item-drop-down-active {
 	display: inline-block;
 }
 
-.itemDropDownItem {
+.item-drop-down-item {
 	width: 55px;
 	height: 25px;
 	cursor: pointer;
@@ -189,7 +189,7 @@ body {
 	border-bottom: solid 1px #e0e0e0;
 }
 
-.itemDropDownItem:hover {
+.item-drop-down-item:hover {
 	background-color: #c0c0c0;
 }
 
@@ -198,18 +198,18 @@ body {
 	white-space: nowrap;
 }
 
-.kpiLeft {
+.kpi-left {
 	display: inline-block;
 	vertical-align: top;
 	position: relative;
 }
 
-.kpiRight {
+.kpi-right {
 	display: inline-block;
 	vertical-align: top;
 }
 
-.kpiRightTop {
+.kpi-right-top {
 	display: table-cell;
 	vertical-align: bottom;
 	font-family: "Helvetica";
@@ -222,7 +222,7 @@ body {
 	text-align: center;
 }
 
-.stockUp {
+.stock-up {
 	width: 0;
 	height: 0;
 	border-left: 20px solid transparent;
@@ -240,7 +240,7 @@ body {
 	transform: translate(0px, -20px);
 }
 
-.stockDown {
+.stock-down {
 	width: 0;
 	height: 0;
 	border-left: 20px solid transparent;

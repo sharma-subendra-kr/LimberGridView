@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License
 along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-.limberGridViewContainer {
+.limber-grid-view-container {
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -33,7 +33,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	display: inline-block;
 }
 
-.limberGridView {
+.limber-grid-view {
 	width: 100%;
 	height: 100%;
 	position: relative;
@@ -46,20 +46,20 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	padding: 20px;
 }
 
-.limberGridView::-webkit-scrollbar {
+.limber-grid-view::-webkit-scrollbar {
 	width: 10px;
 	height: 0px;
 }
 
-.limberGridView::-webkit-scrollbar-track {
+.limber-grid-view::-webkit-scrollbar-track {
 	background: #f9f9f9;
 }
 
-.limberGridView::-webkit-scrollbar-thumb {
+.limber-grid-view::-webkit-scrollbar-thumb {
 	background: #737373;
 }
 
-.limberGridViewItem {
+.limber-grid-view-item {
 	position: absolute;
 	display: inline-block;
 	vertical-align: top;
@@ -70,11 +70,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	transition: transform 0.25s linear;
 }
 
-.limberGridViewItemDemo {
+.limber-grid-view-item-demo {
 	display: none;
 }
 
-.limberGridViewItem.limberGridViewItemEditable::before {
+.limber-grid-view-item.limber-grid-view-item-editable::before {
 	content: "";
 	height: 20px;
 	width: 20px;
@@ -88,11 +88,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	cursor: grab;
 }
 
-.limberGridViewItem.limberGridViewItemEditable:hover::before {
+.limber-grid-view-item.limber-grid-view-item-editable:hover::before {
 	display: block;
 }
 
-.limberGridViewItem.limberGridViewItemEditable::after {
+.limber-grid-view-item.limber-grid-view-item-editable::after {
 	content: "";
 	height: 10px;
 	width: 10px;
@@ -109,11 +109,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	cursor: nwse-resize;
 }
 
-.limberGridViewItem.limberGridViewItemEditable:hover::after {
+.limber-grid-view-item.limber-grid-view-item-editable:hover::after {
 	display: block;
 }
 
-.limberGridViewPseudoContainer {
+.limber-grid-view-pseudo-container {
 	height: 0px;
 	width: 0px;
 	display: block;
@@ -124,7 +124,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	left: 0px;
 }
 
-.limberGridViewBodyPseudoItem {
+.limber-grid-view-pseudo-container-item {
 	position: absolute;
 	display: none;
 	vertical-align: top;
@@ -139,7 +139,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	cursor: grabbing;
 }
 
-.limberGridViewGridPseudoItem {
+.limber-grid-view-pseudo-item {
 	position: absolute;
 	display: none;
 	vertical-align: top;
@@ -149,50 +149,50 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	z-index: 1000;
 }
 
-.limberGridViewBodyPseudoItemActive {
+.limber-grid-view-pseudo-container-item-active {
 	display: inline-block;
 	box-shadow: 0px 10px 6px -6px #777;
 }
 
-.limberGridViewGridPseudoItemActive {
+.limber-grid-view-pseudo-item-Active {
 	display: inline-block;
 	border: dotted 2px black;
 }
 
-.limberGridViewBodyPseudoItemMoveAllow {
+.limber-grid-view-pseudo-container-item-move-allow {
 	border: solid 3px green;
 }
 
-.limberGridViewBodyPseudoItemMoveDisallow {
+.limber-grid-view-pseudo-container-item-move-disallow {
 	border: solid 3px red;
 }
 
-.limberGridViewGridPseudoItemResizeAllow {
+.limber-grid-view-pseudo-item-resize-allow {
 	border-color: green;
 }
 
-.limberGridViewGridPseudoItemResizeDisallow {
+.limber-grid-view-pseudo-item-resize-disallow {
 	border-color: red;
 }
 
-.limberGridViewItemResizingState {
+.limber-grid-view-item-resizing-state {
 	pointer-events: none;
 }
 
-.limberGridViewGridPseudoItemResizingState {
+.limber-grid-view-pseudo-item-resizing-state {
 	pointer-events: none;
 }
 
-.limberGridViewBodyTagStateElementDraggingOrResizing {
+.limber-grid-view-body-tag-state-element-dragging-or-resizing {
 	user-select: none;
 	cursor: grabbing;
 }
 
-.limberGridViewBodyTagStateElementAdding {
+.limber-grid-view-body-tag-state-element-adding {
 	cursor: crosshair;
 }
 
-.limberGridViewMoveGuide {
+.limber-grid-view-move-guide {
 	width: 15px;
 	height: 15px;
 	border-top: solid 3px black;
@@ -207,11 +207,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	cursor: grabbing;
 }
 
-.limberGridViewMoveGuideActive {
+.limber-grid-view-move-guide-active {
 	display: inline-block;
 }
 
-.limberGridViewHeightAdjustGuide {
+.limber-grid-view-height-adjust-guide {
 	width: 1px;
 	height: 0px;
 
@@ -223,11 +223,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	box-sizing: border-box;
 }
 
-.limberGridViewHeightAdjustGuideActive {
+.limber-grid-view-height-adjust-guide-active {
 	display: inline-block;
 }
 
-.limberGridViewAddItemGuide {
+.limber-grid-view-add-cut-guide {
 	position: absolute;
 	display: none;
 	vertical-align: top;
@@ -240,23 +240,23 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	z-index: 1000;
 }
 
-.limberGridViewAddItemGuideCutMode {
+.limber-grid-view-add-cut-guide-cut-mode {
 	border: dashed;
 }
 
-.limberGridViewAddItemGuideActive {
+.limber-grid-view-add-cut-guide-active {
 	display: inline-block;
 }
 
-.limberGridViewAddItemGuideAddAllow {
+.limber-grid-view-add-cut-guide-add-allow {
 	border-color: green;
 }
 
-.limberGridViewAddItemGuideAddDisallow {
+.limber-grid-view-add-cut-guide-add-disallow {
 	border-color: red;
 }
 
-.limberGridViewAddItemOnTouchHoldGuide {
+.limber-grid-view-touch-hold-guide {
 	width: 1px;
 	height: 1px;
 	position: absolute;
@@ -273,12 +273,12 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	z-index: 1000;
 }
 
-.limberGridViewAddItemOnTouchHoldGuideActive {
+.limber-grid-view-touch-hold-guide-active {
 	display: inline-block;
 	animation: limberGridViewAddItemOnTouchHoldRipple 500ms ease-out;
 }
 
-.limberGridViewLicense {
+.limber-grid-view-license {
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
@@ -288,7 +288,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	z-index: 999;
 }
 
-.limberGridViewLicenseDetails {
+.limber-grid-view-license-details {
 	height: 10px;
 	position: relative;
 	text-align: right;
@@ -301,7 +301,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	float: left;
 }
 
-.limberGridViewLicenseIcon {
+.limber-grid-view-license-icon {
 	height: 10px;
 	width: 10px;
 	border: solid 1px black;
@@ -315,11 +315,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 900;
 }
 
-.limberGridViewLicenseIcon:hover + .limberGridViewLicenseDetails {
+.limber-grid-view-license-icon:hover + .limber-grid-view-license-details {
 	display: inline-block;
 }
 
-.limberGridViewDebugUnmergedRect {
+.limber-grid-view-debug-unmerged-rect {
 	border: solid 1px blue;
 	position: absolute;
 	user-select: none;
@@ -332,13 +332,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugUnmergedRect:hover {
+.limber-grid-view-debug-unmerged-rect:hover {
 	border-width: 3px;
 	font-weight: 900;
 	font-size: 30px;
 }
 
-.limberGridViewDebugMergedFreeRect {
+.limber-grid-view-debug-merged-free-rect {
 	border: solid 1px red;
 
 	position: absolute;
@@ -352,13 +352,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugMergedFreeRect:hover {
+.limber-grid-view-debug-merged-free-rect:hover {
 	border-width: 3px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugMergedRect {
+.limber-grid-view-debug-merged-rect {
 	border: solid 1px red;
 
 	position: absolute;
@@ -372,17 +372,17 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugMergedRect-thick {
+.limber-grid-view-debug-merged-rect-thick {
 	border: solid 3px red;
 }
 
-.limberGridViewDebugMergedRect:hover {
+.limber-grid-view-debug-merged-rect:hover {
 	border-width: 3px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugResultStackRects {
+.limber-grid-view-debug-result-stack-rects {
 	border: solid 1px green;
 	position: absolute;
 	user-select: none;
@@ -395,13 +395,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugResultStackRects:hover {
+.limber-grid-view-debug-result-stack-rects:hover {
 	border-width: 3px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugStackRects {
+.limber-grid-view-debug-stack-rects {
 	border: solid 1px black;
 	position: absolute;
 	user-select: none;
@@ -414,13 +414,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugStackRects:hover {
+.limber-grid-view-debug-stack-rects:hover {
 	border-width: 3px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugMergedTempRects {
+.limber-grid-view-debug-merged-temp-rects {
 	border: solid 1px saddlebrown;
 	position: absolute;
 	user-select: none;
@@ -433,13 +433,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugMergedTempRects:hover {
+.limber-grid-view-debug-merged-temp-rects:hover {
 	border-width: 3px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugStackTopRect {
+.limber-grid-view-debug-stack-top-rect {
 	border: solid 3px aqua;
 	position: absolute;
 	user-select: none;
@@ -452,13 +452,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugStackTopRect:hover {
+.limber-grid-view-debug-stack-top-rect:hover {
 	border-width: 6px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugStackTopAdjRect {
+.limber-grid-view-debug-stack-top-adj-rect {
 	border: solid 3px fuchsia;
 	position: absolute;
 	user-select: none;
@@ -471,13 +471,13 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugStackTopAdjRect:hover {
+.limber-grid-view-debug-stack-top-adj-rect:hover {
 	border-width: 6px;
 	font-weight: 400;
 	font-size: 30px;
 }
 
-.limberGridViewDebugAdjRect {
+.limber-grid-view-debug-adj-rect {
 	border: solid 3px lawngreen;
 	position: absolute;
 	user-select: none;
@@ -490,7 +490,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	font-weight: 400;
 }
 
-.limberGridViewDebugAdjRect:hover {
+.limber-grid-view-debug-adj-rect:hover {
 	border-width: 6px;
 	font-weight: 400;
 	font-size: 30px;

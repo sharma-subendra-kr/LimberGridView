@@ -390,7 +390,10 @@ LimberGridView.prototype.initRender = function () {
 	const limberGridViewAddCutGuide = document.createElement("div"); // desk interaction rect
 	const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
 
-	pseudoContainerItem.setAttribute("class", "pseudo-container-item");
+	pseudoContainerItem.setAttribute(
+		"class",
+		"limber-grid-view-pseudo-container-item"
+	);
 	pseudoContainerItem.style.width = "1px !important";
 	pseudoContainerItem.style.height = "1px !important";
 	limberGridViewPseudoItem.setAttribute(
