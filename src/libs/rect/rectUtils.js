@@ -24,22 +24,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import {
-	getPlainFrom4Points,
-	isValidPlane,
-	getLines,
-	getMarginAtPoint,
-	arePlainsIdentical,
-	sortPlainsByArea,
-	sortPlainsByDepth,
-	sortPlainsByHeight,
-	arePlainsSame,
-} from "../utils/essentials";
-import publicConstants from "../../constants/publicConstants";
-import privateConstants from "../../constants/privateConstants";
-import { positionData } from "../../variables/essentials";
-import e from "../../variables/elements";
-
 export const isPointInsideRect = (rect, point) => {
 	const rectCo = getCoordinates(rect);
 	try {

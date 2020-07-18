@@ -25,11 +25,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import {
-	positionData as pd,
-	modifiedPositionData as mpd,
-} from "../../variables/essentials";
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+	getPositionData,
+	getModifiedPositionData,
+} from "../../store/variables/essentials";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	doRectsOverlap,
 	isRectInside,
@@ -37,7 +37,9 @@ import {
 } from "../rect/rectUtils";
 import { filter } from "../utils/utils";
 
-export const isFlippingPosPossible = () => {
+export const isFlippingPosPossible = (context) => {
+	const pd = getPositionData(context);
+
 	if (affectedItems.length === 2) {
 		const diff = Math.abs(pd[affectedItems[0]].y - pd[affectedItems[1]].y);
 		if (diff > privateConstants.HEIGHT) {
@@ -49,12 +51,16 @@ export const isFlippingPosPossible = () => {
 };
 
 export const getMinMaxXY = (
+	context,
 	affectedItems,
 	resizedRightX,
 	resizedBottomY,
 	toY,
 	movedBottomY
 ) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
 	let minY = Number.MAX_SAFE_INTEGER;
 	let maxY = 0;
 	let minX = Number.MAX_SAFE_INTEGER;
@@ -86,14 +92,14 @@ export const getMinMaxXY = (
 	if (movedBottomY > maxY) maxY = movedBottomY;
 
 	return {
-		minX: minX - publicConstants.MARGIN,
-		maxX: maxX + publicConstants.MARGIN,
-		minY: minY - publicConstants.MARGIN,
-		maxY: maxY + publicConstants.MARGIN,
+		minX: minX - privateConstants.MARGIN,
+		maxX: maxX + privateConstants.MARGIN,
+		minY: minY - privateConstants.MARGIN,
+		maxY: maxY + privateConstants.MARGIN,
 	};
 };
 
-export const filterToArrange = (toArrangeItems, arranged) => {
+export const filterToArrange = (context, toArrangeItems, arranged) => {
 	const len = toArrangeItems.length;
 	const result = new Array(len);
 	for (let i = 0; i < len; i++) {
@@ -104,14 +110,18 @@ export const filterToArrange = (toArrangeItems, arranged) => {
 	return filter(result);
 };
 
-export const getBottomMax = (minX, maxX) => {
+export const getBottomMax = (context, minX, maxX) => {
+	const pd = getPositionData(context);
+	const mpd = getModifiedPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
 	let max = 0;
 	let item, mItem;
 	const len = pd.length;
 
 	for (let i = 0; i < len; i++) {
-		item = getItemDimenWithMargin(pd[i]);
-		mItem = getItemDimenWithMargin(mpd[i]);
+		item = getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
+		mItem = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 		if (
 			pd[i].y + pd[i].height > max &&
 			item.x < maxX &&
@@ -132,7 +142,7 @@ export const getBottomMax = (minX, maxX) => {
 	return max;
 };
 
-export const getTopBottomWS = (workSpaceRectCo, minX, maxX) => {
+export const getTopBottomWS = (context, workSpaceRectCo, minX, maxX) => {
 	let topWorkSpaceCo, bottomWorkSpaceCo;
 	if (workSpaceRectCo.tl.y > 0) {
 		topWorkSpaceCo = {
@@ -143,7 +153,7 @@ export const getTopBottomWS = (workSpaceRectCo, minX, maxX) => {
 		};
 	}
 
-	const bottomMax = getBottomMax(minX, maxX);
+	const bottomMax = getBottomMax(context, minX, maxX);
 
 	if (bottomMax > workSpaceRectCo.bl.y) {
 		bottomWorkSpaceCo = {
@@ -157,12 +167,24 @@ export const getTopBottomWS = (workSpaceRectCo, minX, maxX) => {
 	return { topWorkSpaceCo, bottomWorkSpaceCo };
 };
 
-export const getItemsInWorkSpace = (workSpaceRect, getIndices = false) => {
+export const getItemsInWorkSpace = (
+	context,
+	workSpaceRect,
+	getIndices = false
+) => {
+	const mpd = getModifiedPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
 	const len = mpd.length;
 	const itemsInWorkSpace = new Array(len);
 	let count = 0;
 	for (let i = 0; i < len; i++) {
-		if (doRectsOverlap(workSpaceRect, getItemDimenWithMargin(mpd[i]))) {
+		if (
+			doRectsOverlap(
+				workSpaceRect,
+				getItemDimenWithMargin(privateConstants.MARGIN, mpd[i])
+			)
+		) {
 			if (!getIndices) {
 				itemsInWorkSpace[count++] = mpd[i];
 			} else {
@@ -180,15 +202,22 @@ export const getItemsInWorkSpace = (workSpaceRect, getIndices = false) => {
 };
 
 export const getItemsBelowBottomWorkSpace = (
+	context,
 	workSpaceRect,
 	getIndices = false
 ) => {
+	const mpd = getModifiedPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
 	const len = mpd.length;
 	const items = new Array(len);
 	let count = 0;
 
 	for (let i = 0; i < len; i++) {
-		if (workSpaceRect.bl.y <= getItemDimenWithMargin(mpd[i]).y) {
+		if (
+			workSpaceRect.bl.y <=
+			getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]).y
+		) {
 			if (!getIndices) {
 				items[count++] = mpd[i];
 			} else {
@@ -206,6 +235,7 @@ export const getItemsBelowBottomWorkSpace = (
 };
 
 export const getResizeWSItemsDetail = (
+	context,
 	wsCo,
 	topWsCo,
 	bottomWsCo,
@@ -214,6 +244,9 @@ export const getResizeWSItemsDetail = (
 	itemsToArrange,
 	getIndices = false
 ) => {
+	const mpd = getModifiedPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
 	const wsPlusTopWsCo = {
 		tl: { ...topWsCo.tl },
 		tr: { ...topWsCo.tr },
@@ -247,7 +280,7 @@ export const getResizeWSItemsDetail = (
 	let iCount = 0;
 
 	for (let i = 0; i < len; i++) {
-		const _item = getItemDimenWithMargin(mpd[i]);
+		const _item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 		if (doRectsOverlap(cWs, _item)) {
 			if (arranged[i]) {
 				if (!getIndices) {
@@ -291,12 +324,12 @@ export const getResizeWSItemsDetail = (
 	};
 };
 
-export const getItemDimenWithMargin = (item) => {
+export const getItemDimenWithMargin = (MARGIN, item) => {
 	const _item = { ...item };
-	_item.x -= publicConstants.MARGIN;
-	_item.y -= publicConstants.MARGIN;
-	_item.width += publicConstants.MARGIN * 2;
-	_item.height += publicConstants.MARGIN * 2;
+	_item.x -= MARGIN;
+	_item.y -= MARGIN;
+	_item.width += MARGIN * 2;
+	_item.height += MARGIN * 2;
 
 	return _item;
 };
@@ -349,7 +382,9 @@ export const getScore = (rect, maxHWSum) => {
 // 	return { maxScore, maxHWSum };
 // };
 
-export const getItemsToArrangeScore = (affectedItems) => {
+export const getItemsToArrangeScore = (context, affectedItems) => {
+	const mpd = getModifiedPositionData(context);
+
 	const len = affectedItems.length;
 	let item;
 	let maxHeight = 0;
@@ -397,7 +432,9 @@ export const getPerfectMatch = (arr, hwSum) => {
 	return arr[0];
 };
 
-export const shiftItems = (items, height) => {
+export const shiftItems = (context, items, height) => {
+	const mpd = getModifiedPositionData(context);
+
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {

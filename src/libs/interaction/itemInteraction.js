@@ -48,19 +48,23 @@ import {
 	movePointAdjust,
 } from "./itemInteractionUtils";
 import { arrangeMove, arrangeResize } from "../arrange/arrange";
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 import {
-	positionData as pd,
-	modifiedPositionData as mpd,
+	getPositionData,
+	getModifiedPositionData,
 	setPositionData,
 	setModifiedPositionData,
-} from "../../variables/essentials";
-import e from "../../variables/elements";
+} from "../../store/variables/essentials";
+import getElements from "../../store/variables/elements";
 
 // import { renderItems } from "../renderers/renderers";
 
 export const resizeItem = async function (index, width, height) {
+	const pd = getPositionData(this);
+	const mpd = getModifiedPositionData(this);
+	const e = getElements(this);
+
 	index = parseInt(index);
 	resizeItemInitialChecks(index, width, height);
 
@@ -99,6 +103,10 @@ export const resizeItem = async function (index, width, height) {
 };
 
 export const resizeItemDemo = async function (index, width, height) {
+	const pd = getPositionData(this);
+	const mpd = getModifiedPositionData(this);
+	const e = getElements(this);
+
 	index = parseInt(index);
 	resizeItemInitialChecks(index, width, height);
 
@@ -135,6 +143,10 @@ export const resizeItemDemo = async function (index, width, height) {
 };
 
 export const moveItem = async function (index, toX, toY) {
+	const pd = getPositionData(this);
+	const mpd = getModifiedPositionData(this);
+	const e = getElements(this);
+
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {
@@ -192,6 +204,10 @@ export const moveItem = async function (index, toX, toY) {
 };
 
 export const moveItemDemo = async function (index, toX, toY) {
+	const pd = getPositionData(this);
+	const mpd = getModifiedPositionData(this);
+	const e = getElements(this);
+
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {

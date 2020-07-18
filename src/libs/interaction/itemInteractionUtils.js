@@ -30,18 +30,23 @@ import {
 	isPointInsideRect,
 	doesPointTouchRect,
 } from "../rect/rectUtils";
-import publicConstants, {
+import getPublicConstants, {
 	getPublicConstantByName,
-} from "../../constants/publicConstants";
-import privateConstants from "../../constants/privateConstants";
+} from "../../store/constants/publicConstants";
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
-	positionData as pd,
-	modifiedPositionData as mpd,
+	getPositionData,
+	getModifiedPositionData,
 	setModifiedPositionData,
-} from "../../variables/essentials";
-import e from "../../variables/elements";
+} from "../../store/variables/essentials";
+import getElements from "../../store/variables/elements";
 
-export const getResizeAffectedItems = (item, index) => {
+export const getResizeAffectedItems = (context, item, index) => {
+	const pd = getPositionData(context);
+	const mpd = getModifiedPositionData(context);
+	const publicConstants = getPublicConstants(context);
+	const privateConstants = getPrivateConstants(context);
+
 	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
@@ -77,7 +82,12 @@ export const getResizeAffectedItems = (item, index) => {
 	return result;
 };
 
-export const getMoveAffectedItems = (item, index) => {
+export const getMoveAffectedItems = (context, item, index) => {
+	const pd = getPositionData(context);
+	const mpd = getModifiedPositionData(context);
+	const publicConstants = getPublicConstants(context);
+	const privateConstants = getPrivateConstants(context);
+
 	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
@@ -112,7 +122,11 @@ export const getMoveAffectedItems = (item, index) => {
 	return result;
 };
 
-export const resizeItemInitialChecks = (index, width, height) => {
+export const resizeItemInitialChecks = (context, index, width, height) => {
+	const pd = getPositionData(context);
+	const publicConstants = getPublicConstants(context);
+	const privateConstants = getPrivateConstants(context);
+
 	if (index < 0 || index >= pd.length) {
 		// invalid index
 		throw "Index out of bounds.";
@@ -140,7 +154,11 @@ export const resizeItemInitialChecks = (index, width, height) => {
 	return true;
 };
 
-export const moveItemInitialChecks = (index, toX, toY) => {
+export const moveItemInitialChecks = (context, index, toX, toY) => {
+	const pd = getPositionData(context);
+	const publicConstants = getPublicConstants(context);
+	const privateConstants = getPrivateConstants(context);
+
 	if (index < 0 || index >= pd.length) {
 		// invalid index
 		throw "Index out of bounds.";
@@ -163,7 +181,10 @@ export const moveItemInitialChecks = (index, toX, toY) => {
 	return true;
 };
 
-export const resetDemoUIChanges = () => {
+export const resetDemoUIChanges = (context) => {
+	const pd = getPositionData(context);
+	const e = getElements(context);
+
 	const len = pd.length;
 	for (var i = 0; i < len; i++) {
 		e.$limberGridViewItems[i].style.transform =
@@ -172,7 +193,11 @@ export const resetDemoUIChanges = () => {
 	}
 };
 
-export const movePointAdjust = (toX, toY) => {
+export const movePointAdjust = (context, toX, toY) => {
+	const pd = getPositionData(context);
+	const publicConstants = getPublicConstants(context);
+	const privateConstants = getPrivateConstants(context);
+
 	let overlapped;
 	let len = pd.length;
 	let temp = { x: 0, y: 0, height: 0, width: 0 };

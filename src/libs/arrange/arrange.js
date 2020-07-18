@@ -27,15 +27,15 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 import { IntervalTreesIterative } from "interval-trees";
 import { ClosestBST } from "closest-bst";
 import {
-	positionData as pd,
-	modifiedPositionData as mpd,
-} from "../../variables/essentials";
-import privateConstants, {
+	getPositionData,
+	getModifiedPositionData,
+} from "../../store/variables/essentials";
+import getPrivateConstants, {
 	getPrivateConstantByName,
-} from "../../constants/privateConstants";
-import publicConstants, {
+} from "../../store/constants/privateConstants";
+import getPublicConstants, {
 	getPublicConstantByName,
-} from "../../constants/publicConstants";
+} from "../../store/constants/publicConstants";
 import {
 	getMinMaxXY,
 	getTopBottomWS,
@@ -79,16 +79,21 @@ import {
 } from "../debug/debug";
 
 export const arrangeMove = async (
+	context,
 	affectedItems,
 	toY,
 	movedBottomY,
 	isDemo = false
 ) => {
+	const privateConstants = getPrivateConstants(context);
+	const mpd = getPrivateConstants(context);
+
 	const p1 = performance.now();
 
 	const idCount = { idCount: 0 };
 
 	const { minY, maxY } = getMinMaxXY(
+		context,
 		affectedItems,
 		undefined,
 		undefined,
@@ -117,11 +122,16 @@ export const arrangeMove = async (
 		bl: { ...workSpaceRectCo.bl },
 	};
 	const { topWorkSpaceCo, bottomWorkSpaceCo } = getTopBottomWS(
+		context,
 		workSpaceRectCo,
 		0,
 		privateConstants.WIDTH
 	);
-	const shrinkRes = shrinkTopBottomWS(topWorkSpaceCo, bottomWorkSpaceCo);
+	const shrinkRes = shrinkTopBottomWS(
+		context,
+		topWorkSpaceCo,
+		bottomWorkSpaceCo
+	);
 
 	if (shrinkRes.integrateTop) {
 		combinedWorkSpaceRectCo.tl = { ...topWorkSpaceCo.tl };
@@ -133,20 +143,25 @@ export const arrangeMove = async (
 	}
 
 	let itemsInBottomWorkSpace = getItemsInWorkSpace(
+		context,
 		getRectObjectFromCo(bottomWorkSpaceCo),
 		true
 	);
 	const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(
+		context,
 		bottomWorkSpaceCo,
 		true
 	);
 
 	let combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
-	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
+	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
+		context,
+		combinedWorkSpaceRect
+	);
 
 	const shiftHeight =
 		(getPrivateConstantByName("MIN_HEIGHT_AND_WIDTH") -
-			publicConstants.MARGIN * 2) /
+			privateConstants.MARGIN * 2) /
 		2;
 
 	let passCount = 0;
@@ -161,6 +176,7 @@ export const arrangeMove = async (
 		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 		const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
+			context,
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
 			itemsInCombinedWorkSpace,
@@ -195,6 +211,7 @@ export const arrangeMove = async (
 			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
 			idCount: lastId3,
 		} = await arrange(
+			context,
 			itemsToArrange.filter((id) => !arranged[id]),
 			overlappedRects,
 			getRectObjectFromCo(topWorkSpaceCo),
@@ -231,7 +248,7 @@ export const arrangeMove = async (
 
 			combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
 
-			shiftItems(itemsInBottomWorkSpace, shiftHeight);
+			shiftItems(context, itemsInBottomWorkSpace, shiftHeight);
 		}
 
 		passCount++;
@@ -244,7 +261,11 @@ export const arrangeMove = async (
 
 	if (workSpaceResizeCount > 0) {
 		// push items in below bottom workspace below
-		shiftItems(itemsBelowBottomWorkSpace, shiftHeight * workSpaceResizeCount);
+		shiftItems(
+			context,
+			itemsBelowBottomWorkSpace,
+			shiftHeight * workSpaceResizeCount
+		);
 
 		// put items in bottom workspace and below bottom workspace in arranged map
 		let len = itemsInBottomWorkSpace.length;
@@ -268,16 +289,20 @@ export const arrangeMove = async (
 };
 
 export const arrangeResize = async (
+	context,
 	affectedItems,
 	resizedBottomY,
 	resizedRightX,
 	isDemo = false
 ) => {
+	const privateConstants = getPrivateConstants(context);
+
 	const p1 = performance.now();
 
 	const idCount = { idCount: 0 };
 
 	const { minX, maxX, minY, maxY } = getMinMaxXY(
+		context,
 		affectedItems,
 		resizedRightX,
 		resizedBottomY,
@@ -307,11 +332,16 @@ export const arrangeResize = async (
 	};
 
 	const { topWorkSpaceCo, bottomWorkSpaceCo } = getTopBottomWS(
+		context,
 		workSpaceRectCo,
 		0,
 		privateConstants.WIDTH
 	);
-	const shrinkRes = shrinkTopBottomWS(topWorkSpaceCo, bottomWorkSpaceCo);
+	const shrinkRes = shrinkTopBottomWS(
+		context,
+		topWorkSpaceCo,
+		bottomWorkSpaceCo
+	);
 
 	if (shrinkRes.integrateTop) {
 		combinedWorkSpaceRectCo.tl = { ...topWorkSpaceCo.tl };
@@ -345,12 +375,13 @@ export const arrangeResize = async (
 		topWorkSpaceCo: _topWorkSpaceCo,
 		bottomWorkSpaceCo: _bottomWorkSpaceCo,
 	} = getTopBottomWS(
+		context,
 		_workSpaceRectCo,
-		minX - publicConstants.MARGIN,
-		maxX + publicConstants.MARGIN
+		minX - privateConstants.MARGIN,
+		maxX + privateConstants.MARGIN
 	);
 
-	const _shrinkRes = shrinkTopBottomWS(_topWorkSpaceCo);
+	const _shrinkRes = shrinkTopBottomWS(context, _topWorkSpaceCo);
 
 	if (_shrinkRes.integrateTop) {
 		_combinedWorkSpaceRectCo.tl = { ..._topWorkSpaceCo.tl };
@@ -360,7 +391,10 @@ export const arrangeResize = async (
 	_combinedWorkSpaceRectCo.bl = { ..._bottomWorkSpaceCo.bl };
 
 	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
-	let itemsInCombinedWorkSpace = getItemsInWorkSpace(combinedWorkSpaceRect);
+	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
+		context,
+		combinedWorkSpaceRect
+	);
 
 	let _combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
 
@@ -380,6 +414,7 @@ export const arrangeResize = async (
 			itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 			const { it: _freeRectsItY, idCount: lastId1 } = sweepLine(
+				context,
 				combinedWorkSpaceRect,
 				combinedWorkSpaceRectCo,
 				itemsInCombinedWorkSpace,
@@ -392,6 +427,7 @@ export const arrangeResize = async (
 				itemsInWorkSpace: _itemsInCombinedWorkSpace,
 				updatedItemsToArrange,
 			} = getResizeWSItemsDetail(
+				context,
 				_workSpaceRectCo,
 				_topWorkSpaceCo,
 				_bottomWorkSpaceCo,
@@ -409,6 +445,7 @@ export const arrangeResize = async (
 			itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 			const { it: _freeRectsItY, idCount: lastId1 } = sweepLine(
+				context,
 				_combinedWorkSpaceRect,
 				_combinedWorkSpaceRectCo,
 				itemsInCombinedWorkSpace,
@@ -441,6 +478,7 @@ export const arrangeResize = async (
 		// printMergedFreeRects(overlappedRects.map((o) => o.d));
 
 		const { arranged: _arranged, idCount: lastId3 } = await arrange(
+			context,
 			itemsToArrange.filter((id) => !arranged[id]),
 			overlappedRects,
 			getRectObjectFromCo(topWorkSpaceCo),
@@ -482,11 +520,14 @@ export const arrangeResize = async (
 	return arranged;
 };
 
-export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
+export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
 	const res = { integrateTop: false, integrateBottom: false };
 	if (topWorkSpace) {
-		topWSItems = getItemsInWorkSpace(getRectObjectFromCo(topWorkSpace));
+		topWSItems = getItemsInWorkSpace(
+			context,
+			getRectObjectFromCo(topWorkSpace)
+		);
 		const sweepRes = sweepLineTop(topWorkSpace, topWSItems);
 
 		if (sweepRes < topWorkSpace.bl.y) {
@@ -498,7 +539,10 @@ export const shrinkTopBottomWS = (topWorkSpace, bottomWorkSpace) => {
 	}
 
 	if (bottomWorkSpace) {
-		bottomWSItems = getItemsInWorkSpace(getRectObjectFromCo(bottomWorkSpace));
+		bottomWSItems = getItemsInWorkSpace(
+			context,
+			getRectObjectFromCo(bottomWorkSpace)
+		);
 		const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems);
 
 		if (sweepRes > bottomWorkSpace.tl.y) {
@@ -601,10 +645,12 @@ export const sweepLineBottom = (area, items) => {
 	return resultPoint;
 };
 
-export const sweepLine = (area, areaCo, items, lastId) => {
+export const sweepLine = (context, area, areaCo, items, lastId) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
+
+	const privateConstants = getPrivateConstants(context);
 
 	let idCount = lastId;
 
@@ -631,11 +677,14 @@ export const sweepLine = (area, areaCo, items, lastId) => {
 		iLen = intervals.length;
 		for (let j = 0; j < iLen; j++) {
 			if (
-				doRectsOverlap(intervals[j].d.rect, getItemDimenWithMargin(items[i]))
+				doRectsOverlap(
+					intervals[j].d.rect,
+					getItemDimenWithMargin(privateConstants.MARGIN, items[i])
+				)
 			) {
 				diff = subtractRect(
 					intervals[j].d.rect,
-					getItemDimenWithMargin(items[i]),
+					getItemDimenWithMargin(privateConstants.MARGIN, items[i]),
 					true
 				);
 
@@ -887,6 +936,7 @@ export const findOverlapped = (mergedRects) => {
  * @return {object}                         arranged{object}: key is index in position data array, value is the object; itemsInbottomworkSpace{object}: key is index in position data array, value is also the index; idCount: next available id
  */
 export const arrange = async (
+	context,
 	itemsToArrange,
 	overlappedRects,
 	topWorkSpace,
@@ -896,6 +946,10 @@ export const arrange = async (
 ) => {
 	// this function updates the modified position data
 	// so no need to update the modified position data later
+
+	const mpd = getModifiedPositionData(context);
+	const privateConstants = getModifiedPositionData(context);
+
 	let idCount = lastId;
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
@@ -916,7 +970,10 @@ export const arrange = async (
 	const itemsToArrangeStack = new Stack();
 	const itemsToArrangeLaterStack = new Stack();
 
-	const itemsToArrangeWithScore = getItemsToArrangeScore(itemsToArrange);
+	const itemsToArrangeWithScore = getItemsToArrangeScore(
+		context,
+		itemsToArrange
+	);
 	for (let i = 0; i < iToALen; i++) {
 		itemsToArrangeStack.push(itemsToArrangeWithScore[i]);
 	}
@@ -931,7 +988,9 @@ export const arrange = async (
 		aItem = mpd[top.d];
 
 		wCBSTRes = wCBST.findUsingComparator(
-			cBSTRectComparator(getItemDimenWithMargin(aItem)),
+			cBSTRectComparator(
+				getItemDimenWithMargin(privateConstants.MARGIN, aItem)
+			),
 			cBSTLComp(aItem.width),
 			cBSTRComp
 		);
@@ -943,8 +1002,8 @@ export const arrange = async (
 
 		const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
 
-		aItem.x = pm.d.rect.x + publicConstants.MARGIN;
-		aItem.y = pm.d.rect.y + publicConstants.MARGIN;
+		aItem.x = pm.d.rect.x + privateConstants.MARGIN;
+		aItem.y = pm.d.rect.y + privateConstants.MARGIN;
 
 		arranged[top.d] = aItem;
 
@@ -957,6 +1016,7 @@ export const arrange = async (
 		// printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
 
 		const { result, idCount: lastId1 } = await arrangeCleanUp(
+			context,
 			aItem,
 			pm,
 			wCBST,
@@ -980,7 +1040,9 @@ export const arrange = async (
 	};
 };
 
-export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
+export const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
+	const privateConstants = getPrivateConstants(context);
+
 	let idCount = lastId;
 	let diff;
 	let diffLen;
@@ -999,10 +1061,10 @@ export const arrangeCleanUp = async (aItem, pm, wCBST, lastId) => {
 	const diffStack = new Stack();
 
 	const itemWithMargins = {
-		x: aItem.x - publicConstants.MARGIN,
-		y: aItem.y - publicConstants.MARGIN,
-		width: aItem.width + publicConstants.MARGIN * 2,
-		height: aItem.height + publicConstants.MARGIN * 2,
+		x: aItem.x - privateConstants.MARGIN,
+		y: aItem.y - privateConstants.MARGIN,
+		width: aItem.width + privateConstants.MARGIN * 2,
+		height: aItem.height + privateConstants.MARGIN * 2,
 	};
 	wCBST.remove(pm.v, pm.d);
 
