@@ -24,25 +24,30 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import e from "../../variables/elements";
-import { positionData as pd } from "../../variables/essentials";
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+import getElements from "../../store/variables/elements";
+import { getPositionData } from "../../store/variables/essentials";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 
-export const loadInitState = () => {
-	e.$body[0].classList.add(
-		"limberGridViewBodyTagStateElementDraggingOrResizing",
-		"limberGridViewBodyTagStateElementAdding"
+export const loadInitState = (context) => {
+	const e = getElements(context);
+	const publicConstants = getPublicConstants(context);
+
+	e.$body.classList.add(
+		"limber-grid-view-body-tag-state-element-dragging-or-resizing",
+		"limber-grid-view-body-tag-state-element-adding"
 	);
 
 	const len = e.$limberGridViewItems.length;
 	for (let i = 0; i < len; i++) {
-		e.$limberGridViewItems[i].classList.add("limberGridViewItemResizingState");
+		e.$limberGridViewItems[i].classList.add(
+			"limber-grid-view-item-resizing-state"
+		);
 	}
 
 	for (let i = 0; i < len; i++) {
-		e.$limberGridViewGridPseudoItems[i].classList.add(
-			"limberGridViewGridPseudoItemResizingState"
+		e.$limberGridViewPseudoItem.classList.add(
+			"limber-grid-view-pseudo-item-resizing-state"
 		);
 	}
 
@@ -52,51 +57,53 @@ export const loadInitState = () => {
 	// 	"translate(" + x + "px, " + y + "px)";
 
 	if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
-		e.$limberGridViewAddItemGuide[0].classList.add(
-			"limberGridViewAddItemGuideActive"
+		e.$limberGridViewAddCutGuide.classList.add(
+			"limber-grid-view-add-item-guide-active"
 		);
 	} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
-		e.$limberGridViewAddItemGuide[0].classList.add(
-			"limberGridViewAddItemGuideActive",
-			"limberGridViewAddItemGuideCutMode"
+		e.$limberGridViewAddCutGuide.classList.add(
+			"limber-grid-view-add-cut-guide-active",
+			"limber-grid-view-add-cut-guide-cut-mode"
 		);
 	}
 
-	e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-	e.$limberGridViewHeightAdjustGuide[0].classList.add(
-		"limberGridViewHeightAdjustGuideActive"
+	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
+	e.$limberGridViewHeightAdjustGuide.classList.add(
+		"limber-grid-view-height-adjust-guide-active"
 	);
 };
 
-export const unloadInitState = () => {
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing",
-		"limberGridViewBodyTagStateElementAdding"
+export const unloadInitState = (context) => {
+	const e = getElements(context);
+
+	e.$body.classList.remove(
+		"limber-grid-view-body-tag-state-element-dragging-or-resizing",
+		"limber-grid-view-body-tag-state-element-adding"
 	);
 
 	const len = e.$limberGridViewItems.length;
 	for (var i = 0; i < len; i++) {
 		e.$limberGridViewItems[i].classList.remove(
-			"limberGridViewItemResizingState"
+			"limber-grid-view-item-resizing-state"
 		);
-		e.$limberGridViewGridPseudoItems[i].classList.remove(
-			"limberGridViewGridPseudoItemResizingState"
+		e.$limberGridViewPseudoItem.classList.remove(
+			"limber-grid-view-pseudo-item-resizing-state"
 		);
 	}
 
-	e.$limberGridViewAddItemGuide[0].classList.remove(
-		"limberGridViewAddItemGuideActive",
-		"limberGridViewAddItemGuideCutMode",
-		"limberGridViewAddItemGuideAddAllow",
-		"limberGridViewAddItemGuideAddDisallow"
+	e.$limberGridViewAddCutGuide.classList.remove(
+		"limber-grid-view-add-cut-guide-active",
+		"limber-grid-view-add-cut-guide-cut-mode",
+		"limber-grid-view-add-cut-guide-add-allow",
+		"limber-grid-view-add-cut-guide-add-disallow"
 	);
 
-	e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
+	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
+	e.$limberGridViewHeightAdjustGuide.classList.remove(
+		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewAddItemOnTouchHoldGuide[0].classList.remove(
-		"limberGridViewAddItemOnTouchHoldGuideActive"
+	e.$limberGridViewTouchHoldGuide.classList.remove(
+		"limber-grid-view-touch-hold-guide-active"
 	);
 };

@@ -154,7 +154,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	box-shadow: 0px 10px 6px -6px #777;
 }
 
-.limber-grid-view-pseudo-item-Active {
+.limber-grid-view-pseudo-item-active {
 	display: inline-block;
 	border: dotted 2px black;
 }
@@ -248,11 +248,11 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	display: inline-block;
 }
 
-.limber-grid-view-add-cut-guide-add-allow {
+.limber-grid-view-add-cut-guide-allow {
 	border-color: green;
 }
 
-.limber-grid-view-add-cut-guide-add-disallow {
+.limber-grid-view-add-cut-guide-disallow {
 	border-color: red;
 }
 

@@ -24,13 +24,16 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import e from "../../variables/elements";
-import { positionData as pd } from "../../variables/essentials";
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+import getElements from "../../store/variables/elements";
+import { getPositionData } from "../../store/variables/essentials";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 
-export const calculateMousePosOnLimberGrid = function (event) {
-	const limberGridViewPosition = e.$limberGridView[0].getBoundingClientRect();
+export const calculateMousePosOnLimberGrid = function (event, context) {
+	const e = getElements(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const limberGridViewPosition = e.$limberGridView.getBoundingClientRect();
 	if (
 		event.clientX >= limberGridViewPosition.left &&
 		event.clientX <=
@@ -38,8 +41,8 @@ export const calculateMousePosOnLimberGrid = function (event) {
 		event.clientY >= limberGridViewPosition.top &&
 		event.clientY <= limberGridViewPosition.top + limberGridViewPosition.height
 	) {
-		const scrollTop = e.$limberGridView[0].scrollTop;
-		const scrollLeft = e.$limberGridView[0].scrollLeft;
+		const scrollTop = e.$limberGridView.scrollTop;
+		const scrollLeft = e.$limberGridView.scrollLeft;
 
 		const mouseXOnLimberGridView =
 			event.clientX -
@@ -62,11 +65,14 @@ export const calculateMousePosOnLimberGrid = function (event) {
 	}
 };
 
-export const calculateTouchPosOnLimberGrid = function (event) {
-	const limberGridViewPosition = e.$limberGridView[0].getBoundingClientRect();
+export const calculateTouchPosOnLimberGrid = function (event, context) {
+	const e = getElements(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const limberGridViewPosition = e.$limberGridView.getBoundingClientRect();
 	let touch;
 
-	if (event.type == "touchend") {
+	if (event.type === "touchend") {
 		touch = {
 			clientX: event.changedTouches[0].clientX,
 			clientY: event.changedTouches[0].clientY,
@@ -84,8 +90,8 @@ export const calculateTouchPosOnLimberGrid = function (event) {
 		touch.clientY >= limberGridViewPosition.top &&
 		touch.clientY <= limberGridViewPosition.top + limberGridViewPosition.height
 	) {
-		const scrollTop = e.$limberGridView[0].scrollTop;
-		const scrollLeft = e.$limberGridView[0].scrollLeft;
+		const scrollTop = e.$limberGridView.scrollTop;
+		const scrollLeft = e.$limberGridView.scrollLeft;
 
 		const touchXOnLimberGridView =
 			touch.clientX -
@@ -108,7 +114,9 @@ export const calculateTouchPosOnLimberGrid = function (event) {
 	}
 };
 
-export const calculateTouchPosOnLimberGridItem = function (event) {
+export const calculateTouchPosOnLimberGridItem = function (event, context) {
+	const e = getElements(context);
+
 	const limberGridViewItemPosition = e.$limberGridViewItems[
 		event.currentTarget.attributes["data-index"].value
 	].getBoundingClientRect();

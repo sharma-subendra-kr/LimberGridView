@@ -24,13 +24,15 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import e from "../../variables/elements";
-import { positionData as pd } from "../../variables/essentials";
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+import getElements from "../../store/variables/elements";
+import { getPositionData } from "../../store/variables/essentials";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 import { calculateTouchPosOnLimberGridItem } from "./eventHandlerUtils";
 
-export const getUserActionData = (event) => {
+export const getUserActionData = (context, event) => {
+	const publicConstants = getPublicConstants(context);
+
 	let radius;
 	let touchPosOnLimberGridItem;
 	let X, Y;
@@ -100,155 +102,156 @@ export const getUserActionData = (event) => {
 	}
 };
 
-export const loadResizingState = (userActionData) => {
-	e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-	e.$limberGridViewHeightAdjustGuide[0].classList.add(
-		"limberGridViewHeightAdjustGuideActive"
+export const loadResizingState = (context, userActionData) => {
+	const e = getElements(context);
+	const pd = getPositionData(context);
+
+	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
+	e.$limberGridViewHeightAdjustGuide.classList.add(
+		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].style.width = `${
+	e.$limberGridViewPseudoItem.style.width = `${
 		pd[userActionData.itemIndex].width
 	}px`;
-	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].style.height = `${
+	e.$limberGridViewPseudoItem.style.height = `${
 		pd[userActionData.itemIndex].height
 	}px`;
-	e.$limberGridViewGridPseudoItems[
-		userActionData.itemIndex
-	].style.transform = `translate(${userActionData.itemX}px,${userActionData.itemY}px)`;
-	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.add(
-		"limberGridViewGridPseudoItemActive"
+	e.$limberGridViewPseudoItem.style.transform = `translate(${userActionData.itemX}px,${userActionData.itemY}px)`;
+	e.$limberGridViewPseudoItem.classList.add(
+		"limber-grid-view-pseudo-item-active"
 	);
-	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.remove(
-		"limberGridViewGridPseudoItemResizeAllow",
-		"limberGridViewGridPseudoItemResizeDisallow"
+	e.$limberGridViewPseudoItem.classList.remove(
+		"limber-grid-view-pseudo-item-resize-allow",
+		"limber-grid-view-pseudo-item-resize-disallow"
 	);
 
-	e.$body[0].classList.add(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	e.$body.classList.add(
+		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
 	);
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
-		e.$limberGridViewItems[i].classList.add("limberGridViewItemResizingState");
+		e.$limberGridViewItems[i].classList.add(
+			"limber-grid-view-item-resizing-state"
+		);
 	}
 
-	const pseudoItemsLen = e.$limberGridViewGridPseudoItems.length;
+	const pseudoItemsLen = e.$limberGridViewPseudoItem.length;
 	for (let i = 0; i < pseudoItemsLen; i++) {
-		e.$limberGridViewGridPseudoItems[i].classList.add(
-			"limberGridViewGridPseudoItemResizingState"
+		e.$limberGridViewPseudoItem.classList.add(
+			"limber-grid-view-pseudo-item-resizing-state"
 		);
 	}
 };
 
-export const unloadResizingState = (userActionData) => {
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
+export const unloadResizingState = (context, userActionData) => {
+	const e = getElements(context);
+
+	e.$limberGridViewHeightAdjustGuide.classList.remove(
+		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.remove(
-		"limberGridViewGridPseudoItemActive"
+	e.$limberGridViewPseudoItem.classList.remove(
+		"limber-grid-view-pseudo-item-active"
 	);
-	e.$limberGridViewGridPseudoItems[
-		userActionData.itemIndex
-	].style.transform = `translate(0px, 0px)`;
+	e.$limberGridViewPseudoItem.style.transform = `translate(0px, 0px)`;
 
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	e.$body.classList.remove(
+		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
 	);
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
 		e.$limberGridViewItems[i].classList.remove(
-			"limberGridViewItemResizingState"
+			"limber-grid-view-item-resizing-state"
 		);
 	}
-	const pseudoItemsLen = e.$limberGridViewGridPseudoItems.length;
+	const pseudoItemsLen = e.$limberGridViewPseudoItem.length;
 	for (let i = 0; i < pseudoItemsLen; i++) {
-		e.$limberGridViewGridPseudoItems[i].classList.remove(
-			"limberGridViewGridPseudoItemResizingState"
+		e.$limberGridViewPseudoItem.classList.remove(
+			"limber-grid-view-pseudo-item-resizing-state"
 		);
 	}
 };
 
-export const loadMoveState = (userActionData, event) => {
-	e.$limberGridViewHeightAdjustGuide[0].style.height = 0 + "px";
-	e.$limberGridViewHeightAdjustGuide[0].classList.add(
-		"limberGridViewHeightAdjustGuideActive"
+export const loadMoveState = (context, userActionData, event) => {
+	const e = getElements(context);
+
+	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
+	e.$limberGridViewHeightAdjustGuide.classList.add(
+		"limber-grid-view-height-adjust-guide-active"
 	);
 
 	e.$limberGridViewItems[userActionData.itemIndex].classList.add(
-		"limberGridViewItemDemo"
+		"limber-grid-view-item-demo"
 	);
 
-	e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].classList.add(
-		"limberGridViewBodyPseudoItemActive"
+	e.$pseudoContainerItem.classList.add(
+		"limber-Grid-View-pseudo-container-item-active"
 	);
 	if (event.which === 1) {
-		e.$limberGridViewBodyPseudoItems[
-			userActionData.itemIndex
-		].style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+		e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
 	} else if (event.which === 0) {
-		e.$limberGridViewBodyPseudoItems[
-			userActionData.itemIndex
-		].style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+		e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
 	}
 
-	e.$body[0].classList.add(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	e.$body.classList.add(
+		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
 	);
 };
 
-export const unloadMoveState = (userActionData) => {
-	e.$limberGridViewHeightAdjustGuide[0].classList.remove(
-		"limberGridViewHeightAdjustGuideActive"
+export const unloadMoveState = (context, userActionData) => {
+	const e = getElements(context);
+
+	e.$limberGridViewHeightAdjustGuide.classList.remove(
+		"limber-grid-view-height-adjust-guide-active"
 	);
 
 	e.$limberGridViewItems[userActionData.itemIndex].classList.remove(
-		"limberGridViewItemDemo"
+		"limber-grid-view-item-demo"
 	);
 
-	e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].classList.remove(
-		"limberGridViewBodyPseudoItemActive"
+	e.$pseudoContainerItem.classList.remove(
+		"limber-grid-view-pseudo-container-item-active"
 	);
-	e.$limberGridViewBodyPseudoItems[
-		userActionData.itemIndex
-	].style.transform = `translate(0px, 0px)`;
+	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
 
-	e.$body[0].classList.remove(
-		"limberGridViewBodyTagStateElementDraggingOrResizing"
+	e.$body.classList.remove(
+		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
 	);
 };
 
-export const loadOnMoveState = (userActionData, event, type) => {
+export const loadOnMoveState = (context, userActionData, event, type) => {
+	const e = getElements(context);
+
 	if (type === "move") {
-		e.$limberGridViewMoveGuide[0].classList.remove(
-			"limberGridViewMoveGuideActive"
+		e.$limberGridViewMoveGuide.classList.remove(
+			"limber-grid-view-move-guide-active"
 		);
 
-		e.$limberGridViewBodyPseudoItems[userActionData.itemIndex].classList.remove(
-			"limberGridViewBodyPseudoItemMoveAllow",
-			"limberGridViewBodyPseudoItemMoveDisallow"
+		e.$pseudoContainerItem.classList.remove(
+			"limber-grid-view-pseudo-container-item-move-allow",
+			"limber-grid-view-pseudo-container-item-move-disallow"
 		);
 
 		if (event.which === 1) {
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+			e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
 		} else if (event.which === 0) {
-			e.$limberGridViewBodyPseudoItems[
-				userActionData.itemIndex
-			].style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+			e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
 		}
 	} else if (type === "resize") {
-		e.$limberGridViewGridPseudoItems[userActionData.itemIndex].classList.remove(
-			"limberGridViewGridPseudoItemResizeAllow",
-			"limberGridViewGridPseudoItemResizeDisallow"
+		e.$limberGridViewPseudoItem.classList.remove(
+			"limber-grid-view-pseudo-item-resize-allow",
+			"limber-grid-view-pseudo-item-resize-disallow"
 		);
 	}
 };
 
-export const unloadOnMoveState = () => {
-	e.$limberGridViewMoveGuide[0].classList.remove(
-		"limberGridViewMoveGuideActive"
+export const unloadOnMoveState = (context) => {
+	const e = getElements(context);
+
+	e.$limberGridViewMoveGuide.classList.remove(
+		"limber-grid-view-move-guide-active"
 	);
 };
