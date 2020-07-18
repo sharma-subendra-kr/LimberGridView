@@ -35,8 +35,8 @@ import e, {
 	set$limberGridViewDebugResultStackRects,
 	set$limberGridViewDebugUnmergedRects,
 	set$limberGridViewDebugMergedFreeRects,
-} from "../../variables/elements";
-import { DEBUG_MODE } from "../../variables/essentials";
+} from "../../store/variables/elements";
+import { DEBUG_MODE } from "../../store/variables/essentials";
 
 export const sleep = (ms) => {
 	return new Promise((resolve, reject) => {

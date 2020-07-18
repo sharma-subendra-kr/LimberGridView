@@ -252,7 +252,7 @@ var main = function () {
 		window.limberGridView.renderItems([index], false);
 	}
 
-	function getItemRenderDataCallback(index, width, height, processType) {
+	function renderContent(index, width, height, type) {
 		// console.log(width);
 		// console.log(height);
 		// console.log(processType);
@@ -267,12 +267,7 @@ var main = function () {
 			`</span><div class = "item-drop-down-button">:::<div class = "item-drop-down"><div class = "item-drop-down-item">add</div><div class = "item-drop-down-item">remove</div></div></div></div>`;
 		div.innerHTML = layoutHtml;
 
-		if (
-			processType === "render" ||
-			processType === "onDemand" ||
-			processType === "removeItems" ||
-			processType === "resizeItems"
-		) {
+		if (!type) {
 			var random = Math.floor(Math.random() * 3);
 			if (random === 0) {
 				var chart = barchart(width, height - 25);
@@ -290,10 +285,7 @@ var main = function () {
 				// return div;
 				return div.outerHTML;
 			}
-		} else if (
-			processType == "addItems" ||
-			processType == "addItemInteractive"
-		) {
+		} else {
 			var random = Math.floor(Math.random() * 3);
 			return div.outerHTML;
 		}
@@ -319,26 +311,26 @@ var main = function () {
 		// console.log("renderComplete");
 	};
 
-	var itemsRenderComplete = function (indices, scale, processType) {
+	var renderComplete = function (indices, scale, processType) {
 		// console.log("itemsRenderComplete");
 		// console.log(event);
 	};
 
-	var resizeCompleteCallback = function (index, width, height) {
+	var resizeComplete = function (index, width, height) {
 		// console.log("resizeCompleteCallback");
 		// console.log(index);
 		// console.log(width);
 		// console.log(height);
 	};
 
-	var moveCompleteCallback = function (status, index, coordinatesOrEvent) {
+	var moveComplete = function (status, index, coordinatesOrEvent) {
 		// console.log("moveCompleteCallback");
 		// console.log(status);
 		// console.log(index);
 		// console.log(coordinatesOrEvent);
 	};
 
-	var addCompleteCallback = function (indices, width, height, processType) {
+	var addComplete = function (indices, width, height, processType) {
 		// console.log("addCompleteCallback");
 		// console.log(indices);
 		// console.log(width);
@@ -346,7 +338,7 @@ var main = function () {
 		// console.log(processType);
 	};
 
-	var removeCompleteCallback = function (indices) {
+	var removeComplete = function (indices) {
 		// console.log("removeCompleteCallback");
 		// console.log(indices);
 	};
@@ -360,259 +352,259 @@ var main = function () {
 		autoArrange: false,
 		reRenderOnResize: true,
 		callbacks: {
-			getItemRenderDataCallback: getItemRenderDataCallback,
+			renderContent: renderContent,
 			onItemClickCallback: onItemClickCallback,
 			renderComplete: renderComplete,
-			itemsRenderComplete: itemsRenderComplete,
-			resizeCompleteCallback: resizeCompleteCallback,
-			moveCompleteCallback: moveCompleteCallback,
-			addCompleteCallback: addCompleteCallback,
-			removeCompleteCallback: removeCompleteCallback,
+			renderComplete: renderComplete,
+			resizeComplete: resizeComplete,
+			moveComplete: moveComplete,
+			addComplete: addComplete,
+			removeComplete: removeComplete,
 		},
 		// "{"gridHeight":561,"gridWidth":960,"margin":5,"initialPositionData":[{"x":519,"y":194,"height":218.1500000000001,"width":263},{"x":317,"y":6,"height":284,"width":191},{"x":0,"y":0,"height":134,"width":110},{"x":3,"y":146,"height":142,"width":306},{"x":149,"y":301,"height":194.92385786802032,"width":194.92385786802032},{"x":353,"y":300,"height":115.15000000000009,"width":110.76599999999996},{"x":2,"y":509,"height":194.92385786802032,"width":555.5329949238579},{"x":518,"y":9,"height":174,"width":159},{"x":4,"y":295,"height":112.46000000000004,"width":135},{"x":118,"y":1,"height":139,"width":149.152}]}"
 		// "{"gridHeight":482,"gridWidth":999,"margin":3.830521472392638,"initialPositionData":[{"x":0,"y":0,"height":371.56058282208585,"width":506.3949386503067},{"x":512.1776649746192,"y":0,"height":202.84263959390861,"width":202.84263959390861},{"x":512.1776649746192,"y":207.91370558375635,"height":163.64677223926378,"width":199.53339570552146},{"x":720.0913705583756,"y":0,"height":374.625,"width":268.18323542944785},{"x":0,"y":383.17659057643795,"height":202.84263959390861,"width":202.84263959390861},{"x":207.91370558375635,"y":383.17659057643795,"height":202.84263959390861,"width":202.84263959390861},{"x":415.8274111675127,"y":383.17659057643795,"height":202.84263959390861,"width":578.1015228426396},{"x":0,"y":591.0902961601943,"height":608.5279187817258,"width":405.68527918781723},{"x":414.4624233128834,"y":594.4969325153374,"height":486.2310736196319,"width":552.2370874233128},{"x":0,"y":1208.197027498365,"height":438.1580291411043,"width":718.6058282208588}]}"
 
-		initialGridData: {
-			gridHeight: 482,
-			gridWidth: 999,
-			margin: 3.830521472392638,
-			initialPositionData: [
-				// set 1
-				// {
-				// 	x: 50,
-				// 	y: 100,
-				// 	width: 200,
-				// 	height: 200,
-				// },
-				// {
-				// 	x: 270,
-				// 	y: 100,
-				// 	width: 200,
-				// 	height: 200,
-				// },
-				// {
-				// 	x: 590,
-				// 	y: 100,
-				// 	width: 200,
-				// 	height: 200,
-				// },
-				// set 2
-				// {
-				// 	x: 0 + 5,
-				// 	y: 0 + 5,
-				// 	height: 371.56058282208585 - 5,
-				// 	width: 506.3949386503067 - 5,
-				// },
-				// {
-				// 	x: 512.1776649746192,
-				// 	y: 0 + 5,
-				// 	height: 202.84263959390861 - 5,
-				// 	width: 202.84263959390861,
-				// },
-				// {
-				// 	x: 512.1776649746192,
-				// 	y: 207.91370558375635,
-				// 	height: 163.64677223926378,
-				// 	width: 199.53339570552146,
-				// },
-				// {
-				// 	x: 720.0913705583756,
-				// 	y: 0 + 5,
-				// 	height: 374.625 - 5,
-				// 	width: 268.18323542944785,
-				// },
-				// {
-				// 	x: 0 + 5,
-				// 	y: 383.17659057643795,
-				// 	height: 202.84263959390861,
-				// 	width: 202.84263959390861 - 5,
-				// },
-				// {
-				// 	x: 207.91370558375635,
-				// 	y: 383.17659057643795,
-				// 	height: 202.84263959390861,
-				// 	width: 202.84263959390861,
-				// },
-				// {
-				// 	x: 415.8274111675127,
-				// 	y: 383.17659057643795,
-				// 	height: 202.84263959390861,
-				// 	width: 578.1015228426396,
-				// },
-				// {
-				// 	x: 0 + 5,
-				// 	y: 591.0902961601943,
-				// 	height: 608.5279187817258,
-				// 	width: 405.68527918781723 - 5,
-				// },
-				// {
-				// 	x: 414.4624233128834,
-				// 	y: 594.4969325153374,
-				// 	height: 486.2310736196319,
-				// 	width: 552.2370874233128,
-				// },
-				// {
-				// 	x: 0 + 5,
-				// 	y: 1208.197027498365,
-				// 	height: 438.1580291411043,
-				// 	width: 718.6058282208588 - 5,
-				// },
-
-				// set 3
-				{
-					x: 5,
-					y: 5,
-					width: 195,
-					height: 195,
-				},
-				{
-					x: 215,
-					y: 5,
-					width: 200,
-					height: 295,
-				},
-				{
-					x: 430,
-					y: 5,
-					width: 200,
-					height: 395,
-				},
-				{
-					x: 650,
-					y: 5,
-					width: 200,
-					height: 195,
-				},
-				{
-					x: 865,
-					y: 5,
-					width: 130,
-					height: 195,
-				},
-				{
-					x: 5,
-					y: 210,
-					width: 195,
-					height: 200,
-				},
-				//
-				// {
-				// 	x: 215,
-				// 	y: 310,
-				// 	width: 200,
-				// 	height: 200,
-				// },
-				{
-					x: 430,
-					y: 420,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 650,
-					y: 210,
-					width: 200,
-					height: 400,
-				},
-				{
-					x: 865,
-					y: 210,
-					width: 130,
-					height: 300,
-				},
-				{
-					x: 5,
-					y: 420,
-					width: 195,
-					height: 300,
-				},
-				{
-					x: 215,
-					y: 520,
-					width: 200,
-					height: 300,
-				},
-				{
-					x: 430,
-					y: 630,
-					width: 200,
-					height: 250,
-				},
-				{
-					x: 650,
-					y: 620,
-					width: 200,
-					height: 300,
-				},
-				{
-					x: 865,
-					y: 520,
-					width: 130,
-					height: 200,
-				},
-				{
-					x: 5,
-					y: 730,
-					width: 195,
-					height: 200,
-				},
-				{
-					x: 215,
-					y: 830,
-					width: 200,
-					height: 300,
-				},
-				//
-				// {
-				// 	x: 430,
-				// 	y: 890,
-				// 	width: 200,
-				// 	height: 200,
-				// },
-				{
-					x: 650,
-					y: 950,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 865,
-					y: 820,
-					width: 130,
-					height: 300,
-				},
-				{
-					x: 5,
-					y: 960,
-					width: 195,
-					height: 200,
-				},
-				{
-					x: 215,
-					y: 1140,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 430,
-					y: 1100,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 650,
-					y: 1160,
-					width: 200,
-					height: 200,
-				},
-				{
-					x: 865,
-					y: 1130,
-					width: 130,
-					height: 200,
-				},
-			],
+		gridData: {
+			HEIGHT: 482,
+			WIDTH: 999,
+			MARGIN: 3.830521472392638,
 		},
+		positionData: [
+			// set 1
+			// {
+			// 	x: 50,
+			// 	y: 100,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			// {
+			// 	x: 270,
+			// 	y: 100,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			// {
+			// 	x: 590,
+			// 	y: 100,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			// set 2
+			// {
+			// 	x: 0 + 5,
+			// 	y: 0 + 5,
+			// 	height: 371.56058282208585 - 5,
+			// 	width: 506.3949386503067 - 5,
+			// },
+			// {
+			// 	x: 512.1776649746192,
+			// 	y: 0 + 5,
+			// 	height: 202.84263959390861 - 5,
+			// 	width: 202.84263959390861,
+			// },
+			// {
+			// 	x: 512.1776649746192,
+			// 	y: 207.91370558375635,
+			// 	height: 163.64677223926378,
+			// 	width: 199.53339570552146,
+			// },
+			// {
+			// 	x: 720.0913705583756,
+			// 	y: 0 + 5,
+			// 	height: 374.625 - 5,
+			// 	width: 268.18323542944785,
+			// },
+			// {
+			// 	x: 0 + 5,
+			// 	y: 383.17659057643795,
+			// 	height: 202.84263959390861,
+			// 	width: 202.84263959390861 - 5,
+			// },
+			// {
+			// 	x: 207.91370558375635,
+			// 	y: 383.17659057643795,
+			// 	height: 202.84263959390861,
+			// 	width: 202.84263959390861,
+			// },
+			// {
+			// 	x: 415.8274111675127,
+			// 	y: 383.17659057643795,
+			// 	height: 202.84263959390861,
+			// 	width: 578.1015228426396,
+			// },
+			// {
+			// 	x: 0 + 5,
+			// 	y: 591.0902961601943,
+			// 	height: 608.5279187817258,
+			// 	width: 405.68527918781723 - 5,
+			// },
+			// {
+			// 	x: 414.4624233128834,
+			// 	y: 594.4969325153374,
+			// 	height: 486.2310736196319,
+			// 	width: 552.2370874233128,
+			// },
+			// {
+			// 	x: 0 + 5,
+			// 	y: 1208.197027498365,
+			// 	height: 438.1580291411043,
+			// 	width: 718.6058282208588 - 5,
+			// },
+
+			// set 3
+			{
+				x: 5,
+				y: 5,
+				width: 195,
+				height: 195,
+			},
+			{
+				x: 215,
+				y: 5,
+				width: 200,
+				height: 295,
+			},
+			{
+				x: 430,
+				y: 5,
+				width: 200,
+				height: 395,
+			},
+			{
+				x: 650,
+				y: 5,
+				width: 200,
+				height: 195,
+			},
+			{
+				x: 865,
+				y: 5,
+				width: 130,
+				height: 195,
+			},
+			{
+				x: 5,
+				y: 210,
+				width: 195,
+				height: 200,
+			},
+			//
+			// {
+			// 	x: 215,
+			// 	y: 310,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			{
+				x: 430,
+				y: 420,
+				width: 200,
+				height: 200,
+			},
+			{
+				x: 650,
+				y: 210,
+				width: 200,
+				height: 400,
+			},
+			{
+				x: 865,
+				y: 210,
+				width: 130,
+				height: 300,
+			},
+			{
+				x: 5,
+				y: 420,
+				width: 195,
+				height: 300,
+			},
+			{
+				x: 215,
+				y: 520,
+				width: 200,
+				height: 300,
+			},
+			{
+				x: 430,
+				y: 630,
+				width: 200,
+				height: 250,
+			},
+			{
+				x: 650,
+				y: 620,
+				width: 200,
+				height: 300,
+			},
+			{
+				x: 865,
+				y: 520,
+				width: 130,
+				height: 200,
+			},
+			{
+				x: 5,
+				y: 730,
+				width: 195,
+				height: 200,
+			},
+			{
+				x: 215,
+				y: 830,
+				width: 200,
+				height: 300,
+			},
+			//
+			// {
+			// 	x: 430,
+			// 	y: 890,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			{
+				x: 650,
+				y: 950,
+				width: 200,
+				height: 200,
+			},
+			{
+				x: 865,
+				y: 820,
+				width: 130,
+				height: 300,
+			},
+			{
+				x: 5,
+				y: 960,
+				width: 195,
+				height: 200,
+			},
+			{
+				x: 215,
+				y: 1140,
+				width: 200,
+				height: 200,
+			},
+			{
+				x: 430,
+				y: 1100,
+				width: 200,
+				height: 200,
+			},
+			{
+				x: 650,
+				y: 1160,
+				width: 200,
+				height: 200,
+			},
+			{
+				x: 865,
+				y: 1130,
+				width: 130,
+				height: 200,
+			},
+		],
 
 		// initialGridData : {
 		// 	gridHeight : 624,
@@ -650,8 +642,8 @@ var main = function () {
 	// console.log(
 	// 	window.getComputedStyle(body[0], null).getPropertyValue("width")
 	// );
-
-	window.limberGridView = new LimberGridView(obj);
+	console.log("LimberGridView", LimberGridView);
+	window.limberGridView = new LimberGridView.default(obj);
 	// window.limberGridView.MOVE_GUIDE_RADIUS = 20;
 	// window.limberGridView.RESIZE_SQUARE_GUIDE_LENGTH = 15;
 	// window.limberGridView.RESIZE_SQUARE_BORDER_GUIDE_WIDTH = 5;
@@ -666,7 +658,6 @@ var main = function () {
 	// 		"only screen and (max-width: 1023px) and (min-width : 1px)"
 	// 	).matches;
 	// });
-	window.limberGridView.render();
 
 	window.toggleMerged = function () {
 		const els = document.getElementsByClassName(

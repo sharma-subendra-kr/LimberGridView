@@ -24,8 +24,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import publicConstants from "../../constants/publicConstants";
-import privateConstants from "../../constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
+import getPrivateConstants from "../../store/constants/privateConstants";
 
 let isMobileFunction;
 

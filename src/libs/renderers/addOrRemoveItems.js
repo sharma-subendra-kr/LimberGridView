@@ -29,16 +29,16 @@ import {
 	callbacks,
 	serializedPositionData,
 	setSerializedPositionData,
-} from "../../variables/essentials";
+} from "../../store/variables/essentials";
 import { isMobile } from "../utils/utils";
 import { renderItems } from "./renderers";
-import e from "../../variables/elements";
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
+import e from "../../store/variables/elements";
+import privateConstants from "../../store/constants/privateConstants";
+import publicConstants from "../../store/constants/publicConstants";
 import { getMarginAtPoint } from "../utils/essentials";
 import { unInitializeEvents } from "../eventHandlerLib/initializers";
 
-export const removeItems = function(itemsIndices) {
+export const removeItems = function (itemsIndices) {
 	unInitializeEvents();
 
 	var scrollTop = e.$limberGridView[0].scrollTop;
@@ -51,7 +51,7 @@ export const removeItems = function(itemsIndices) {
 		itemsToRender.push(length_0 - i);
 	}
 
-	itemsIndices.sort(function(a, b) {
+	itemsIndices.sort(function (a, b) {
 		return Number(a) - Number(b);
 	});
 	var length_0 = itemsIndices.length - 1;
@@ -95,7 +95,7 @@ export const removeItems = function(itemsIndices) {
 	}
 };
 
-export const addItems = function(
+export const addItems = function (
 	howMany = 1,
 	itemWidth = 100,
 	itemHeight = 100
@@ -136,8 +136,7 @@ export const addItems = function(
 				height: itemHeight,
 			};
 
-			remainingWidth =
-				remainingWidth - itemWidth - getMarginAtPoint(startingX);
+			remainingWidth = remainingWidth - itemWidth - getMarginAtPoint(startingX);
 			startingX = startingX + getMarginAtPoint(startingX) + itemWidth;
 			remainingItems--;
 			items.push(item);
@@ -169,7 +168,7 @@ export const addItems = function(
 	}
 };
 
-export const addItemsAtPositions = function(
+export const addItemsAtPositions = function (
 	items,
 	scale = true,
 	processType = "onDemand"

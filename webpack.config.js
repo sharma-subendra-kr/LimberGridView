@@ -49,8 +49,8 @@ module.exports = {
         path: process.env.NODE_ENV === "development" ? __dirname + "/public/assets" : __dirname + "/dist",
         publicPath: "assets",
         filename: "limberGridView-" + process.env.VERSION  + ".js",
-        // library: "LimberGridView",
-        // libraryTarget: "umd"
+        library: "LimberGridView",
+        libraryTarget: "umd"
     },
     devServer: {
         inline: true,

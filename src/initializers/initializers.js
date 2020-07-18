@@ -24,7 +24,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import { getOptions } from "../variables/options";
+import { getOptions } from "../store/variables/options";
 import {
 	setPseudoElementId,
 	getPseudoElementId,

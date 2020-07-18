@@ -24,12 +24,12 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import privateConstants from "../../constants/privateConstants";
-import publicConstants from "../../constants/publicConstants";
-import { positionData } from "../../variables/essentials";
-import e from "../../variables/elements";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
+import { getPositionData } from "../../store/variables/essentials";
+import getElements from "../../store/variables/elements";
 
-export const getPlainFrom4Points = function(pointsArray) {
+export const getPlainFrom4Points = function (pointsArray) {
 	var minX = -1;
 	var minY = -1;
 	var maxX = -1;
@@ -59,7 +59,7 @@ export const getPlainFrom4Points = function(pointsArray) {
 	return plane;
 };
 
-export const getCoordinates = function(item) {
+export const getCoordinates = function (item) {
 	var itemTopLeft = [item.x, item.y];
 	var itemTopRight = [item.x + item.width, item.y];
 	var itemBottomLeft = [item.x, item.y + item.height];
@@ -75,11 +75,9 @@ export const getCoordinates = function(item) {
 	return itemCoordinatesArr;
 };
 
-export const getLines = function(item) {
+export const getLines = function (item) {
 	var itemTopLeft = JSON.parse(JSON.stringify([item.x, item.y]));
-	var itemTopRight = JSON.parse(
-		JSON.stringify([item.x + item.width, item.y])
-	);
+	var itemTopRight = JSON.parse(JSON.stringify([item.x + item.width, item.y]));
 	var itemBottomLeft = JSON.parse(
 		JSON.stringify([item.x, item.y + item.height])
 	);
@@ -97,20 +95,15 @@ export const getLines = function(item) {
 	return allLines;
 };
 
-export const arePlainsSame = function(A, B) {
-	if (
-		A.x == B.x &&
-		A.y == B.y &&
-		A.width == B.width &&
-		A.height == B.height
-	) {
+export const arePlainsSame = function (A, B) {
+	if (A.x == B.x && A.y == B.y && A.width == B.width && A.height == B.height) {
 		return true;
 	} else {
 		return false;
 	}
 };
 
-export const arePlainsIdentical = function(A, B) {
+export const arePlainsIdentical = function (A, B) {
 	if (A.width == B.width && A.height == B.height) {
 		return true;
 	} else {
@@ -118,7 +111,7 @@ export const arePlainsIdentical = function(A, B) {
 	}
 };
 
-export const isValidPlane = function(plane) {
+export const isValidPlane = function (plane) {
 	if (plane.x >= 0 && plane.y >= 0 && plane.width > 0 && plane.height > 0) {
 		return true;
 	} else {
@@ -126,19 +119,17 @@ export const isValidPlane = function(plane) {
 	}
 };
 
-export const sortPlainsByArea = function(planes, order = "dec") {
+export const sortPlainsByArea = function (planes, order = "dec") {
 	if (order == "asc") {
-		planes.sort(function(a, b) {
+		planes.sort(function (a, b) {
 			return (
-				(a.x + a.width) * (a.y + a.height) -
-				(b.x + b.width) * (b.y + b.height)
+				(a.x + a.width) * (a.y + a.height) - (b.x + b.width) * (b.y + b.height)
 			);
 		});
 	} else {
-		planes.sort(function(a, b) {
+		planes.sort(function (a, b) {
 			return (
-				(b.x + b.width) * (b.y + b.height) -
-				(a.x + a.width) * (a.y + a.height)
+				(b.x + b.width) * (b.y + b.height) - (a.x + a.width) * (a.y + a.height)
 			);
 		});
 	}
@@ -146,13 +137,13 @@ export const sortPlainsByArea = function(planes, order = "dec") {
 	return planes;
 };
 
-export const sortPlainsByHeight = function(planes, order = "dec") {
+export const sortPlainsByHeight = function (planes, order = "dec") {
 	if (order == "asc") {
-		planes.sort(function(a, b) {
+		planes.sort(function (a, b) {
 			return a.height - b.height;
 		});
 	} else {
-		planes.sort(function(a, b) {
+		planes.sort(function (a, b) {
 			return b.height - a.height;
 		});
 	}
@@ -160,13 +151,13 @@ export const sortPlainsByHeight = function(planes, order = "dec") {
 	return planes;
 };
 
-export const sortPlainsByDepth = function(planes, order = "dec") {
+export const sortPlainsByDepth = function (planes, order = "dec") {
 	if (order == "asc") {
-		planes.sort(function(a, b) {
+		planes.sort(function (a, b) {
 			return a.y + a.height - (b.y + b.height);
 		});
 	} else {
-		planes.sort(function(a, b) {
+		planes.sort(function (a, b) {
 			return b.y + b.height - (a.y + a.height);
 		});
 	}
@@ -174,7 +165,7 @@ export const sortPlainsByDepth = function(planes, order = "dec") {
 	return planes;
 };
 
-export const divideEqualNumber = function(a, DEFAULT = 0) {
+export const divideEqualNumber = function (a, DEFAULT = 0) {
 	var res = a / a;
 	if (res == NaN) {
 		return 0;
@@ -183,7 +174,7 @@ export const divideEqualNumber = function(a, DEFAULT = 0) {
 	}
 };
 
-export const getMarginAtPoint = function(a) {
+export const getMarginAtPoint = function (a) {
 	if (a == 0) {
 		return 0;
 	} else {
@@ -191,7 +182,7 @@ export const getMarginAtPoint = function(a) {
 	}
 };
 
-export const getRowSequence = function(serialize) {
+export const getRowSequence = function (serialize) {
 	var rows = {};
 	var rowsArr = [];
 	var columns = {};
@@ -208,13 +199,13 @@ export const getRowSequence = function(serialize) {
 		}
 	}
 
-	rowsArr.sort(function(a, b) {
+	rowsArr.sort(function (a, b) {
 		return a - b;
 	});
 
 	var length_0 = rowsArr.length;
 	for (var i = 0; i < length_0; i++) {
-		rows[rowsArr[i]].sort(function(a, b) {
+		rows[rowsArr[i]].sort(function (a, b) {
 			return positionData[a].x - positionData[b].x;
 		});
 	}
@@ -239,7 +230,7 @@ export const getRowSequence = function(serialize) {
 	}
 };
 
-export const adjustHeight = function(yMouseOrTouchPosition) {
+export const adjustHeight = function (yMouseOrTouchPosition) {
 	var scrollHeight = e.$limberGridView[0].scrollHeight;
 	if (
 		scrollHeight - yMouseOrTouchPosition <=
@@ -252,7 +243,7 @@ export const adjustHeight = function(yMouseOrTouchPosition) {
 	}
 };
 
-export const adjustScroll = function(
+export const adjustScroll = function (
 	limberGridViewOnVisibleAreaY,
 	limberGridViewHeightVisibleHeight
 ) {

@@ -43,14 +43,15 @@ import {
 } from "../eventHandlerLib/initializers";
 
 export const render = function (context, scale = true) {
-	unInitializeEvents();
-
 	const options = getOptions(context);
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 	const publicConstants = getPublicConstants(context);
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
+
+	unInitializeEvents.call(context);
+
 	const len = pd.length;
 
 	let WIDTH_SCALE_FACTOR = 1;
@@ -93,7 +94,7 @@ export const render = function (context, scale = true) {
 		}
 	} else {
 		classList = classList + "limber-grid-view-item-mobile-view";
-		const spd = getSerializedPositionData();
+		const spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
 			spd[i].width = privateConstants.WIDTH;
@@ -134,11 +135,12 @@ export const render = function (context, scale = true) {
 	}
 
 	set$limberGridViewItems(
-		e.$limberGridView.getElementsByClassName(".limber-grid-view-item")
+		context,
+		e.$limberGridView.getElementsByClassName("limber-grid-view-item")
 	);
 
-	initializeVariables();
-	initializeEvents();
+	// initializeVariables();
+	initializeEvents.call(context);
 
 	if (callbacks.renderComplete) {
 		callbacks.renderComplete();
@@ -171,6 +173,8 @@ export const addItem = function (context, item) {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 	const publicConstants = getPublicConstants(context);
+
+	unInitializeEvents.call(context);
 
 	try {
 		// call arrange and get coordinates
@@ -222,11 +226,9 @@ export const addItem = function (context, item) {
 		e.$limberGridView.appendChild(itemEl);
 
 		set$limberGridViewItems(
-			e.$limberGridView.getElementsByClassName(".limber-grid-view-item")
+			context,
+			e.$limberGridView.getElementsByClassName("limber-grid-view-item")
 		);
-
-		initializeVariables();
-		initializeEvents();
 
 		if (callbacks.addComplete) {
 			callbacks.addComplete(index);
@@ -234,6 +236,8 @@ export const addItem = function (context, item) {
 	} catch (error) {
 		console.error(error);
 	}
+
+	initializeEvents.call(context);
 };
 
 export const removeItem = function (context, index) {
@@ -241,11 +245,14 @@ export const removeItem = function (context, index) {
 	const callbacks = getCallbacks(context);
 	const pd = getPositionData(context);
 
+	unInitializeEvents.call(context);
+
 	pd.splice(index, 1);
 
 	e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
 	set$limberGridViewItems(
-		e.$limberGridView.getElementsByClassName(".limber-grid-view-item")
+		context,
+		e.$limberGridView.getElementsByClassName("limber-grid-view-item")
 	);
 
 	initializeVariables();
@@ -254,6 +261,8 @@ export const removeItem = function (context, index) {
 	if (callbacks.removeComplete) {
 		callbacks.removeComplete(index);
 	}
+
+	initializeEvents.call(context);
 };
 
 export const getSerializedPositionData = (pd) => {

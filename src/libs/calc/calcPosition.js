@@ -39,12 +39,15 @@ import {
 	mergePlains,
 	subtractPlanes,
 } from "./calcUtils";
-import privateConstants from "../../constants/privateConstants";
-import { positionData, setPositionData } from "../../variables/essentials";
-import e from "../../variables/elements";
+import privateConstants from "../../store/constants/privateConstants";
+import {
+	positionData,
+	setPositionData,
+} from "../../store/variables/essentials";
+import e from "../../store/variables/elements";
 import { renderItems } from "../renderers/renderers";
 
-export const resizePlane = function(index, width, height) {
+export const resizePlane = function (index, width, height) {
 	let _positionData;
 
 	if (positionData[index].x + width > privateConstants.WIDTH) {
@@ -75,9 +78,7 @@ export const resizePlane = function(index, width, height) {
 	for (var i = 0; i < length_0; i++) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
-			JSON.stringify(
-				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
-			)
+			JSON.stringify(positionData[allAffectedItems.affectedItemsExceptSelf[i]])
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
@@ -105,10 +106,7 @@ export const resizePlane = function(index, width, height) {
 	for (var i = 0; i < length_0; i++) {
 		var fittedFlag = false;
 		for (var j = 0; j < length_1; j++) {
-			if (
-				allAffectedItems.affectedItemsExceptSelf[i] ==
-				fittedItems[j].index
-			) {
+			if (allAffectedItems.affectedItemsExceptSelf[i] == fittedItems[j].index) {
 				fittedFlag = true;
 				break;
 			}
@@ -129,11 +127,7 @@ export const resizePlane = function(index, width, height) {
 	var length_0 = _positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		e.$limberGridViewItems[i].style.transform =
-			"translate(" +
-			_positionData[i].x +
-			"px, " +
-			_positionData[i].y +
-			"px)";
+			"translate(" + _positionData[i].x + "px, " + _positionData[i].y + "px)";
 		e.$limberGridViewItems[i].classList.remove(
 			"limberGridViewItemDemo",
 			"limberGridViewItemResizingState"
@@ -147,7 +141,7 @@ export const resizePlane = function(index, width, height) {
 	e.$limberGridView[0].scrollTop = scrollTop;
 };
 
-export const resizePlaneDemo = function(index, width, height) {
+export const resizePlaneDemo = function (index, width, height) {
 	if (positionData[index].x + width > privateConstants.WIDTH) {
 		return false;
 	}
@@ -163,11 +157,7 @@ export const resizePlaneDemo = function(index, width, height) {
 	var length_0 = e.$limberGridViewItems.length;
 	for (var i = 0; i < length_0; i++) {
 		e.$limberGridViewItems[i].style.transform =
-			"translate(" +
-			positionData[i].x +
-			"px, " +
-			positionData[i].y +
-			"px)";
+			"translate(" + positionData[i].x + "px, " + positionData[i].y + "px)";
 		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
@@ -187,9 +177,7 @@ export const resizePlaneDemo = function(index, width, height) {
 	for (var i = 0; i < length_0; i++) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
-			JSON.stringify(
-				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
-			)
+			JSON.stringify(positionData[allAffectedItems.affectedItemsExceptSelf[i]])
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
@@ -216,10 +204,7 @@ export const resizePlaneDemo = function(index, width, height) {
 	for (var i = 0; i < length_0; i++) {
 		var fittedFlag = false;
 		for (var j = 0; j < length_1; j++) {
-			if (
-				allAffectedItems.affectedItemsExceptSelf[i] ==
-				fittedItems[j].index
-			) {
+			if (allAffectedItems.affectedItemsExceptSelf[i] == fittedItems[j].index) {
 				fittedFlag = true;
 				break;
 			}
@@ -232,7 +217,7 @@ export const resizePlaneDemo = function(index, width, height) {
 	}
 };
 
-export const movePlane = function(index, toX, toY) {
+export const movePlane = function (index, toX, toY) {
 	let _positionData;
 	var allAffectedItems = findAffectedItemsOnMove(index, toX, toY);
 
@@ -250,9 +235,7 @@ export const movePlane = function(index, toX, toY) {
 	for (var i = 0; i < length_0; i++) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
-			JSON.stringify(
-				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
-			)
+			JSON.stringify(positionData[allAffectedItems.affectedItemsExceptSelf[i]])
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
@@ -280,10 +263,7 @@ export const movePlane = function(index, toX, toY) {
 	for (var i = 0; i < length_0; i++) {
 		var fittedFlag = false;
 		for (var j = 0; j < length_1; j++) {
-			if (
-				allAffectedItems.affectedItemsExceptSelf[i] ==
-				fittedItems[j].index
-			) {
+			if (allAffectedItems.affectedItemsExceptSelf[i] == fittedItems[j].index) {
 				fittedFlag = true;
 				break;
 			}
@@ -304,26 +284,18 @@ export const movePlane = function(index, toX, toY) {
 	var length_0 = _positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		e.$limberGridViewItems[i].style.transform =
-			"translate(" +
-			_positionData[i].x +
-			"px, " +
-			_positionData[i].y +
-			"px)";
+			"translate(" + _positionData[i].x + "px, " + _positionData[i].y + "px)";
 		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
 	setPositionData(_positionData);
 };
 
-export const movePlaneDemo = function(index, toX, toY) {
+export const movePlaneDemo = function (index, toX, toY) {
 	var length_0 = e.$limberGridViewItems.length;
 	for (var i = 0; i < length_0; i++) {
 		e.$limberGridViewItems[i].style.transform =
-			"translate(" +
-			positionData[i].x +
-			"px, " +
-			positionData[i].y +
-			"px)";
+			"translate(" + positionData[i].x + "px, " + positionData[i].y + "px)";
 		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 
@@ -343,9 +315,7 @@ export const movePlaneDemo = function(index, toX, toY) {
 	for (var i = 0; i < length_0; i++) {
 		var ind = allAffectedItems.affectedItemsExceptSelf[i];
 		affectedItemsExceptSelfObjects[i] = JSON.parse(
-			JSON.stringify(
-				positionData[allAffectedItems.affectedItemsExceptSelf[i]]
-			)
+			JSON.stringify(positionData[allAffectedItems.affectedItemsExceptSelf[i]])
 		);
 		affectedItemsExceptSelfObjects[i].index = ind;
 	}
@@ -372,10 +342,7 @@ export const movePlaneDemo = function(index, toX, toY) {
 	for (var i = 0; i < length_0; i++) {
 		var fittedFlag = false;
 		for (var j = 0; j < length_1; j++) {
-			if (
-				allAffectedItems.affectedItemsExceptSelf[i] ==
-				fittedItems[j].index
-			) {
+			if (allAffectedItems.affectedItemsExceptSelf[i] == fittedItems[j].index) {
 				fittedFlag = true;
 				break;
 			}

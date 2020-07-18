@@ -35,12 +35,12 @@ import {
 	sortPlainsByHeight,
 	arePlainsSame,
 } from "../utils/essentials";
-import publicConstants from "../../constants/publicConstants";
-import privateConstants from "../../constants/privateConstants";
-import { positionData } from "../../variables/essentials";
-import e from "../../variables/elements";
+import publicConstants from "../../store/constants/publicConstants";
+import privateConstants from "../../store/constants/privateConstants";
+import { positionData } from "../../store/variables/essentials";
+import e from "../../store/variables/elements";
 
-export const findFreeSpaces = function(item, affectedItems) {
+export const findFreeSpaces = function (item, affectedItems) {
 	var freeSpaces = [];
 	var length_0 = affectedItems.length;
 	for (var i = 0; i < length_0; i++) {
@@ -62,11 +62,11 @@ export const findFreeSpaces = function(item, affectedItems) {
 	return freeSpaces;
 };
 
-export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
+export const mergeFreeSpaces = function (freeSpaces, itemsNotToMerge) {
 	var mergePlainsFreeSpacesAndItemsNotToMerge = freeSpaces.concat(
 		itemsNotToMerge
 	);
-	var isPlaneInsideStack = function(stack, plane) {
+	var isPlaneInsideStack = function (stack, plane) {
 		var flag = false;
 		var length_0 = stack.length;
 		for (var i = 0; i < length_0; i++) {
@@ -83,10 +83,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 	for (var i = 0; i < length_0 - 1; i++) {
 		for (var j = i + 1; j < length_0; j++) {
 			if (
-				!isPlaneBInsidePlaneA_TouchingNotInside(
-					freeSpaces[i],
-					freeSpaces[j]
-				)
+				!isPlaneBInsidePlaneA_TouchingNotInside(freeSpaces[i], freeSpaces[j])
 			) {
 				var mergedPlane = mergePlains(
 					freeSpaces[i],
@@ -102,7 +99,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 		}
 	}
 
-	var mergeStackItemWithFreeSpaces = function(
+	var mergeStackItemWithFreeSpaces = function (
 		freeSpaces,
 		mergedStack,
 		mergePlainsFreeSpacesAndItemsNotToMerge
@@ -113,10 +110,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 		for (var i = 0; i < length_0; i++) {
 			for (var j = 0; j < length_1; j++) {
 				if (
-					!isPlaneBInsidePlaneA_TouchingNotInside(
-						freeSpaces[i],
-						mergedStack[j]
-					)
+					!isPlaneBInsidePlaneA_TouchingNotInside(freeSpaces[i], mergedStack[j])
 				) {
 					var mergedPlane = mergePlains(
 						freeSpaces[i],
@@ -125,10 +119,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 					);
 					if (mergedPlane != false) {
 						if (
-							!isPlaneInsideStack(
-								mergedStack.concat(newStack),
-								mergedPlane
-							)
+							!isPlaneInsideStack(mergedStack.concat(newStack), mergedPlane)
 						) {
 							newStack.push(mergedPlane);
 						}
@@ -191,7 +182,7 @@ export const mergeFreeSpaces = function(freeSpaces, itemsNotToMerge) {
 	return finalMergedPlanes;
 };
 
-export const findAffectedItemsOnMove = function(index, toX, toY) {
+export const findAffectedItemsOnMove = function (index, toX, toY) {
 	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.x = toX;
 	item.y = toY;
@@ -200,10 +191,7 @@ export const findAffectedItemsOnMove = function(index, toX, toY) {
 
 	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		var result = isPlaneBInsidePlaneA_TouchingIsInside(
-			item,
-			positionData[i]
-		);
+		var result = isPlaneBInsidePlaneA_TouchingIsInside(item, positionData[i]);
 		if (result == true) {
 			affectedItems.push(i);
 			if (i != index) {
@@ -218,7 +206,7 @@ export const findAffectedItemsOnMove = function(index, toX, toY) {
 	};
 };
 
-export const findAffectedItemsOnResize = function(index, width, height) {
+export const findAffectedItemsOnResize = function (index, width, height) {
 	var item = JSON.parse(JSON.stringify(positionData[index]));
 	item.width = width;
 	item.height = height;
@@ -227,10 +215,7 @@ export const findAffectedItemsOnResize = function(index, width, height) {
 
 	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
-		var result = isPlaneBInsidePlaneA_TouchingIsInside(
-			item,
-			positionData[i]
-		);
+		var result = isPlaneBInsidePlaneA_TouchingIsInside(item, positionData[i]);
 		if (result == true) {
 			affectedItems.push(i);
 			if (i != index) {
@@ -245,7 +230,7 @@ export const findAffectedItemsOnResize = function(index, width, height) {
 	};
 };
 
-export const isPlaneBInsidePlaneA_TouchingIsInside = function(
+export const isPlaneBInsidePlaneA_TouchingIsInside = function (
 	A,
 	B,
 	resultType
@@ -343,7 +328,7 @@ export const isPlaneBInsidePlaneA_TouchingIsInside = function(
 	}
 };
 
-export const isPlaneBInsidePlaneA_TouchingNotInside = function(
+export const isPlaneBInsidePlaneA_TouchingNotInside = function (
 	A,
 	B,
 	resultType
@@ -496,7 +481,7 @@ export const isPlaneBInsidePlaneA_TouchingNotInside = function(
 	}
 };
 
-export const fitItemsIntoFreeSpaces = function(
+export const fitItemsIntoFreeSpaces = function (
 	items,
 	freeSpaces,
 	doNotMergeItems
@@ -513,9 +498,7 @@ export const fitItemsIntoFreeSpaces = function(
 		match.matchingItemIndex != null &&
 		match.matchingFreeSpaceIndex != null
 	) {
-		var tempItem = JSON.parse(
-			JSON.stringify(items[match.matchingItemIndex])
-		);
+		var tempItem = JSON.parse(JSON.stringify(items[match.matchingItemIndex]));
 
 		var repositionedItem = {
 			x:
@@ -558,10 +541,7 @@ export const fitItemsIntoFreeSpaces = function(
 
 		// calculate new mergedFreeSpaces
 		doNotMergeItems.push(occupiedSpace);
-		var newMergedFreeSpaces = mergeFreeSpaces(
-			newFreeSpaces,
-			doNotMergeItems
-		);
+		var newMergedFreeSpaces = mergeFreeSpaces(newFreeSpaces, doNotMergeItems);
 
 		freeSpaces = newMergedFreeSpaces;
 		var match = findMatchingSpace(items, newMergedFreeSpaces);
@@ -569,7 +549,7 @@ export const fitItemsIntoFreeSpaces = function(
 	return { repositionedItems: repositionedItems, freeSpaces: freeSpaces };
 };
 
-export const findMatchingSpace = function(items, freeSpaces) {
+export const findMatchingSpace = function (items, freeSpaces) {
 	// IMPORTANT
 	// items must sorted in descending order according to area
 	// IMPORTANT END
@@ -628,8 +608,7 @@ export const findMatchingSpace = function(items, freeSpaces) {
 			var flooredQuotient = Math.floor(
 				freeSpaces[possibilitiesWidth[k]].width / tempItem.width
 			);
-			var quotient =
-				freeSpaces[possibilitiesWidth[k]].width / tempItem.width;
+			var quotient = freeSpaces[possibilitiesWidth[k]].width / tempItem.width;
 			var diff = quotient - flooredQuotient;
 
 			if (diff > greatestWidthDiff) {
@@ -641,24 +620,18 @@ export const findMatchingSpace = function(items, freeSpaces) {
 				freeSpaces[possibilitiesWidth[k]].y <= minYPossibilitiesWidth ||
 				minYPossibilitiesWidth == 0
 			) {
-				if (
-					freeSpaces[possibilitiesWidth[k]].y ==
-					minYPossibilitiesWidth
-				) {
+				if (freeSpaces[possibilitiesWidth[k]].y == minYPossibilitiesWidth) {
 					if (greatestWidthDiffIndex == null) {
-						minYPossibilitiesWidth =
-							freeSpaces[possibilitiesWidth[k]].y;
+						minYPossibilitiesWidth = freeSpaces[possibilitiesWidth[k]].y;
 						minYPossibilitiesWidthIndex = possibilitiesWidth[k];
 					} else {
 						if (diff == greatestWidthDiff) {
-							minYPossibilitiesWidth =
-								freeSpaces[possibilitiesWidth[k]].y;
+							minYPossibilitiesWidth = freeSpaces[possibilitiesWidth[k]].y;
 							minYPossibilitiesWidthIndex = possibilitiesWidth[k];
 						}
 					}
 				} else {
-					minYPossibilitiesWidth =
-						freeSpaces[possibilitiesWidth[k]].y;
+					minYPossibilitiesWidth = freeSpaces[possibilitiesWidth[k]].y;
 					minYPossibilitiesWidthIndex = possibilitiesWidth[k];
 				}
 			}
@@ -679,29 +652,21 @@ export const findMatchingSpace = function(items, freeSpaces) {
 			}
 
 			if (
-				freeSpaces[possibilitiesHeight[k]].y <=
-					minYPossibilitiesHeight ||
+				freeSpaces[possibilitiesHeight[k]].y <= minYPossibilitiesHeight ||
 				minYPossibilitiesHeight == 0
 			) {
-				if (
-					freeSpaces[possibilitiesHeight[k]].y ==
-					minYPossibilitiesHeight
-				) {
+				if (freeSpaces[possibilitiesHeight[k]].y == minYPossibilitiesHeight) {
 					if (greatestHeightDiffIndex == null) {
-						minYPossibilitiesHeight =
-							freeSpaces[possibilitiesHeight[k]].y;
+						minYPossibilitiesHeight = freeSpaces[possibilitiesHeight[k]].y;
 						minYPossibilitiesHeightIndex = possibilitiesHeight[k];
 					} else {
 						if (diff == greatestHeightDiff) {
-							minYPossibilitiesHeight =
-								freeSpaces[possibilitiesHeight[k]].y;
-							minYPossibilitiesHeightIndex =
-								possibilitiesHeight[k];
+							minYPossibilitiesHeight = freeSpaces[possibilitiesHeight[k]].y;
+							minYPossibilitiesHeightIndex = possibilitiesHeight[k];
 						}
 					}
 				} else {
-					minYPossibilitiesHeight =
-						freeSpaces[possibilitiesHeight[k]].y;
+					minYPossibilitiesHeight = freeSpaces[possibilitiesHeight[k]].y;
 					minYPossibilitiesHeightIndex = possibilitiesHeight[k];
 				}
 			}
@@ -741,7 +706,7 @@ export const findMatchingSpace = function(items, freeSpaces) {
 	};
 };
 
-export const fitRemainingItems = function(
+export const fitRemainingItems = function (
 	positionData,
 	remainingItems,
 	allAffectedItems,
@@ -785,8 +750,7 @@ export const fitRemainingItems = function(
 			positionData[i].y < greatestDepthAffectedItems &&
 			(positionData[i].y + positionData[i].height <=
 				greatestDepthAffectedItems ||
-				positionData[i].y + positionData[i].height >
-					greatestDepthAffectedItems)
+				positionData[i].y + positionData[i].height > greatestDepthAffectedItems)
 		) {
 			if (
 				positionData[i].y + positionData[i].height >
@@ -820,8 +784,7 @@ export const fitRemainingItems = function(
 	}
 
 	if (
-		recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseGreater !=
-		null
+		recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseGreater != null
 	) {
 		// fitRemainingItems Case I
 		var greatestDepthOfAffectedArea = recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseGreater;
@@ -855,8 +818,7 @@ export const fitRemainingItems = function(
 			itemsToShift
 		);
 	} else if (
-		recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseLesser !=
-		null
+		recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseLesser != null
 	) {
 		// fitRemainingItems Case II
 		var greatestDepthOfAffectedArea = recalculatedGreatestDepthAffectedItemsAndNonAffectedItemsCaseLesser;
@@ -883,7 +845,7 @@ export const fitRemainingItems = function(
 	return finalPositionData;
 };
 
-export const fitRemainingItemsAboveDeepestLine = function(
+export const fitRemainingItemsAboveDeepestLine = function (
 	deepPoint,
 	positionData,
 	remainingItems,
@@ -922,16 +884,10 @@ export const fitRemainingItemsAboveDeepestLine = function(
 	var remainingFreeSpaces = previousFitDetails.freeSpaces;
 	remainingFreeSpaces.push(linePlane);
 
-	var mergedFreeSpaces = mergeFreeSpaces(
-		remainingFreeSpaces,
-		doNotMergeItems
-	);
+	var mergedFreeSpaces = mergeFreeSpaces(remainingFreeSpaces, doNotMergeItems);
 	var length_0 = mergedFreeSpaces.length;
 	for (var i = 0; i < length_0; i++) {
-		if (
-			mergedFreeSpaces[i].y + mergedFreeSpaces[i].height ==
-			deepPoint + 1
-		) {
+		if (mergedFreeSpaces[i].y + mergedFreeSpaces[i].height == deepPoint + 1) {
 			mergedFreeSpaces[i].height -= 1;
 		}
 	}
@@ -975,7 +931,7 @@ export const fitRemainingItemsAboveDeepestLine = function(
 	return { remainingItems: remainingItems, positionData: positionData };
 };
 
-export const fitRemainingItemsBelowDeepestLine = function(
+export const fitRemainingItemsBelowDeepestLine = function (
 	startingY,
 	positionData,
 	remainingItems,
@@ -1031,8 +987,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 					privateConstants.WIDTH -
 					remainingWidth +
 					getMarginAtPoint(privateConstants.WIDTH - remainingWidth);
-				remainingItemsObject[i].y =
-					startingY + getMarginAtPoint(startingY);
+				remainingItemsObject[i].y = startingY + getMarginAtPoint(startingY);
 				positionData[remainingItemsObject[i].index].x =
 					privateConstants.WIDTH -
 					remainingWidth +
@@ -1045,12 +1000,8 @@ export const fitRemainingItemsBelowDeepestLine = function(
 					y: startingY,
 					width:
 						remainingItemsObject[i].width +
-						getMarginAtPoint(
-							privateConstants.WIDTH - remainingWidth
-						),
-					height:
-						remainingItemsObject[i].height +
-						getMarginAtPoint(startingY),
+						getMarginAtPoint(privateConstants.WIDTH - remainingWidth),
+					height: remainingItemsObject[i].height + getMarginAtPoint(startingY),
 					doNotMergeFlag: true,
 				};
 
@@ -1064,9 +1015,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 						remainingItemsObject[i].height,
 					width:
 						remainingItemsObject[i].width +
-						getMarginAtPoint(
-							privateConstants.WIDTH - remainingWidth
-						),
+						getMarginAtPoint(privateConstants.WIDTH - remainingWidth),
 					height:
 						initializedPlane.y +
 						initializedPlane.height -
@@ -1083,9 +1032,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 				remainingWidth =
 					remainingWidth -
 					(remainingItemsObject[i].width +
-						getMarginAtPoint(
-							privateConstants.WIDTH - remainingWidth
-						));
+						getMarginAtPoint(privateConstants.WIDTH - remainingWidth));
 			}
 		}
 
@@ -1125,15 +1072,10 @@ export const fitRemainingItemsBelowDeepestLine = function(
 				var length_1 = remainingItemsObject.length;
 				for (var i = 0; i < length_0; i++) {
 					for (var j = 0; j < length_1; j++) {
-						if (
-							fittedItems[i].index ==
-							remainingItemsObject[j].index
-						) {
+						if (fittedItems[i].index == remainingItemsObject[j].index) {
 							fittedRemainingItems[j] = true;
-							positionData[remainingItemsObject[j].index].x =
-								fittedItems[i].x;
-							positionData[remainingItemsObject[j].index].y =
-								fittedItems[i].y;
+							positionData[remainingItemsObject[j].index].x = fittedItems[i].x;
+							positionData[remainingItemsObject[j].index].y = fittedItems[i].y;
 						}
 					}
 				}
@@ -1154,9 +1096,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 				width: privateConstants.WIDTH,
 				height:
 					remainingItemsObject[0].height +
-					getMarginAtPoint(
-						initializedPlane.y + initializedPlane.height
-					),
+					getMarginAtPoint(initializedPlane.y + initializedPlane.height),
 			};
 			var initializedPlane = nextInitializePlane;
 			remainingWidth = privateConstants.WIDTH;
@@ -1166,7 +1106,7 @@ export const fitRemainingItemsBelowDeepestLine = function(
 	return { positionData: positionData, deepestY: deepestY };
 };
 
-export const getItemsFromPointDepth = function(
+export const getItemsFromPointDepth = function (
 	startingY,
 	includePlaneAboveAndBelowPointDepth = false,
 	positionData
@@ -1200,7 +1140,7 @@ export const getItemsFromPointDepth = function(
 	};
 };
 
-export const shitftItemsBelow = function(
+export const shitftItemsBelow = function (
 	shiftHeight,
 	positionData,
 	indicesToShift
@@ -1215,22 +1155,18 @@ export const shitftItemsBelow = function(
 	return positionData;
 };
 
-export const shiftItemsUp = function(y, shiftHeight) {
+export const shiftItemsUp = function (y, shiftHeight) {
 	var length_0 = positionData.length;
 	for (var i = 0; i < length_0; i++) {
 		if (positionData[i].y >= y) {
 			positionData[i].y -= shiftHeight;
 			e.$limberGridViewItems[i].style.transform =
-				"translate(" +
-				positionData[i].x +
-				"px, " +
-				positionData[i].y +
-				"px)";
+				"translate(" + positionData[i].x + "px, " + positionData[i].y + "px)";
 		}
 	}
 };
 
-export const mergePlains = function(A, B, planes = []) {
+export const mergePlains = function (A, B, planes = []) {
 	var aLines = getLines(A);
 	var bLines = getLines(B);
 	var oppositeLines = { 0: 2, 1: 3, 2: 0, 3: 1 };
@@ -1331,8 +1267,7 @@ export const mergePlains = function(A, B, planes = []) {
 		) {
 			if (intersectionCount == 2) {
 				if (
-					JSON.stringify(linePointsA) ==
-					JSON.stringify(intersectionPointsBtoA)
+					JSON.stringify(linePointsA) == JSON.stringify(intersectionPointsBtoA)
 				) {
 					continue;
 				}
@@ -1346,12 +1281,8 @@ export const mergePlains = function(A, B, planes = []) {
 	}
 
 	if (aLineId == 0 || aLineId == 2) {
-		var aOppLine = JSON.parse(
-			JSON.stringify(aLines[oppositeLines[aLineId]])
-		);
-		var bOppLine = JSON.parse(
-			JSON.stringify(bLines[oppositeLines[bLineId]])
-		);
+		var aOppLine = JSON.parse(JSON.stringify(aLines[oppositeLines[aLineId]]));
+		var bOppLine = JSON.parse(JSON.stringify(bLines[oppositeLines[bLineId]]));
 
 		var d = Math.abs(aOppLine[0][1] - bOppLine[0][1]);
 		if (d < distance) {
@@ -1373,12 +1304,8 @@ export const mergePlains = function(A, B, planes = []) {
 			}
 		}
 	} else {
-		var aOppLine = JSON.parse(
-			JSON.stringify(aLines[oppositeLines[aLineId]])
-		);
-		var bOppLine = JSON.parse(
-			JSON.stringify(bLines[oppositeLines[bLineId]])
-		);
+		var aOppLine = JSON.parse(JSON.stringify(aLines[oppositeLines[aLineId]]));
+		var bOppLine = JSON.parse(JSON.stringify(bLines[oppositeLines[bLineId]]));
 
 		var d = Math.abs(aOppLine[0][0] - bOppLine[0][0]);
 		if (d < distance) {
@@ -1471,10 +1398,7 @@ export const mergePlains = function(A, B, planes = []) {
 		var length_0 = planes.length;
 		for (var i = 0; i < length_0; i++) {
 			if (
-				isPlaneBInsidePlaneA_TouchingNotInside(
-					plainToCheckIfFree,
-					planes[i]
-				)
+				isPlaneBInsidePlaneA_TouchingNotInside(plainToCheckIfFree, planes[i])
 			) {
 				if (planes[i].hasOwnProperty("doNotMergeFlag")) {
 					freeDistance = -1;
@@ -1538,12 +1462,8 @@ export const mergePlains = function(A, B, planes = []) {
 	if (makeFinalFreeSpace == true) {
 		var mergedPlane = {};
 		if (aLineId == 0 || aLineId == 2) {
-			var aOppLine = JSON.parse(
-				JSON.stringify(aLines[oppositeLines[aLineId]])
-			);
-			var bOppLine = JSON.parse(
-				JSON.stringify(bLines[oppositeLines[bLineId]])
-			);
+			var aOppLine = JSON.parse(JSON.stringify(aLines[oppositeLines[aLineId]]));
+			var bOppLine = JSON.parse(JSON.stringify(bLines[oppositeLines[bLineId]]));
 
 			aLineId = oppositeLines[aLineId];
 			bLineId = oppositeLines[bLineId];
@@ -1561,12 +1481,8 @@ export const mergePlains = function(A, B, planes = []) {
 				linePointsB[i][1] = bOppLine[0][1];
 			}
 		} else {
-			var aOppLine = JSON.parse(
-				JSON.stringify(aLines[oppositeLines[aLineId]])
-			);
-			var bOppLine = JSON.parse(
-				JSON.stringify(bLines[oppositeLines[bLineId]])
-			);
+			var aOppLine = JSON.parse(JSON.stringify(aLines[oppositeLines[aLineId]]));
+			var bOppLine = JSON.parse(JSON.stringify(bLines[oppositeLines[bLineId]]));
 
 			aLineId = oppositeLines[aLineId];
 			bLineId = oppositeLines[bLineId];
@@ -1607,20 +1523,14 @@ export const mergePlains = function(A, B, planes = []) {
 				var finalPointsToGetMergedPlain = [];
 				var length_0 = pointsToGetMergedPlain.length;
 				for (var i = 0; i < length_0; i++) {
-					var temp = JSON.parse(
-						JSON.stringify(pointsToGetMergedPlain[i])
-					);
+					var temp = JSON.parse(JSON.stringify(pointsToGetMergedPlain[i]));
 					if (duplicateCheck.hasOwnProperty(temp)) {
 					} else {
 						duplicateCheck[temp] = true;
-						finalPointsToGetMergedPlain.push(
-							pointsToGetMergedPlain[i]
-						);
+						finalPointsToGetMergedPlain.push(pointsToGetMergedPlain[i]);
 					}
 				}
-				var mergedPlane = getPlainFrom4Points(
-					finalPointsToGetMergedPlain
-				);
+				var mergedPlane = getPlainFrom4Points(finalPointsToGetMergedPlain);
 			} else {
 				var mergedPlane = getPlainFrom4Points(pointsToGetMergedPlain);
 			}
@@ -1638,7 +1548,7 @@ export const mergePlains = function(A, B, planes = []) {
 	}
 };
 
-export const subtractPlanes = function(A, B) {
+export const subtractPlanes = function (A, B) {
 	// A-B
 	// result on "A" area
 

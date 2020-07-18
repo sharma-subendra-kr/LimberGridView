@@ -137,12 +137,9 @@ export const loadResizingState = (context, userActionData) => {
 		);
 	}
 
-	const pseudoItemsLen = e.$limberGridViewPseudoItem.length;
-	for (let i = 0; i < pseudoItemsLen; i++) {
-		e.$limberGridViewPseudoItem.classList.add(
-			"limber-grid-view-pseudo-item-resizing-state"
-		);
-	}
+	e.$limberGridViewPseudoItem.classList.add(
+		"limber-grid-view-pseudo-item-resizing-state"
+	);
 };
 
 export const unloadResizingState = (context, userActionData) => {
@@ -167,12 +164,10 @@ export const unloadResizingState = (context, userActionData) => {
 			"limber-grid-view-item-resizing-state"
 		);
 	}
-	const pseudoItemsLen = e.$limberGridViewPseudoItem.length;
-	for (let i = 0; i < pseudoItemsLen; i++) {
-		e.$limberGridViewPseudoItem.classList.remove(
-			"limber-grid-view-pseudo-item-resizing-state"
-		);
-	}
+
+	e.$limberGridViewPseudoItem.classList.remove(
+		"limber-grid-view-pseudo-item-resizing-state"
+	);
 };
 
 export const loadMoveState = (context, userActionData, event) => {

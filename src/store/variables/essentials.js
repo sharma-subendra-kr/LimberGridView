@@ -24,7 +24,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import { emptyObject } from "../libs/utils/utils";
+import { emptyObject } from "../../libs/utils/utils";
 
 // const ev = {
 // 	// elementID: "",

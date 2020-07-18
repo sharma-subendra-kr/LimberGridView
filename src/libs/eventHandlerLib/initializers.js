@@ -24,10 +24,10 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import options from "../../store/variables/options";
-import e from "../../store/variables/elements";
+import getOptions from "../../store/variables/options";
+import getElements from "../../store/variables/elements";
 import { isMobile } from "../utils/utils";
-import { callbacks } from "../../store/variables/essentials";
+import { getCallbacks } from "../../store/variables/essentials";
 import { onItemMouseDown, onItemTouchStart } from "./itemInteraction";
 import {
 	onLimberGridMouseDown,
@@ -43,48 +43,55 @@ export const reInitializeEvents = function () {
 export const initializeVariables = function () {};
 
 export const initializeEvents = function () {
-	if (options.editable == true) {
-		if (isMobile() == false) {
-			if (options.enableInteractiveAddAndCut != false) {
-				e.$limberGridView[0].addEventListener(
+	const options = getOptions(this);
+	const e = getElements(this);
+	const callbacks = getCallbacks(this);
+
+	if (options.editable === true) {
+		if (!isMobile()) {
+			if (options.enableInteractiveAddAndCut !== false) {
+				e.$limberGridView.addEventListener(
 					"mousedown",
-					onLimberGridMouseDown
+					onLimberGridMouseDown.bind(this)
 				);
-				if (options.enableTouchInteraction != false) {
-					e.$limberGridView[0].addEventListener(
+				if (options.enableTouchInteraction !== false) {
+					e.$limberGridView.addEventListener(
 						"touchstart",
-						onLimberGridTouchStart
+						onLimberGridTouchStart.bind(this)
 					);
 				}
 			}
 		}
 
-		var length_0 = e.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
-			if (isMobile() == false) {
+		var len = e.$limberGridViewItems.length;
+		for (var i = 0; i < len; i++) {
+			if (!isMobile()) {
 				e.$limberGridViewItems[i].addEventListener(
 					"mousedown",
-					onItemMouseDown
+					onItemMouseDown.bind(this)
 				);
-				if (options.enableTouchInteraction != false) {
+				if (options.enableTouchInteraction !== false) {
 					e.$limberGridViewItems[i].addEventListener(
 						"touchstart",
-						onItemTouchStart
+						onItemTouchStart.bind(this)
 					);
 				}
 			}
 
-			if (
-				callbacks.onItemClickCallback != undefined &&
-				callbacks.onItemClickCallback != null
-			) {
-				e.$limberGridViewItems[i].addEventListener("click", onItemClick);
+			if (callbacks.onItemClickCallback) {
+				e.$limberGridViewItems[i].addEventListener(
+					"click",
+					onItemClick.bind(this)
+				);
 			}
 		}
 	}
 };
 
 export const unInitializeEvents = function () {
+	const options = getOptions(this);
+	const e = getElements(this);
+
 	if (options.editable === true) {
 		if (e.$limberGridView !== undefined) {
 			e.$limberGridView.removeEventListener("mousedown", onLimberGridMouseDown);
@@ -94,9 +101,9 @@ export const unInitializeEvents = function () {
 			);
 		}
 
-		if (e.$limberGridViewItems != undefined) {
-			var length_0 = e.$limberGridViewItems.length;
-			for (var i = 0; i < length_0; i++) {
+		if (e.$limberGridViewItems !== undefined) {
+			const len = e.$limberGridViewItems.length;
+			for (let i = 0; i < len; i++) {
 				e.$limberGridViewItems[i].removeEventListener(
 					"mousedown",
 					onItemMouseDown
@@ -113,22 +120,29 @@ export const unInitializeEvents = function () {
 };
 
 export const initializeItemTouchEvents = function () {
-	if (e.$limberGridViewItems != undefined) {
-		var length_0 = e.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
-			e.$limberGridViewItems[i].addEventListener("mousedown", onItemMouseDown);
+	const e = getElements(this);
+
+	if (e.$limberGridViewItems !== undefined) {
+		const len = e.$limberGridViewItems.length;
+		for (let i = 0; i < len; i++) {
+			e.$limberGridViewItems[i].addEventListener(
+				"mousedown",
+				onItemMouseDown.bind(this)
+			);
 			e.$limberGridViewItems[i].addEventListener(
 				"touchstart",
-				onItemTouchStart
+				onItemTouchStart.bind(this)
 			);
 		}
 	}
 };
 
 export const unInitializeItemTouchEvents = function () {
-	if (e.$limberGridViewItems != undefined) {
-		var length_0 = e.$limberGridViewItems.length;
-		for (var i = 0; i < length_0; i++) {
+	const e = getElements(this);
+
+	if (e.$limberGridViewItems !== undefined) {
+		const len = e.$limberGridViewItems.length;
+		for (let i = 0; i < len; i++) {
 			e.$limberGridViewItems[i].removeEventListener(
 				"mousedown",
 				onItemMouseDown
