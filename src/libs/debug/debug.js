@@ -63,9 +63,12 @@ export const printUnmergedFreeRects = (arr) => {
 			node = document.createElement("div");
 			node.setAttribute(
 				"class",
-				"limberGridViewDebugRect limberGridViewDebugUnmergedRect"
+				"limber-grid-view-debug-rect limber-grid-view-debug-unmerged-rect"
 			);
-			node.setAttribute("id", `limberGridViewDebugUnmergedRect-${arr[i].id}`);
+			node.setAttribute(
+				"id",
+				`limber-grid-view-debug-unmerged-rect-${arr[i].id}`
+			);
 			node.setAttribute("tabindex", "-1");
 
 			node.setAttribute(
@@ -82,7 +85,9 @@ export const printUnmergedFreeRects = (arr) => {
 		}
 
 		set$limberGridViewDebugUnmergedRects(
-			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugUnmergedRect")
+			e.$limberGridView[0].querySelectorAll(
+				".limber-grid-view-debug-unmerged-rect"
+			)
 		);
 	}
 };
@@ -108,9 +113,12 @@ export const printMergedFreeRects = (arr) => {
 			node = document.createElement("div");
 			node.setAttribute(
 				"class",
-				`limberGridViewDebugRect limberGridViewDebugMergedFreeRect`
+				`limber-grid-view-debug-rect limber-grid-view-debug-merged-free-rect`
 			);
-			node.setAttribute("id", `limberGridViewDebugMergedFreeRect-${arr[i].id}`);
+			node.setAttribute(
+				"id",
+				`limber-grid-view-debug-merged-free-rect-${arr[i].id}`
+			);
 			node.setAttribute("tabindex", -1);
 
 			node.setAttribute(
@@ -129,7 +137,7 @@ export const printMergedFreeRects = (arr) => {
 
 		set$limberGridViewDebugMergedFreeRects(
 			e.$limberGridView[0].querySelectorAll(
-				".limberGridViewDebugMergedFreeRect"
+				".limber-grid-view-debug-merged-free-rect"
 			)
 		);
 	}
@@ -156,11 +164,11 @@ export const printResultStackRects = (arr) => {
 			node = document.createElement("div");
 			node.setAttribute(
 				"class",
-				`limberGridViewDebugRect limberGridViewDebugResultStackRects`
+				`limber-grid-view-debug-rect limber-grid-view-debug-result-stack-rects`
 			);
 			node.setAttribute(
 				"id",
-				`limberGridViewDebugResultStackRects-${arr[i].id}`
+				`limber-grid-view-debug-result-stack-rects-${arr[i].id}`
 			);
 			node.setAttribute("tabindex", -1);
 
@@ -180,7 +188,7 @@ export const printResultStackRects = (arr) => {
 
 		set$limberGridViewDebugResultStackRects(
 			e.$limberGridView[0].querySelectorAll(
-				".limberGridViewDebugResultStackRects"
+				".limber-grid-view-debug-result-stack-rects"
 			)
 		);
 	}
@@ -205,9 +213,12 @@ export const printStackRects = (arr) => {
 			node = document.createElement("div");
 			node.setAttribute(
 				"class",
-				`limberGridViewDebugRect limberGridViewDebugStackRects`
+				`limber-grid-view-debug-rect limber-grid-view-debug-stack-rects`
 			);
-			node.setAttribute("id", `limberGridViewDebugStackRects-${arr[i].id}`);
+			node.setAttribute(
+				"id",
+				`limber-grid-view-debug-stack-rects-${arr[i].id}`
+			);
 			node.setAttribute("tabindex", -1);
 
 			node.setAttribute(
@@ -225,7 +236,9 @@ export const printStackRects = (arr) => {
 		}
 
 		set$limberGridViewDebugStackRects(
-			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugStackRects")
+			e.$limberGridView[0].querySelectorAll(
+				".limber-grid-view-debug-stack-rects"
+			)
 		);
 	}
 };
@@ -235,9 +248,12 @@ export const printMergedTempRects = (obj) => {
 		const node = document.createElement("div");
 		node.setAttribute(
 			"class",
-			`limberGridViewDebugRect limberGridViewDebugMergedTempRects`
+			`limber-grid-view-debug-rect limber-grid-view-debug-merged-temp-rects`
 		);
-		node.setAttribute("id", `limberGridViewDebugMergedTempRects-${obj.id}`);
+		node.setAttribute(
+			"id",
+			`limber-grid-view-debug-merged-temp-rects-${obj.id}`
+		);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -253,7 +269,7 @@ export const printMergedTempRects = (obj) => {
 
 		set$limberGridViewDebugMergedTempRects(
 			e.$limberGridView[0].querySelectorAll(
-				".limberGridViewDebugMergedTempRects"
+				".limber-grid-view-debug-merged-temp-rects"
 			)
 		);
 	}
@@ -276,9 +292,9 @@ export const printStackTopRect = (obj) => {
 		const node = document.createElement("div");
 		node.setAttribute(
 			"class",
-			`limberGridViewDebugRect limberGridViewDebugStackTopRect`
+			`limber-grid-view-debug-rect limber-grid-view-debug-stack-top-rect`
 		);
-		node.setAttribute("id", `limberGridViewDebugStackTopRect`);
+		node.setAttribute("id", `limber-grid-view-debug-stack-top-rect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -294,7 +310,7 @@ export const printStackTopRect = (obj) => {
 
 		set$limberGridViewDebugStackTopRect(
 			e.$limberGridView[0].querySelectorAll(
-				".limberGridViewDebugStackTopRect"
+				".limber-grid-view-debug-stack-top-rect"
 			)[0]
 		);
 		// console.log(e.$limberGridViewDebugStackTopRect);
@@ -318,9 +334,9 @@ export const printStackTopAdjRect = (obj) => {
 		const node = document.createElement("div");
 		node.setAttribute(
 			"class",
-			`limberGridViewDebugRect limberGridViewDebugStackTopAdjRect`
+			`limber-grid-view-debug-rect limber-grid-view-debug-stack-top-adj-rect`
 		);
-		node.setAttribute("id", `limberGridViewDebugStackTopAdjRect`);
+		node.setAttribute("id", `limber-grid-view-debug-stack-top-adj-rect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -336,7 +352,7 @@ export const printStackTopAdjRect = (obj) => {
 
 		set$limberGridViewDebugStackTopAdjRect(
 			e.$limberGridView[0].querySelectorAll(
-				".limberGridViewDebugStackTopAdjRect"
+				".limber-grid-view-debug-stack-top-adj-rect"
 			)[0]
 		);
 		// console.log(e.$limberGridViewDebugStackTopAdjRect);
@@ -360,9 +376,9 @@ export const printMergedRect = (obj) => {
 		const node = document.createElement("div");
 		node.setAttribute(
 			"class",
-			`limberGridViewDebugRect limberGridViewDebugMergedRect limberGridViewDebugMergedRect-thick`
+			`limber-grid-view-debug-rect limber-grid-view-debug-merged-rect limber-grid-view-debug-merged-rect-thick`
 		);
-		node.setAttribute("id", `limberGridViewDebugMergedRect`);
+		node.setAttribute("id", `limber-grid-view-debug-merged-rect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -377,7 +393,9 @@ export const printMergedRect = (obj) => {
 		e.$limberGridView[0].appendChild(node);
 
 		set$limberGridViewDebugMergedRect(
-			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugMergedRect")[0]
+			e.$limberGridView[0].querySelectorAll(
+				".limber-grid-view-debug-merged-rect"
+			)[0]
 		);
 		// console.log(e.$limberGridViewDebugMergedRect);
 	}
@@ -400,9 +418,9 @@ export const printAdjRect = (obj) => {
 		const node = document.createElement("div");
 		node.setAttribute(
 			"class",
-			`limberGridViewDebugRect limberGridViewDebugAdjRect`
+			`limber-grid-view-debug-rect limber-grid-view-debug-adj-rect`
 		);
-		node.setAttribute("id", `limberGridViewDebugAdjRect`);
+		node.setAttribute("id", `limber-grid-view-debug-adj-rect`);
 		node.setAttribute("tabindex", -1);
 
 		node.setAttribute(
@@ -417,7 +435,9 @@ export const printAdjRect = (obj) => {
 		e.$limberGridView[0].appendChild(node);
 
 		set$limberGridViewDebugAdjRect(
-			e.$limberGridView[0].querySelectorAll(".limberGridViewDebugAdjRect")[0]
+			e.$limberGridView[0].querySelectorAll(
+				".limber-grid-view-debug-adj-rect"
+			)[0]
 		);
 		// console.log(e.$limberGridViewDebugAdjRect);
 	}
