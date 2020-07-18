@@ -63,28 +63,39 @@ const get$body = function (context) {
 	return context.store.variables.elements.$body;
 };
 
-const set$bodyPseudoEl = function (context, elm) {
-	context.store.variables.elements.$bodyPseudoEl = elm;
+// outside pseudos BEGIN
+const set$pseudoContainer = function (context, elm) {
+	context.store.variables.elements.$pseudoContainer = elm;
 };
 
-const get$bodyPseudoEl = function (context) {
-	return context.store.variables.elements.$bodyPseudoEl;
+const get$pseudoContainer = function (context) {
+	return context.store.variables.elements.$pseudoContainer;
 };
 
-const set$limberGridViewBodyPseudoItem = function (context, elm) {
-	context.store.variables.elements.$limberGridViewBodyPseudoItem = elm;
+const set$pseudoContainerItem = function (context, elm) {
+	context.store.variables.elements.$pseudoContainerItem = elm;
 };
 
-const get$limberGridViewBodyPseudoItem = function (context) {
-	return context.store.variables.elements.$limberGridViewBodyPseudoItem;
+const get$pseudoContainerItem = function (context) {
+	return context.store.variables.elements.$pseudoContainerItem;
 };
+// outside pseudos ENDED
 
+// Grid Elements BEGIN
 const set$el = function (context, elm) {
 	context.store.variables.elements.$el = elm;
 };
 
 const get$el = function (context) {
 	return context.store.variables.elements.$el;
+};
+
+const set$limberGridViewContainer = function (context, elm) {
+	context.store.variables.elements.$limberGridViewContainer = elm;
+};
+
+const get$limberGridViewContainer = function (context) {
+	return context.store.variables.elements.$limberGridViewContainer;
 };
 
 const set$limberGridView = function (context, elm) {
@@ -103,14 +114,6 @@ const get$limberGridViewItems = function (context) {
 	return context.store.variables.elements.$limberGridViewItems;
 };
 
-const set$limberGridViewContainer = function (context, elm) {
-	context.store.variables.elements.$limberGridViewContainer = elm;
-};
-
-const get$limberGridViewContainer = function (context) {
-	return context.store.variables.elements.$limberGridViewContainer;
-};
-
 const set$limberGridViewStyle = function (context, elm) {
 	context.store.variables.elements.$limberGridViewStyle = elm;
 };
@@ -119,12 +122,12 @@ const get$limberGridViewStyle = function (context) {
 	return context.store.variables.elements.$limberGridViewStyle;
 };
 
-const set$limberGridViewGridPseudoItem = function (context, elm) {
-	context.store.variables.elements.$limberGridViewGridPseudoItem = elm;
+const set$limberGridViewPseudoItem = function (context, elm) {
+	context.store.variables.elements.$limberGridViewPseudoItem = elm;
 };
 
-const get$limberGridViewGridPseudoItem = function (context) {
-	return context.store.variables.elements.$limberGridViewGridPseudoItem;
+const get$limberGridViewPseudoItem = function (context) {
+	return context.store.variables.elements.$limberGridViewPseudoItem;
 };
 
 const set$limberGridViewMoveGuide = function (context, elm) {
@@ -143,22 +146,22 @@ const get$limberGridViewHeightAdjustGuide = function (context) {
 	return context.store.variables.elements.$limberGridViewHeightAdjustGuide;
 };
 
-const set$limberGridViewAddItemGuide = function (context, elm) {
-	context.store.variables.elements.$limberGridViewAddItemGuide = elm;
+const set$limberGridViewAddCutGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewAddCutGuide = elm;
 };
 
-const get$limberGridViewAddItemGuide = function (context) {
-	return context.store.variables.elements.$limberGridViewAddItemGuide;
+const get$limberGridViewAddCutGuide = function (context) {
+	return context.store.variables.elements.$limberGridViewAddCutGuide;
 };
 
-const set$limberGridViewAddItemOnTouchHoldGuide = function (context, elm) {
-	context.store.variables.elements.$limberGridViewAddItemOnTouchHoldGuide = elm;
+const set$limberGridViewTouchHoldGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewTouchHoldGuide = elm;
 };
 
-const get$limberGridViewAddItemOnTouchHoldGuide = function (context) {
-	return context.store.variables.elements
-		.$limberGridViewAddItemOnTouchHoldGuide;
+const get$limberGridViewTouchHoldGuide = function (context) {
+	return context.store.variables.elements.$limberGridViewTouchHoldGuide;
 };
+// Grid Elements ENDED
 
 // DEBUG Elements
 const set$limberGridViewDebugMergedTempRects = function (context, elm) {
@@ -238,10 +241,12 @@ export {
 	getElements,
 	set$body,
 	get$body,
-	set$bodyPseudoEl,
-	get$bodyPseudoEl,
-	set$limberGridViewBodyPseudoItem,
-	get$limberGridViewBodyPseudoItem,
+	// outside pseudo
+	set$pseudoContainer,
+	get$pseudoContainer,
+	set$pseudoContainerItem,
+	get$pseudoContainerItem,
+	// Grid Elements
 	set$el,
 	get$el,
 	set$limberGridView,
@@ -252,16 +257,16 @@ export {
 	get$limberGridViewContainer,
 	set$limberGridViewStyle,
 	get$limberGridViewStyle,
-	set$limberGridViewGridPseudoItem,
-	get$limberGridViewGridPseudoItem,
+	set$limberGridViewPseudoItem,
+	get$limberGridViewPseudoItem,
 	set$limberGridViewMoveGuide,
 	get$limberGridViewMoveGuide,
 	set$limberGridViewHeightAdjustGuide,
 	get$limberGridViewHeightAdjustGuide,
-	set$limberGridViewAddItemGuide,
-	get$limberGridViewAddItemGuide,
-	set$limberGridViewAddItemOnTouchHoldGuide,
-	get$limberGridViewAddItemOnTouchHoldGuide,
+	set$limberGridViewAddCutGuide,
+	get$limberGridViewAddCutGuide,
+	set$limberGridViewTouchHoldGuide,
+	get$limberGridViewTouchHoldGuide,
 	// DEBUG Elements
 	set$limberGridViewDebugMergedTempRects,
 	get$limberGridViewDebugMergedTempRects,

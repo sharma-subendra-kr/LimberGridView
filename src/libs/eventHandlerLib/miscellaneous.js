@@ -45,7 +45,7 @@ export const onWindowResize = function (event) {
 
 export const onWindowResizeTimerCallback = function (event) {
 	init(this, false);
-	render();
+	render(this);
 
 	const options = getOptions();
 

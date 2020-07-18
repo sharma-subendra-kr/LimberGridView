@@ -118,27 +118,27 @@ const getWidthScaleFactor = function (context) {
 };
 
 //
-const setOutputWidth = function (context, val) {
+const setGridWidth = function (context, val) {
 	context.store.constants.privateConstants.GRID_WIDTH = val;
 };
 
-const getOutputWidth = function (context) {
+const getGridWidth = function (context) {
 	return context.store.constants.privateConstants.GRID_WIDTH;
 };
 
-const setOutputHeight = function (context, val) {
+const setGridHeight = function (context, val) {
 	context.store.constants.privateConstants.GRID_HEIGHT = val;
 };
 
-const getOutputHeight = function (context) {
+const getGridHeight = function (context) {
 	return context.store.constants.privateConstants.GRID_HEIGHT;
 };
 
-const setOutputMargin = function (context, val) {
+const setGridMargin = function (context, val) {
 	context.store.constants.privateConstants.GRID_MARGIN = val;
 };
 
-const getOutputMargin = function (context) {
+const getGridMargin = function (context) {
 	return context.store.constants.privateConstants.GRID_MARGIN;
 };
 

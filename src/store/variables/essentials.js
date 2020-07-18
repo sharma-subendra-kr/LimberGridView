@@ -49,12 +49,12 @@ const getEssentialVariables = function (context) {
 	return context.store.variables.essentials;
 };
 
-const setPseudoElementId = function (context, id) {
-	context.store.variables.essentials.pseudoElementId = id;
+const setPseudoContainerId = function (context, id) {
+	context.store.variables.essentials.pseudoContainerId = id;
 };
 
-const getPseudoElementId = function (context) {
-	return context.store.variables.essentials.pseudoElementId;
+const getPseudoContainerId = function (context) {
+	return context.store.variables.essentials.pseudoContainerId;
 };
 
 const setPositionData = function (context, pos) {
@@ -125,8 +125,8 @@ export {
 	// setElementId,
 	setEssentialVariables,
 	getEssentialVariables,
-	setPseudoElementId,
-	getPseudoElementId,
+	setPseudoContainerId,
+	getPseudoContainerId,
 	setPositionData,
 	getPositionData,
 	setModifiedPositionData,

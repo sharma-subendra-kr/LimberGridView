@@ -35,13 +35,13 @@ import {
 } from "./libs/utils/utils";
 import {
 	getPublicConstants,
-	setPublicConstantsByName,
+	setPublicConstantByName,
 } from "./store/constants/publicConstants";
 import {
 	getPrivateConstants,
-	setOutputWidth,
-	setOutputHeight,
-	setOutputMargin,
+	setGridWidth,
+	setGridHeight,
+	setGridMargin,
 } from "./store/constants/privateConstants";
 import { setOptions } from "./store/variables/options";
 
@@ -50,21 +50,27 @@ import {
 	getPositionData,
 	setGridData,
 	setCallbacks,
-	setPseudoElementId,
-	getPseudoElementId,
+	setPseudoContainerId,
+	getPseudoContainerId,
 } from "./store/variables/essentials";
 import {
 	getElements,
 	set$body,
 	set$el,
-	set$bodyPseudoEl,
+	set$pseudoContainer,
 	set$limberGridViewContainer,
 	set$limberGridViewStyle,
 	set$limberGridView,
+	set$pseudoContainerItem,
+	set$limberGridViewPseudoItem,
+	set$limberGridViewMoveGuide,
+	set$limberGridViewHeightAdjustGuide,
+	set$limberGridViewAddCutGuide,
+	set$limberGridViewTouchHoldGuide,
 } from "./store/variables/elements";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
 
-import { render, renderItems } from "./libs/renderers/renderers";
+import { render, renderItem as _renderItem } from "./libs/renderers/renderers";
 import { removeItems, addItems } from "./libs/renderers/addOrRemoveItems";
 import { init } from "./initializers/initializers";
 
@@ -83,9 +89,9 @@ LimberGridView.prototype.constructor = LimberGridView;
 	var options = {
 		el : "#",																				// id of the parent element with #
 		editable : true, 																		// true/false (optional default true)
-		enableInteractiveAddAndCut : true,														// true/false (optional default true)
-		enableTouchInteraction : true,															// true/false (optional default true)
-		dataType : "string", 																	// string/node
+		//enableInteractiveAddAndCut : true,														// true/false (optional default true)
+		//enableTouchInteraction : true,															// true/false (optional default true)
+		//dataType : "string", 																	// string/node
 		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
 		reRenderOnResize : true, 																// true/false (optional default true)
 		mobileAspectRatio : <value>, 															// aspect ratio of for mobile devices
@@ -107,14 +113,20 @@ LimberGridView.prototype.constructor = LimberGridView;
 				...
 		]
 		callbacks : {
-			getItemRenderDataCallback : function(index, width, height, processType){}, 			// callback to get string or node object to render inside the item
+			renderComplete : function(){}, 														// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
+			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem
+			addComplete : function(index){}
+			removeComplete: function(index){}
+			moveComplete: function(index, toX, toY) {}
+			resizeComplete: function(index, width, height){}
+
+			//getItemRenderDataCallback : function(index, width, height, processType){}, 			// callback to get string or node object to render inside the item
 			onItemClickCallback : function(event){},											// click callback for item
-			renderComplete : function(){}, 														// callback for completion of render function
-			itemsRenderComplete : function([index, index, ...], scale, processType){}, 			// callback for completion of renderItems function
-			resizeCompleteCallback : function(index, {x, y, width, height}){}, 					// callback for completion of resizing an item
-			moveCompleteCallback : function(status, index, {x, y, width, height} or event){}, 					// callback for completion of moving an item
-			addCompleteCallback : function([index, index, ...], width, height, processType){}, 	// callback for completion of adding an item
-			removeCompleteCallback : function([index, index, ...]){}, 							// callback for completion of removing an item
+			//itemsRenderComplete : function([index, index, ...], scale, processType){}, 			// callback for completion of renderItems function
+			//resizeCompleteCallback : function(index, {x, y, width, height}){}, 					// callback for completion of resizing an item
+			//moveCompleteCallback : function(status, index, {x, y, width, height} or event){}, 					// callback for completion of moving an item
+			//addCompleteCallback : function([index, index, ...], width, height, processType){}, 	// callback for completion of adding an item
+			//removeCompleteCallback : function([index, index, ...]){}, 							// callback for completion of removing an item
 		}
 	}
 	*/
@@ -163,51 +175,29 @@ function LimberGridView(options) {
 	// setInitialPositionData(this, options.gridData.initialPositionData);
 
 	// INITIALIZATION BEGIN
-	const e = getElements(this);
+	// const e = getElements(this);
 	if (typeof options.el === "string") {
 		const el = document.getElementById(options.el);
 		if (!el) {
 			throw `No for element found for id ${options.el}`;
 		}
-		set$el(el);
+		set$el(this, el);
 	} else if (options.el instanceof Element) {
-		set$el(options.el);
+		set$el(this, options.el);
 	} else {
 		throw "Valid DOM Element or Id required";
 	}
 
-	set$body(this, document.getElementsByTagName("body")[0]);
+	this.initRender();
 
-	let pseudoElementId;
-	do {
-		pseudoElementId = "limber-grid-view-pseudo-container-" + getRandomString();
-	} while (document.getElementById(pseudoElementId) !== null);
-	setPseudoElementId(this, pseudoElementId);
-
-	e.$body[0].insertAdjacentHTML(
-		"beforeend",
-		`<div id = ${getPseudoElementId(
-			this
-		)} class = "limber-grid-view-pseudo-container"></div>`
-	);
-	set$bodyPseudoEl(this, document.getElementById(getPseudoElementId(this)));
-
-	e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
-	set$limberGridViewContainer(
-		this,
-		e.$el.querySelectorAll(".limber-grid-view-container")[0]
-	);
-	set$limberGridViewStyle(this, e.$el.getElementsByTagName("style")[0]);
-	set$limberGridView(this, e.$el.querySelectorAll(".limber-grid-view")[0]);
-
-	setOutputWidth(this, options.gridData.WIDTH);
-	setOutputHeight(this, options.gridData.HEIGHT);
-	setOutputMargin(this, options.gridData.MARGIN);
+	setGridWidth(this, options.gridData.WIDTH);
+	setGridHeight(this, options.gridData.HEIGHT);
+	setGridMargin(this, options.gridData.MARGIN);
 
 	// INITIALIZATION ENDED
 
 	if (!isNaN(options.gridData.mobileAspectRatio)) {
-		setPublicConstantsByName(
+		setPublicConstantByName(
 			this,
 			"MOBILE_ASPECT_RATIO",
 			options.gridData.mobileAspectRatio
@@ -218,7 +208,7 @@ function LimberGridView(options) {
 
 	if (options.editable === true) {
 		if (!isNaN(options.moveGuideRadius)) {
-			setPublicConstantsByName(
+			setPublicConstantByName(
 				this,
 				"MOVE_GUIDE_RADIUS",
 				options.moveGuideRadius
@@ -227,7 +217,7 @@ function LimberGridView(options) {
 		}
 
 		if (!isNaN(options.resizeSquareGuideLength)) {
-			setPublicConstantsByName(
+			setPublicConstantByName(
 				this,
 				"RESIZE_SQUARE_GUIDE_LENGTH",
 				options.resizeSquareGuideLength
@@ -237,7 +227,7 @@ function LimberGridView(options) {
 		}
 
 		if (!isNaN(options.resizeSquareBorderGuideWidth)) {
-			setPublicConstantsByName(
+			setPublicConstantByName(
 				this,
 				"RESIZE_SQUARE_BORDER_GUIDE_WIDTH",
 				options.resizeSquareBorderGuideWidth
@@ -252,6 +242,7 @@ function LimberGridView(options) {
 	}
 
 	init(this, options.autoArrange);
+	render(this, true);
 }
 
 LimberGridView.prototype.initializeStore = function () {
@@ -260,18 +251,18 @@ LimberGridView.prototype.initializeStore = function () {
 		variables: {
 			elements: {
 				$body: undefined,
-				$bodyPseudoEl: undefined,
-				$limberGridViewBodyPseudoItem: undefined,
+				$pseudoContainer: undefined,
+				$pseudoContainerItem: undefined,
 				$el: undefined,
+				$limberGridViewContainer: undefined,
 				$limberGridView: undefined,
 				$limberGridViewItems: [],
-				$limberGridViewContainer: undefined,
 				$limberGridViewStyle: undefined,
-				$limberGridViewGridPseudoItem: undefined,
+				$limberGridViewPseudoItem: undefined,
 				$limberGridViewMoveGuide: undefined,
 				$limberGridViewHeightAdjustGuide: undefined,
-				$limberGridViewAddItemGuide: undefined,
-				$limberGridViewAddItemOnTouchHoldGuide: undefined,
+				$limberGridViewAddCutGuide: undefined, // limberGridViewAddItemGuide
+				$limberGridViewTouchHoldGuide: undefined, // limberGridViewAddItemOnTouchHoldGuide
 				//  DEBUG elements:
 				$limberGridViewDebugMergedTempRects: [],
 				$limberGridViewDebugStackTopRect: undefined,
@@ -284,13 +275,13 @@ LimberGridView.prototype.initializeStore = function () {
 				$limberGridViewDebugMergedFreeRects: [],
 			},
 			essentials: {
-				pseudoElementId: undefined,
+				pseudoContainerId: undefined,
 				positionData: [],
 				modifiedPositionData: [],
-				initialPositionData: [],
+				// initialPositionData: [],
 				gridData: {},
 				callbacks: {},
-				serializedPositionData: {},
+				// serializedPositionData: [],
 			},
 		},
 		constants: {
@@ -354,17 +345,98 @@ LimberGridView.prototype.getGridData = function () {
 
 LimberGridView.prototype.setDeskInteractMode = function (flag) {
 	if (DESK_INTERACTION_MODE[flag]) {
-		setPublicConstantsByName(this, "DESK_INTERACTION_MODE", flag);
+		setPublicConstantByName(this, "DESK_INTERACTION_MODE", flag);
 	}
 };
 
-LimberGridView.prototype.render = render;
+LimberGridView.prototype.initRender = function () {
+	const e = getElements(this);
 
-LimberGridView.prototype.renderItems = renderItems;
+	set$body(this, document.getElementsByTagName("body")[0]);
 
-LimberGridView.prototype.removeItems = removeItems;
+	let pseudoContainerId;
+	do {
+		pseudoContainerId =
+			"limber-grid-view-pseudo-container-" + getRandomString();
+	} while (document.getElementById(pseudoContainerId) !== null);
+	setPseudoContainerId(this, pseudoContainerId);
 
-LimberGridView.prototype.addItems = addItems;
+	e.$body[0].insertAdjacentHTML(
+		"beforeend",
+		`<div id = ${getPseudoContainerId(
+			this
+		)} class = "limber-grid-view-pseudo-container"></div>`
+	);
+	set$pseudoContainer(
+		this,
+		document.getElementById(getPseudoContainerId(this))
+	);
+
+	e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
+	set$limberGridViewContainer(
+		this,
+		e.$el.getElementsByClassName(".limber-grid-view-container")[0]
+	);
+	set$limberGridViewStyle(this, e.$el.getElementsByTagName("style")[0]);
+	set$limberGridView(
+		this,
+		e.$el.getElementsByClassName(".limber-grid-view")[0]
+	);
+
+	const pseudoContainerItem = document.createElement("div");
+	const limberGridViewPseudoItem = document.createElement("div");
+	const limberGridViewMoveGuide = document.createElement("div"); // thing that shows to if there is a latch on item available on move
+	const limberGridViewHeightAdjustGuide = document.createElement("div");
+	const limberGridViewAddCutGuide = document.createElement("div"); // desk interaction rect
+	const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
+
+	pseudoContainerItem.setAttribute("class", "pseudo-container-item");
+	pseudoContainerItem.style.width = "1px !important";
+	pseudoContainerItem.style.height = "1px !important";
+	limberGridViewPseudoItem.setAttribute(
+		"class",
+		"limber-grid-view-pseudo-item"
+	);
+	limberGridViewPseudoItem.style.width = "1px !important";
+	limberGridViewPseudoItem.style.height = "1px !important";
+	limberGridViewMoveGuide.setAttribute("class", "limber-grid-view-move-guide");
+	limberGridViewHeightAdjustGuide.setAttribute(
+		"class",
+		"limber-grid-view-height-adjust-guide"
+	);
+	limberGridViewAddCutGuide.setAttribute(
+		"class",
+		"limber-grid-view-add-cut-guide"
+	);
+	limberGridViewTouchHoldGuide.setAttribute(
+		"class",
+		"limber-grid-view-touch-hold-guide"
+	);
+
+	e.$limberGridView.appendChild(pseudoContainerItem);
+	e.$limberGridView.appendChild(limberGridViewPseudoItem);
+	e.$limberGridView.appendChild(limberGridViewMoveGuide);
+	e.$limberGridView.appendChild(limberGridViewHeightAdjustGuide);
+	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
+	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
+
+	set$pseudoContainerItem(this, pseudoContainerItem);
+	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
+	set$limberGridViewMoveGuide(this, limberGridViewMoveGuide);
+	set$limberGridViewHeightAdjustGuide(this, limberGridViewHeightAdjustGuide);
+	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
+	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
+};
+
+// LimberGridView.prototype.render = render;
+
+LimberGridView.prototype.renderItem = function (index) {
+	_renderItem(this, index);
+};
+
+// LimberGridView.prototype.removeItems = removeItems;
+
+// LimberGridView.prototype.addItems = addItems;
 
 LimberGridView.prototype.setIsMobileFunction = function (f) {
 	setIsMobileFunc(f);
