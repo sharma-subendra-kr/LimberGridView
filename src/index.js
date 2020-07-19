@@ -466,14 +466,10 @@ LimberGridView.prototype.initRender = function () {
 		"class",
 		"limber-grid-view-pseudo-container-item"
 	);
-	pseudoContainerItem.style.width = "1px !important";
-	pseudoContainerItem.style.height = "1px !important";
 	limberGridViewPseudoItem.setAttribute(
 		"class",
 		"limber-grid-view-pseudo-item"
 	);
-	limberGridViewPseudoItem.style.width = "1px !important";
-	limberGridViewPseudoItem.style.height = "1px !important";
 	limberGridViewMoveGuide.setAttribute("class", "limber-grid-view-move-guide");
 	limberGridViewHeightAdjustGuide.setAttribute(
 		"class",
@@ -488,7 +484,7 @@ LimberGridView.prototype.initRender = function () {
 		"limber-grid-view-touch-hold-guide"
 	);
 
-	e.$limberGridView.appendChild(pseudoContainerItem);
+	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
 	e.$limberGridView.appendChild(limberGridViewMoveGuide);
 	e.$limberGridView.appendChild(limberGridViewHeightAdjustGuide);

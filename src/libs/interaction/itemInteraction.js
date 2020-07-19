@@ -66,9 +66,9 @@ export const resizeItem = async function (index, width, height) {
 	const e = getElements(this);
 
 	index = parseInt(index);
-	resizeItemInitialChecks(index, width, height);
+	resizeItemInitialChecks(this, index, width, height);
 
-	setModifiedPositionData(pd);
+	setModifiedPositionData(this, pd);
 	mpd[index].width = width;
 	mpd[index].height = height;
 
@@ -78,15 +78,16 @@ export const resizeItem = async function (index, width, height) {
 		width: width,
 		height: height,
 	};
-	const affectedItems = getResizeAffectedItems(modifiedItem, index);
+	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeResize(
+		this,
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
 		modifiedItem.x + modifiedItem.width
 	);
 
-	setPositionData(mpd);
+	setPositionData(this, mpd);
 
 	e.$limberGridViewItems[index].style.width = mpd[index].width;
 	e.$limberGridViewItems[index].style.height = mpd[index].height;
@@ -108,11 +109,11 @@ export const resizeItemDemo = async function (index, width, height) {
 	const e = getElements(this);
 
 	index = parseInt(index);
-	resizeItemInitialChecks(index, width, height);
+	resizeItemInitialChecks(this, index, width, height);
 
-	resetDemoUIChanges();
+	resetDemoUIChanges(this);
 
-	setModifiedPositionData(pd);
+	setModifiedPositionData(this, pd);
 	mpd[index].width = width;
 	mpd[index].height = height;
 
@@ -122,9 +123,10 @@ export const resizeItemDemo = async function (index, width, height) {
 		width: width,
 		height: height,
 	};
-	const affectedItems = getResizeAffectedItems(modifiedItem, index);
+	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeResize(
+		this,
 		affectedItems,
 		modifiedItem.y + modifiedItem.height,
 		modifiedItem.x + modifiedItem.width,
@@ -153,14 +155,14 @@ export const moveItem = async function (index, toX, toY) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
 		// maybe "LATCH_MOVED_ITEM"
-		const adjustedPt = movePointAdjust(toX, toY);
+		const adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
 	}
 
-	moveItemInitialChecks(index, toX, toY);
+	moveItemInitialChecks(this, index, toX, toY);
 
-	setModifiedPositionData(pd);
+	setModifiedPositionData(this, pd);
 	mpd[index].x = toX;
 	mpd[index].y = toY;
 
@@ -170,15 +172,16 @@ export const moveItem = async function (index, toX, toY) {
 		width: pd[index].width,
 		height: pd[index].height,
 	};
-	const affectedItems = getMoveAffectedItems(modifiedItem, index);
+	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeMove(
+		this,
 		affectedItems,
 		toY,
 		toY + pd[index].height
 	);
 
-	setPositionData(mpd);
+	setPositionData(this, mpd);
 
 	e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
 	e.$limberGridViewItems[
@@ -213,16 +216,16 @@ export const moveItemDemo = async function (index, toX, toY) {
 	if (true) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
-		adjustedPt = movePointAdjust(toX, toY);
+		adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
 	}
 
-	moveItemInitialChecks(index, toX, toY);
+	moveItemInitialChecks(this, index, toX, toY);
 
-	resetDemoUIChanges();
+	resetDemoUIChanges(this);
 
-	setModifiedPositionData(pd);
+	setModifiedPositionData(this, pd);
 	mpd[index].x = toX;
 	mpd[index].y = toY;
 
@@ -232,9 +235,10 @@ export const moveItemDemo = async function (index, toX, toY) {
 		width: pd[index].width,
 		height: pd[index].height,
 	};
-	const affectedItems = getMoveAffectedItems(modifiedItem, index);
+	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeMove(
+		this,
 		affectedItems,
 		toY,
 		toY + pd[index].height,

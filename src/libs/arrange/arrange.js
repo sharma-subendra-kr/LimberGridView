@@ -160,7 +160,7 @@ export const arrangeMove = async (
 	);
 
 	const shiftHeight =
-		(getPrivateConstantByName("MIN_HEIGHT_AND_WIDTH") -
+		(getPrivateConstantByName(context, "MIN_HEIGHT_AND_WIDTH") -
 			privateConstants.MARGIN * 2) /
 		2;
 
@@ -398,7 +398,8 @@ export const arrangeResize = async (
 
 	let _combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
 
-	const incrementHeight = getPrivateConstantByName("MIN_HEIGHT_AND_WIDTH") * 2;
+	const incrementHeight =
+		getPrivateConstantByName(context, "MIN_HEIGHT_AND_WIDTH") * 2;
 
 	let passCount = 0;
 	let arranged = {};

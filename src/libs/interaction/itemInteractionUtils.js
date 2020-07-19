@@ -142,11 +142,12 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 	}
 
 	if (
-		width < getPublicConstantByName("DEFINED_MIN_HEIGHT_AND_WIDTH") ||
-		height < getPublicConstantByName("DEFINED_MIN_HEIGHT_AND_WIDTH")
+		width < getPublicConstantByName(context, "DEFINED_MIN_HEIGHT_AND_WIDTH") ||
+		height < getPublicConstantByName(context, "DEFINED_MIN_HEIGHT_AND_WIDTH")
 	) {
 		// very small. TO DO: let the developers decide the smallest item size but can't be less than 150
 		throw `Width or height less than min height or width ${getPublicConstantByName(
+			context,
 			"DEFINED_MIN_HEIGHT_AND_WIDTH"
 		)}.`;
 	}

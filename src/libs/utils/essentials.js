@@ -230,13 +230,16 @@ export const getRowSequence = function (serialize) {
 	}
 };
 
-export const adjustHeight = function (yMouseOrTouchPosition) {
-	var scrollHeight = e.$limberGridView[0].scrollHeight;
+export const adjustHeight = function (context, yMouseOrTouchPosition) {
+	const e = getElements(context);
+	const publicConstants = getPublicConstants(context);
+
+	const scrollHeight = e.$limberGridView.scrollHeight;
 	if (
 		scrollHeight - yMouseOrTouchPosition <=
 		publicConstants.AUTO_SCROLL_POINT
 	) {
-		e.$limberGridViewHeightAdjustGuide[0].style.height =
+		e.$limberGridViewHeightAdjustGuide.style.height =
 			yMouseOrTouchPosition +
 			publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
 			"px";
@@ -244,12 +247,17 @@ export const adjustHeight = function (yMouseOrTouchPosition) {
 };
 
 export const adjustScroll = function (
+	context,
 	limberGridViewOnVisibleAreaY,
 	limberGridViewHeightVisibleHeight
 ) {
-	var scrollTop = e.$limberGridView[0].scrollTop;
+	const e = getElements(context);
+	const publicConstants = getPublicConstants(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const scrollTop = e.$limberGridView[0].scrollTop;
 	// var scrollLeft = this.$limberGridView[0].scrollLeft;
-	var programScrolled = false;
+	let programScrolled = false;
 	if (limberGridViewOnVisibleAreaY > 0) {
 		if (
 			limberGridViewHeightVisibleHeight - limberGridViewOnVisibleAreaY <
@@ -261,7 +269,7 @@ export const adjustScroll = function (
 		}
 		if (
 			limberGridViewOnVisibleAreaY < privateConstants.HEIGHT / 10 &&
-			scrollTop != 0
+			scrollTop !== 0
 		) {
 			e.$limberGridView[0].scrollTop =
 				scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;

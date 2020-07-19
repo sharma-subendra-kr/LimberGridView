@@ -42,7 +42,7 @@ import {
 	getPositionData,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
-import { calculateTouchPosOnLimberGrid } from "./eventHandlerUtils.js";
+import { calculateTouchPosOnDesk } from "./eventHandlerUtils.js";
 import {
 	loadInitState,
 	unloadInitState,
@@ -179,7 +179,7 @@ export const tapHoldCheck = function (event) {
 	if (dkiv.tapHoldCancel === false) {
 		dkiv.tapHoldTimerComplete = true;
 
-		var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
+		var touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 
 		var x = touchPositionOnLimberGrid.x;
 		var y = touchPositionOnLimberGrid.y;
@@ -244,7 +244,7 @@ export const onDeskMouseMove = function (event) {
 		dkiv.userActionData.newHeight = newHeight;
 
 		const yMousePosition = event.offsetY + scrollTop;
-		adjustHeight(yMousePosition);
+		adjustHeight(this, yMousePosition);
 
 		if (newWidth > 0 && newHeight > 0) {
 			e.$limberGridViewAddCutGuide.style.width = newWidth + "px";
@@ -306,7 +306,7 @@ export const onDeskTouchMove = function (event) {
 		const x = dkiv.userActionData.addPositionX;
 		const y = dkiv.userActionData.addPositionY;
 
-		const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
+		const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 
 		const newWidth = touchPositionOnLimberGrid.x - x;
 		const newHeight = touchPositionOnLimberGrid.y - y;
@@ -335,9 +335,10 @@ export const onDeskTouchMove = function (event) {
 				touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
 
 			const yTouchPosition = touchPositionOnLimberGrid.y;
-			adjustHeight(yTouchPosition);
+			adjustHeight(this, yTouchPosition);
 
 			const programScrolled = adjustScroll(
+				this,
 				limberGridViewOnVisibleAreaY,
 				limberGridViewHeightVisibleHeight
 			);

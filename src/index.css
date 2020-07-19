@@ -130,6 +130,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limber-grid-view-pseudo-container-item {
+	width: 1px;
+	height: 1px;
 	position: absolute;
 	display: none;
 	vertical-align: top;
@@ -145,6 +147,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limber-grid-view-pseudo-item {
+	width: 1px;
+	height: 1px;
 	position: absolute;
 	display: none;
 	vertical-align: top;

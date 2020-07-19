@@ -29,7 +29,7 @@ import { getPositionData } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
 
-export const calculateMousePosOnLimberGrid = function (event, context) {
+export const calculateMousePosOnDesk = function (context, event) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -65,7 +65,7 @@ export const calculateMousePosOnLimberGrid = function (event, context) {
 	}
 };
 
-export const calculateTouchPosOnLimberGrid = function (event, context) {
+export const calculateTouchPosOnDesk = function (context, event) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -114,7 +114,7 @@ export const calculateTouchPosOnLimberGrid = function (event, context) {
 	}
 };
 
-export const calculateTouchPosOnLimberGridItem = function (event, context) {
+export const calculateTouchPosOnItem = function (context, event) {
 	const e = getElements(context);
 
 	const limberGridViewItemPosition = e.$limberGridViewItems[

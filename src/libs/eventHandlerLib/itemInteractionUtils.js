@@ -28,7 +28,7 @@ import getElements from "../../store/variables/elements";
 import { getPositionData } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
-import { calculateTouchPosOnLimberGridItem } from "./eventHandlerUtils";
+import { calculateTouchPosOnItem } from "./eventHandlerUtils";
 
 export const getUserActionData = (context, event) => {
 	const publicConstants = getPublicConstants(context);
@@ -44,7 +44,7 @@ export const getUserActionData = (context, event) => {
 		X = event.offsetX;
 		Y = event.offsetY;
 	} else if (event.which === 0) {
-		touchPosOnLimberGridItem = calculateTouchPosOnLimberGridItem(event);
+		touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
 		radius = Math.sqrt(
 			Math.pow(0 - touchPosOnLimberGridItem.x, 2) +
 				Math.pow(0 - touchPosOnLimberGridItem.y, 2)
@@ -106,17 +106,15 @@ export const loadResizingState = (context, userActionData) => {
 	const e = getElements(context);
 	const pd = getPositionData(context);
 
+	const item = pd[userActionData.itemIndex];
+
 	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
 	e.$limberGridViewHeightAdjustGuide.classList.add(
 		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewPseudoItem.style.width = `${
-		pd[userActionData.itemIndex].width
-	}px`;
-	e.$limberGridViewPseudoItem.style.height = `${
-		pd[userActionData.itemIndex].height
-	}px`;
+	e.$limberGridViewPseudoItem.style.width = `${item.width}px`;
+	e.$limberGridViewPseudoItem.style.height = `${item.height}px`;
 	e.$limberGridViewPseudoItem.style.transform = `translate(${userActionData.itemX}px,${userActionData.itemY}px)`;
 	e.$limberGridViewPseudoItem.classList.add(
 		"limber-grid-view-pseudo-item-active"
@@ -144,6 +142,9 @@ export const loadResizingState = (context, userActionData) => {
 
 export const unloadResizingState = (context, userActionData) => {
 	const e = getElements(context);
+	const pd = getPositionData(context);
+
+	const item = pd[userActionData.itemIndex];
 
 	e.$limberGridViewHeightAdjustGuide.classList.remove(
 		"limber-grid-view-height-adjust-guide-active"
@@ -172,6 +173,9 @@ export const unloadResizingState = (context, userActionData) => {
 
 export const loadMoveState = (context, userActionData, event) => {
 	const e = getElements(context);
+	const pd = getPositionData(context);
+
+	const item = pd[userActionData.itemIndex];
 
 	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
 	e.$limberGridViewHeightAdjustGuide.classList.add(
@@ -185,6 +189,10 @@ export const loadMoveState = (context, userActionData, event) => {
 	e.$pseudoContainerItem.classList.add(
 		"limber-Grid-View-pseudo-container-item-active"
 	);
+
+	e.$pseudoContainerItem.style.width = item.width + "px";
+	e.$pseudoContainerItem.style.height = item.height + "px";
+
 	if (event.which === 1) {
 		e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
 	} else if (event.which === 0) {
@@ -210,6 +218,10 @@ export const unloadMoveState = (context, userActionData) => {
 	e.$pseudoContainerItem.classList.remove(
 		"limber-grid-view-pseudo-container-item-active"
 	);
+
+	e.$pseudoContainerItem.style.width = item.width + "px";
+	e.$pseudoContainerItem.style.height = item.height + "px";
+
 	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
 
 	e.$body.classList.remove(
@@ -219,6 +231,9 @@ export const unloadMoveState = (context, userActionData) => {
 
 export const loadOnMoveState = (context, userActionData, event, type) => {
 	const e = getElements(context);
+	const pd = getPositionData(context);
+
+	const item = pd[userActionData.itemIndex];
 
 	if (type === "move") {
 		e.$limberGridViewMoveGuide.classList.remove(
