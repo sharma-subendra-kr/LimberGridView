@@ -59,15 +59,14 @@ export const render = function (context, scale = true) {
 		WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
 	}
 
-	let classList = ["limber-grid-view-item"];
-	if (options.editable === true) {
-		classList = ["limber-grid-view-item", "limber-grid-view-item-editable"];
-	}
-	classList = classList.join(" ");
-
 	const nodes = new Array(len);
 
 	if (!isMobile()) {
+		let classList = "limber-grid-view-item";
+		if (options.editable === true) {
+			classList = "limber-grid-view-item limber-grid-view-item-editable";
+		}
+
 		for (let i = 0; i < len; i++) {
 			pd[i].x *= WIDTH_SCALE_FACTOR;
 			pd[i].y *= WIDTH_SCALE_FACTOR;
@@ -93,7 +92,7 @@ export const render = function (context, scale = true) {
 			nodes[i] = itemEl;
 		}
 	} else {
-		classList = classList + " limber-grid-view-item-mobile-view";
+		const classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
 		const spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
@@ -186,14 +185,13 @@ export const addItem = function (context, item) {
 		const len = pd.length;
 		const index = len - 1;
 
-		let classList = ["limber-grid-view-item"];
-		if (options.editable === true) {
-			classList = ["limber-grid-view-item", "limber-grid-view-item-editable"];
-		}
-		classList = classList.join(" ");
-
 		const itemEl = document.createElement("div");
 		if (!isMobile()) {
+			let classList = "limber-grid-view-item";
+			if (options.editable === true) {
+				classList = "limber-grid-view-item limber-grid-view-item-editable";
+			}
+
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", index);
 			itemEl.style.transform = `translate(${pd[index].x}px, ${pd[index].y}px)`;
@@ -207,7 +205,7 @@ export const addItem = function (context, item) {
 				"isAdd"
 			);
 		} else {
-			classList += " limber-grid-view-item-mobile-view";
+			let classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
 
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
