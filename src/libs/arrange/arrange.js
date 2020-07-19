@@ -86,7 +86,7 @@ export const arrangeMove = async (
 	isDemo = false
 ) => {
 	const privateConstants = getPrivateConstants(context);
-	const mpd = getPrivateConstants(context);
+	const mpd = getModifiedPositionData(context);
 
 	const p1 = performance.now();
 
@@ -949,7 +949,7 @@ export const arrange = async (
 	// so no need to update the modified position data later
 
 	const mpd = getModifiedPositionData(context);
-	const privateConstants = getModifiedPositionData(context);
+	const privateConstants = getPrivateConstants(context);
 
 	let idCount = lastId;
 	const arranged = {};

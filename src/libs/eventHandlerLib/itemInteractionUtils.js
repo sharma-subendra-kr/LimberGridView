@@ -206,6 +206,9 @@ export const loadMoveState = (context, userActionData, event) => {
 
 export const unloadMoveState = (context, userActionData) => {
 	const e = getElements(context);
+	const pd = getPositionData(context);
+
+	const item = pd[userActionData.itemIndex];
 
 	e.$limberGridViewHeightAdjustGuide.classList.remove(
 		"limber-grid-view-height-adjust-guide-active"
@@ -219,8 +222,8 @@ export const unloadMoveState = (context, userActionData) => {
 		"limber-grid-view-pseudo-container-item-active"
 	);
 
-	e.$pseudoContainerItem.style.width = item.width + "px";
-	e.$pseudoContainerItem.style.height = item.height + "px";
+	e.$pseudoContainerItem.style.width = "0px";
+	e.$pseudoContainerItem.style.height = "0px";
 
 	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
 
