@@ -45,7 +45,7 @@ import getPrivateConstants, {
 import getPublicConstants from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
 
-export const init = function (context, initialGridWidth, autoArrange) {
+export const init = function (context, autoArrange) {
 	// if (typeof options.el === "string") {
 	// 	const el = document.getElementById(options.el);
 	// 	if (!el) {

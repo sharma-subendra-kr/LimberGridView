@@ -27,7 +27,32 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 import "./index.css";
 import "./index.scss";
 
-import { onWindowResize } from "./libs/eventHandlerLib/miscellaneous";
+import {
+	onItemMouseDown,
+	onItemTouchStart,
+	onItemMouseMove,
+	onItemTouchMove,
+	onItemMouseUp,
+	onItemTouchEnd,
+	onItemContextMenu,
+	onItemTouchContextMenu,
+	onItemTouchCancel,
+} from "./libs/eventHandlerLib/itemInteraction";
+import {
+	onDeskMouseDown,
+	onDeskTouchStart,
+	onDeskMouseMove,
+	onDeskTouchMove,
+	onDeskMouseUp,
+	onDeskTouchEnd,
+	onDeskContextMenu,
+	onDeskTouchContextMenu,
+	onDeskTouchCancel,
+} from "./libs/eventHandlerLib/deskInteraction";
+import {
+	onWindowResize,
+	onWindowResizeTimerCallback,
+} from "./libs/eventHandlerLib/miscellaneous";
 
 import {
 	setIsMobileFunction as setIsMobileFunc,
@@ -69,9 +94,10 @@ import {
 	set$limberGridViewTouchHoldGuide,
 } from "./store/variables/elements";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
+import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 import { render, renderItem as _renderItem } from "./libs/renderers/renderers";
-import { removeItems, addItems } from "./libs/renderers/addOrRemoveItems";
+// import { removeItems, addItems } from "./libs/renderers/addOrRemoveItems";
 import { init } from "./initializers/initializers";
 
 LimberGridView.prototype.constructor = LimberGridView;
@@ -238,7 +264,7 @@ function LimberGridView(options) {
 	}
 
 	if (options.reRenderOnResize === true) {
-		window.addEventListener("resize", onWindowResize.bind(this));
+		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
 	}
 
 	init(this, options.autoArrange);
@@ -283,6 +309,55 @@ LimberGridView.prototype.initializeStore = function () {
 				callbacks: {},
 				// serializedPositionData: [],
 			},
+			bindedFunctions: {
+				onItemMouseDown: onItemMouseDown.bind(this),
+				onItemTouchStart: onItemTouchStart.bind(this),
+				onItemMouseMove: onItemMouseMove.bind(this),
+				onItemTouchMove: onItemTouchMove.bind(this),
+				onItemMouseUp: onItemMouseUp.bind(this),
+				onItemTouchEnd: onItemTouchEnd.bind(this),
+				onItemContextMenu: onItemContextMenu.bind(this),
+				onItemTouchContextMenu: onItemTouchContextMenu.bind(this),
+				onItemTouchCancel: onItemTouchCancel.bind(this),
+				// Desk
+				onDeskMouseDown: onDeskMouseDown.bind(this),
+				onDeskTouchStart: onDeskTouchStart.bind(this),
+				onDeskMouseMove: onDeskMouseMove.bind(this),
+				onDeskTouchMove: onDeskTouchMove.bind(this),
+				onDeskMouseUp: onDeskMouseUp.bind(this),
+				onDeskTouchEnd: onDeskTouchEnd.bind(this),
+				onDeskTouchCancel: onDeskTouchCancel.bind(this),
+				onDeskTouchContextMenu: onDeskTouchContextMenu.bind(this),
+				onDeskContextMenu: onDeskContextMenu.bind(this),
+
+				//
+				onWindowResize: onWindowResize.bind(this),
+				onWindowResizeTimerCallback: onWindowResizeTimerCallback.bind(this),
+			},
+			eventSpecific: {
+				itemInteraction: {
+					userActionData: {},
+					mouseDownCancel: false,
+					mouseDownTimerComplete: true,
+					touchHoldCancel: false,
+					touchHoldTimerComplete: false,
+					longPressCheck: undefined,
+					longTouchCheck: undefined,
+					showResizeDemoTimeOutVariable: undefined,
+					showMoveDemoTimeOutVariable: undefined,
+				},
+				deskInteraction: {
+					userActionData: {},
+					mouseDownCancel: false,
+					mouseDownTimerComplete: false,
+					tapHoldCancel: false,
+					tapHoldTimerComplete: false,
+					longPressCheck: undefined,
+					longTouchCheck: undefined,
+					addItemAllowCheckTimeOutVariable: undefined,
+					cutSpaceAllowCheckTimeOutVariable: undefined,
+				},
+			},
 		},
 		constants: {
 			privateConstants: {
@@ -317,7 +392,7 @@ LimberGridView.prototype.initializeStore = function () {
 				WINDOW_RESIZE_WAIT_TIME: 1000,
 				MARGIN: 5,
 
-				MOBILE_ASPECT_RATIO: 16 / 9,
+				MOBILE_ASPECT_RATIO: 16 / 10,
 
 				DESK_INTERACTION_MODE: "ADD",
 

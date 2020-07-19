@@ -107,3 +107,17 @@ export const unloadInitState = (context) => {
 		"limber-grid-view-touch-hold-guide-active"
 	);
 };
+
+export const shiftItemsUp = function (context, y, shiftHeight) {
+	const pd = getPositionData(context);
+	const e = getElements(context);
+
+	const len = pd.length;
+	for (let i = 0; i < len; i++) {
+		if (pd[i].y >= y) {
+			pd[i].y -= shiftHeight;
+			e.$limberGridViewItems[i].style.transform =
+				"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
+		}
+	}
+};

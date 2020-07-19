@@ -86,5 +86,14 @@ export const getRandomString = (len = 22) => {
 	for (let i = 0; i < len; i++) {
 		arr[i] = alpNum[Math.floor(Math.random() * 36)];
 	}
-	return arr.join();
+	return arr.join("");
+};
+
+export const getItemDimenWithMargin = (MARGIN, item) => {
+	return {
+		x: item.x - MARGIN,
+		y: item.y - MARGIN,
+		width: item.width + MARGIN * 2,
+		height: item.height + MARGIN * 2,
+	};
 };

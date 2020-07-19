@@ -22,5 +22,5 @@
 
 export NODE_ENV="development"
 export PORT=3000
-export VERSION="1.0.0"
+export VERSION="1.0.0-beta.0"
 export MINIMIZE=false

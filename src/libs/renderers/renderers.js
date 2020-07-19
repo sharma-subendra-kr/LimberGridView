@@ -93,13 +93,13 @@ export const render = function (context, scale = true) {
 			nodes[i] = itemEl;
 		}
 	} else {
-		classList = classList + "limber-grid-view-item-mobile-view";
+		classList = classList + " limber-grid-view-item-mobile-view";
 		const spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
 			spd[i].width = privateConstants.WIDTH;
 			spd[i].height =
-				privateConstants.WIDTH * publicConstants.MOBILE_ASPECT_RATIO;
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
 
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
@@ -127,17 +127,16 @@ export const render = function (context, scale = true) {
 	// e.$limberGridView.innerHTML = "";
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
-		e.limberGridView.removeChild(e.$limberGridViewItems[i]);
+		e.$limberGridView.removeChild(e.$limberGridViewItems[i]);
 	}
 
 	for (let i = 0; i < len; i++) {
 		e.$limberGridView.appendChild(nodes[i]);
 	}
 
-	set$limberGridViewItems(
-		context,
-		e.$limberGridView.getElementsByClassName("limber-grid-view-item")
-	);
+	set$limberGridViewItems(context, [
+		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
+	]);
 
 	// initializeVariables();
 	initializeEvents.call(context);
@@ -177,6 +176,8 @@ export const addItem = function (context, item) {
 	unInitializeEvents.call(context);
 
 	try {
+		// check coordinates if present
+		// if not
 		// call arrange and get coordinates
 		// arrange()
 		// thhrow error if item overlaps another item
@@ -206,29 +207,28 @@ export const addItem = function (context, item) {
 				"isAdd"
 			);
 		} else {
-			classList += "limber-grid-view-item-mobile-view";
+			classList += " limber-grid-view-item-mobile-view";
 
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", index);
 			itemEl.style.width = privateConstants.WIDTH;
 			itemEl.style.height =
-				privateConstants.WIDTH * publicConstants.MOBILE_ASPECT_RATIO;
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
 
 			callbacks.renderContent(
 				index,
 				privateConstants.WIDTH,
-				privateConstants.WIDTH * publicConstants.MOBILE_ASPECT_RATIO,
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO,
 				"isAdd"
 			);
 		}
 
 		e.$limberGridView.appendChild(itemEl);
 
-		set$limberGridViewItems(
-			context,
-			e.$limberGridView.getElementsByClassName("limber-grid-view-item")
-		);
+		set$limberGridViewItems(context, [
+			...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
+		]);
 
 		if (callbacks.addComplete) {
 			callbacks.addComplete(index);
@@ -250,18 +250,15 @@ export const removeItem = function (context, index) {
 	pd.splice(index, 1);
 
 	e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
-	set$limberGridViewItems(
-		context,
-		e.$limberGridView.getElementsByClassName("limber-grid-view-item")
-	);
-
-	initializeVariables();
-	initializeEvents();
+	set$limberGridViewItems(context, [
+		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
+	]);
 
 	if (callbacks.removeComplete) {
 		callbacks.removeComplete(index);
 	}
 
+	// initializeVariables();
 	initializeEvents.call(context);
 };
 

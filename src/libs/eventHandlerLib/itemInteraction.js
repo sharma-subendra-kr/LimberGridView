@@ -57,28 +57,35 @@ import {
 	loadOnMoveState,
 	unloadOnMoveState,
 } from "./itemInteractionUtils.js";
-import { onLimberGridTouchStart } from "./addItemAndCutSpace";
+import { onDeskTouchStart } from "./deskInteraction";
 import {
 	moveItem,
 	moveItemDemo,
 	resizeItem,
 	resizeItemDemo,
 } from "../interaction/itemInteraction";
+import { getBindedFunctions } from "../../store/variables/bindedFunctions";
+import { getItemInteractionVars } from "../../store/variables/eventSpecific";
 
-let userActionData = {};
-let mouseDownCancel = false;
-let mouseDownTimerComplete = true;
-let tapHoldCancel = false;
-let tapHoldTimerComplete = false;
-let longPressCheck;
-let longTouchCheck;
-let showResizeDemoTimeOutVariable;
-let showMoveDemoTimeOutVariable;
+// let userActionData = {};
+// let mouseDownCancel = false;
+// let mouseDownTimerComplete = true;
+// let touchHoldCancel = false;
+// // let tapHoldCancel = false;
+// let touchHoldTimerComplete = false;
+// // let tapHoldTimerComplete = false;
+// let longPressCheck;
+// let longTouchCheck;
+// let showResizeDemoTimeOutVariable;
+// let showMoveDemoTimeOutVariable;
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const pd = getPositionData(this);
+
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
 
 	if (event.which !== 1) {
 		return;
@@ -90,35 +97,35 @@ export const onItemMouseDown = function (event) {
 		return;
 	}
 
-	userActionData = getUserActionData(event);
+	Object.assign(iiv.userActionData, getUserActionData(event));
 
-	if (userActionData.type === "move") {
-		mouseDownCancel = false;
-		mouseDownTimerComplete = false;
+	if (iiv.userActionData.type === "move") {
+		iiv.mouseDownCancel = false;
+		iiv.mouseDownTimerComplete = false;
 
-		document.addEventListener("mousemove", onMouseMove);
-		document.addEventListener("mouseup", onMouseUp);
-		document.addEventListener("contextmenu", onContextMenu);
+		document.addEventListener("mousemove", bf.onItemMouseMove);
+		document.addEventListener("mouseup", bf.onItemMouseUp);
+		document.addEventListener("contextmenu", bf.onItemContextMenu);
 
-		clearTimeout(longPressCheck);
-		longPressCheck = setTimeout(
+		clearTimeout(iiv.longPressCheck);
+		iiv.longPressCheck = setTimeout(
 			mouseDownCheck.bind(this, event),
 			publicConstants.MOUSE_DOWN_TIME
 		);
 
 		event.preventDefault();
-	} else if (userActionData.type === "resize") {
-		mouseDownCancel = false;
-		mouseDownTimerComplete = true;
+	} else if (iiv.userActionData.type === "resize") {
+		iiv.mouseDownCancel = false;
+		iiv.mouseDownTimerComplete = true;
 
-		e.$limberGridView.addEventListener("mousemove", onMouseMove);
-		document.addEventListener("mouseup", onMouseUp);
-		document.addEventListener("contextmenu", onContextMenu);
+		e.$limberGridView.addEventListener("mousemove", bf.onItemMouseMove);
+		document.addEventListener("mouseup", bf.onItemMouseUp);
+		document.addEventListener("contextmenu", bf.onItemContextMenu);
 
-		userActionData.itemX = pd[userActionData.itemIndex].x;
-		userActionData.itemY = pd[userActionData.itemIndex].y;
+		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
+		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
 
-		loadResizingState(userActionData);
+		loadResizingState(iiv.userActionData);
 
 		event.preventDefault();
 	}
@@ -128,6 +135,9 @@ export const onItemTouchStart = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const pd = getPositionData(this);
+
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
 
 	if (event.which !== 0) {
 		return;
@@ -148,37 +158,37 @@ export const onItemTouchStart = function (event) {
 		return;
 	}
 
-	userActionData = getUserActionData(event);
+	iiv.userActionData = getUserActionData(event);
 
-	if (userActionData.type === "move") {
-		tapHoldCancel = false;
-		tapHoldTimerComplete = false;
+	if (iiv.userActionData.type === "move") {
+		iiv.touchHoldCancel = false;
+		iiv.touchHoldTimerComplete = false;
 
-		e.$limberGridView.removeEventListener("touchstart", onLimberGridTouchStart);
-		document.addEventListener("touchmove", onTouchMove);
-		document.addEventListener("touchend", onTouchEnd);
-		document.addEventListener("touchcancel", onTouchCancel);
-		document.addEventListener("contextmenu", onItemTouchContextMenu);
+		e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
+		document.addEventListener("touchmove", bf.onItemTouchMove);
+		document.addEventListener("touchend", bf.onItemTouchEnd);
+		document.addEventListener("touchcancel", bf.onItemTouchCancel);
+		document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
 
-		longTouchCheck = setTimeout(
+		iiv.longTouchCheck = setTimeout(
 			tapHoldCheck.bind(this, event),
 			publicConstants.TOUCH_HOLD_TIME
 		);
 
 		event.preventDefault();
-	} else if (userActionData.type === "resize") {
-		tapHoldCancel = false;
-		tapHoldTimerComplete = true;
+	} else if (iiv.userActionData.type === "resize") {
+		iiv.touchHoldCancel = false;
+		iiv.touchHoldTimerComplete = true;
 
-		e.$limberGridView.removeEventListener("touchstart", onLimberGridTouchStart);
-		e.$limberGridView.addEventListener("touchmove", onTouchMove);
-		document.addEventListener("touchend", onTouchEnd);
-		document.addEventListener("touchcancel", onTouchCancel);
+		e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
+		e.$limberGridView.addEventListener("touchmove", bf.onItemTouchMove);
+		document.addEventListener("touchend", bf.onItemTouchEnd);
+		document.addEventListener("touchcancel", bf.onItemTouchCancel);
 
-		userActionData.itemX = pd[userActionData.itemIndex].x;
-		userActionData.itemY = pd[userActionData.itemIndex].y;
+		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
+		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
 
-		loadResizingState(userActionData);
+		loadResizingState(iiv.userActionData);
 
 		event.preventDefault();
 	}
@@ -187,31 +197,38 @@ export const onItemTouchStart = function (event) {
 };
 
 export const mouseDownCheck = function (event) {
-	if (mouseDownCancel === false) {
-		mouseDownTimerComplete = true;
+	const iiv = getItemInteractionVars(this);
 
-		loadMoveState(userActionData, event);
+	if (iiv.mouseDownCancel === false) {
+		iiv.mouseDownTimerComplete = true;
+
+		loadMoveState(iiv.userActionData, event);
 	}
 };
 
 export const tapHoldCheck = function (event) {
-	if (tapHoldCancel === false) {
-		tapHoldTimerComplete = true;
+	const iiv = getItemInteractionVars(this);
 
-		loadMoveState(userActionData, event);
+	if (iiv.touchHoldCancel === false) {
+		iiv.touchHoldTimerComplete = true;
+
+		loadMoveState(iiv.userActionData, event);
 	}
 };
 
-export const onMouseMove = function (event) {
+export const onItemMouseMove = function (event) {
 	const e = getElements(this);
 	const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 
-	if (mouseDownTimerComplete === true) {
-		if (userActionData.type === "move") {
-			loadOnMoveState(userActionData, event, "move");
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
 
-			clearTimeout(showMoveDemoTimeOutVariable);
+	if (iiv.mouseDownTimerComplete === true) {
+		if (iiv.userActionData.type === "move") {
+			loadOnMoveState(iiv.userActionData, event, "move");
+
+			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
 
@@ -219,48 +236,48 @@ export const onMouseMove = function (event) {
 				const yMousePosition = mousePositionOnLimberGrid.y;
 				adjustHeight(yMousePosition);
 
-				showMoveDemoTimeOutVariable = setTimeout(
+				iiv.showMoveDemoTimeOutVariable = setTimeout(
 					showMoveDemo.bind(
 						this,
-						userActionData.itemIndex,
+						iiv.userActionData.itemIndex,
 						mousePositionOnLimberGrid
 					),
 					publicConstants.DEMO_WAIT_TIME
 				);
 			}
 		} else {
-			loadOnMoveState(userActionData, event, "resize");
+			loadOnMoveState(iiv.userActionData, event, "resize");
 
-			clearTimeout(showResizeDemoTimeOutVariable);
+			clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
 			const scrollTop = e.$limberGridView.scrollTop;
 			const scrollLeft = e.$limberGridView.scrollLeft;
 
-			const x = userActionData.itemX;
-			const y = userActionData.itemY;
+			const x = iiv.userActionData.itemX;
+			const y = iiv.userActionData.itemY;
 
 			const newWidth =
 				event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
 			const newHeight =
 				event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
 
-			userActionData.newWidth = newWidth;
-			userActionData.newHeight = newHeight;
+			iiv.userActionData.newWidth = newWidth;
+			iiv.userActionData.newHeight = newHeight;
 
 			const yMousePosition = event.offsetY + scrollTop;
 			adjustHeight(yMousePosition);
 
 			if (newWidth > 0 && newHeight > 0) {
-				e.$limberGridViewPseudoItem[userActionData.itemIndex].style.width =
+				e.$limberGridViewPseudoItem[iiv.userActionData.itemIndex].style.width =
 					newWidth + "px";
-				e.$limberGridViewPseudoItem[userActionData.itemIndex].style.height =
+				e.$limberGridViewPseudoItem[iiv.userActionData.itemIndex].style.height =
 					newHeight + "px";
 			}
 
-			showResizeDemoTimeOutVariable = setTimeout(
+			iiv.showResizeDemoTimeOutVariable = setTimeout(
 				showResizeDemo.bind(
 					this,
-					userActionData.itemIndex,
+					iiv.userActionData.itemIndex,
 					newWidth,
 					newHeight
 				),
@@ -268,12 +285,12 @@ export const onMouseMove = function (event) {
 			);
 		}
 	} else {
-		mouseDownCancel = true;
-		clearTimeout(longPressCheck);
-		document.removeEventListener("mousemove", onMouseMove);
-		e.$limberGridView.removeEventListener("mousemove", onMouseMove);
-		document.removeEventListener("mouseup", onMouseUp);
-		document.removeEventListener("contextmenu", onContextMenu);
+		iiv.mouseDownCancel = true;
+		clearTimeout(iiv.longPressCheck);
+		document.removeEventListener("mousemove", bf.onItemMouseMove);
+		e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
+		document.removeEventListener("mouseup", bf.onItemMouseUp);
+		document.removeEventListener("contextmenu", bf.onItemContextMenu);
 
 		// canceling mouseHold
 	}
@@ -281,16 +298,19 @@ export const onMouseMove = function (event) {
 	event.stopPropagation();
 };
 
-export const onTouchMove = function (event) {
+export const onItemTouchMove = function (event) {
 	const e = getElements(this);
 	const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 
-	if (tapHoldTimerComplete === true) {
-		if (userActionData.type === "move") {
-			loadOnMoveState(userActionData, event, "move");
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
 
-			clearTimeout(showMoveDemoTimeOutVariable);
+	if (iiv.touchHoldTimerComplete === true) {
+		if (iiv.userActionData.type === "move") {
+			loadOnMoveState(iiv.userActionData, event, "move");
+
+			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
@@ -321,10 +341,10 @@ export const onTouchMove = function (event) {
 				);
 
 				if (programScrolled !== true) {
-					showMoveDemoTimeOutVariable = setTimeout(
+					iiv.showMoveDemoTimeOutVariable = setTimeout(
 						showMoveDemo.bind(
 							this,
-							userActionData.itemIndex,
+							iiv.userActionData.itemIndex,
 							touchPositionOnLimberGrid
 						),
 						publicConstants.DEMO_WAIT_TIME
@@ -332,12 +352,12 @@ export const onTouchMove = function (event) {
 				}
 			}
 		} else {
-			loadOnMoveState(userActionData, event, "resize");
+			loadOnMoveState(iiv.userActionData, event, "resize");
 
-			clearTimeout(showResizeDemoTimeOutVariable);
+			clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
-			const x = userActionData.itemX;
-			const y = userActionData.itemY;
+			const x = iiv.userActionData.itemX;
+			const y = iiv.userActionData.itemY;
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
@@ -345,14 +365,16 @@ export const onTouchMove = function (event) {
 			const newHeight = touchPositionOnLimberGrid.y - y;
 
 			if (touchPositionOnLimberGrid !== false) {
-				userActionData.newWidth = newWidth;
-				userActionData.newHeight = newHeight;
+				iiv.userActionData.newWidth = newWidth;
+				iiv.userActionData.newHeight = newHeight;
 
 				if (newWidth > 0 && newHeight > 0) {
-					e.$limberGridViewPseudoItem[userActionData.itemIndex].style.width =
-						newWidth + "px";
-					e.$limberGridViewPseudoItem[userActionData.itemIndex].style.height =
-						newHeight + "px";
+					e.$limberGridViewPseudoItem[
+						iiv.userActionData.itemIndex
+					].style.width = newWidth + "px";
+					e.$limberGridViewPseudoItem[
+						iiv.userActionData.itemIndex
+					].style.height = newHeight + "px";
 				}
 			}
 
@@ -383,10 +405,10 @@ export const onTouchMove = function (event) {
 				);
 
 				if (programScrolled !== true) {
-					showResizeDemoTimeOutVariable = setTimeout(
+					iiv.showResizeDemoTimeOutVariable = setTimeout(
 						showResizeDemo.bind(
 							this,
-							userActionData.itemIndex,
+							iiv.userActionData.itemIndex,
 							newWidth,
 							newHeight
 						),
@@ -396,15 +418,15 @@ export const onTouchMove = function (event) {
 			}
 		}
 	} else {
-		tapHoldCancel = true;
-		clearTimeout(longTouchCheck);
-		document.removeEventListener("touchmove", onTouchMove);
-		e.$limberGridView.removeEventListener("touchmove", onTouchMove);
-		document.removeEventListener("touchend", onTouchEnd);
-		document.removeEventListener("contextmenu", onContextMenu);
-		document.removeEventListener("contextmenu", onItemTouchContextMenu);
-		document.removeEventListener("touchcancel", onTouchCancel);
-		e.$limberGridView.addEventListener("touchstart", onLimberGridTouchStart);
+		iiv.touchHoldCancel = true;
+		clearTimeout(iiv.longTouchCheck);
+		document.removeEventListener("touchmove", bf.onItemTouchMove);
+		e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
+		document.removeEventListener("touchend", bf.onItemTouchEnd);
+		document.removeEventListener("contextmenu", bf.onItemContextMenu);
+		document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
+		document.removeEventListener("touchcancel", bf.onItemTouchCancel);
+		e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 
 		// canceling taphold
 	}
@@ -412,18 +434,21 @@ export const onTouchMove = function (event) {
 	event.stopPropagation();
 };
 
-export const onMouseUp = async function (event) {
+export const onItemMouseUp = async function (event) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
 
-	clearTimeout(showMoveDemoTimeOutVariable);
-	clearTimeout(showResizeDemoTimeOutVariable);
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
+
+	clearTimeout(iiv.showMoveDemoTimeOutVariable);
+	clearTimeout(iiv.showResizeDemoTimeOutVariable);
 	var itemResizeFlag = false;
 	var itemMoveFlag = false;
-	if (mouseDownTimerComplete === true) {
-		if (userActionData.type === "move") {
-			unloadMoveState(userActionData);
+	if (iiv.mouseDownTimerComplete === true) {
+		if (iiv.userActionData.type === "move") {
+			unloadMoveState(iiv.userActionData);
 			unloadOnMoveState();
 
 			const mousePositionOnLimberGrid = calculateMousePosOnLimberGrid(event);
@@ -431,7 +456,7 @@ export const onMouseUp = async function (event) {
 			try {
 				if (mousePositionOnLimberGrid !== false) {
 					await moveItem(
-						userActionData.itemIndex,
+						iiv.userActionData.itemIndex,
 						mousePositionOnLimberGrid.x,
 						mousePositionOnLimberGrid.y
 					);
@@ -446,29 +471,29 @@ export const onMouseUp = async function (event) {
 				revertShowMoveOrResizeDemo(this);
 			}
 		} else {
-			unloadResizingState(userActionData);
+			unloadResizingState(iiv.userActionData);
 			unloadOnMoveState();
 
 			try {
-				var newWidth = userActionData.newWidth;
-				var newHeight = userActionData.newHeight;
+				var newWidth = iiv.userActionData.newWidth;
+				var newHeight = iiv.userActionData.newHeight;
 
-				resizeItem(userActionData.itemIndex, newWidth, newHeight);
+				resizeItem(iiv.userActionData.itemIndex, newWidth, newHeight);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
 				itemResizeFlag = true;
 			}
 		}
 	} else {
-		mouseDownCancel = true;
-		clearTimeout(longPressCheck);
+		iiv.mouseDownCancel = true;
+		clearTimeout(iiv.longPressCheck);
 		// canceling mouseHold
 	}
 
-	document.removeEventListener("mousemove", onMouseMove);
-	e.$limberGridView.removeEventListener("mousemove", onMouseMove);
-	document.removeEventListener("mouseup", onMouseUp);
-	document.removeEventListener("contextmenu", onContextMenu);
+	document.removeEventListener("mousemove", bf.onItemMouseMove);
+	e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
+	document.removeEventListener("mouseup", bf.onItemMouseUp);
+	document.removeEventListener("contextmenu", bf.onItemContextMenu);
 
 	event.preventDefault();
 	event.stopPropagation();
@@ -479,15 +504,19 @@ export const onMouseUp = async function (event) {
 		callbacks.moveCompleteCallback != null
 	) {
 		if (itemMoveFlag == true) {
-			updatedCoordinates.width = pd[userActionData.itemIndex].width;
-			updatedCoordinates.height = pd[userActionData.itemIndex].height;
+			updatedCoordinates.width = pd[iiv.userActionData.itemIndex].width;
+			updatedCoordinates.height = pd[iiv.userActionData.itemIndex].height;
 			callbacks.moveCompleteCallback(
 				true,
-				userActionData.itemIndex,
+				iiv.userActionData.itemIndex,
 				updatedCoordinates
 			);
-		} else if (userActionData.type == "move") {
-			callbacks.moveCompleteCallback(false, userActionData.itemIndex, event);
+		} else if (iiv.userActionData.type == "move") {
+			callbacks.moveCompleteCallback(
+				false,
+				iiv.userActionData.itemIndex,
+				event
+			);
 		}
 	}
 	if (
@@ -495,9 +524,9 @@ export const onMouseUp = async function (event) {
 		callbacks.resizeCompleteCallback != null
 	) {
 		if (itemResizeFlag == true) {
-			callbacks.resizeCompleteCallback(userActionData.itemIndex, {
-				x: pd[userActionData.itemIndex].x,
-				y: pd[userActionData.itemIndex].y,
+			callbacks.resizeCompleteCallback(iiv.userActionData.itemIndex, {
+				x: pd[iiv.userActionData.itemIndex].x,
+				y: pd[iiv.userActionData.itemIndex].y,
 				height: newHeight,
 				width: newWidth,
 			});
@@ -505,21 +534,24 @@ export const onMouseUp = async function (event) {
 	}
 	//
 
-	userActionData = null;
+	iiv.userActionData = null;
 };
 
-export const onTouchEnd = async function (event) {
+export const onItemTouchEnd = async function (event) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
 
-	clearTimeout(showMoveDemoTimeOutVariable);
-	clearTimeout(showResizeDemoTimeOutVariable);
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
+
+	clearTimeout(iiv.showMoveDemoTimeOutVariable);
+	clearTimeout(iiv.showResizeDemoTimeOutVariable);
 	var itemResizeFlag = false;
 	var itemMoveFlag = false;
-	if (tapHoldTimerComplete === true) {
-		if (userActionData.type === "move") {
-			unloadMoveState(userActionData);
+	if (iiv.touchHoldTimerComplete === true) {
+		if (iiv.userActionData.type === "move") {
+			unloadMoveState(iiv.userActionData);
 			unloadOnMoveState();
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
@@ -527,7 +559,7 @@ export const onTouchEnd = async function (event) {
 			try {
 				if (touchPositionOnLimberGrid !== false) {
 					await moveItem(
-						userActionData.itemIndex,
+						iiv.userActionData.itemIndex,
 						touchPositionOnLimberGrid.x,
 						touchPositionOnLimberGrid.y
 					);
@@ -542,32 +574,32 @@ export const onTouchEnd = async function (event) {
 				revertShowMoveOrResizeDemo(this);
 			}
 		} else {
-			unloadResizingState(userActionData);
+			unloadResizingState(iiv.userActionData);
 			unloadOnMoveState();
 
 			try {
-				var newWidth = userActionData.newWidth;
-				var newHeight = userActionData.newHeight;
+				var newWidth = iiv.userActionData.newWidth;
+				var newHeight = iiv.userActionData.newHeight;
 
-				resizeItem(userActionData.itemIndex, newWidth, newHeight);
+				resizeItem(iiv.userActionData.itemIndex, newWidth, newHeight);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
 				itemResizeFlag = true;
 			}
 		}
 	} else {
-		tapHoldCancel = true;
-		clearTimeout(longTouchCheck);
+		iiv.touchHoldCancel = true;
+		clearTimeout(iiv.longTouchCheck);
 		// canceling taphold
 	}
 
-	document.removeEventListener("touchmove", onTouchMove);
-	e.$limberGridView.removeEventListener("touchmove", onTouchMove);
-	document.removeEventListener("touchend", onTouchEnd);
-	document.removeEventListener("contextmenu", onContextMenu);
-	document.removeEventListener("contextmenu", onItemTouchContextMenu);
-	document.removeEventListener("touchcancel", onTouchCancel);
-	e.$limberGridView.addEventListener("touchstart", onLimberGridTouchStart);
+	document.removeEventListener("touchmove", bf.onItemTouchMove);
+	e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
+	document.removeEventListener("touchend", bf.onItemTouchEnd);
+	document.removeEventListener("contextmenu", bf.onItemContextMenu);
+	document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
+	document.removeEventListener("touchcancel", bf.onItemTouchCancel);
+	e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 
 	event.stopPropagation();
 
@@ -577,15 +609,19 @@ export const onTouchEnd = async function (event) {
 		callbacks.moveCompleteCallback != null
 	) {
 		if (itemMoveFlag == true) {
-			updatedCoordinates.width = pd[userActionData.itemIndex].width;
-			updatedCoordinates.height = pd[userActionData.itemIndex].height;
+			updatedCoordinates.width = pd[iiv.userActionData.itemIndex].width;
+			updatedCoordinates.height = pd[iiv.userActionData.itemIndex].height;
 			callbacks.moveCompleteCallback(
 				true,
-				userActionData.itemIndex,
+				iiv.userActionData.itemIndex,
 				updatedCoordinates
 			);
-		} else if (userActionData.type == "move") {
-			callbacks.moveCompleteCallback(false, userActionData.itemIndex, event);
+		} else if (iiv.userActionData.type == "move") {
+			callbacks.moveCompleteCallback(
+				false,
+				iiv.userActionData.itemIndex,
+				event
+			);
 		}
 	}
 	if (
@@ -593,9 +629,9 @@ export const onTouchEnd = async function (event) {
 		callbacks.resizeCompleteCallback != null
 	) {
 		if (itemResizeFlag == true) {
-			callbacks.resizeCompleteCallback(userActionData.itemIndex, {
-				x: pd[userActionData.itemIndex].x,
-				y: pd[userActionData.itemIndex].y,
+			callbacks.resizeCompleteCallback(iiv.userActionData.itemIndex, {
+				x: pd[iiv.userActionData.itemIndex].x,
+				y: pd[iiv.userActionData.itemIndex].y,
 				height: newHeight,
 				width: newWidth,
 			});
@@ -603,33 +639,36 @@ export const onTouchEnd = async function (event) {
 	}
 	//
 
-	userActionData = null;
+	iiv.userActionData = null;
 };
 
-export const onContextMenu = function (event) {
+export const onItemContextMenu = function (event) {
 	const e = getElements(this);
 
-	clearTimeout(showMoveDemoTimeOutVariable);
-	clearTimeout(showResizeDemoTimeOutVariable);
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
+
+	clearTimeout(iiv.showMoveDemoTimeOutVariable);
+	clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
 	unloadResizingState();
 	unloadMoveState();
 	unloadOnMoveState();
 	revertShowMoveOrResizeDemo(this);
 
-	document.removeEventListener("mousemove", onMouseMove);
-	e.$limberGridView.removeEventListener("mousemove", onMouseMove);
-	document.removeEventListener("mouseup", onMouseUp);
+	document.removeEventListener("mousemove", bf.onItemMouseMove);
+	e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
+	document.removeEventListener("mouseup", bf.onItemMouseUp);
 
-	document.removeEventListener("touchmove", onTouchMove);
-	e.$limberGridView.removeEventListener("touchmove", onTouchMove);
-	document.removeEventListener("touchend", onTouchEnd);
-	document.removeEventListener("contextmenu", onItemTouchContextMenu);
-	document.removeEventListener("touchcancel", onTouchCancel);
+	document.removeEventListener("touchmove", bf.onItemTouchMove);
+	e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
+	document.removeEventListener("touchend", bf.onItemTouchEnd);
+	document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
+	document.removeEventListener("touchcancel", bf.onItemTouchCancel);
 
-	document.removeEventListener("contextmenu", onContextMenu);
+	document.removeEventListener("contextmenu", bf.onItemContextMenu);
 
-	userActionData = null;
+	iiv.userActionData = null;
 
 	event.preventDefault();
 	event.stopPropagation();
@@ -639,12 +678,15 @@ export const onItemTouchContextMenu = function (event) {
 	event.preventDefault();
 };
 
-export const onTouchCancel = function (event) {
+export const onItemTouchCancel = function (event) {
 	const e = getElements(this);
 
-	onContextMenu();
-	tapHoldTimerComplete = false;
-	e.$limberGridView.addEventListener("touchstart", onLimberGridTouchStart);
+	const iiv = getItemInteractionVars(this);
+	const bf = getBindedFunctions(this);
+
+	onItemContextMenu.call(this);
+	iiv.touchHoldTimerComplete = false;
+	e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 };
 
 export const showMoveDemo = async function (index, mousePosition) {

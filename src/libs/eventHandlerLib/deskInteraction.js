@@ -25,14 +25,16 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import {
-	getMarginAtPoint,
+	// getMarginAtPoint,
 	adjustHeight,
 	adjustScroll,
 } from "../utils/essentials";
-import {
-	isPlaneBInsidePlaneA_TouchingIsInside,
-	shiftItemsUp,
-} from "../calc/calcUtils";
+import { getItemDimenWithMargin } from "../utils/utils";
+// import {
+// 	isPlaneBInsidePlaneA_TouchingIsInside,
+// 	shiftItemsUp,
+// } from "../calc/calcUtils";
+import { doRectsOverlap, doRectsOnlyTouch } from "../rect/rectUtils";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
@@ -41,26 +43,42 @@ import {
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { calculateTouchPosOnLimberGrid } from "./eventHandlerUtils.js";
-import { loadInitState, unloadInitState } from "./addItemAndCutSpaceUtils.js";
+import {
+	loadInitState,
+	unloadInitState,
+	shiftItemsUp,
+} from "./deskInteractionUtils.js";
 import {
 	initializeItemTouchEvents,
 	unInitializeItemTouchEvents,
 } from "./initializers";
-import { addItemsAtPositions } from "../renderers/addOrRemoveItems";
+import { getBindedFunctions } from "../../store/variables/bindedFunctions";
+import { getDeskInteractionVars } from "../../store/variables/eventSpecific";
+import { addItem } from "../renderers/renderers";
+// import { addItemsAtPositions } from "../renderers/addOrRemoveItems";
 
-let userActionData = {};
-let limberGridMouseDownCancel = false;
-let limberGridMouseDownTimerComplete = false;
-let limberGridTouchStartCancel = false;
-let limberGridTouchStartTimerComplete = false;
-let limberGridMouseDownCheckTimeOutVariable;
-let limberGridTouchStartCheckTimeOutVariable;
-let addItemAllowCheckTimeOutVariable;
-let cutSpaceAllowCheckTimeOutVariable;
+// let userActionData = {};
+// let mouseDownCancel = false;
+// // let limberGridMouseDownCancel = false;
+// let mouseDownTimerComplete = false;
+// // let limberGridMouseDownTimerComplete = false;
+// let tapHoldCancel = false;
+// // let limberGridTouchStartCancel = false;
+// let tapHoldTimerComplete = false;
+// // let limberGridTouchStartTimerComplete = false;
+// let longPressCheck;
+// // let limberGridMouseDownCheckTimeOutVariable;
+// let longTouchCheck;
+// // let limberGridTouchStartCheckTimeOutVariable;
+// let addItemAllowCheckTimeOutVariable;
+// let cutSpaceAllowCheckTimeOutVariable;
 
-export const onLimberGridMouseDown = function (event) {
+export const onDeskMouseDown = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+
+	const dkiv = getDeskInteractionVars(this);
+	const bf = getBindedFunctions(this);
 
 	if (event.target.classList.contains("limber-grid-view")) {
 		event.stopPropagation();
@@ -72,23 +90,26 @@ export const onLimberGridMouseDown = function (event) {
 		return;
 	}
 
-	limberGridMouseDownCancel = false;
-	limberGridMouseDownTimerComplete = false;
+	dkiv.mouseDownCancel = false;
+	dkiv.mouseDownTimerComplete = false;
 
-	clearTimeout(limberGridMouseDownCheckTimeOutVariable);
-	limberGridMouseDownCheckTimeOutVariable = setTimeout(
-		onLimberGridMouseDownCheck.bind(this, event, event.offsetX, event.offsetY),
+	clearTimeout(dkiv.longPressCheck);
+	dkiv.longPressCheck = setTimeout(
+		mouseDownCheck.bind(this, event, event.offsetX, event.offsetY),
 		publicConstants.MOUSE_DOWN_TIME
 	);
 
-	e.$limberGridView.addEventListener("mousemove", onLimberGridMouseMove);
-	document.addEventListener("mouseup", onLimberGridMouseUp);
-	document.addEventListener("contextmenu", onLimberGridContextMenu);
+	e.$limberGridView.addEventListener("mousemove", bf.onDeskMouseMove);
+	document.addEventListener("mouseup", bf.onDeskMouseUp);
+	document.addEventListener("contextmenu", bf.onDeskContextMenu);
 };
 
-export const onLimberGridTouchStart = function (event) {
+export const onDeskTouchStart = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+
+	const dkiv = getDeskInteractionVars(this);
+	const bf = getBindedFunctions(this);
 
 	if (event.target.classList.contains("limber-grid-view")) {
 		event.stopPropagation();
@@ -100,37 +121,40 @@ export const onLimberGridTouchStart = function (event) {
 		return;
 	}
 
-	limberGridTouchStartCancel = false;
-	limberGridTouchStartTimerComplete = false;
+	dkiv.tapHoldCancel = false;
+	dkiv.tapHoldTimerComplete = false;
 
-	clearTimeout(limberGridTouchStartCheckTimeOutVariable);
-	limberGridTouchStartCheckTimeOutVariable = setTimeout(
-		onLimberGridTouchStartCheck.bind(this, event),
+	clearTimeout(dkiv.longTouchCheck);
+	dkiv.longTouchCheck = setTimeout(
+		tapHoldCheck.bind(this, event),
 		publicConstants.TOUCH_HOLD_TIME
 	);
 
-	e.$limberGridView.addEventListener("touchmove", onLimberGridTouchMove);
-	document.addEventListener("touchend", onLimberGridTouchEnd);
-	document.addEventListener("touchcancel", onLimberGridTouchCancel);
-	document.addEventListener("contextmenu", onLimberGridTouchContextMenu);
+	e.$limberGridView.addEventListener("touchmove", bf.onDeskTouchMove);
+	document.addEventListener("touchend", bf.onDeskTouchEnd);
+	document.addEventListener("touchcancel", bf.onDeskTouchCancel);
+	document.addEventListener("contextmenu", bf.onDeskTouchContextMenu);
 	unInitializeItemTouchEvents();
 
 	event.stopPropagation();
 };
 
-export const onLimberGridMouseDownCheck = function (event, offsetX, offsetY) {
+// onLimberGridMouseDownCheck
+export const mouseDownCheck = function (event, offsetX, offsetY) {
 	const e = getElements(this);
 	const privateConstants = getPrivateConstants(this);
 
-	if (limberGridMouseDownCancel === false) {
-		limberGridMouseDownTimerComplete = true;
+	const dkiv = getDeskInteractionVars(this);
+
+	if (dkiv.mouseDownCancel === false) {
+		dkiv.mouseDownTimerComplete = true;
 
 		var scrollTop = e.$limberGridView.scrollTop;
 		var scrollLeft = e.$limberGridView.scrollLeft;
 		var x = offsetX + scrollLeft - privateConstants.PADDING_LEFT;
 		var y = offsetY + scrollTop - privateConstants.PADDING_TOP;
 
-		userActionData = {
+		dkiv.userActionData = {
 			type: "add",
 			addPositionX: x,
 			addPositionY: y,
@@ -146,18 +170,21 @@ export const onLimberGridMouseDownCheck = function (event, offsetX, offsetY) {
 	}
 };
 
-export const onLimberGridTouchStartCheck = function (event) {
+// onLimberGridTouchStartCheck
+export const tapHoldCheck = function (event) {
 	const e = getElements(this);
 
-	if (limberGridTouchStartCancel === false) {
-		limberGridTouchStartTimerComplete = true;
+	const dkiv = getDeskInteractionVars(this);
+
+	if (dkiv.tapHoldCancel === false) {
+		dkiv.tapHoldTimerComplete = true;
 
 		var touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
 		var x = touchPositionOnLimberGrid.x;
 		var y = touchPositionOnLimberGrid.y;
 
-		userActionData = {
+		dkiv.userActionData = {
 			type: "add",
 			addPositionX: x,
 			addPositionY: y,
@@ -188,12 +215,15 @@ export const onLimberGridTouchStartCheck = function (event) {
 	}
 };
 
-export const onLimberGridMouseMove = function (event) {
+export const onDeskMouseMove = function (event) {
 	const e = getElements(this);
 	const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 
-	if (limberGridMouseDownTimerComplete === true) {
+	const dkiv = getDeskInteractionVars(this);
+	const bf = getBindedFunctions(this);
+
+	if (dkiv.mouseDownTimerComplete === true) {
 		e.$limberGridViewAddCutGuide.classList.remove(
 			"limber-grid-view-add-cut-guide-allow",
 			"limber-grid-view-add-cut-guide-disallow"
@@ -202,16 +232,16 @@ export const onLimberGridMouseMove = function (event) {
 		const scrollTop = e.$limberGridView.scrollTop;
 		const scrollLeft = e.$limberGridView.scrollLeft;
 
-		const x = userActionData.addPositionX;
-		const y = userActionData.addPositionY;
+		const x = dkiv.userActionData.addPositionX;
+		const y = dkiv.userActionData.addPositionY;
 
 		const newWidth =
 			event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
 		const newHeight =
 			event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
 
-		userActionData.newWidth = newWidth;
-		userActionData.newHeight = newHeight;
+		dkiv.userActionData.newWidth = newWidth;
+		dkiv.userActionData.newHeight = newHeight;
 
 		const yMousePosition = event.offsetY + scrollTop;
 		adjustHeight(yMousePosition);
@@ -222,24 +252,24 @@ export const onLimberGridMouseMove = function (event) {
 		}
 
 		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
-			clearTimeout(addItemAllowCheckTimeOutVariable);
-			addItemAllowCheckTimeOutVariable = setTimeout(
+			clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+			dkiv.addItemAllowCheckTimeOutVariable = setTimeout(
 				addItemAllowCheckTimeOut.bind(
 					this,
-					userActionData.addPositionX,
-					userActionData.addPositionY,
+					dkiv.userActionData.addPositionX,
+					dkiv.userActionData.addPositionY,
 					newWidth,
 					newHeight
 				),
 				publicConstants.DEMO_WAIT_TIME
 			);
 		} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "CUTSPACE") {
-			clearTimeout(cutSpaceAllowCheckTimeOutVariable);
-			cutSpaceAllowCheckTimeOutVariable = setTimeout(
+			clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
+			dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(
 				cutSpaceAllowCheckTimeOut.bind(
 					this,
-					userActionData.addPositionX,
-					userActionData.addPositionY,
+					dkiv.userActionData.addPositionX,
+					dkiv.userActionData.addPositionY,
 					newWidth,
 					newHeight
 				),
@@ -247,21 +277,24 @@ export const onLimberGridMouseMove = function (event) {
 			);
 		}
 	} else {
-		clearTimeout(limberGridMouseDownCheckTimeOutVariable);
+		clearTimeout(dkiv.longPressCheck);
 
-		e.$limberGridView.removeEventListener("mousemove", onLimberGridMouseMove);
-		document.removeEventListener("mouseup", onLimberGridMouseUp);
-		document.removeEventListener("contextmenu", onLimberGridContextMenu);
+		e.$limberGridView.removeEventListener("mousemove", bf.onDeskMouseMove);
+		document.removeEventListener("mouseup", bf.onDeskMouseUp);
+		document.removeEventListener("contextmenu", bf.onDeskContextMenu);
 	}
 	event.stopPropagation();
 };
 
-export const onLimberGridTouchMove = function (event) {
+export const onDeskTouchMove = function (event) {
 	const e = getElements(this);
 	const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 
-	if (limberGridTouchStartTimerComplete === true) {
+	const dkiv = getDeskInteractionVars(this);
+	const bf = getBindedFunctions(this);
+
+	if (dkiv.tapHoldTimerComplete === true) {
 		e.$limberGridViewAddCutGuide.classList.remove(
 			"limber-grid-view-add-cut-guide-allow",
 			"limber-grid-view-add-cut-guide-disallow"
@@ -270,8 +303,8 @@ export const onLimberGridTouchMove = function (event) {
 		const scrollTop = e.$limberGridView.scrollTop;
 		const scrollLeft = e.$limberGridView.scrollLeft;
 
-		const x = userActionData.addPositionX;
-		const y = userActionData.addPositionY;
+		const x = dkiv.userActionData.addPositionX;
+		const y = dkiv.userActionData.addPositionY;
 
 		const touchPositionOnLimberGrid = calculateTouchPosOnLimberGrid(event);
 
@@ -279,8 +312,8 @@ export const onLimberGridTouchMove = function (event) {
 		const newHeight = touchPositionOnLimberGrid.y - y;
 
 		if (touchPositionOnLimberGrid !== false) {
-			userActionData.newWidth = newWidth;
-			userActionData.newHeight = newHeight;
+			dkiv.userActionData.newWidth = newWidth;
+			dkiv.userActionData.newHeight = newHeight;
 
 			if (newWidth > 0 && newHeight > 0) {
 				e.$limberGridViewAddCutGuide.style.width = newWidth + "px";
@@ -310,13 +343,13 @@ export const onLimberGridTouchMove = function (event) {
 			);
 
 			if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
-				clearTimeout(addItemAllowCheckTimeOutVariable);
+				clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
 				if (programScrolled !== true) {
-					addItemAllowCheckTimeOutVariable = setTimeout(
+					dkiv.addItemAllowCheckTimeOutVariable = setTimeout(
 						addItemAllowCheckTimeOut.bind(
 							this,
-							userActionData.addPositionX,
-							userActionData.addPositionY,
+							dkiv.userActionData.addPositionX,
+							dkiv.userActionData.addPositionY,
 							newWidth,
 							newHeight
 						),
@@ -324,13 +357,13 @@ export const onLimberGridTouchMove = function (event) {
 					);
 				}
 			} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "CUTSPACE") {
-				clearTimeout(cutSpaceAllowCheckTimeOutVariable);
+				clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
 				if (programScrolled !== true) {
-					cutSpaceAllowCheckTimeOutVariable = setTimeout(
+					dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(
 						cutSpaceAllowCheckTimeOut.bind(
 							this,
-							userActionData.addPositionX,
-							userActionData.addPositionY,
+							dkiv.userActionData.addPositionX,
+							dkiv.userActionData.addPositionY,
 							newWidth,
 							newHeight
 						),
@@ -341,51 +374,49 @@ export const onLimberGridTouchMove = function (event) {
 		}
 		event.preventDefault();
 	} else {
-		clearTimeout(limberGridTouchStartCheckTimeOutVariable);
+		clearTimeout(dkiv.longTouchCheck);
 
-		e.$limberGridView.removeEventListener("touchmove", onLimberGridTouchMove);
-		document.removeEventListener("touchend", onLimberGridTouchEnd);
-		document.removeEventListener("touchcancel", onLimberGridTouchCancel);
-		document.removeEventListener("contextmenu", onLimberGridTouchContextMenu);
+		e.$limberGridView.removeEventListener("touchmove", bf.onDeskTouchMove);
+		document.removeEventListener("touchend", bf.onDeskTouchEnd);
+		document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
+		document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
 		initializeItemTouchEvents();
 	}
 
 	event.stopPropagation();
 };
 
-export const onLimberGridMouseUp = function (event) {
+export const onDeskMouseUp = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
 
-	clearTimeout(addItemAllowCheckTimeOutVariable);
-	clearTimeout(limberGridMouseDownCheckTimeOutVariable);
+	const dkiv = getDeskInteractionVars(this);
+
+	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+	clearTimeout(dkiv.longPressCheck);
 	var itemAddedFlag = false;
-	if (limberGridMouseDownTimerComplete === true) {
+	if (dkiv.mouseDownTimerComplete === true) {
 		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
 			if (
 				addItemAllowCheck(
 					this,
-					userActionData.addPositionX,
-					userActionData.addPositionY,
-					userActionData.newWidth,
-					userActionData.newHeight
+					dkiv.userActionData.addPositionX,
+					dkiv.userActionData.addPositionY,
+					dkiv.userActionData.newWidth,
+					dkiv.userActionData.newHeight
 				)
 			) {
 				var item = {
-					x: userActionData.addPositionX,
-					y: userActionData.addPositionY,
-					width: userActionData.newWidth,
-					height: userActionData.newHeight,
+					x: dkiv.userActionData.addPositionX,
+					y: dkiv.userActionData.addPositionY,
+					width: dkiv.userActionData.newWidth,
+					height: dkiv.userActionData.newHeight,
 				};
 
 				var scrollTop = e.$limberGridView.scrollTop;
 
-				var renderDetails = addItemsAtPositions(
-					[item],
-					false,
-					"addItemInteractive"
-				);
+				var renderDetails = addItem([item], false, "addItemInteractive");
 				itemAddedFlag = true;
 
 				e.$limberGridView.scrollTop = scrollTop;
@@ -394,19 +425,22 @@ export const onLimberGridMouseUp = function (event) {
 			if (
 				cutSpaceAllowCheck(
 					this,
-					userActionData.addPositionX,
-					userActionData.addPositionY,
-					userActionData.newWidth,
-					userActionData.newHeight
+					dkiv.userActionData.addPositionX,
+					dkiv.userActionData.addPositionY,
+					dkiv.userActionData.newWidth,
+					dkiv.userActionData.newHeight
 				)
 			) {
-				shiftItemsUp(userActionData.addPositionY, userActionData.newHeight);
+				shiftItemsUp(
+					dkiv.userActionData.addPositionY,
+					dkiv.userActionData.newHeight
+				);
 			}
 		}
 	} else {
-		limberGridMouseDownCancel = true;
+		dkiv.mouseDownCancel = true;
 	}
-	onLimberGridContextMenu();
+	onDeskContextMenu.call(this);
 	event.stopPropagation();
 
 	if (
@@ -424,39 +458,37 @@ export const onLimberGridMouseUp = function (event) {
 	}
 };
 
-export const onLimberGridTouchEnd = function (event) {
+export const onDeskTouchEnd = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
 
-	clearTimeout(addItemAllowCheckTimeOutVariable);
-	clearTimeout(limberGridTouchStartCheckTimeOutVariable);
+	const dkiv = getDeskInteractionVars(this);
+
+	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+	clearTimeout(dkiv.longTouchCheck);
 	var itemAddedFlag = false;
-	if (limberGridTouchStartTimerComplete === true) {
+	if (dkiv.tapHoldTimerComplete === true) {
 		if (publicConstants.ADD_OR_CUTSPACE_TOGGLE === "ADD") {
 			if (
 				addItemAllowCheck(
 					this,
-					userActionData.addPositionX,
-					userActionData.addPositionY,
-					userActionData.newWidth,
-					userActionData.newHeight
+					dkiv.userActionData.addPositionX,
+					dkiv.userActionData.addPositionY,
+					dkiv.userActionData.newWidth,
+					dkiv.userActionData.newHeight
 				)
 			) {
 				var item = {
-					x: userActionData.addPositionX,
-					y: userActionData.addPositionY,
-					width: userActionData.newWidth,
-					height: userActionData.newHeight,
+					x: dkiv.userActionData.addPositionX,
+					y: dkiv.userActionData.addPositionY,
+					width: dkiv.userActionData.newWidth,
+					height: dkiv.userActionData.newHeight,
 				};
 
 				var scrollTop = e.$limberGridView.scrollTop;
 
-				var renderDetails = addItemsAtPositions(
-					[item],
-					false,
-					"addItemInteractive"
-				);
+				var renderDetails = addItem([item], false, "addItemInteractive");
 				itemAddedFlag = true;
 
 				e.$limberGridView.scrollTop = scrollTop;
@@ -465,20 +497,23 @@ export const onLimberGridTouchEnd = function (event) {
 			if (
 				cutSpaceAllowCheck(
 					this,
-					userActionData.addPositionX,
-					userActionData.addPositionY,
-					userActionData.newWidth,
-					userActionData.newHeight
+					dkiv.userActionData.addPositionX,
+					dkiv.userActionData.addPositionY,
+					dkiv.userActionData.newWidth,
+					dkiv.userActionData.newHeight
 				)
 			) {
-				shiftItemsUp(userActionData.addPositionY, userActionData.newHeight);
+				shiftItemsUp(
+					dkiv.userActionData.addPositionY,
+					dkiv.userActionData.newHeight
+				);
 			}
 		}
 	} else {
-		limberGridTouchStartCancel = true;
+		dkiv.tapHoldCancel = true;
 	}
-	limberGridTouchStartTimerComplete = false;
-	onLimberGridContextMenu();
+	dkiv.tapHoldTimerComplete = false;
+	onDeskContextMenu.call(this);
 	initializeItemTouchEvents();
 
 	event.stopPropagation();
@@ -498,23 +533,27 @@ export const onLimberGridTouchEnd = function (event) {
 	}
 };
 
-export const onLimberGridTouchCancel = function (event) {
-	clearTimeout(addItemAllowCheckTimeOutVariable);
-	clearTimeout(limberGridTouchStartCheckTimeOutVariable);
-	limberGridTouchStartCancel = false;
-	limberGridTouchStartTimerComplete = false;
-	onLimberGridContextMenu();
+export const onDeskTouchCancel = function (event) {
+	const dkiv = getDeskInteractionVars(this);
+
+	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+	clearTimeout(dkiv.longTouchCheck);
+	dkiv.tapHoldCancel = false;
+	dkiv.tapHoldTimerComplete = false;
+	onDeskContextMenu.call(this);
 	initializeItemTouchEvents();
 
 	event.stopPropagation();
 };
 
-export const onLimberGridTouchContextMenu = function (event) {
+export const onDeskTouchContextMenu = function (event) {
 	event.preventDefault();
 };
 
-export const onLimberGridContextMenu = function (event) {
+export const onDeskContextMenu = function (event) {
 	const e = getElements(this);
+
+	const bf = getBindedFunctions(this);
 
 	if (event) {
 		event.preventDefault();
@@ -523,14 +562,14 @@ export const onLimberGridContextMenu = function (event) {
 
 	unloadInitState();
 
-	e.$limberGridView.removeEventListener("mousemove", onLimberGridMouseMove);
-	document.removeEventListener("mouseup", onLimberGridMouseUp);
-	document.removeEventListener("contextmenu", onLimberGridContextMenu);
+	e.$limberGridView.removeEventListener("mousemove", bf.onDeskMouseMove);
+	document.removeEventListener("mouseup", bf.onDeskMouseUp);
+	document.removeEventListener("contextmenu", bf.onDeskContextMenu);
 
-	e.$limberGridView.removeEventListener("touchmove", onLimberGridTouchMove);
-	document.removeEventListener("touchend", onLimberGridTouchEnd);
-	document.removeEventListener("touchcancel", onLimberGridTouchCancel);
-	document.removeEventListener("contextmenu", onLimberGridTouchContextMenu);
+	e.$limberGridView.removeEventListener("touchmove", bf.onDeskTouchMove);
+	document.removeEventListener("touchend", bf.onDeskTouchEnd);
+	document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
+	document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
 };
 
 export const addItemAllowCheckTimeOut = function (x, y, width, height) {
@@ -559,10 +598,10 @@ export const addItemAllowCheck = function (context, x, y, width, height) {
 	const pd = getPositionData(this);
 
 	var tempPlane = {
-		x: x,
-		y: y,
-		width: width,
-		height: height,
+		x: x - privateConstants.MARGIN,
+		y: y - privateConstants.MARGIN,
+		width: width + publicConstants.MARGIN * 2,
+		height: height + publicConstants.MARGIN * 2,
 	};
 
 	if (x < 0 || y < 0) {
@@ -581,15 +620,18 @@ export const addItemAllowCheck = function (context, x, y, width, height) {
 		return false;
 	}
 
+	let isInside;
 	const len = pd.length;
-	for (var i = 0; i < len; i++) {
-		var iterItem = {
-			x: pd[i].x - getMarginAtPoint(pd[i].x),
-			y: pd[i].y - getMarginAtPoint(pd[i].y),
-			width: pd[i].width + getMarginAtPoint(pd[i].x) + publicConstants.MARGIN,
-			height: pd[i].height + getMarginAtPoint(pd[i].y) + publicConstants.MARGIN,
-		};
-		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(iterItem, tempPlane);
+	for (let i = 0; i < len; i++) {
+		isInside =
+			doRectsOverlap(
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i]),
+				tempPlane
+			) ||
+			doRectsOnlyTouch(
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i]),
+				tempPlane
+			);
 
 		if (isInside) {
 			return false;
@@ -620,22 +662,31 @@ export const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
 
 export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
+	const pd = getPositionData(context);
 
-	var tempPlane = {
+	const tempPlane = {
 		x: 0,
-		y: y - publicConstants.MARGIN / 2,
+		y: y,
 		width: privateConstants.WIDTH,
-		height: height + publicConstants.MARGIN / 2,
+		height: height,
 	};
 
 	if (typeof width !== "number" || typeof height !== "number") {
 		return false;
 	}
 
+	let isInside;
 	const len = pd.length;
-	for (var i = 0; i < len; i++) {
-		var isInside = isPlaneBInsidePlaneA_TouchingIsInside(tempPlane, pd[i]);
+	for (let i = 0; i < len; i++) {
+		isInside =
+			doRectsOverlap(
+				tempPlane,
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
+			) ||
+			doRectsOnlyTouch(
+				tempPlane,
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
+			);
 
 		if (isInside) {
 			return false;

@@ -28,32 +28,35 @@ import getPublicConstants from "../../store/constants/publicConstants";
 // import getPrivateConstants from "../../store/constants/privateConstants";
 import getOptions from "../../store/variables/options";
 import { getCallbacks } from "../../store/variables/essentials";
+import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
 
 export const onWindowResize = function (event) {
-	console.log("onWindowResize CALL", this);
-
 	const publicConstants = getPublicConstants(this);
 
 	setTimeout(
-		onWindowResizeTimerCallback.bind(this),
+		getBindedFunctions(this).onWindowResizeTimerCallback,
+		// onWindowResizeTimerCallback,
 		publicConstants.WINDOW_RESIZE_WAIT_TIME
+		// this
 	);
-	window.removeEventListener("resize", onWindowResize);
+	window.removeEventListener("resize", getBindedFunctions(this).onWindowResize);
 };
 
 export const onWindowResizeTimerCallback = function (event) {
 	init(this, false);
 	render(this);
 
-	const options = getOptions();
+	const options = getOptions(this);
 
 	if (options.reRenderOnResize !== false) {
-		window.addEventListener("resize", onWindowResize.bind(this));
+		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
 	}
 };
 
 export const onItemClick = function (event) {
+	const callbacks = getCallbacks(this);
+
 	callbacks.onItemClickCallback(event);
 };
