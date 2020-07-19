@@ -209,6 +209,10 @@ export const getItemsBelowBottomWorkSpace = (
 	const mpd = getModifiedPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
+	if (!workSpaceRect) {
+		return [];
+	}
+
 	const len = mpd.length;
 	const items = new Array(len);
 	let count = 0;
@@ -248,8 +252,8 @@ export const getResizeWSItemsDetail = (
 	const privateConstants = getPrivateConstants(context);
 
 	const wsPlusTopWsCo = {
-		tl: { ...topWsCo.tl },
-		tr: { ...topWsCo.tr },
+		tl: { ...(topWsCo?.tl ? topWsCo.tl : wsCo.tl) },
+		tr: { ...(topWsCo?.tr ? topWsCo.tr : wsCo.tr) },
 		br: { ...wsCo.br },
 		bl: { ...wsCo.bl },
 	};

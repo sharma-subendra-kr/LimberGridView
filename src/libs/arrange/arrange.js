@@ -387,8 +387,10 @@ export const arrangeResize = async (
 		_combinedWorkSpaceRectCo.tl = { ..._topWorkSpaceCo.tl };
 		_combinedWorkSpaceRectCo.tr = { ..._topWorkSpaceCo.tr };
 	}
-	_combinedWorkSpaceRectCo.br = { ..._bottomWorkSpaceCo.br };
-	_combinedWorkSpaceRectCo.bl = { ..._bottomWorkSpaceCo.bl };
+	if (_bottomWorkSpaceCo) {
+		_combinedWorkSpaceRectCo.br = { ..._bottomWorkSpaceCo.br };
+		_combinedWorkSpaceRectCo.bl = { ..._bottomWorkSpaceCo.bl };
+	}
 
 	const combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
