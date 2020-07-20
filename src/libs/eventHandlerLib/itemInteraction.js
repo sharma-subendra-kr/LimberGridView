@@ -478,7 +478,7 @@ export const onItemMouseUp = async function (event) {
 				var newWidth = iiv.userActionData.newWidth;
 				var newHeight = iiv.userActionData.newHeight;
 
-				resizeItem.call(
+				await resizeItem.call(
 					this,
 					iiv.userActionData.itemIndex,
 					newWidth,
@@ -563,7 +563,7 @@ export const onItemTouchEnd = async function (event) {
 			var updatedCoordinates = {};
 			try {
 				if (touchPositionOnLimberGrid !== false) {
-					await moveItem(
+					await moveItem.call(
 						this,
 						iiv.userActionData.itemIndex,
 						touchPositionOnLimberGrid.x,
@@ -587,7 +587,7 @@ export const onItemTouchEnd = async function (event) {
 				var newWidth = iiv.userActionData.newWidth;
 				var newHeight = iiv.userActionData.newHeight;
 
-				resizeItem.call(
+				await resizeItem.call(
 					this,
 					iiv.userActionData.itemIndex,
 					newWidth,
@@ -733,11 +733,11 @@ export const showMoveDemo = async function (index, mousePosition) {
 	}
 };
 
-export const showResizeDemo = function (index, width, height) {
+export const showResizeDemo = async function (index, width, height) {
 	const e = getElements(this);
 
 	try {
-		resizeItemDemo.call(this, index, width, height);
+		await resizeItemDemo.call(this, index, width, height);
 		e.$limberGridViewPseudoItem.classList.add(
 			"limber-grid-view-pseudo-item-resize-allow"
 		);

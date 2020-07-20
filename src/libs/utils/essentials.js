@@ -255,7 +255,7 @@ export const adjustScroll = function (
 	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const scrollTop = e.$limberGridView[0].scrollTop;
+	const scrollTop = e.$limberGridView.scrollTop;
 	// var scrollLeft = this.$limberGridView[0].scrollLeft;
 	let programScrolled = false;
 	if (limberGridViewOnVisibleAreaY > 0) {
@@ -263,7 +263,7 @@ export const adjustScroll = function (
 			limberGridViewHeightVisibleHeight - limberGridViewOnVisibleAreaY <
 			publicConstants.AUTO_SCROLL_POINT
 		) {
-			e.$limberGridView[0].scrollTop =
+			e.$limberGridView.scrollTop =
 				scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
 			programScrolled = true;
 		}
@@ -271,7 +271,7 @@ export const adjustScroll = function (
 			limberGridViewOnVisibleAreaY < privateConstants.HEIGHT / 10 &&
 			scrollTop !== 0
 		) {
-			e.$limberGridView[0].scrollTop =
+			e.$limberGridView.scrollTop =
 				scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
 			programScrolled = true;
 		}

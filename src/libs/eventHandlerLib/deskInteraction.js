@@ -131,7 +131,7 @@ export const onDeskTouchStart = function (event) {
 	document.addEventListener("touchend", bf.onDeskTouchEnd);
 	document.addEventListener("touchcancel", bf.onDeskTouchCancel);
 	document.addEventListener("contextmenu", bf.onDeskTouchContextMenu);
-	unInitializeItemTouchEvents();
+	unInitializeItemTouchEvents.call(this);
 
 	event.stopPropagation();
 };
@@ -378,7 +378,7 @@ export const onDeskTouchMove = function (event) {
 		document.removeEventListener("touchend", bf.onDeskTouchEnd);
 		document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
 		document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
-		initializeItemTouchEvents();
+		initializeItemTouchEvents.call(this);
 	}
 
 	event.stopPropagation();
@@ -514,7 +514,7 @@ export const onDeskTouchEnd = function (event) {
 	}
 	dkiv.tapHoldTimerComplete = false;
 	onDeskContextMenu.call(this);
-	initializeItemTouchEvents();
+	initializeItemTouchEvents.call(this);
 
 	event.stopPropagation();
 
@@ -541,7 +541,7 @@ export const onDeskTouchCancel = function (event) {
 	dkiv.tapHoldCancel = false;
 	dkiv.tapHoldTimerComplete = false;
 	onDeskContextMenu.call(this);
-	initializeItemTouchEvents();
+	initializeItemTouchEvents.call(this);
 
 	event.stopPropagation();
 };
