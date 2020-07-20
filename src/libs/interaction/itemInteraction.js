@@ -55,6 +55,7 @@ import {
 	getModifiedPositionData,
 	setPositionData,
 	setModifiedPositionData,
+	getCallbacks,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 
@@ -63,6 +64,7 @@ import getElements from "../../store/variables/elements";
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
+	const callbacks = getCallbacks(this);
 
 	index = parseInt(index);
 	resizeItemInitialChecks(this, index, width, height);
@@ -102,6 +104,10 @@ export const resizeItem = async function (index, width, height) {
 		e.$limberGridViewItems[
 			key
 		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
+
+	if (callbacks.resizeComplete) {
+		callbacks.resizeComplete(index, width, height, arrangedArr);
 	}
 };
 
@@ -149,6 +155,7 @@ export const resizeItemDemo = async function (index, width, height) {
 export const moveItem = async function (index, toX, toY) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
+	const callbacks = getCallbacks(this);
 
 	index = parseInt(index);
 	let adjustedPt = {};
@@ -207,6 +214,10 @@ export const moveItem = async function (index, toX, toY) {
 		e.$limberGridViewItems[
 			key
 		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
+
+	if (callbacks.resizeComplete) {
+		callbacks.moveComplete(index, toX, toY, arrangedArr);
 	}
 };
 

@@ -147,8 +147,8 @@ LimberGridView.prototype.constructor = LimberGridView;
 			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem
 			addComplete : function(index){}
 			removeComplete: function(index){}
-			moveComplete: function(index, toX, toY) {}
-			resizeComplete: function(index, width, height){}
+			moveComplete: function(index, toX, toY, arrangedIndices) {}
+			resizeComplete: function(index, width, height, arrangedIndices){}
 
 			//getItemRenderDataCallback : function(index, width, height, processType){}, 			// callback to get string or node object to render inside the item
 			onItemClickCallback : function(event){},											// click callback for item

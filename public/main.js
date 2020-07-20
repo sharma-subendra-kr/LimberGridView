@@ -316,18 +316,58 @@ var main = function () {
 		// console.log(event);
 	};
 
-	var resizeComplete = function (index, width, height) {
-		// console.log("resizeCompleteCallback");
-		// console.log(index);
-		// console.log(width);
-		// console.log(height);
+	var resizeComplete = function (index, width, height, arrangedIndices) {
+		var items =
+			window.limberGridView.store.variables.elements.$limberGridViewItems;
+		var len = arrangedIndices.length;
+
+		for (var i = 0; i < len; i++) {
+			items[arrangedIndices[i]].classList.add(
+				"limber-grid-view-item-no-shadow"
+			);
+		}
+
+		setTimeout(function () {
+			for (var i = 0; i < len; i++) {
+				items[arrangedIndices[i]].classList.add("limber-grid-view-item-glow");
+			}
+		}, 250);
+
+		setTimeout(function () {
+			for (var i = 0; i < len; i++) {
+				items[arrangedIndices[i]].classList.remove(
+					"limber-grid-view-item-no-shadow",
+					"limber-grid-view-item-glow"
+				);
+			}
+		}, 2000);
 	};
 
-	var moveComplete = function (status, index, coordinatesOrEvent) {
-		// console.log("moveCompleteCallback");
-		// console.log(status);
-		// console.log(index);
-		// console.log(coordinatesOrEvent);
+	var moveComplete = function (index, toX, toY, arrangedIndices) {
+		var items =
+			window.limberGridView.store.variables.elements.$limberGridViewItems;
+		var len = arrangedIndices.length;
+
+		for (var i = 0; i < len; i++) {
+			items[arrangedIndices[i]].classList.add(
+				"limber-grid-view-item-no-shadow"
+			);
+		}
+
+		setTimeout(function () {
+			for (var i = 0; i < len; i++) {
+				items[arrangedIndices[i]].classList.add("limber-grid-view-item-glow");
+			}
+		}, 250);
+
+		setTimeout(function () {
+			for (var i = 0; i < len; i++) {
+				items[arrangedIndices[i]].classList.remove(
+					"limber-grid-view-item-no-shadow",
+					"limber-grid-view-item-glow"
+				);
+			}
+		}, 2000);
 	};
 
 	var addComplete = function (indices, width, height, processType) {
