@@ -115,6 +115,7 @@ export const loadResizingState = (context, userActionData) => {
 
 	e.$limberGridViewPseudoItem.style.width = `${item.width}px`;
 	e.$limberGridViewPseudoItem.style.height = `${item.height}px`;
+	e.$limberGridViewPseudoItem.setAttribute("data-after", `w: 0px, h: 0px`);
 	e.$limberGridViewPseudoItem.style.transform = `translate(${userActionData.itemX}px,${userActionData.itemY}px)`;
 	e.$limberGridViewPseudoItem.classList.add(
 		"limber-grid-view-pseudo-item-active"

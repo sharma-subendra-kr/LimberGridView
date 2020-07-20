@@ -249,7 +249,7 @@ export const onDeskMouseMove = function (event) {
 			e.$limberGridViewAddCutGuide.style.height = newHeight + "px";
 			e.$limberGridViewAddCutGuide.setAttribute(
 				"data-after",
-				`w: ${newWidth}px, h: ${newHeight}px`
+				`w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`
 			);
 		}
 
@@ -322,7 +322,7 @@ export const onDeskTouchMove = function (event) {
 				e.$limberGridViewAddCutGuide.style.height = newHeight + "px";
 				e.$limberGridViewAddCutGuide.setAttribute(
 					"data-after",
-					`w: ${newWidth}px, h: ${newHeight}px`
+					`w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`
 				);
 			}
 		}

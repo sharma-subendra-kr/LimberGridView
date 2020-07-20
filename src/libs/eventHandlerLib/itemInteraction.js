@@ -273,6 +273,10 @@ export const onItemMouseMove = function (event) {
 			if (newWidth > 0 && newHeight > 0) {
 				e.$limberGridViewPseudoItem.style.width = newWidth + "px";
 				e.$limberGridViewPseudoItem.style.height = newHeight + "px";
+				e.$limberGridViewPseudoItem.setAttribute(
+					"data-after",
+					`w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`
+				);
 			}
 
 			iiv.showResizeDemoTimeOutVariable = setTimeout(
@@ -373,6 +377,10 @@ export const onItemTouchMove = function (event) {
 				if (newWidth > 0 && newHeight > 0) {
 					e.$limberGridViewPseudoItem.style.width = newWidth + "px";
 					e.$limberGridViewPseudoItem.style.height = newHeight + "px";
+					e.$limberGridViewPseudoItem.setAttribute(
+						"data-after",
+						`w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`
+					);
 				}
 			}
 
