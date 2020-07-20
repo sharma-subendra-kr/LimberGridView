@@ -200,7 +200,6 @@ export const tapHoldCheck = function (event) {
 
 		loadInitState(this);
 
-		insertAddItemOnTouchHoldGuideStyles(x, y);
 		e.$limberGridViewTouchHoldGuide.style.transform = `translate(${x}px, ${y}px)`;
 		e.$limberGridViewTouchHoldGuide.classList.add(
 			"limber-grid-view-touch-hold-guide-active"
@@ -693,27 +692,4 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 		}
 	}
 	return true;
-};
-
-export const insertAddItemOnTouchHoldGuideStyles = function (x, y) {
-	var ripple = [];
-	ripple[0] = "@keyframes limberGridViewAddItemOnTouchHoldRipple {";
-	ripple[1] = "0% {";
-	ripple[2] =
-		"transform: translate(" + (x - 5) + "px, " + (y - 5) + "px) scale(0, 0);";
-	ripple[3] = "opacity: 1;";
-	ripple[4] = "}";
-	ripple[5] = "20% {";
-	ripple[6] =
-		"transform: translate(" + (x - 5) + "px, " + (y - 5) + "px) scale(25, 25);";
-	ripple[7] = "opacity: 1;";
-	ripple[8] = "}";
-	ripple[9] = "100% {";
-	ripple[10] =
-		"transform: translate(" + (x - 5) + "px, " + (y - 5) + "px) scale(50, 50);";
-	ripple[11] = "opacity: 0;";
-	ripple[12] = "}";
-	ripple[13] = "}";
-	var rippleString = ripple.join("");
-	e.$limberGridViewStyle[0].innerHTML = rippleString;
 };

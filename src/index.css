@@ -268,25 +268,50 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limber-grid-view-touch-hold-guide {
-	width: 1px;
-	height: 1px;
+	width: 100px;
+	height: 100px;
 	position: absolute;
 	display: none;
 	vertical-align: top;
-	border-radius: 20px;
-	border: solid #1a8cff;
-	background-color: #1a8cff;
 	box-sizing: border-box;
 
 	pointer-events: none;
 	user-select: none;
 
 	z-index: 1000;
+	overflow: visible;
+}
+
+.limber-grid-view-touch-hold-guide div {
+	height: 0px;
+	width: 0px;
+
+	border-radius: 20px;
+	border: solid 1px #1a8cff;
+	background-color: #1a8cff;
 }
 
 .limber-grid-view-touch-hold-guide-active {
-	display: inline-block;
-	animation: limberGridViewAddItemOnTouchHoldRipple 500ms ease-out;
+	display: block;
+}
+
+@keyframes limber-grid-view-touch-hold-guide-ripple {
+	0% {
+		transform: scale(0, 0);
+		opacity: 1;
+	}
+	20% {
+		transform: scale(25, 25);
+		opacity: 1;
+	}
+	100% {
+		transform: scale(75, 75);
+		opacity: 0;
+	}
+}
+
+.limber-grid-view-touch-hold-guide-active div {
+	animation: limber-grid-view-touch-hold-guide-ripple 500ms ease-out;
 }
 
 .limber-grid-view-license {

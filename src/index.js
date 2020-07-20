@@ -84,7 +84,6 @@ import {
 	set$el,
 	set$pseudoContainer,
 	set$limberGridViewContainer,
-	set$limberGridViewStyle,
 	set$limberGridView,
 	set$pseudoContainerItem,
 	set$limberGridViewPseudoItem,
@@ -283,7 +282,6 @@ LimberGridView.prototype.initializeStore = function () {
 				$limberGridViewContainer: undefined,
 				$limberGridView: undefined,
 				$limberGridViewItems: [],
-				$limberGridViewStyle: undefined,
 				$limberGridViewPseudoItem: undefined,
 				$limberGridViewMoveGuide: undefined,
 				$limberGridViewHeightAdjustGuide: undefined,
@@ -447,12 +445,11 @@ LimberGridView.prototype.initRender = function () {
 		document.getElementById(getPseudoContainerId(this))
 	);
 
-	e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
+	e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
 	set$limberGridViewContainer(
 		this,
 		e.$el.getElementsByClassName("limber-grid-view-container")[0]
 	);
-	set$limberGridViewStyle(this, e.$el.getElementsByTagName("style")[0]);
 	set$limberGridView(this, e.$el.getElementsByClassName("limber-grid-view")[0]);
 
 	const pseudoContainerItem = document.createElement("div");
@@ -461,6 +458,7 @@ LimberGridView.prototype.initRender = function () {
 	const limberGridViewHeightAdjustGuide = document.createElement("div");
 	const limberGridViewAddCutGuide = document.createElement("div"); // desk interaction rect
 	const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
+	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
 
 	pseudoContainerItem.setAttribute(
 		"class",

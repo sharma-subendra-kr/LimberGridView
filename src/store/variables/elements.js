@@ -114,14 +114,6 @@ const get$limberGridViewItems = function (context) {
 	return context.store.variables.elements.$limberGridViewItems;
 };
 
-const set$limberGridViewStyle = function (context, elm) {
-	context.store.variables.elements.$limberGridViewStyle = elm;
-};
-
-const get$limberGridViewStyle = function (context) {
-	return context.store.variables.elements.$limberGridViewStyle;
-};
-
 const set$limberGridViewPseudoItem = function (context, elm) {
 	context.store.variables.elements.$limberGridViewPseudoItem = elm;
 };
@@ -255,8 +247,6 @@ export {
 	get$limberGridViewItems,
 	set$limberGridViewContainer,
 	get$limberGridViewContainer,
-	set$limberGridViewStyle,
-	get$limberGridViewStyle,
 	set$limberGridViewPseudoItem,
 	get$limberGridViewPseudoItem,
 	set$limberGridViewMoveGuide,
