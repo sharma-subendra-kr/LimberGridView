@@ -168,6 +168,8 @@ export const init = function (context, isResize, autoArrange) {
 			pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;
 			pd[i].height /= privateConstants.WIDTH_SCALE_FACTOR;
 		}
+
+		privateConstants.MARGIN /= privateConstants.WIDTH_SCALE_FACTOR;
 	}
 
 	setWidthScaleFactor(

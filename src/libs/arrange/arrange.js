@@ -358,8 +358,8 @@ export const arrangeResize = async (
 	const _workSpaceRectCo = {
 		// can safely do these operations
 		// work space width should be greather than or equal to "DEFINED_MIN_HEIGHT_AND_WIDTH + (MARGIN * 2)"
-		// minX - publicConstants.MARGIN
-		// maxX + publicConstants.MARGIN
+		// minX - privateConstants.MARGIN
+		// maxX + privateConstants.MARGIN
 		// above two operations are already done in getMinMaxXY
 		tl: { x: minX, y: minY },
 		tr: { x: maxX, y: minY },

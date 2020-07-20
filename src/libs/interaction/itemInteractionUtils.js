@@ -44,7 +44,6 @@ import getElements from "../../store/variables/elements";
 export const getResizeAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
-	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
@@ -52,17 +51,17 @@ export const getResizeAffectedItems = (context, item, index) => {
 	let count = 0;
 
 	const _item = { ...item };
-	_item.x -= publicConstants.MARGIN;
-	_item.y -= publicConstants.MARGIN;
-	_item.width += publicConstants.MARGIN;
-	_item.height += publicConstants.MARGIN;
-	let temp = { x: 0, y: 0, height: 0, width: 0 };
+	_item.x -= privateConstants.MARGIN;
+	_item.y -= privateConstants.MARGIN;
+	_item.width += privateConstants.MARGIN;
+	_item.height += privateConstants.MARGIN;
+	const temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x - publicConstants.MARGIN;
-		temp.y = pd[i].y - publicConstants.MARGIN;
-		temp.width = pd[i].width + publicConstants.MARGIN;
-		temp.height = pd[i].height + publicConstants.MARGIN;
+		temp.x = pd[i].x - privateConstants.MARGIN;
+		temp.y = pd[i].y - privateConstants.MARGIN;
+		temp.width = pd[i].width + privateConstants.MARGIN;
+		temp.height = pd[i].height + privateConstants.MARGIN;
 		if (
 			(doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
 			i !== index
@@ -85,7 +84,6 @@ export const getResizeAffectedItems = (context, item, index) => {
 export const getMoveAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
-	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
@@ -93,17 +91,17 @@ export const getMoveAffectedItems = (context, item, index) => {
 	let count = 0;
 
 	const _item = { ...item };
-	_item.x -= publicConstants.MARGIN;
-	_item.y -= publicConstants.MARGIN;
-	_item.width += publicConstants.MARGIN;
-	_item.height += publicConstants.MARGIN;
-	let temp = { x: 0, y: 0, height: 0, width: 0 };
+	_item.x -= privateConstants.MARGIN;
+	_item.y -= privateConstants.MARGIN;
+	_item.width += privateConstants.MARGIN;
+	_item.height += privateConstants.MARGIN;
+	const temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x - publicConstants.MARGIN;
-		temp.y = pd[i].y - publicConstants.MARGIN;
-		temp.width = pd[i].width + publicConstants.MARGIN;
-		temp.height = pd[i].height + publicConstants.MARGIN;
+		temp.x = pd[i].x - privateConstants.MARGIN;
+		temp.y = pd[i].y - privateConstants.MARGIN;
+		temp.width = pd[i].width + privateConstants.MARGIN;
+		temp.height = pd[i].height + privateConstants.MARGIN;
 		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
 			if (i !== index) {
 				affectedArr[count++] = i;
@@ -124,7 +122,6 @@ export const getMoveAffectedItems = (context, item, index) => {
 
 export const resizeItemInitialChecks = (context, index, width, height) => {
 	const pd = getPositionData(context);
-	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
 	if (index < 0 || index >= pd.length) {
@@ -136,7 +133,7 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 		throw "Width or Height is not a number.";
 	}
 
-	if (pd[index].x + width + publicConstants.MARGIN > privateConstants.WIDTH) {
+	if (pd[index].x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
 		throw "Right edges falls outside the grid area.";
 	}
@@ -157,7 +154,6 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 
 export const moveItemInitialChecks = (context, index, toX, toY) => {
 	const pd = getPositionData(context);
-	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
 	if (index < 0 || index >= pd.length) {
@@ -169,12 +165,15 @@ export const moveItemInitialChecks = (context, index, toX, toY) => {
 		throw "toX or toY is not a number.";
 	}
 
-	if (toX < publicConstants.MARGIN || toY < publicConstants.MARGIN) {
+	if (toX < privateConstants.MARGIN || toY < privateConstants.MARGIN) {
 		// falls outside
 		throw "Left edges falls outside the grid area.";
 	}
 
-	if (toX + pd[index].width + publicConstants.MARGIN > privateConstants.WIDTH) {
+	if (
+		toX + pd[index].width + privateConstants.MARGIN >
+		privateConstants.WIDTH
+	) {
 		// falls outside
 		throw "Right edges falls outside the grid area.";
 	}
