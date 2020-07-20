@@ -18,7 +18,7 @@ var main = function () {
 			event.currentTarget.parentNode.childNodes[1].classList.add(
 				"toggle-add-or-cut-space-button-active"
 			);
-			window.limberGridView.setAddOrCutSpace("ADD");
+			window.limberGridView.setDeskInteractMode("ADD");
 		} else if (
 			event.currentTarget.classList.contains("activate-cut-space-mode")
 		) {
@@ -28,7 +28,7 @@ var main = function () {
 			event.currentTarget.parentNode.childNodes[3].classList.add(
 				"toggle-add-or-cut-space-button-active"
 			);
-			window.limberGridView.setAddOrCutSpace("CUTSPACE");
+			window.limberGridView.setDeskInteractMode("CUTSPACE");
 		}
 	};
 
@@ -476,49 +476,50 @@ var main = function () {
 				width: 200,
 				height: 195,
 			},
-			{
-				x: 865,
-				y: 5,
-				width: 130,
-				height: 195,
-			},
-			{
-				x: 5,
-				y: 210,
-				width: 195,
-				height: 200,
-			},
-			//
+			// {
+			// 	x: 865,
+			// 	y: 5,
+			// 	width: 130,
+			// 	height: 195,
+			// },
+			// {
+			// 	x: 5,
+			// 	y: 210,
+			// 	width: 195,
+			// 	height: 200,
+			// },
+			/**/
 			// {
 			// 	x: 215,
 			// 	y: 310,
 			// 	width: 200,
 			// 	height: 200,
 			// },
-			{
-				x: 430,
-				y: 420,
-				width: 200,
-				height: 200,
-			},
-			{
-				x: 650,
-				y: 210,
-				width: 200,
-				height: 400,
-			},
-			{
-				x: 865,
-				y: 210,
-				width: 130,
-				height: 300,
-			},
-			{
-				x: 5,
-				y: 420,
-				width: 195,
-				height: 300,
-			},
+			/**/
+			// {
+			// 	x: 430,
+			// 	y: 420,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			// {
+			// 	x: 650,
+			// 	y: 210,
+			// 	width: 200,
+			// 	height: 400,
+			// },
+			// {
+			// 	x: 865,
+			// 	y: 210,
+			// 	width: 130,
+			// 	height: 300,
+			// },
+			// {
+			// 	x: 5,
+			// 	y: 420,
+			// 	width: 195,
+			// 	height: 300,
+			// },
 			{
 				x: 215,
 				y: 520,
@@ -537,49 +538,50 @@ var main = function () {
 				width: 200,
 				height: 300,
 			},
-			{
-				x: 865,
-				y: 520,
-				width: 130,
-				height: 200,
-			},
-			{
-				x: 5,
-				y: 730,
-				width: 195,
-				height: 200,
-			},
-			{
-				x: 215,
-				y: 830,
-				width: 200,
-				height: 300,
-			},
-			//
+			// {
+			// 	x: 865,
+			// 	y: 520,
+			// 	width: 130,
+			// 	height: 200,
+			// },
+			// {
+			// 	x: 5,
+			// 	y: 730,
+			// 	width: 195,
+			// 	height: 200,
+			// },
+			// {
+			// 	x: 215,
+			// 	y: 830,
+			// 	width: 200,
+			// 	height: 300,
+			// },
+			/**/
 			// {
 			// 	x: 430,
 			// 	y: 890,
 			// 	width: 200,
 			// 	height: 200,
 			// },
-			{
-				x: 650,
-				y: 950,
-				width: 200,
-				height: 200,
-			},
-			{
-				x: 865,
-				y: 820,
-				width: 130,
-				height: 300,
-			},
-			{
-				x: 5,
-				y: 960,
-				width: 195,
-				height: 200,
-			},
+			/**/
+			// {
+			// 	x: 650,
+			// 	y: 950,
+			// 	width: 200,
+			// 	height: 200,
+			// },
+			// {
+			// 	x: 865,
+			// 	y: 820,
+			// 	width: 130,
+			// 	height: 300,
+			// },
+			// {
+			// 	x: 5,
+			// 	y: 960,
+			// 	width: 195,
+			// 	height: 200,
+			// },
 			{
 				x: 215,
 				y: 1140,

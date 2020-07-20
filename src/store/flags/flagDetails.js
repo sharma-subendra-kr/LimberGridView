@@ -24,4 +24,4 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-export const DESK_INTERACTION_MODE = { ADD: true, CUT: true };
+export const DESK_INTERACTION_MODE = { ADD: true, CUTSPACE: true };

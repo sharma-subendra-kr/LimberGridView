@@ -237,6 +237,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limber-grid-view-add-cut-guide {
+	width: 1px;
+	height: 1px;
 	position: absolute;
 	display: none;
 	vertical-align: top;

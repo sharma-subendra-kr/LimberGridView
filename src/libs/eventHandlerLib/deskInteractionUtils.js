@@ -56,11 +56,11 @@ export const loadInitState = (context) => {
 	// e.$limberGridViewAddItemGuide[0].style.transform =
 	// 	"translate(" + x + "px, " + y + "px)";
 
-	if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "ADD") {
+	if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 		e.$limberGridViewAddCutGuide.classList.add(
-			"limber-grid-view-add-item-guide-active"
+			"limber-grid-view-add-cut-guide-active"
 		);
-	} else if (publicConstants.ADD_OR_CUTSPACE_TOGGLE == "CUTSPACE") {
+	} else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
 		e.$limberGridViewAddCutGuide.classList.add(
 			"limber-grid-view-add-cut-guide-active",
 			"limber-grid-view-add-cut-guide-cut-mode"
@@ -106,18 +106,4 @@ export const unloadInitState = (context) => {
 	e.$limberGridViewTouchHoldGuide.classList.remove(
 		"limber-grid-view-touch-hold-guide-active"
 	);
-};
-
-export const shiftItemsUp = function (context, y, shiftHeight) {
-	const pd = getPositionData(context);
-	const e = getElements(context);
-
-	const len = pd.length;
-	for (let i = 0; i < len; i++) {
-		if (pd[i].y >= y) {
-			pd[i].y -= shiftHeight;
-			e.$limberGridViewItems[i].style.transform =
-				"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-		}
-	}
 };
