@@ -51,6 +51,8 @@ import getPrivateConstants, {
 	setPaddingBottom,
 	setWidthScaleFactor,
 	setMargin,
+	setDefinedMinHeightAndWidth,
+	getDefinedMinHeightAndWidth,
 	setGridWidth,
 	setGridHeight,
 	setGridMargin,
@@ -161,6 +163,7 @@ export const init = function (context, isResize, autoArrange) {
 	// 	privateConstants.PADDING_BOTTOM;
 
 	if (isResize) {
+		// resiet item x, y, width, height; MARGIN, MIN_HEIGHT_AND_WIDTH
 		const len = pd.length;
 		for (let i = 0; i < len; i++) {
 			pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
@@ -170,16 +173,22 @@ export const init = function (context, isResize, autoArrange) {
 		}
 
 		privateConstants.MARGIN /= privateConstants.WIDTH_SCALE_FACTOR;
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH /=
+			privateConstants.WIDTH_SCALE_FACTOR;
 	}
 
 	setWidthScaleFactor(
 		context,
 		privateConstants.WIDTH / privateConstants.GRID_WIDTH
 	);
-
 	setMargin(
 		context,
 		privateConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR
+	);
+	setDefinedMinHeightAndWidth(
+		context,
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
+			privateConstants.WIDTH_SCALE_FACTOR
 	);
 
 	if (autoArrange === true || !checkPositionData(pd)) {
@@ -317,14 +326,6 @@ export const initConstantsAndFlags = function (options) {
 			this,
 			"DESK_INTERACTION_MODE",
 			options?.publicConstants?.deskInteractionMode
-		);
-	}
-
-	if (!isNaN(options?.publicConstants?.definedMinHeightAndWidth)) {
-		setPublicConstantByName(
-			this,
-			"DEFINED_MIN_HEIGHT_AND_WIDTH",
-			options?.publicConstants?.definedMinHeightAndWidth
 		);
 	}
 };

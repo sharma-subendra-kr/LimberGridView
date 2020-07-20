@@ -162,7 +162,7 @@ export const arrangeMove = async (
 	);
 
 	const shiftHeight =
-		(publicConstants.DEFINDED_MIN_HEIGHT_AND_WIDTH -
+		(privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
 			privateConstants.MARGIN * 2) /
 		2;
 
@@ -403,7 +403,7 @@ export const arrangeResize = async (
 
 	let _combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
 
-	const incrementHeight = publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 2;
+	const incrementHeight = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 2;
 
 	let passCount = 0;
 	let arranged = {};
@@ -536,7 +536,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	const minX = 0;
 	const maxX = privateConstants.WIDTH;
 	const minY = height;
-	const maxY = height + publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH;
+	const maxY = height + privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH;
 
 	const iToALen = itemsToArrange.length;
 
@@ -574,7 +574,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	);
 
 	const shiftHeight =
-		publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
 		privateConstants.MARGIN * 2 -
 		10;
 

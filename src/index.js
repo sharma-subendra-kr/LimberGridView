@@ -125,9 +125,10 @@ LimberGridView.prototype.constructor = LimberGridView;
 		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
 		reRenderOnResize : true, 																// true/false (optional default true)
 		gridData : {
-			HEIGHT : 1080, 																	// height of limberGridView
 			WIDTH : 1920,																	// width of limberGridView
+			HEIGHT : 1080, 																	// height of limberGridView
 			MARGIN : 8, 																		// margin for items
+			MIN_HEIGHT_AND_WIDTH: 150 															// min height and width of items
 		},
 		positionData: [																			// position Data
 			{x : <value>, y : <value>, width : <value>, height : <value>},
@@ -345,6 +346,7 @@ LimberGridView.prototype.initializeStore = function () {
 				WIDTH_SCALE_FACTOR: 1,
 
 				MARGIN: 8,
+				DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
 				// reinitialized in init i.e. first render and window resize ENDED
 
 				// These should be decided and set only once for app development, if custom values are used then it should be passed everytime
@@ -369,8 +371,6 @@ LimberGridView.prototype.initializeStore = function () {
 				WINDOW_RESIZE_WAIT_TIME: 1000,
 
 				DESK_INTERACTION_MODE: "ADD",
-
-				DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
 			},
 		},
 	};

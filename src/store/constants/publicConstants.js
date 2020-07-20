@@ -56,13 +56,6 @@ const getPublicConstants = function (context) {
 };
 
 const setPublicConstantByName = function (context, name, value) {
-	if (
-		name === "DEFINED_MIN_HEIGHT_AND_WIDTH" &&
-		value < getPrivateConstantByName(context, "MIN_HEIGHT_AND_WIDTH")
-	) {
-		throw "DEFINED_MIN_HEIGHT_AND_WIDTH can't be less than MIN_HEIGHT_AND_WIDTH";
-	}
-
 	if (context.store.constants.publicConstants[name]) {
 		context.store.constants.publicConstants[name] = value;
 	}
