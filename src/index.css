@@ -217,7 +217,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .limber-grid-view-move-guide-active {
-	display: inline-block;
+	display: block;
 }
 
 .limber-grid-view-height-adjust-guide {

@@ -62,13 +62,15 @@ import getElements from "../../store/variables/elements";
 
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
-	const mpd = getModifiedPositionData(this);
 	const e = getElements(this);
 
 	index = parseInt(index);
 	resizeItemInitialChecks(this, index, width, height);
 
+	resetDemoUIChanges(this);
+
 	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
 	mpd[index].width = width;
 	mpd[index].height = height;
 
@@ -105,7 +107,6 @@ export const resizeItem = async function (index, width, height) {
 
 export const resizeItemDemo = async function (index, width, height) {
 	const pd = getPositionData(this);
-	const mpd = getModifiedPositionData(this);
 	const e = getElements(this);
 
 	index = parseInt(index);
@@ -114,6 +115,7 @@ export const resizeItemDemo = async function (index, width, height) {
 	resetDemoUIChanges(this);
 
 	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
 	mpd[index].width = width;
 	mpd[index].height = height;
 
@@ -146,7 +148,6 @@ export const resizeItemDemo = async function (index, width, height) {
 
 export const moveItem = async function (index, toX, toY) {
 	const pd = getPositionData(this);
-	const mpd = getModifiedPositionData(this);
 	const e = getElements(this);
 
 	index = parseInt(index);
@@ -162,7 +163,10 @@ export const moveItem = async function (index, toX, toY) {
 
 	moveItemInitialChecks(this, index, toX, toY);
 
+	resetDemoUIChanges(this);
+
 	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
 	mpd[index].x = toX;
 	mpd[index].y = toY;
 
@@ -208,17 +212,26 @@ export const moveItem = async function (index, toX, toY) {
 
 export const moveItemDemo = async function (index, toX, toY) {
 	const pd = getPositionData(this);
-	const mpd = getModifiedPositionData(this);
 	const e = getElements(this);
 
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {
+		debugger;
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
 		adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
+		console.log("adjustedPt", adjustedPt);
+
+		if (!isNaN(adjustedPt.overlappedItemIndex)) {
+			e.$limberGridViewMoveGuide.style.transform =
+				"translate(" + toX + "px, " + toY + "px)";
+			e.$limberGridViewMoveGuide.classList.add(
+				"limber-grid-view-move-guide-active"
+			);
+		}
 	}
 
 	moveItemInitialChecks(this, index, toX, toY);
@@ -226,6 +239,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 	resetDemoUIChanges(this);
 
 	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
 	mpd[index].x = toX;
 	mpd[index].y = toY;
 

@@ -57,18 +57,28 @@ const getPseudoContainerId = function (context) {
 	return context.store.variables.essentials.pseudoContainerId;
 };
 
-const setPositionData = function (context, pos) {
-	context.store.variables.essentials.positionData.length = 0;
-	Object.assign(context.store.variables.essentials.positionData, pos);
+const setPositionData = function (context, pd) {
+	const len = pd.length;
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = { ...pd[i] };
+	}
+
+	context.store.variables.essentials.positionData = arr;
 };
 
 const getPositionData = function (context) {
 	return context.store.variables.essentials.positionData;
 };
 
-const setModifiedPositionData = function (context, pos) {
-	context.store.variables.essentials.modifiedPositionData.length = 0;
-	Object.assign(context.store.variables.essentials.modifiedPositionData, pos);
+const setModifiedPositionData = function (context, pd) {
+	const len = pd.length;
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = { ...pd[i] };
+	}
+
+	context.store.variables.essentials.modifiedPositionData = arr;
 };
 
 const getModifiedPositionData = function (context) {

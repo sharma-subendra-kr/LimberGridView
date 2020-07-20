@@ -707,11 +707,11 @@ export const showMoveDemo = async function (index, mousePosition) {
 		if (mousePosition !== false) {
 			await moveItemDemo.call(this, index, mousePosition.x, mousePosition.y);
 
-			e.$limberGridViewMoveGuide.style.transform =
-				"translate(" + mousePosition.x + "px, " + mousePosition.y + "px)";
-			e.$limberGridViewMoveGuide.classList.add(
-				"limber-grid-view-move-guide-active"
-			);
+			// e.$limberGridViewMoveGuide.style.transform =
+			// 	"translate(" + mousePosition.x + "px, " + mousePosition.y + "px)";
+			// e.$limberGridViewMoveGuide.classList.add(
+			// 	"limber-grid-view-move-guide-active"
+			// );
 
 			e.$pseudoContainerItem.classList.remove(
 				"limber-grid-view-pseudo-container-item-move-disallow"

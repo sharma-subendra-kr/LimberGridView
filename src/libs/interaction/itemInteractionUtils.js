@@ -196,25 +196,23 @@ export const resetDemoUIChanges = (context) => {
 
 export const movePointAdjust = (context, toX, toY) => {
 	const pd = getPositionData(context);
-	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
-	let overlapped;
-	let len = pd.length;
-	let temp = { x: 0, y: 0, height: 0, width: 0 };
+	const len = pd.length;
+	const temp = { x: 0, y: 0, height: 0, width: 0 };
 	const pt = { x: toX, y: toY };
-	let inside = null;
+	let inside;
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x - publicConstants.MARGIN;
-		temp.y = pd[i].y - publicConstants.MARGIN;
-		temp.width = pd[i].width + publicConstants.MARGIN;
-		temp.height = pd[i].height + publicConstants.MARGIN;
+		temp.x = pd[i].x - privateConstants.MARGIN;
+		temp.y = pd[i].y - privateConstants.MARGIN;
+		temp.width = pd[i].width + privateConstants.MARGIN * 2;
+		temp.height = pd[i].height + privateConstants.MARGIN * 2;
 		if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
 			inside = i;
 			break;
 		}
 	}
-	if (inside != null) {
+	if (inside !== undefined) {
 		toX = pd[inside].x;
 		toY = pd[inside].y;
 	}
