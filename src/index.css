@@ -251,6 +251,23 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	z-index: 1000;
 }
 
+.limber-grid-view-add-cut-guide::after {
+	content: attr(data-after);
+	position: absolute;
+	top: calc(100% + 10px);
+	left: calc(100% + 10px);
+
+	border: solid 1px black;
+	border-radius: 5px;
+	background-color: white;
+	color: black;
+
+	font-family: "Helvetica";
+	font-size: 11px;
+
+	padding: 3px 5px;
+}
+
 .limber-grid-view-add-cut-guide-cut-mode {
 	border: dashed;
 }

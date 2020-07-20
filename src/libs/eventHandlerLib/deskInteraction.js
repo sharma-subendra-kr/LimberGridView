@@ -160,6 +160,7 @@ export const mouseDownCheck = function (event, offsetX, offsetY) {
 		e.$limberGridViewAddCutGuide.style.height = 1 + "px";
 		e.$limberGridViewAddCutGuide.style.width = 1 + "px";
 		e.$limberGridViewAddCutGuide.style.transform = `translate(${x}px, ${y}px)`;
+		e.$limberGridViewAddCutGuide.setAttribute("data-after", `w: 0px, h: 0px`);
 
 		loadInitState(this);
 	} else {
@@ -197,6 +198,7 @@ export const tapHoldCheck = function (event) {
 		e.$limberGridViewAddCutGuide.style.height = 1 + "px";
 		e.$limberGridViewAddCutGuide.style.width = 1 + "px";
 		e.$limberGridViewAddCutGuide.style.transform = `translate(${x}px, ${y}px)`;
+		e.$limberGridViewAddCutGuide.setAttribute("data-after", `w: 0px, h: 0px`);
 
 		loadInitState(this);
 
@@ -245,6 +247,10 @@ export const onDeskMouseMove = function (event) {
 		if (newWidth > 0 && newHeight > 0) {
 			e.$limberGridViewAddCutGuide.style.width = newWidth + "px";
 			e.$limberGridViewAddCutGuide.style.height = newHeight + "px";
+			e.$limberGridViewAddCutGuide.setAttribute(
+				"data-after",
+				`w: ${newWidth}px, h: ${newHeight}px`
+			);
 		}
 
 		if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
@@ -314,6 +320,10 @@ export const onDeskTouchMove = function (event) {
 			if (newWidth > 0 && newHeight > 0) {
 				e.$limberGridViewAddCutGuide.style.width = newWidth + "px";
 				e.$limberGridViewAddCutGuide.style.height = newHeight + "px";
+				e.$limberGridViewAddCutGuide.setAttribute(
+					"data-after",
+					`w: ${newWidth}px, h: ${newHeight}px`
+				);
 			}
 		}
 
