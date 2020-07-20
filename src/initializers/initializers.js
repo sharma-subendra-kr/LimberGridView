@@ -26,12 +26,22 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 import { getOptions } from "../store/variables/options";
 import {
-	setPseudoElementId,
-	getPseudoElementId,
-	initialGridData,
 	getPositionData,
+	setPseudoContainerId,
+	getPseudoContainerId,
 } from "../store/variables/essentials";
-import getElements from "../store/variables/elements";
+import getElements, {
+	set$body,
+	set$pseudoContainer,
+	set$limberGridViewContainer,
+	set$limberGridView,
+	set$pseudoContainerItem,
+	set$limberGridViewPseudoItem,
+	set$limberGridViewMoveGuide,
+	set$limberGridViewHeightAdjustGuide,
+	set$limberGridViewAddCutGuide,
+	set$limberGridViewTouchHoldGuide,
+} from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
 	setHeight,
@@ -41,11 +51,18 @@ import getPrivateConstants, {
 	setPaddingBottom,
 	setWidthScaleFactor,
 	setMargin,
+	setGridWidth,
+	setGridHeight,
+	setGridMargin,
+	setMinHeightAndWidth,
 } from "../store/constants/privateConstants";
-import getPublicConstants from "../store/constants/publicConstants";
+import getPublicConstants, {
+	setPublicConstantByName,
+} from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
+import { getRandomString } from "../libs/utils/utils";
 
-export const init = function (context, autoArrange) {
+export const init = function (context, isResize, autoArrange) {
 	// if (typeof options.el === "string") {
 	// 	const el = document.getElementById(options.el);
 	// 	if (!el) {
@@ -143,6 +160,16 @@ export const init = function (context, autoArrange) {
 	// 	privateConstants.PADDING_TOP -
 	// 	privateConstants.PADDING_BOTTOM;
 
+	if (isResize) {
+		const len = pd.length;
+		for (let i = 0; i < len; i++) {
+			pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].y /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].height /= privateConstants.WIDTH_SCALE_FACTOR;
+		}
+	}
+
 	setWidthScaleFactor(
 		context,
 		privateConstants.WIDTH / privateConstants.GRID_WIDTH
@@ -173,4 +200,201 @@ export const init = function (context, autoArrange) {
 		// 		.positionData
 		// );
 	}
+};
+
+export const initConstantsAndFlags = function (options) {
+	if (options?.gridData?.WIDTH && !isNaN(options.gridData.WIDTH)) {
+		setGridWidth(this, options.gridData.WIDTH);
+	}
+
+	if (options?.gridData?.HEIGHT && !isNaN(options.gridData.HEIGHT)) {
+		setGridHeight(this, options.gridData.HEIGHT);
+	}
+
+	if (options?.gridData?.MARGIN && !isNaN(options.gridData.MARGIN)) {
+		setGridMargin(this, options.gridData.MARGIN);
+	}
+
+	if (
+		options?.gridData?.MIN_HEIGHT_AND_WIDTH &&
+		!isNaN(options.gridData.MIN_HEIGHT_AND_WIDTH)
+	) {
+		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
+	}
+
+	if (!isNaN(options?.publicConstants?.mobileAspectRatio)) {
+		setPublicConstantByName(
+			this,
+			"MOBILE_ASPECT_RATIO",
+			options.publicConstants.mobileAspectRatio
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.moveGuideRadius)) {
+		setPublicConstantByName(
+			this,
+			"MOVE_GUIDE_RADIUS",
+			options.publicConstants.moveGuideRadius
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.resizeSquareGuideLength)) {
+		setPublicConstantByName(
+			this,
+			"RESIZE_SQUARE_GUIDE_LENGTH",
+			options.publicConstants.resizeSquareGuideLength
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.resizeSquareBorderGuideWidth)) {
+		setPublicConstantByName(
+			this,
+			"RESIZE_SQUARE_GUIDE_BORDER_WIDTH",
+			options?.publicConstants?.resizeSquareBorderGuideWidth
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.autoScrollDistance)) {
+		setPublicConstantByName(
+			this,
+			"AUTO_SCROLL_DISTANCE",
+			options?.publicConstants?.autoScrollDistance
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.autoScrollPoint)) {
+		setPublicConstantByName(
+			this,
+			"AUTO_SCROLL_POINT",
+			options?.publicConstants?.autoScrollPoint
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.moveOrResizeHeightIncrements)) {
+		setPublicConstantByName(
+			this,
+			"MOVE_OR_RESIZE_HEIGHT_INCREMENTS",
+			options?.publicConstants?.moveOrResizeHeightIncrements
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.mouseDownTime)) {
+		setPublicConstantByName(
+			this,
+			"MOUSE_DOWN_TIME",
+			options?.publicConstants?.mouseDownTime
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.touchHoldTime)) {
+		setPublicConstantByName(
+			this,
+			"TOUCH_HOLD_TIME",
+			options?.publicConstants?.touchHoldTime
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.demoWaitTime)) {
+		setPublicConstantByName(
+			this,
+			"DEMO_WAIT_TIME",
+			options?.publicConstants?.demoWaitTime
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.windowResizeWaitTime)) {
+		setPublicConstantByName(
+			this,
+			"WINDOW_RESIZE_WAIT_TIME",
+			options?.publicConstants?.windowResizeWaitTime
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.deskInteractionMode)) {
+		setPublicConstantByName(
+			this,
+			"DESK_INTERACTION_MODE",
+			options?.publicConstants?.deskInteractionMode
+		);
+	}
+
+	if (!isNaN(options?.publicConstants?.definedMinHeightAndWidth)) {
+		setPublicConstantByName(
+			this,
+			"DEFINED_MIN_HEIGHT_AND_WIDTH",
+			options?.publicConstants?.definedMinHeightAndWidth
+		);
+	}
+};
+
+export const initRender = function () {
+	const e = getElements(this);
+
+	set$body(this, document.getElementsByTagName("body")[0]);
+
+	let pseudoContainerId;
+	do {
+		pseudoContainerId =
+			"limber-grid-view-pseudo-container-" + getRandomString();
+	} while (document.getElementById(pseudoContainerId) !== null);
+	setPseudoContainerId(this, pseudoContainerId);
+
+	const pseudoContainer = document.createElement("div");
+	pseudoContainer.setAttribute("class", "limber-grid-view-pseudo-container");
+	pseudoContainer.setAttribute("id", pseudoContainerId);
+	set$pseudoContainer(this, pseudoContainer);
+
+	// pseudo container should be kept in defined container, if not defined then body
+	e.$body.appendChild(pseudoContainer);
+
+	e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
+	set$limberGridViewContainer(
+		this,
+		e.$el.getElementsByClassName("limber-grid-view-container")[0]
+	);
+	set$limberGridView(this, e.$el.getElementsByClassName("limber-grid-view")[0]);
+
+	const pseudoContainerItem = document.createElement("div");
+	const limberGridViewPseudoItem = document.createElement("div");
+	const limberGridViewMoveGuide = document.createElement("div"); // thing that shows to if there is a latch on item available on move
+	const limberGridViewHeightAdjustGuide = document.createElement("div");
+	const limberGridViewAddCutGuide = document.createElement("div"); // desk interaction rect
+	const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
+	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
+
+	pseudoContainerItem.setAttribute(
+		"class",
+		"limber-grid-view-pseudo-container-item"
+	);
+	limberGridViewPseudoItem.setAttribute(
+		"class",
+		"limber-grid-view-pseudo-item"
+	);
+	limberGridViewMoveGuide.setAttribute("class", "limber-grid-view-move-guide");
+	limberGridViewHeightAdjustGuide.setAttribute(
+		"class",
+		"limber-grid-view-height-adjust-guide"
+	);
+	limberGridViewAddCutGuide.setAttribute(
+		"class",
+		"limber-grid-view-add-cut-guide"
+	);
+	limberGridViewTouchHoldGuide.setAttribute(
+		"class",
+		"limber-grid-view-touch-hold-guide"
+	);
+
+	e.$pseudoContainer.appendChild(pseudoContainerItem);
+	e.$limberGridView.appendChild(limberGridViewPseudoItem);
+	e.$limberGridView.appendChild(limberGridViewMoveGuide);
+	e.$limberGridView.appendChild(limberGridViewHeightAdjustGuide);
+	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
+	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
+
+	set$pseudoContainerItem(this, pseudoContainerItem);
+	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
+	set$limberGridViewMoveGuide(this, limberGridViewMoveGuide);
+	set$limberGridViewHeightAdjustGuide(this, limberGridViewHeightAdjustGuide);
+	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
+	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
 };

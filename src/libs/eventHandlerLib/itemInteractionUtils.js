@@ -64,10 +64,10 @@ export const getUserActionData = (context, event) => {
 			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
 		width:
 			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
-			publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
+			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
 		height:
 			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
-			publicConstants.RESIZE_SQUARE_BORDER_GUIDE_WIDTH,
+			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
 	};
 
 	if (false) {

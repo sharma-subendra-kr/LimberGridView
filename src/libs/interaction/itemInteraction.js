@@ -217,13 +217,11 @@ export const moveItemDemo = async function (index, toX, toY) {
 	index = parseInt(index);
 	let adjustedPt = {};
 	if (true) {
-		debugger;
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
 		adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
-		console.log("adjustedPt", adjustedPt);
 
 		if (!isNaN(adjustedPt.overlappedItemIndex)) {
 			e.$limberGridViewMoveGuide.style.transform =

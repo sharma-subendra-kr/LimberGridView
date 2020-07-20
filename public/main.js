@@ -346,15 +346,14 @@ var main = function () {
 	var obj = {
 		el: "limber-grid-view-implement",
 		editable: true,
-		enableInteractiveAddAndCut: true,
-		enableTouchInteraction: true,
-		dataType: "string", // string or node
+		// enableInteractiveAddAndCut: true,
+		// enableTouchInteraction: true,
+		// dataType: "string", // string or node
 		autoArrange: false,
 		reRenderOnResize: true,
 		callbacks: {
 			renderContent: renderContent,
 			onItemClickCallback: onItemClickCallback,
-			renderComplete: renderComplete,
 			renderComplete: renderComplete,
 			resizeComplete: resizeComplete,
 			moveComplete: moveComplete,

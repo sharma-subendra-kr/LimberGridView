@@ -117,6 +117,14 @@ const getWidthScaleFactor = function (context) {
 	return context.store.constants.privateConstants.WIDTH_SCALE_FACTOR;
 };
 
+const setMargin = function (context, val) {
+	context.store.constants.privateConstants.MARGIN = val;
+};
+
+const getMargin = function (context) {
+	return context.store.constants.privateConstants.MARGIN;
+};
+
 //
 const setGridWidth = function (context, val) {
 	context.store.constants.privateConstants.GRID_WIDTH = val;
@@ -140,14 +148,6 @@ const setGridMargin = function (context, val) {
 
 const getGridMargin = function (context) {
 	return context.store.constants.privateConstants.GRID_MARGIN;
-};
-
-const setMargin = function (context, val) {
-	context.store.constants.privateConstants.MARGIN = val;
-};
-
-const getMargin = function (context) {
-	return context.store.constants.privateConstants.MARGIN;
 };
 
 const setMinHeightAndWidth = function (context, val) {
@@ -178,14 +178,14 @@ export {
 	getPaddingBottom,
 	setWidthScaleFactor,
 	getWidthScaleFactor,
+	setMargin,
+	getMargin,
 	setGridWidth,
 	getGridWidth,
 	setGridHeight,
 	getGridHeight,
 	setGridMargin,
 	getGridMargin,
-	setMargin,
-	getMargin,
 	setMinHeightAndWidth,
 	getMinHeightAndWidth,
 };

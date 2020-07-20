@@ -87,6 +87,7 @@ export const arrangeMove = async (
 	isDemo = false
 ) => {
 	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
 	const mpd = getModifiedPositionData(context);
 
 	const p1 = performance.now();
@@ -161,7 +162,7 @@ export const arrangeMove = async (
 	);
 
 	const shiftHeight =
-		(getPrivateConstantByName(context, "MIN_HEIGHT_AND_WIDTH") -
+		(publicConstants.DEFINDED_MIN_HEIGHT_AND_WIDTH -
 			privateConstants.MARGIN * 2) /
 		2;
 
@@ -297,6 +298,7 @@ export const arrangeResize = async (
 	isDemo = false
 ) => {
 	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
 
 	const p1 = performance.now();
 
@@ -401,8 +403,7 @@ export const arrangeResize = async (
 
 	let _combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
 
-	const incrementHeight =
-		getPrivateConstantByName(context, "MIN_HEIGHT_AND_WIDTH") * 2;
+	const incrementHeight = publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 2;
 
 	let passCount = 0;
 	let arranged = {};
@@ -512,6 +513,145 @@ export const arrangeResize = async (
 
 		DEBUG_COUNT++;
 		if (DEBUG_COUNT > 50) {
+			throw "Arrange time out";
+		}
+	}
+
+	const p2 = performance.now();
+	console.log("p1: ", p1);
+	console.log("p2: ", p2);
+	console.log("arrange total: ", p2 - p1);
+
+	return arranged;
+};
+
+export const arrangeFromHeight = async (context, itemsToArrange, height) => {
+	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
+
+	const p1 = performance.now();
+
+	const idCount = { idCount: 0 };
+
+	const minX = 0;
+	const maxX = privateConstants.WIDTH;
+	const minY = height;
+	const maxY = height + publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH;
+
+	const iToALen = itemsToArrange.length;
+
+	const workSpaceRectCo = {
+		tl: { x: minX, y: minY },
+		tr: { x: maxX, y: minY },
+		br: { x: maxX, y: maxY },
+		bl: { x: minX, y: maxY },
+	};
+
+	const combinedWorkSpaceRectCo = {
+		tl: { ...workSpaceRectCo.tl },
+		tr: { ...workSpaceRectCo.tr },
+		br: { ...workSpaceRectCo.br },
+		bl: { ...workSpaceRectCo.bl },
+	};
+
+	const { topWorkSpaceCo } = getTopBottomWS(
+		context,
+		workSpaceRectCo,
+		0,
+		privateConstants.WIDTH
+	);
+	const shrinkRes = shrinkTopBottomWS(context, topWorkSpaceCo);
+
+	if (shrinkRes.integrateTop) {
+		combinedWorkSpaceRectCo.tl = { ...topWorkSpaceCo.tl };
+		combinedWorkSpaceRectCo.tr = { ...topWorkSpaceCo.tr };
+	}
+
+	let combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
+		context,
+		combinedWorkSpaceRect
+	);
+
+	const shiftHeight =
+		publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
+		privateConstants.MARGIN * 2 -
+		10;
+
+	let passCount = 0;
+	let arranged = {};
+	let arrangedCount = 0;
+	let workSpaceResizeCount = 0;
+
+	while (arrangedCount !== iToALen) {
+		// sort items in workspace by lt.x  i.e horizontally
+		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+
+		const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
+			context,
+			combinedWorkSpaceRect,
+			combinedWorkSpaceRectCo,
+			itemsInCombinedWorkSpace,
+			idCount.idCount
+		);
+		idCount.idCount = lastId1;
+
+		const freeRectsArr = freeRectsItY.getDataInArray();
+		shuffle(freeRectsArr);
+
+		assignAdjacentRects(freeRectsItY);
+
+		// DEBUG:
+		// printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+
+		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
+			freeRectsArr,
+			idCount.idCount
+		);
+		idCount.idCount = lastId2;
+
+		// DEBUG:
+		// printMergedFreeRects(mergedRects.map((o) => o.d));
+
+		const { overlappedRects } = findOverlapped(mergedRects);
+
+		// DEBUG:
+		// printMergedFreeRects(overlappedRects.map((o) => o.d));
+
+		const { arranged: _arranged, idCount: lastId3 } = await arrange(
+			context,
+			itemsToArrange.filter((id) => !arranged[id]),
+			overlappedRects,
+			getRectObjectFromCo(topWorkSpaceCo),
+			{},
+			combinedWorkSpaceRectCo,
+			idCount.idCount
+		);
+		idCount.idCount = lastId3;
+
+		arranged = { ...arranged, ..._arranged };
+		const _arrangedArr = Object.values(_arranged);
+		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
+
+		arrangedCount += _arrangedArr.length;
+
+		if (arrangedCount !== iToALen) {
+			// resize workSpace and push bottom workspace down
+			workSpaceResizeCount++;
+			console.log("workSpaceResizeCount", workSpaceResizeCount);
+
+			workSpaceRectCo.br.y += shiftHeight;
+			workSpaceRectCo.bl.y += shiftHeight;
+			combinedWorkSpaceRectCo.br.y += shiftHeight;
+			combinedWorkSpaceRectCo.bl.y += shiftHeight;
+
+			combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
+		}
+
+		passCount++;
+
+		passCount++;
+		if (passCount > 10000) {
 			throw "Arrange time out";
 		}
 	}

@@ -96,6 +96,11 @@ export const render = function (context, scale = true) {
 		const spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
+			pd[i].x *= WIDTH_SCALE_FACTOR;
+			pd[i].y *= WIDTH_SCALE_FACTOR;
+			pd[i].width *= WIDTH_SCALE_FACTOR;
+			pd[i].height *= WIDTH_SCALE_FACTOR;
+
 			spd[i].width = privateConstants.WIDTH;
 			spd[i].height =
 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
