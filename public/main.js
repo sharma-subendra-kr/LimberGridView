@@ -389,6 +389,7 @@ var main = function () {
 		// enableInteractiveAddAndCut: true,
 		// enableTouchInteraction: true,
 		// dataType: "string", // string or node
+		// pseudoElementContainer: "limber-grid-controls",
 		autoArrange: false,
 		reRenderOnResize: true,
 		callbacks: {

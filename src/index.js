@@ -125,6 +125,7 @@ LimberGridView.prototype.constructor = LimberGridView;
 		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
 		reRenderOnResize : true, 																// true/false (optional default true)
 		isMobileCheck: function
+		pseudoElementContainer: string or element
 		gridData : {
 			WIDTH : 1920,																	// width of limberGridView
 			HEIGHT : 1080, 																	// height of limberGridView

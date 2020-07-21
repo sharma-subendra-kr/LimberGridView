@@ -387,6 +387,7 @@ export const initConstantsAndFlags = function (options) {
 
 export const initRender = function () {
 	const e = getElements(this);
+	const options = getOptions(this);
 
 	set$body(this, document.getElementsByTagName("body")[0]);
 
@@ -403,7 +404,19 @@ export const initRender = function () {
 	set$pseudoContainer(this, pseudoContainer);
 
 	// pseudo container should be kept in defined container, if not defined then body
-	e.$body.appendChild(pseudoContainer);
+	if (options.pseudoElementContainer) {
+		let $pseudoElementContainer;
+		if (typeof options.pseudoElementContainer === "string") {
+			$pseudoElementContainer = document.getElementById(
+				options.pseudoElementContainer
+			);
+		} else if (options.pseudoElementContainer instanceof Element) {
+			$pseudoElementContainer = options.pseudoElementContainer;
+		}
+		$pseudoElementContainer.appendChild(pseudoContainer);
+	} else {
+		e.$body.appendChild(pseudoContainer);
+	}
 
 	e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
 	set$limberGridViewContainer(
