@@ -589,7 +589,7 @@ export const onItemTouchEnd = async function (event) {
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
 	var itemResizeFlag = false;
 	var itemMoveFlag = false;
-	if (iiv.touchHoldTimerComplete === true) {
+	if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
 		if (iiv.userActionData.type === "move") {
 			unloadMoveState(this, iiv.userActionData);
 			unloadOnMoveState(this);
