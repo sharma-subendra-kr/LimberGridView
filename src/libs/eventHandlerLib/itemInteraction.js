@@ -90,15 +90,20 @@ export const onItemMouseDown = function (event) {
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (event.which !== 1) {
+	if (!event.target.classList.contains("limber-grid-view-item")) {
 		return;
 	}
 
-	if (event.target.classList.contains("limber-grid-view-item")) {
-		event.stopPropagation();
-	} else {
+	if (event.which !== 1) {
+		onItemContextMenu.call(this, event);
 		return;
 	}
+
+	// if (event.target.classList.contains("limber-grid-view-item")) {
+	// 	event.stopPropagation();
+	// } else {
+	// 	return;
+	// }
 
 	Object.assign(iiv.userActionData, getUserActionData(this, event));
 
@@ -132,6 +137,9 @@ export const onItemMouseDown = function (event) {
 
 		event.preventDefault();
 	}
+
+	//
+	event.stopPropagation();
 };
 
 export const onItemTouchStart = function (event) {
@@ -142,19 +150,25 @@ export const onItemTouchStart = function (event) {
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
+	if (!event.target.classList.contains("limber-grid-view-item")) {
+		return;
+	}
+
+	if (event.touches.length !== 1) {
+		onItemTouchContextMenu.call(this, event);
+		return;
+	}
+
 	if (event.which !== 0) {
+		onItemTouchContextMenu.call(this, event);
 		return;
 	}
 
-	if (event.target.classList.contains("limber-grid-view-item")) {
-		event.stopPropagation();
-	} else {
-		return;
-	}
-
-	if (event.touches.length > 1) {
-		return;
-	}
+	// if (event.target.classList.contains("limber-grid-view-item")) {
+	// 	event.stopPropagation();
+	// } else {
+	// 	return;
+	// }
 
 	const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
 	if (touchPosOnLimberGridItem === false) {
@@ -167,7 +181,7 @@ export const onItemTouchStart = function (event) {
 		iiv.touchHoldCancel = false;
 		iiv.touchHoldTimerComplete = false;
 
-		e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
+		// e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
 		document.addEventListener("touchmove", bf.onItemTouchMove);
 		document.addEventListener("touchend", bf.onItemTouchEnd);
 		document.addEventListener("touchcancel", bf.onItemTouchCancel);
@@ -183,10 +197,12 @@ export const onItemTouchStart = function (event) {
 		iiv.touchHoldCancel = false;
 		iiv.touchHoldTimerComplete = true;
 
-		e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
+		// e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
 		e.$limberGridView.addEventListener("touchmove", bf.onItemTouchMove);
 		document.addEventListener("touchend", bf.onItemTouchEnd);
 		document.addEventListener("touchcancel", bf.onItemTouchCancel);
+		//
+		document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
 
 		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
 		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
@@ -291,11 +307,13 @@ export const onItemMouseMove = function (event) {
 		}
 	} else {
 		iiv.mouseDownCancel = true;
-		clearTimeout(iiv.longPressCheck);
-		document.removeEventListener("mousemove", bf.onItemMouseMove);
-		e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
-		document.removeEventListener("mouseup", bf.onItemMouseUp);
-		document.removeEventListener("contextmenu", bf.onItemContextMenu);
+
+		onItemContextMenu.call(this, event);
+		// clearTimeout(iiv.longPressCheck);
+		// document.removeEventListener("mousemove", bf.onItemMouseMove);
+		// e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
+		// document.removeEventListener("mouseup", bf.onItemMouseUp);
+		// document.removeEventListener("contextmenu", bf.onItemContextMenu);
 
 		// canceling mouseHold
 	}
@@ -311,7 +329,7 @@ export const onItemTouchMove = function (event) {
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (iiv.touchHoldTimerComplete === true) {
+	if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
 		if (iiv.userActionData.type === "move") {
 			loadOnMoveState(this, iiv.userActionData, event, "move");
 
@@ -425,15 +443,21 @@ export const onItemTouchMove = function (event) {
 			}
 		}
 	} else {
+		console.log("else");
 		iiv.touchHoldCancel = true;
-		clearTimeout(iiv.longTouchCheck);
-		document.removeEventListener("touchmove", bf.onItemTouchMove);
-		e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
-		document.removeEventListener("touchend", bf.onItemTouchEnd);
-		document.removeEventListener("contextmenu", bf.onItemContextMenu);
-		document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
-		document.removeEventListener("touchcancel", bf.onItemTouchCancel);
-		e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
+
+		onItemTouchContextMenu.call(this, event);
+		// clearTimeout(iiv.longTouchCheck);
+
+		// document.removeEventListener("contextmenu", bf.onItemContextMenu);
+
+		// document.removeEventListener("touchmove", bf.onItemTouchMove);
+		// e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
+		// document.removeEventListener("touchend", bf.onItemTouchEnd);
+		// document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
+		// document.removeEventListener("touchcancel", bf.onItemTouchCancel);
+
+		// e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 
 		// canceling taphold
 	}
@@ -499,17 +523,19 @@ export const onItemMouseUp = async function (event) {
 		}
 	} else {
 		iiv.mouseDownCancel = true;
-		clearTimeout(iiv.longPressCheck);
+		// clearTimeout(iiv.longPressCheck);
 		// canceling mouseHold
 	}
 
-	document.removeEventListener("mousemove", bf.onItemMouseMove);
-	e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
-	document.removeEventListener("mouseup", bf.onItemMouseUp);
-	document.removeEventListener("contextmenu", bf.onItemContextMenu);
+	onItemContextMenu.call(this, event);
 
-	event.preventDefault();
-	event.stopPropagation();
+	// document.removeEventListener("mousemove", bf.onItemMouseMove);
+	// e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
+	// document.removeEventListener("mouseup", bf.onItemMouseUp);
+	// document.removeEventListener("contextmenu", bf.onItemContextMenu);
+
+	// event.preventDefault();
+	// event.stopPropagation();
 
 	//
 	if (
@@ -551,6 +577,7 @@ export const onItemMouseUp = async function (event) {
 };
 
 export const onItemTouchEnd = async function (event) {
+	console.log("onItemTouchEnd");
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
@@ -608,17 +635,20 @@ export const onItemTouchEnd = async function (event) {
 		}
 	} else {
 		iiv.touchHoldCancel = true;
-		clearTimeout(iiv.longTouchCheck);
+		// clearTimeout(iiv.longTouchCheck);
 		// canceling taphold
 	}
 
-	document.removeEventListener("touchmove", bf.onItemTouchMove);
-	e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
-	document.removeEventListener("touchend", bf.onItemTouchEnd);
-	document.removeEventListener("contextmenu", bf.onItemContextMenu);
-	document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
-	document.removeEventListener("touchcancel", bf.onItemTouchCancel);
-	e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
+	onItemTouchContextMenu.call(this, event);
+	// document.removeEventListener("contextmenu", bf.onItemContextMenu);
+
+	// document.removeEventListener("touchmove", bf.onItemTouchMove);
+	// e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
+	// document.removeEventListener("touchend", bf.onItemTouchEnd);
+	// document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
+	// document.removeEventListener("touchcancel", bf.onItemTouchCancel);
+
+	// e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 
 	event.stopPropagation();
 
@@ -670,7 +700,7 @@ export const onItemContextMenu = function (event) {
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
-	unloadResizingState(this);
+	unloadResizingState(this, iiv.userActionData);
 	unloadMoveState(this, iiv.userActionData);
 	unloadOnMoveState(this);
 	revertShowMoveOrResizeDemo(this);
@@ -678,6 +708,7 @@ export const onItemContextMenu = function (event) {
 	document.removeEventListener("mousemove", bf.onItemMouseMove);
 	e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
 	document.removeEventListener("mouseup", bf.onItemMouseUp);
+	document.removeEventListener("contextmenu", bf.onItemContextMenu);
 
 	document.removeEventListener("touchmove", bf.onItemTouchMove);
 	e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
@@ -685,27 +716,32 @@ export const onItemContextMenu = function (event) {
 	document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
 	document.removeEventListener("touchcancel", bf.onItemTouchCancel);
 
-	document.removeEventListener("contextmenu", bf.onItemContextMenu);
-
 	iiv.userActionData = {};
+	//
+	// iiv.mouseDownCancel = false;
+	// iiv.mouseDownTimerComplete = false;
+	clearTimeout(iiv.longPressCheck);
+	clearTimeout(iiv.longTouchCheck);
+	//
 
 	event.preventDefault();
 	event.stopPropagation();
 };
 
 export const onItemTouchContextMenu = function (event) {
-	event.preventDefault();
+	// event.preventDefault();
+	onItemContextMenu.call(this, event);
 };
 
 export const onItemTouchCancel = function (event) {
-	const e = getElements(this);
+	// const e = getElements(this);
 
-	const iiv = getItemInteractionVars(this);
-	const bf = getBindedFunctions(this);
+	// const iiv = getItemInteractionVars(this);
+	// const bf = getBindedFunctions(this);
 
-	onItemContextMenu.call(this);
-	iiv.touchHoldTimerComplete = false;
-	e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
+	onItemContextMenu.call(this, event);
+	// iiv.touchHoldTimerComplete = false;
+	// e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 };
 
 export const showMoveDemo = async function (index, mousePosition) {

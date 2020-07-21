@@ -108,6 +108,10 @@ export const onDeskTouchStart = function (event) {
 	const dkiv = getDeskInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
+	if (event.touches.length > 1) {
+		return;
+	}
+
 	if (event.target.classList.contains("limber-grid-view")) {
 		event.stopPropagation();
 	} else {
