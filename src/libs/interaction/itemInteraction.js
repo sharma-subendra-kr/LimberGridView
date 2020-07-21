@@ -156,10 +156,10 @@ export const moveItem = async function (index, toX, toY) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
+	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
-	let adjustedPt = {};
-	if (true) {
+	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
 		// maybe "LATCH_MOVED_ITEM"
@@ -224,13 +224,13 @@ export const moveItem = async function (index, toX, toY) {
 export const moveItemDemo = async function (index, toX, toY) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
+	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
-	let adjustedPt = {};
-	if (true) {
+	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
 		// provide a flag for developers to switch it on or off any time from UI by the user
-		adjustedPt = movePointAdjust(this, toX, toY);
+		const adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
 

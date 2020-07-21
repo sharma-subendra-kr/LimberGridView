@@ -214,6 +214,7 @@ export const init = function (context, isResize, autoArrange) {
 };
 
 export const initConstantsAndFlags = function (options) {
+	// Private Constants BEGIN
 	if (options?.gridData?.WIDTH && !isNaN(options.gridData.WIDTH)) {
 		setGridWidth(this, options.gridData.WIDTH);
 	}
@@ -232,8 +233,13 @@ export const initConstantsAndFlags = function (options) {
 	) {
 		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
 	}
+	// Private Constants ENDED
 
-	if (!isNaN(options?.publicConstants?.mobileAspectRatio)) {
+	// Public Constants BEGIN
+	if (
+		options?.publicConstants?.mobileAspectRatio &&
+		!isNaN(options.publicConstants.mobileAspectRatio)
+	) {
 		setPublicConstantByName(
 			this,
 			"MOBILE_ASPECT_RATIO",
@@ -241,7 +247,10 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.moveGuideRadius)) {
+	if (
+		options?.publicConstants?.moveGuideRadius &&
+		!isNaN(options.publicConstants.moveGuideRadius)
+	) {
 		setPublicConstantByName(
 			this,
 			"MOVE_GUIDE_RADIUS",
@@ -249,7 +258,10 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.resizeSquareGuideLength)) {
+	if (
+		options?.publicConstants?.resizeSquareGuideLength &&
+		!isNaN(options.publicConstants.resizeSquareGuideLength)
+	) {
 		setPublicConstantByName(
 			this,
 			"RESIZE_SQUARE_GUIDE_LENGTH",
@@ -257,77 +269,120 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.resizeSquareBorderGuideWidth)) {
+	if (
+		options?.publicConstants?.resizeSquareBorderGuideWidth &&
+		!isNaN(options.publicConstants.resizeSquareBorderGuideWidth)
+	) {
 		setPublicConstantByName(
 			this,
 			"RESIZE_SQUARE_GUIDE_BORDER_WIDTH",
-			options?.publicConstants?.resizeSquareBorderGuideWidth
+			options.publicConstants.resizeSquareBorderGuideWidth
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.autoScrollDistance)) {
+	if (
+		options?.publicConstants?.autoScrollDistance &&
+		!isNaN(options.publicConstants.autoScrollDistance)
+	) {
 		setPublicConstantByName(
 			this,
 			"AUTO_SCROLL_DISTANCE",
-			options?.publicConstants?.autoScrollDistance
+			options.publicConstants.autoScrollDistance
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.autoScrollPoint)) {
+	if (
+		options?.publicConstants?.autoScrollPoint &&
+		!isNaN(options.publicConstants.autoScrollPoint)
+	) {
 		setPublicConstantByName(
 			this,
 			"AUTO_SCROLL_POINT",
-			options?.publicConstants?.autoScrollPoint
+			options.publicConstants.autoScrollPoint
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.moveOrResizeHeightIncrements)) {
+	if (
+		options?.publicConstants?.moveOrResizeHeightIncrements &&
+		!isNaN(options.publicConstants.moveOrResizeHeightIncrements)
+	) {
 		setPublicConstantByName(
 			this,
 			"MOVE_OR_RESIZE_HEIGHT_INCREMENTS",
-			options?.publicConstants?.moveOrResizeHeightIncrements
+			options.publicConstants.moveOrResizeHeightIncrements
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.mouseDownTime)) {
+	if (
+		options?.publicConstants?.mouseDownTime &&
+		!isNaN(options.publicConstants.mouseDownTime)
+	) {
 		setPublicConstantByName(
 			this,
 			"MOUSE_DOWN_TIME",
-			options?.publicConstants?.mouseDownTime
+			options.publicConstants.mouseDownTime
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.touchHoldTime)) {
+	if (
+		options?.publicConstants?.touchHoldTime &&
+		!isNaN(options.publicConstants.touchHoldTime)
+	) {
 		setPublicConstantByName(
 			this,
 			"TOUCH_HOLD_TIME",
-			options?.publicConstants?.touchHoldTime
+			options.publicConstants.touchHoldTime
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.demoWaitTime)) {
+	if (
+		options?.publicConstants?.demoWaitTime &&
+		!isNaN(options.publicConstants.demoWaitTime)
+	) {
 		setPublicConstantByName(
 			this,
 			"DEMO_WAIT_TIME",
-			options?.publicConstants?.demoWaitTime
+			options.publicConstants.demoWaitTime
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.windowResizeWaitTime)) {
+	if (
+		options?.publicConstants?.windowResizeWaitTime &&
+		!isNaN(options.publicConstants.windowResizeWaitTime)
+	) {
 		setPublicConstantByName(
 			this,
 			"WINDOW_RESIZE_WAIT_TIME",
-			options?.publicConstants?.windowResizeWaitTime
+			options.publicConstants.windowResizeWaitTime
 		);
 	}
 
-	if (!isNaN(options?.publicConstants?.deskInteractionMode)) {
+	if (
+		options?.publicConstants?.deskInteractionMode &&
+		!isNaN(options.publicConstants.deskInteractionMode)
+	) {
 		setPublicConstantByName(
 			this,
 			"DESK_INTERACTION_MODE",
-			options?.publicConstants?.deskInteractionMode
+			options.publicConstants.deskInteractionMode
 		);
 	}
+
+	if (
+		options?.publicConstants?.latchMovedItem &&
+		!isNaN(options.publicConstants.latchMovedItem)
+	) {
+		setPublicConstantByName(
+			this,
+			"LATCH_MOVED_ITEM",
+			options.publicConstants.latchMovedItem
+		);
+	}
+	// Public Constants ENDED
+
+	// Miscellaneous BEGIN
+
+	// Miscellaneous ENDED
 };
 
 export const initRender = function () {

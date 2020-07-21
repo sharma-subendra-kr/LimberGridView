@@ -52,7 +52,7 @@ const getPrivateConstants = function (context) {
 };
 
 const setPrivateConstantByName = function (context, name, value) {
-	if (context.store.constants.privateConstants[name]) {
+	if (context.store.constants.privateConstants.hasOwnProperty(name)) {
 		context.store.constants.privateConstants[name] = value;
 	}
 };

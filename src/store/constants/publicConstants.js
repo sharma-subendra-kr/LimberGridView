@@ -56,7 +56,7 @@ const getPublicConstants = function (context) {
 };
 
 const setPublicConstantByName = function (context, name, value) {
-	if (context.store.constants.publicConstants[name]) {
+	if (context.store.constants.publicConstants.hasOwnProperty(name)) {
 		context.store.constants.publicConstants[name] = value;
 	}
 };

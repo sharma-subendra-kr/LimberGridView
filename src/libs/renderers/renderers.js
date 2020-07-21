@@ -61,7 +61,7 @@ export const render = function (context, scale = true) {
 
 	const nodes = new Array(len);
 
-	if (!isMobile()) {
+	if (!isMobile(context)) {
 		let classList = "limber-grid-view-item";
 		if (options.editable === true) {
 			classList = "limber-grid-view-item limber-grid-view-item-editable";
@@ -191,7 +191,7 @@ export const addItem = function (context, item) {
 		const index = len - 1;
 
 		const itemEl = document.createElement("div");
-		if (!isMobile()) {
+		if (!isMobile(context)) {
 			let classList = "limber-grid-view-item";
 			if (options.editable === true) {
 				classList = "limber-grid-view-item limber-grid-view-item-editable";

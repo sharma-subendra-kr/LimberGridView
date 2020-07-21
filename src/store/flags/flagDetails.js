@@ -25,3 +25,5 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 export const DESK_INTERACTION_MODE = { ADD: true, CUTSPACE: true };
+
+export const LATCH_MOVED_ITEM = { true: true, false: true };

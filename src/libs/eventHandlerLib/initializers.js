@@ -55,7 +55,7 @@ export const initializeEvents = function () {
 	const bf = getBindedFunctions(this);
 
 	if (options.editable === true) {
-		if (!isMobile()) {
+		if (!isMobile(this)) {
 			if (options.enableInteractiveAddAndCut !== false) {
 				e.$limberGridView.addEventListener("mousedown", bf.onDeskMouseDown);
 				if (options.enableTouchInteraction !== false) {
@@ -66,7 +66,7 @@ export const initializeEvents = function () {
 
 		var len = e.$limberGridViewItems.length;
 		for (var i = 0; i < len; i++) {
-			if (!isMobile()) {
+			if (!isMobile(this)) {
 				e.$limberGridViewItems[i].addEventListener(
 					"mousedown",
 					bf.onItemMouseDown

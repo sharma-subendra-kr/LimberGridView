@@ -54,10 +54,7 @@ import {
 	onWindowResizeTimerCallback,
 } from "./libs/eventHandlerLib/miscellaneous";
 
-import {
-	setIsMobileFunction as setIsMobileFunc,
-	// getRandomString,
-} from "./libs/utils/utils";
+// import {} from "./libs/utils/utils";
 import {
 	getPublicConstants,
 	setPublicConstantByName,
@@ -93,7 +90,10 @@ import {
 	// set$limberGridViewAddCutGuide,
 	// set$limberGridViewTouchHoldGuide,
 } from "./store/variables/elements";
-import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
+import {
+	DESK_INTERACTION_MODE,
+	LATCH_MOVED_ITEM,
+} from "./store/flags/flagDetails";
 import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 import { render, renderItem as _renderItem } from "./libs/renderers/renderers";
@@ -124,6 +124,7 @@ LimberGridView.prototype.constructor = LimberGridView;
 		//dataType : "string", 																	// string/node
 		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
 		reRenderOnResize : true, 																// true/false (optional default true)
+		isMobileCheck: function
 		gridData : {
 			WIDTH : 1920,																	// width of limberGridView
 			HEIGHT : 1080, 																	// height of limberGridView
@@ -174,7 +175,8 @@ LimberGridView.prototype.constructor = LimberGridView;
 			windowResizeWaitTime: number
 
 			deskInteractionMode: "ADD"/"CUTSPACE"
-			definedMinHeightAndWidth: number
+
+			latchMovedItem: boolean
 		}
 	}
 	*/
@@ -371,6 +373,8 @@ LimberGridView.prototype.initializeStore = function () {
 				WINDOW_RESIZE_WAIT_TIME: 1000,
 
 				DESK_INTERACTION_MODE: "ADD",
+
+				LATCH_MOVED_ITEM: true,
 			},
 		},
 	};
@@ -383,6 +387,10 @@ LimberGridView.prototype.initializeStore = function () {
 // LimberGridView.prototype.initRender = function () {
 
 // };
+
+LimberGridView.prototype.renderItem = function (index) {
+	_renderItem(this, index);
+};
 
 LimberGridView.prototype.getGridData = function () {
 	const privateConstants = getPrivateConstants(this);
@@ -406,18 +414,20 @@ LimberGridView.prototype.setDeskInteractMode = function (flag) {
 	}
 };
 
-// LimberGridView.prototype.render = render;
-
-LimberGridView.prototype.renderItem = function (index) {
-	_renderItem(this, index);
+LimberGridView.prototype.setLatchMovedItem = function (flag) {
+	if (LATCH_MOVED_ITEM[flag]) {
+		setPublicConstantByName(this, "LATCH_MOVED_ITEM", flag);
+	}
 };
+
+// LimberGridView.prototype.render = render;
 
 // LimberGridView.prototype.removeItems = removeItems;
 
 // LimberGridView.prototype.addItems = addItems;
 
-LimberGridView.prototype.setIsMobileFunction = function (f) {
-	setIsMobileFunc(f);
+LimberGridView.prototype.setIsMobileCheck = function (f) {
+	this.options.isMobileCheck = f;
 };
 
 export default LimberGridView;
