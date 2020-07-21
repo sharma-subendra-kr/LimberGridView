@@ -108,34 +108,40 @@ export const onDeskTouchStart = function (event) {
 	const dkiv = getDeskInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (event.touches.length > 1) {
+	if (!event.target.classList.contains("limber-grid-view")) {
 		return;
 	}
 
-	if (event.target.classList.contains("limber-grid-view")) {
-		event.stopPropagation();
-	} else {
+	if (event.touches.length !== 1) {
+		// onDeskContextMenu.call(this, event);
 		return;
 	}
+
+	// if (event.target.classList.contains("limber-grid-view")) {
+	// 	event.stopPropagation();
+	// } else {
+	// 	return;
+	// }
 
 	if (event.which !== 0) {
+		// onDeskContextMenu.call(this, event);
 		return;
 	}
 
 	dkiv.tapHoldCancel = false;
 	dkiv.tapHoldTimerComplete = false;
 
-	clearTimeout(dkiv.longTouchCheck);
-	dkiv.longTouchCheck = setTimeout(
-		tapHoldCheck.bind(this, event),
-		publicConstants.TOUCH_HOLD_TIME
-	);
-
 	e.$limberGridView.addEventListener("touchmove", bf.onDeskTouchMove);
 	document.addEventListener("touchend", bf.onDeskTouchEnd);
 	document.addEventListener("touchcancel", bf.onDeskTouchCancel);
 	document.addEventListener("contextmenu", bf.onDeskTouchContextMenu);
 	unInitializeItemTouchEvents.call(this);
+
+	clearTimeout(dkiv.longTouchCheck);
+	dkiv.longTouchCheck = setTimeout(
+		tapHoldCheck.bind(this, event),
+		publicConstants.TOUCH_HOLD_TIME
+	);
 
 	event.stopPropagation();
 };
@@ -283,11 +289,13 @@ export const onDeskMouseMove = function (event) {
 			);
 		}
 	} else {
-		clearTimeout(dkiv.longPressCheck);
+		onDeskContextMenu.call(this, event);
 
-		e.$limberGridView.removeEventListener("mousemove", bf.onDeskMouseMove);
-		document.removeEventListener("mouseup", bf.onDeskMouseUp);
-		document.removeEventListener("contextmenu", bf.onDeskContextMenu);
+		// clearTimeout(dkiv.longPressCheck);
+
+		// e.$limberGridView.removeEventListener("mousemove", bf.onDeskMouseMove);
+		// document.removeEventListener("mouseup", bf.onDeskMouseUp);
+		// document.removeEventListener("contextmenu", bf.onDeskContextMenu);
 	}
 	event.stopPropagation();
 };
@@ -300,7 +308,7 @@ export const onDeskTouchMove = function (event) {
 	const dkiv = getDeskInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (dkiv.tapHoldTimerComplete === true) {
+	if (dkiv.tapHoldTimerComplete === true && event.touches.length === 1) {
 		e.$limberGridViewAddCutGuide.classList.remove(
 			"limber-grid-view-add-cut-guide-allow",
 			"limber-grid-view-add-cut-guide-disallow"
@@ -385,13 +393,14 @@ export const onDeskTouchMove = function (event) {
 		}
 		event.preventDefault();
 	} else {
-		clearTimeout(dkiv.longTouchCheck);
+		onDeskContextMenu.call(this);
+		// clearTimeout(dkiv.longTouchCheck);
 
-		e.$limberGridView.removeEventListener("touchmove", bf.onDeskTouchMove);
-		document.removeEventListener("touchend", bf.onDeskTouchEnd);
-		document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
-		document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
-		initializeItemTouchEvents.call(this);
+		// e.$limberGridView.removeEventListener("touchmove", bf.onDeskTouchMove);
+		// document.removeEventListener("touchend", bf.onDeskTouchEnd);
+		// document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
+		// document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
+		// initializeItemTouchEvents.call(this);
 	}
 
 	event.stopPropagation();
@@ -407,7 +416,7 @@ export const onDeskMouseUp = function (event) {
 	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
 	clearTimeout(dkiv.longPressCheck);
 	var itemAddedFlag = false;
-	if (dkiv.mouseDownTimerComplete === true) {
+	if (dkiv.mouseDownTimerComplete === true && event.touches.length === 0) {
 		if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 			if (
 				addItemAllowCheck(
@@ -525,9 +534,9 @@ export const onDeskTouchEnd = function (event) {
 	} else {
 		dkiv.tapHoldCancel = true;
 	}
-	dkiv.tapHoldTimerComplete = false;
+	// dkiv.tapHoldTimerComplete = false;
 	onDeskContextMenu.call(this);
-	initializeItemTouchEvents.call(this);
+	// initializeItemTouchEvents.call(this);
 
 	event.stopPropagation();
 
@@ -547,32 +556,31 @@ export const onDeskTouchEnd = function (event) {
 };
 
 export const onDeskTouchCancel = function (event) {
-	const dkiv = getDeskInteractionVars(this);
+	// const dkiv = getDeskInteractionVars(this);
 
-	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
-	clearTimeout(dkiv.longTouchCheck);
-	dkiv.tapHoldCancel = false;
-	dkiv.tapHoldTimerComplete = false;
+	// dkiv.tapHoldCancel = false;
+	// dkiv.tapHoldTimerComplete = false;
 	onDeskContextMenu.call(this);
-	initializeItemTouchEvents.call(this);
+	// initializeItemTouchEvents.call(this);
 
-	event.stopPropagation();
+	// event.stopPropagation();
 };
 
 export const onDeskTouchContextMenu = function (event) {
 	event.preventDefault();
+	// onDeskContextMenu.call(this, event);
 };
 
 export const onDeskContextMenu = function (event) {
 	const e = getElements(this);
 
+	const dkiv = getDeskInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (event) {
-		event.preventDefault();
-		event.stopPropagation();
-	}
-
+	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+	clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
+	clearTimeout(dkiv.longPressCheck);
+	clearTimeout(dkiv.longTouchCheck);
 	unloadInitState(this);
 
 	e.$limberGridView.removeEventListener("mousemove", bf.onDeskMouseMove);
@@ -583,6 +591,15 @@ export const onDeskContextMenu = function (event) {
 	document.removeEventListener("touchend", bf.onDeskTouchEnd);
 	document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
 	document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
+
+	initializeItemTouchEvents.call(this);
+
+	dkiv.userActionData = {};
+
+	if (event) {
+		event.preventDefault();
+		event.stopPropagation();
+	}
 };
 
 export const addItemAllowCheckTimeOut = function (x, y, width, height) {

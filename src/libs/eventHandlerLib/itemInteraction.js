@@ -699,6 +699,8 @@ export const onItemContextMenu = function (event) {
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
+	clearTimeout(iiv.longPressCheck);
+	clearTimeout(iiv.longTouchCheck);
 
 	unloadResizingState(this, iiv.userActionData);
 	unloadMoveState(this, iiv.userActionData);
@@ -720,8 +722,7 @@ export const onItemContextMenu = function (event) {
 	//
 	// iiv.mouseDownCancel = false;
 	// iiv.mouseDownTimerComplete = false;
-	clearTimeout(iiv.longPressCheck);
-	clearTimeout(iiv.longTouchCheck);
+
 	//
 
 	event.preventDefault();
