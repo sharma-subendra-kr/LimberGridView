@@ -34,8 +34,8 @@ export const loadInitState = (context) => {
 	const publicConstants = getPublicConstants(context);
 
 	e.$body.classList.add(
-		"limber-grid-view-body-tag-state-element-dragging-or-resizing",
-		"limber-grid-view-body-tag-state-element-adding"
+		"limber-grid-view-body-tag-state-editing",
+		"limber-grid-view-body-tag-state-editing-adding-cutting"
 	);
 
 	const len = e.$limberGridViewItems.length;
@@ -77,8 +77,8 @@ export const unloadInitState = (context) => {
 	const e = getElements(context);
 
 	e.$body.classList.remove(
-		"limber-grid-view-body-tag-state-element-dragging-or-resizing",
-		"limber-grid-view-body-tag-state-element-adding"
+		"limber-grid-view-body-tag-state-editing",
+		"limber-grid-view-body-tag-state-editing-adding-cutting"
 	);
 
 	const len = e.$limberGridViewItems.length;

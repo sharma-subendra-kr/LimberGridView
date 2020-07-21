@@ -209,12 +209,12 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 	pointer-events: none;
 }
 
-.limber-grid-view-body-tag-state-element-dragging-or-resizing {
+.limber-grid-view-body-tag-state-editing {
 	user-select: none;
 	cursor: grabbing;
 }
 
-.limber-grid-view-body-tag-state-element-adding {
+.limber-grid-view-body-tag-state-editing-adding-cutting {
 	cursor: crosshair;
 }
 

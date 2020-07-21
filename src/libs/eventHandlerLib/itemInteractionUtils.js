@@ -145,9 +145,7 @@ export const loadResizingState = (context, userActionData) => {
 		"limber-grid-view-pseudo-item-resize-disallow"
 	);
 
-	e.$body.classList.add(
-		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
-	);
+	e.$body.classList.add("limber-grid-view-body-tag-state-editing");
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
@@ -176,9 +174,7 @@ export const unloadResizingState = (context, userActionData) => {
 	);
 	e.$limberGridViewPseudoItem.style.transform = `translate(0px, 0px)`;
 
-	e.$body.classList.remove(
-		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
-	);
+	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
@@ -220,9 +216,7 @@ export const loadMoveState = (context, userActionData, event) => {
 		e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
 	}
 
-	e.$body.classList.add(
-		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
-	);
+	e.$body.classList.add("limber-grid-view-body-tag-state-editing");
 };
 
 export const unloadMoveState = (context, userActionData) => {
@@ -248,9 +242,7 @@ export const unloadMoveState = (context, userActionData) => {
 
 	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
 
-	e.$body.classList.remove(
-		"limber-grid-view-body-tag-state-element-dragging-or-resizing"
-	);
+	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
 };
 
 export const loadOnMoveState = (context, userActionData, event, type) => {
