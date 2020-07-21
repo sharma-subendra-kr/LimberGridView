@@ -25,6 +25,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import getElements from "../../store/variables/elements";
+import getOptions from "../../store/variables/options";
 import { getPositionData } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -32,7 +33,12 @@ import { calculateTouchPosOnItem } from "./eventHandlerUtils";
 
 export const getUserActionData = (context, event) => {
 	const publicConstants = getPublicConstants(context);
+	const options = getOptions(context);
+	const pd = getPositionData(context);
 
+	const itemIndex = parseInt(
+		event.currentTarget.attributes["data-index"].value
+	);
 	let radius;
 	let touchPosOnLimberGridItem;
 	let X, Y;
@@ -70,30 +76,44 @@ export const getUserActionData = (context, event) => {
 			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
 	};
 
-	if (false) {
+	if (
+		options.itemMouseDownMoveCheck &&
+		options.itemMouseDownMoveCheck(X, Y, pd[itemIndex], itemIndex)
+	) {
 		// call developer defined function to check if mousedown for MOVE is in a valid place
-		return {
-			type: "move",
-			itemIndex: event.currentTarget.attributes["data-index"].value,
-		};
-	} else if (radius <= publicConstants.MOVE_GUIDE_RADIUS) {
 		return {
 			type: "move",
 			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 	}
 
-	if (false) {
+	if (
+		radius <= publicConstants.MOVE_GUIDE_RADIUS &&
+		!options.itemMouseDownMoveCheck
+	) {
+		return {
+			type: "move",
+			itemIndex: event.currentTarget.attributes["data-index"].value,
+		};
+	}
+
+	if (
+		options.itemMouseDownResizeCheck &&
+		options.itemMouseDownResizeCheck(X, Y, pd[itemIndex], itemIndex)
+	) {
 		// call developer defined function to check if mousedown for RESIZE is in a valid place
 		return {
 			type: "resize",
 			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
-	} else if (
+	}
+
+	if (
 		X >= resizeUIBox.x &&
 		X <= resizeUIBox.x + resizeUIBox.width &&
 		Y >= resizeUIBox.y &&
-		Y <= resizeUIBox.y + resizeUIBox.height
+		Y <= resizeUIBox.y + resizeUIBox.height &&
+		!options.itemMouseDownResizeCheck
 	) {
 		return {
 			type: "resize",

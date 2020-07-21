@@ -126,6 +126,9 @@ LimberGridView.prototype.constructor = LimberGridView;
 		reRenderOnResize : true, 																// true/false (optional default true)
 		isMobileCheck: function
 		pseudoElementContainer: string or element
+		itemMouseDownMoveCheck: function 														// x clicked/touched, y clicked/touched, item, index
+		itemMouseDownResizeCheck: function 														// x clicked/touched, y clicked/touched, item, index
+
 		gridData : {
 			WIDTH : 1920,																	// width of limberGridView
 			HEIGHT : 1080, 																	// height of limberGridView

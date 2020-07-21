@@ -90,22 +90,18 @@ export const onItemMouseDown = function (event) {
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (!event.target.classList.contains("limber-grid-view-item")) {
-		return;
-	}
-
 	if (event.which !== 1) {
 		onItemContextMenu.call(this, event);
 		return;
 	}
 
-	// if (event.target.classList.contains("limber-grid-view-item")) {
-	// 	event.stopPropagation();
-	// } else {
-	// 	return;
-	// }
+	const _userActionData = getUserActionData(this, event);
 
-	Object.assign(iiv.userActionData, getUserActionData(this, event));
+	if (!_userActionData) {
+		return;
+	}
+
+	Object.assign(iiv.userActionData, _userActionData);
 
 	if (iiv.userActionData.type === "move") {
 		iiv.mouseDownCancel = false;
@@ -150,10 +146,6 @@ export const onItemTouchStart = function (event) {
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (!event.target.classList.contains("limber-grid-view-item")) {
-		return;
-	}
-
 	if (event.touches.length !== 1) {
 		onItemTouchContextMenu.call(this, event);
 		return;
@@ -164,18 +156,17 @@ export const onItemTouchStart = function (event) {
 		return;
 	}
 
-	// if (event.target.classList.contains("limber-grid-view-item")) {
-	// 	event.stopPropagation();
-	// } else {
-	// 	return;
-	// }
-
 	const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
 	if (touchPosOnLimberGridItem === false) {
 		return;
 	}
 
-	Object.assign(iiv.userActionData, getUserActionData(this, event));
+	const _userActionData = getUserActionData(this, event);
+	if (!_userActionData) {
+		return;
+	}
+
+	Object.assign(iiv.userActionData, _userActionData);
 
 	if (iiv.userActionData.type === "move") {
 		iiv.touchHoldCancel = false;

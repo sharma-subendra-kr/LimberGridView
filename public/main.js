@@ -383,6 +383,14 @@ var main = function () {
 		// console.log(indices);
 	};
 
+	var itemMouseDownMoveCheck = function (x, y, item, index) {
+		return true;
+	};
+
+	var itemMouseDownResizeCheck = function (x, y, item, index) {
+		return true;
+	};
+
 	var obj = {
 		el: "limber-grid-view-implement",
 		editable: true,
@@ -392,6 +400,8 @@ var main = function () {
 		// pseudoElementContainer: "limber-grid-controls",
 		autoArrange: false,
 		reRenderOnResize: true,
+		// itemMouseDownMoveCheck: itemMouseDownMoveCheck,
+		// itemMouseDownResizeCheck: itemMouseDownResizeCheck,
 		callbacks: {
 			renderContent: renderContent,
 			onItemClickCallback: onItemClickCallback,

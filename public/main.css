@@ -169,6 +169,7 @@ body {
 
 	padding-left: 15px;
 	padding-top: 2px;
+	user-select: none;
 }
 
 .item-drop-down-button {
