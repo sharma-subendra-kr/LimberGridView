@@ -54,7 +54,7 @@ import {
 	onWindowResizeTimerCallback,
 } from "./libs/eventHandlerLib/miscellaneous";
 
-// import {} from "./libs/utils/utils";
+import { fixTo } from "./libs/utils/utils";
 import {
 	getPublicConstants,
 	setPublicConstantByName,
@@ -358,7 +358,7 @@ LimberGridView.prototype.initializeStore = function () {
 				MIN_HEIGHT_AND_WIDTH: 150,
 			},
 			publicConstants: {
-				MOBILE_ASPECT_RATIO: 16 / 10,
+				MOBILE_ASPECT_RATIO: 5 / 4,
 
 				MOVE_GUIDE_RADIUS: 10,
 				RESIZE_SQUARE_GUIDE_LENGTH: 10,
@@ -394,7 +394,18 @@ LimberGridView.prototype.renderItem = function (index) {
 
 LimberGridView.prototype.getGridData = function () {
 	const privateConstants = getPrivateConstants(this);
-	const publicConstants = getPublicConstants(this);
+	const pd = getPositionData(this);
+
+	const len = pd.length;
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = {
+			x: fixTo(pd[i].x / privateConstants.WIDTH_SCALE_FACTOR),
+			y: fixTo(pd[i].y / privateConstants.WIDTH_SCALE_FACTOR),
+			width: fixTo(pd[i].width / privateConstants.WIDTH_SCALE_FACTOR),
+			height: fixTo(pd[i].height / privateConstants.WIDTH_SCALE_FACTOR),
+		};
+	}
 
 	// TO DO: have to scale positionData to GRID_HEIGHT, GRID_WIDTH and GRID_MARGIN
 	// Have to send a copy since it will be scaled to output specifications
@@ -402,9 +413,10 @@ LimberGridView.prototype.getGridData = function () {
 		gridData: {
 			height: privateConstants.GRID_HEIGHT,
 			width: privateConstants.GRID_WIDTH,
-			margin: publicConstants.GRID_MARGIN,
+			margin: privateConstants.GRID_MARGIN,
+			MIN_HEIGHT_AND_WIDTH: privateConstants.MIN_HEIGHT_AND_WIDTH,
 		},
-		positionData: JSON.parse(JSON.stringify(getPositionData(this))),
+		positionData: arr,
 	};
 };
 
