@@ -623,7 +623,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 			itemsToArrange.filter((id) => !arranged[id]),
 			overlappedRects,
 			getRectObjectFromCo(topWorkSpaceCo),
-			{},
+			undefined,
 			combinedWorkSpaceRectCo,
 			idCount.idCount
 		);
@@ -1151,7 +1151,7 @@ export const arrange = async (
 
 		arranged[top.d] = aItem;
 
-		if (isRectInside(bottomWorkSpace, pm.d.rect)) {
+		if (bottomWorkSpace && isRectInside(bottomWorkSpace, pm.d.rect)) {
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top.d] = top.d;
 		}
