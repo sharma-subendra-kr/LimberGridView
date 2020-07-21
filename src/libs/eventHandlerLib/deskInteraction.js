@@ -44,7 +44,11 @@ import {
 import getElements from "../../store/variables/elements";
 import { calculateTouchPosOnDesk } from "./eventHandlerUtils.js";
 import { loadInitState, unloadInitState } from "./deskInteractionUtils.js";
-import { shiftItemsUp } from "../arrange/arrange";
+import {
+	shiftItemsUp,
+	addItemAllowCheck,
+	cutSpaceAllowCheck,
+} from "../arrange/arrangeUtils";
 import {
 	initializeItemTouchEvents,
 	unInitializeItemTouchEvents,
@@ -416,7 +420,7 @@ export const onDeskMouseUp = function (event) {
 	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
 	clearTimeout(dkiv.longPressCheck);
 	var itemAddedFlag = false;
-	if (dkiv.mouseDownTimerComplete === true && event.touches.length === 0) {
+	if (dkiv.mouseDownTimerComplete === true) {
 		if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 			if (
 				addItemAllowCheck(
@@ -442,19 +446,20 @@ export const onDeskMouseUp = function (event) {
 				e.$limberGridView.scrollTop = scrollTop;
 			}
 		} else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
-			if (
-				cutSpaceAllowCheck(
-					this,
-					dkiv.userActionData.addPositionX,
-					dkiv.userActionData.addPositionY,
-					dkiv.userActionData.newWidth,
-					dkiv.userActionData.newHeight
-				)
-			) {
+			const cutDetails = cutSpaceAllowCheck(
+				this,
+				dkiv.userActionData.addPositionX,
+				dkiv.userActionData.addPositionY,
+				dkiv.userActionData.newWidth,
+				dkiv.userActionData.newHeight
+			);
+			if (cutDetails) {
 				shiftItemsUp(
 					this,
-					dkiv.userActionData.addPositionY,
-					dkiv.userActionData.newHeight
+					cutDetails.y,
+					cutDetails.shiftHeight
+					// dkiv.userActionData.addPositionY,
+					// dkiv.userActionData.newHeight
 				);
 			}
 		}
@@ -489,7 +494,7 @@ export const onDeskTouchEnd = function (event) {
 	clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
 	clearTimeout(dkiv.longTouchCheck);
 	var itemAddedFlag = false;
-	if (dkiv.tapHoldTimerComplete === true) {
+	if (dkiv.tapHoldTimerComplete === true && event.touches.length === 0) {
 		if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 			if (
 				addItemAllowCheck(
@@ -515,19 +520,20 @@ export const onDeskTouchEnd = function (event) {
 				e.$limberGridView.scrollTop = scrollTop;
 			}
 		} else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
-			if (
-				cutSpaceAllowCheck(
-					this,
-					dkiv.userActionData.addPositionX,
-					dkiv.userActionData.addPositionY,
-					dkiv.userActionData.newWidth,
-					dkiv.userActionData.newHeight
-				)
-			) {
+			const cutDetails = cutSpaceAllowCheck(
+				this,
+				dkiv.userActionData.addPositionX,
+				dkiv.userActionData.addPositionY,
+				dkiv.userActionData.newWidth,
+				dkiv.userActionData.newHeight
+			);
+			if (cutDetails) {
 				shiftItemsUp(
 					this,
-					dkiv.userActionData.addPositionY,
-					dkiv.userActionData.newHeight
+					cutDetails.y,
+					cutDetails.shiftHeight
+					// dkiv.userActionData.addPositionY,
+					// dkiv.userActionData.newHeight
 				);
 			}
 		}
@@ -622,54 +628,6 @@ export const addItemAllowCheckTimeOut = function (x, y, width, height) {
 	}
 };
 
-export const addItemAllowCheck = function (context, x, y, width, height) {
-	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
-	const pd = getPositionData(context);
-
-	var tempPlane = {
-		x: x - privateConstants.MARGIN,
-		y: y - privateConstants.MARGIN,
-		width: width + publicConstants.MARGIN * 2,
-		height: height + publicConstants.MARGIN * 2,
-	};
-
-	if (x < 0 || y < 0) {
-		return false;
-	}
-
-	if (typeof width !== "number" || typeof height !== "number") {
-		return false;
-	}
-
-	if (x + width > privateConstants.WIDTH) {
-		return false;
-	}
-
-	if (width < 50 || height < 50) {
-		return false;
-	}
-
-	let isInside;
-	const len = pd.length;
-	for (let i = 0; i < len; i++) {
-		isInside =
-			doRectsOverlap(
-				getItemDimenWithMargin(privateConstants.MARGIN, pd[i]),
-				tempPlane
-			) ||
-			doRectsOnlyTouch(
-				getItemDimenWithMargin(privateConstants.MARGIN, pd[i]),
-				tempPlane
-			);
-
-		if (isInside) {
-			return false;
-		}
-	}
-	return true;
-};
-
 export const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
 	const e = getElements(this);
 
@@ -688,39 +646,4 @@ export const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
 			"limber-grid-view-add-cut-guide-allow"
 		);
 	}
-};
-
-export const cutSpaceAllowCheck = function (context, x, y, width, height) {
-	const privateConstants = getPrivateConstants(context);
-	const pd = getPositionData(context);
-
-	const tempPlane = {
-		x: 0,
-		y: y,
-		width: privateConstants.WIDTH,
-		height: height,
-	};
-
-	if (typeof width !== "number" || typeof height !== "number") {
-		return false;
-	}
-
-	let isInside;
-	const len = pd.length;
-	for (let i = 0; i < len; i++) {
-		isInside =
-			doRectsOverlap(
-				tempPlane,
-				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
-			) ||
-			doRectsOnlyTouch(
-				tempPlane,
-				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
-			);
-
-		if (isInside) {
-			return false;
-		}
-	}
-	return true;
 };

@@ -24,6 +24,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
+import getElements from "../../store/variables/elements";
 import {
 	getPositionData,
 	getModifiedPositionData,
@@ -34,6 +35,9 @@ import {
 	doRectsOverlap,
 	isRectInside,
 	getRectObjectFromCo,
+	doRectsOnlyTouch,
+	isPointInsideRect,
+	doesPointTouchRect,
 } from "../rect/rectUtils";
 import { filter } from "../utils/utils";
 
@@ -436,7 +440,7 @@ export const getPerfectMatch = (arr, hwSum) => {
 	return arr[0];
 };
 
-export const shiftItems = (context, items, height) => {
+export const shiftItemsDown = (context, items, height) => {
 	const mpd = getModifiedPositionData(context);
 
 	const len = items.length;
@@ -444,4 +448,149 @@ export const shiftItems = (context, items, height) => {
 	for (let i = 0; i < len; i++) {
 		mpd[items[i]].y += height;
 	}
+};
+
+export const shiftItemsUp = function (context, y, shiftHeight) {
+	const pd = getPositionData(context);
+	const e = getElements(context);
+
+	const len = pd.length;
+	for (let i = 0; i < len; i++) {
+		if (pd[i].y >= y) {
+			pd[i].y -= shiftHeight;
+			e.$limberGridViewItems[i].style.transform =
+				"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
+		}
+	}
+};
+
+export const addItemAllowCheck = function (context, x, y, width, height) {
+	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
+	const pd = getPositionData(context);
+
+	var tempPlane = {
+		x: x - privateConstants.MARGIN,
+		y: y - privateConstants.MARGIN,
+		width: width + publicConstants.MARGIN * 2,
+		height: height + publicConstants.MARGIN * 2,
+	};
+
+	if (x < 0 || y < 0) {
+		return false;
+	}
+
+	if (typeof width !== "number" || typeof height !== "number") {
+		return false;
+	}
+
+	if (x + width > privateConstants.WIDTH) {
+		return false;
+	}
+
+	if (width < 50 || height < 50) {
+		return false;
+	}
+
+	let isInside;
+	const len = pd.length;
+	for (let i = 0; i < len; i++) {
+		isInside =
+			doRectsOverlap(
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i]),
+				tempPlane
+			) ||
+			doRectsOnlyTouch(
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i]),
+				tempPlane
+			);
+
+		if (isInside) {
+			return false;
+		}
+	}
+	return true;
+};
+
+export const cutSpaceAllowCheck = function (context, x, y, width, height) {
+	debugger;
+	const privateConstants = getPrivateConstants(context);
+	const pd = getPositionData(context);
+
+	const tempPlane = {
+		x: 0,
+		y: y,
+		width: privateConstants.WIDTH,
+		height: height,
+	};
+
+	if (typeof width !== "number" || typeof height !== "number") {
+		return false;
+	}
+
+	let minY = Number.MAX_SAFE_INTEGER;
+	let maxY = 0;
+
+	let isOverlapping;
+	const len = pd.length;
+	for (let i = 0; i < len; i++) {
+		if (
+			isRectInside(
+				tempPlane,
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
+			)
+		) {
+			return false;
+		}
+
+		isOverlapping =
+			doRectsOverlap(
+				tempPlane,
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
+			) ||
+			doRectsOnlyTouch(
+				tempPlane,
+				getItemDimenWithMargin(privateConstants.MARGIN, pd[i])
+			);
+
+		if (isOverlapping) {
+			const topPoint = {
+				x: pd[i].x,
+				y: pd[i].y - privateConstants.MARGIN,
+			};
+			const bottomPoint = {
+				x: pd[i].x,
+				y: pd[i].y + pd[i].height + privateConstants.MARGIN,
+			};
+			if (
+				pd[i].y - privateConstants.MARGIN < minY &&
+				(isPointInsideRect(tempPlane, topPoint) ||
+					doesPointTouchRect(tempPlane, topPoint))
+			) {
+				minY = pd[i].y - privateConstants.MARGIN;
+			}
+
+			if (
+				pd[i].y + pd[i].height + privateConstants.MARGIN > maxY &&
+				(isPointInsideRect(tempPlane, bottomPoint) ||
+					doesPointTouchRect(tempPlane, bottomPoint))
+			) {
+				maxY = pd[i].y + pd[i].height + privateConstants.MARGIN;
+			}
+		}
+	}
+
+	if (minY === Number.MAX_SAFE_INTEGER) {
+		minY = y;
+	}
+
+	if (maxY === 0) {
+		maxY = y + height;
+	}
+
+	if (minY - maxY > 0) {
+		return { y: maxY, shiftHeight: minY - maxY };
+	}
+
+	return false;
 };

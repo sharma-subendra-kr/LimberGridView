@@ -49,7 +49,7 @@ import {
 	cBSTLComp,
 	cBSTRComp,
 	getPerfectMatch,
-	shiftItems,
+	shiftItemsDown,
 	getResizeWSItemsDetail,
 } from "./arrangeUtils";
 import {
@@ -250,7 +250,7 @@ export const arrangeMove = async (
 
 			combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
 
-			shiftItems(context, itemsInBottomWorkSpace, shiftHeight);
+			shiftItemsDown(context, itemsInBottomWorkSpace, shiftHeight);
 		}
 
 		passCount++;
@@ -263,7 +263,7 @@ export const arrangeMove = async (
 
 	if (workSpaceResizeCount > 0) {
 		// push items in below bottom workspace below
-		shiftItems(
+		shiftItemsDown(
 			context,
 			itemsBelowBottomWorkSpace,
 			shiftHeight * workSpaceResizeCount
@@ -1323,18 +1323,4 @@ export const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
 	// printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
 
 	return { result: filteredOverlappedRects, idCount: lastId1 };
-};
-
-export const shiftItemsUp = function (context, y, shiftHeight) {
-	const pd = getPositionData(context);
-	const e = getElements(context);
-
-	const len = pd.length;
-	for (let i = 0; i < len; i++) {
-		if (pd[i].y >= y) {
-			pd[i].y -= shiftHeight;
-			e.$limberGridViewItems[i].style.transform =
-				"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-		}
-	}
 };
