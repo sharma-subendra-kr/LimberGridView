@@ -96,7 +96,11 @@ import {
 } from "./store/flags/flagDetails";
 import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
-import { render, renderItem as _renderItem } from "./libs/renderers/renderers";
+import {
+	render,
+	renderItem as _renderItem,
+	addItem as _addItem,
+} from "./libs/renderers/renderers";
 // import { removeItems, addItems } from "./libs/renderers/addOrRemoveItems";
 import {
 	init,
@@ -440,7 +444,9 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 
 // LimberGridView.prototype.removeItems = removeItems;
 
-// LimberGridView.prototype.addItems = addItems;
+LimberGridView.prototype.addItem = function (item) {
+	_addItem(this, item);
+};
 
 LimberGridView.prototype.setIsMobileCheck = function (f) {
 	this.options.isMobileCheck = f;

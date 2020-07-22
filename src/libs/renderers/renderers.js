@@ -30,6 +30,9 @@ import getElements, {
 } from "../../store/variables/elements";
 import {
 	getPositionData,
+	setPositionData,
+	getModifiedPositionData,
+	setModifiedPositionData,
 	getCallbacks,
 } from "../../store/variables/essentials";
 import { isMobile } from "../utils/utils";
@@ -41,6 +44,9 @@ import {
 	unInitializeEvents,
 	initializeVariables,
 } from "../eventHandlerLib/initializers";
+import { addItemAllowCheck } from "../arrange/arrangeUtils";
+import { arrangeFromHeight } from "../arrange/arrange";
+import { getPdBottomMax } from "./rendererUtils";
 
 export const render = function (context, scale = true) {
 	const options = getOptions(context);
@@ -169,24 +175,55 @@ export const renderItem = function (context, index) {
 	}
 };
 
-export const addItem = function (context, item) {
+export const addItem = async function (context, item) {
 	const options = getOptions(context);
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
-	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 	const publicConstants = getPublicConstants(context);
 
 	unInitializeEvents.call(context);
 
 	try {
-		// check coordinates if present
-		// if not
-		// call arrange and get coordinates
-		// arrange()
-		// thhrow error if item overlaps another item
+		let allow = false;
+		if (item.x && item.y && item.width && item.height) {
+			allow = addItemAllowCheck(
+				context,
+				item.x,
+				item.y,
+				item.width,
+				item.height
+			);
+			if (allow) {
+				const pd = getPositionData(context);
+				setModifiedPositionData(context, pd);
+				const mpd = getModifiedPositionData(context);
+				mpd.push(item);
+				setPositionData(context, mpd);
+			}
+		} else if (item.width && item.height && !item.x && !item.y) {
+			const pd = getPositionData(context);
+			setModifiedPositionData(context, pd);
+			const mpd = getModifiedPositionData(context);
 
-		pd.push({});
+			const bottomY = getPdBottomMax(context);
+			mpd.push({
+				x: undefined,
+				y: undefined,
+				width: item.width,
+				height: item.height,
+			});
+			const arranged = await arrangeFromHeight(
+				context,
+				[mpd.length - 1],
+				bottomY
+			);
+			setPositionData(context, mpd);
+		} else {
+			return false;
+		}
+
+		const pd = getPositionData(context);
 		const len = pd.length;
 		const index = len - 1;
 
@@ -210,9 +247,9 @@ export const addItem = function (context, item) {
 				"isAdd"
 			);
 		} else {
-			let classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
+			const classList =
+				"limber-grid-view-item limber-grid-view-item-mobile-view";
 
-			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", index);
 			itemEl.style.width = privateConstants.WIDTH;

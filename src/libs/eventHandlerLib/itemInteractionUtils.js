@@ -58,7 +58,8 @@ export const getUserActionData = (context, event) => {
 		X = touchPosOnLimberGridItem.x;
 		Y = touchPosOnLimberGridItem.y;
 	} else {
-		throw "Unidentified event";
+		return false;
+		// throw "Unidentified event";
 	}
 
 	const resizeUIBox = {

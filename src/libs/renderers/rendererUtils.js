@@ -25,6 +25,9 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { isValidRectCoForm, getCoordinates } from "../rect/rectUtils";
+import { getItemDimenWithMargin } from "../arrange/arrangeUtils";
+import getPrivateConstants from "../../store/constants/privateConstants";
+import { getPositionData } from "../../store/variables/essentials";
 
 export const checkPositionData = (pd) => {
 	if (Array.isArray(pd)) {
@@ -51,4 +54,22 @@ export const checkPositionData = (pd) => {
 		return true;
 	}
 	return false;
+};
+
+export const getPdBottomMax = (context) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	let max = privateConstants.MARGIN;
+	let item;
+	const len = pd.length;
+
+	for (let i = 0; i < len; i++) {
+		item = getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
+		if (item.y + item.height > max) {
+			max = item.y + item.height;
+		}
+	}
+
+	return max;
 };

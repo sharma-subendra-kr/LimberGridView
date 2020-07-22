@@ -513,7 +513,6 @@ export const addItemAllowCheck = function (context, x, y, width, height) {
 };
 
 export const cutSpaceAllowCheck = function (context, x, y, width, height) {
-	debugger;
 	const privateConstants = getPrivateConstants(context);
 	const pd = getPositionData(context);
 
