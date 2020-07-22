@@ -341,6 +341,7 @@ var main = function () {
 				);
 			}
 		}, 2000);
+		window.limberGridView.renderItem(index);
 	};
 
 	var moveComplete = function (index, toX, toY, arrangedIndices) {

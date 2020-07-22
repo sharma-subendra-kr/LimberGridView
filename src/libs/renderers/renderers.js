@@ -159,8 +159,13 @@ export const render = function (context, scale = true) {
 export const renderItem = function (context, index) {
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
+	const pd = getPositionData(context);
 
-	const renderData = callbacks.renderContent();
+	const renderData = callbacks.renderContent(
+		index,
+		pd[index].width,
+		pd[index].height
+	);
 	e.$limberGridViewItems[index].innerHTML = "";
 	if (typeof renderData === "string") {
 		e.$limberGridViewItems[index].innerHTML = renderData;

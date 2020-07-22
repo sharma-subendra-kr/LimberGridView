@@ -241,10 +241,12 @@ export const arrangeMove = async (
 
 			workSpaceRectCo.br.y += shiftHeight;
 			workSpaceRectCo.bl.y += shiftHeight;
-			bottomWorkSpaceCo.tl.y += shiftHeight;
-			bottomWorkSpaceCo.tr.y += shiftHeight;
-			bottomWorkSpaceCo.br.y += shiftHeight;
-			bottomWorkSpaceCo.bl.y += shiftHeight;
+			if (bottomWorkSpaceCo) {
+				bottomWorkSpaceCo.tl.y += shiftHeight;
+				bottomWorkSpaceCo.tr.y += shiftHeight;
+				bottomWorkSpaceCo.br.y += shiftHeight;
+				bottomWorkSpaceCo.bl.y += shiftHeight;
+			}
 			combinedWorkSpaceRectCo.br.y += shiftHeight;
 			combinedWorkSpaceRectCo.bl.y += shiftHeight;
 

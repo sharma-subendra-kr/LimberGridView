@@ -153,7 +153,7 @@ LimberGridView.prototype.constructor = LimberGridView;
 		],
 		callbacks : {
 			renderComplete : function(){}, 														// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
-			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem
+			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
 			addComplete : function(index){}
 			removeComplete: function(index){}
 			moveComplete: function(index, toX, toY, arrangedIndices) {}
