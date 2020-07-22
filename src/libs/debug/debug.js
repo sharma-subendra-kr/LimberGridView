@@ -24,7 +24,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import e, {
+import getElements, {
 	set$limberGridView,
 	set$limberGridViewDebugStackTopRect,
 	set$limberGridViewDebugStackTopAdjRect,
@@ -44,16 +44,17 @@ export const sleep = (ms) => {
 	});
 };
 
-export const printUnmergedFreeRects = (arr) => {
+export const printUnmergedFreeRects = (context, arr) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		let len = e.$limberGridViewDebugUnmergedRects.length;
 		for (let i = 0; i < len; i++) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugUnmergedRects[i]);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugUnmergedRects[i]);
 		}
-		set$limberGridViewDebugUnmergedRects([]);
+		set$limberGridViewDebugUnmergedRects(context, []);
 
 		// USE it to hide items
-		// e.$limberGridView[0].innerHTML = "";
+		// e.$limberGridView.innerHTML = "";
 
 		len = arr.length;
 		let html;
@@ -81,29 +82,29 @@ export const printUnmergedFreeRects = (arr) => {
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 			node.style.width = arr[i].rect.width + "px";
 			node.style.height = arr[i].rect.height + "px";
-			e.$limberGridView[0].appendChild(node);
+			e.$limberGridView.appendChild(node);
 		}
 
 		set$limberGridViewDebugUnmergedRects(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-unmerged-rect"
 			)
 		);
 	}
 };
 
-export const printMergedFreeRects = (arr) => {
+export const printMergedFreeRects = (context, arr) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		let len = e.$limberGridViewDebugMergedFreeRects.length;
 		for (let i = 0; i < len; i++) {
-			e.$limberGridView[0].removeChild(
-				e.$limberGridViewDebugMergedFreeRects[i]
-			);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugMergedFreeRects[i]);
 		}
-		set$limberGridViewDebugMergedFreeRects([]);
+		set$limberGridViewDebugMergedFreeRects(context, []);
 
 		// USE it to hide items
-		// e.$limberGridView[0].innerHTML = "";
+		// e.$limberGridView.innerHTML = "";
 
 		len = arr.length;
 		let html;
@@ -132,29 +133,29 @@ export const printMergedFreeRects = (arr) => {
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 			node.style.width = arr[i].rect.width + "px";
 			node.style.height = arr[i].rect.height + "px";
-			e.$limberGridView[0].appendChild(node);
+			e.$limberGridView.appendChild(node);
 		}
 
 		set$limberGridViewDebugMergedFreeRects(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-merged-free-rect"
 			)
 		);
 	}
 };
 
-export const printResultStackRects = (arr) => {
+export const printResultStackRects = (context, arr) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		let len = e.$limberGridViewDebugResultStackRects.length;
 		for (let i = 0; i < len; i++) {
-			e.$limberGridView[0].removeChild(
-				e.$limberGridViewDebugResultStackRects[i]
-			);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugResultStackRects[i]);
 		}
-		set$limberGridViewDebugResultStackRects([]);
+		set$limberGridViewDebugResultStackRects(context, []);
 
 		// USE it to hide items
-		// e.$limberGridView[0].innerHTML = "";
+		// e.$limberGridView.innerHTML = "";
 
 		len = arr.length;
 		let html;
@@ -183,27 +184,29 @@ export const printResultStackRects = (arr) => {
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 			node.style.width = arr[i].rect.width + "px";
 			node.style.height = arr[i].rect.height + "px";
-			e.$limberGridView[0].appendChild(node);
+			e.$limberGridView.appendChild(node);
 		}
 
 		set$limberGridViewDebugResultStackRects(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-result-stack-rects"
 			)
 		);
 	}
 };
 
-export const printStackRects = (arr) => {
+export const printStackRects = (context, arr) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		let len = e.$limberGridViewDebugStackRects.length;
 		for (let i = 0; i < len; i++) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackRects[i]);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugStackRects[i]);
 		}
-		set$limberGridViewDebugStackRects([]);
+		set$limberGridViewDebugStackRects(context, []);
 
 		// USE it to hide items
-		// e.$limberGridView[0].innerHTML = "";
+		// e.$limberGridView.innerHTML = "";
 
 		len = arr.length;
 		let html;
@@ -232,19 +235,19 @@ export const printStackRects = (arr) => {
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 			node.style.width = arr[i].rect.width + "px";
 			node.style.height = arr[i].rect.height + "px";
-			e.$limberGridView[0].appendChild(node);
+			e.$limberGridView.appendChild(node);
 		}
 
 		set$limberGridViewDebugStackRects(
-			e.$limberGridView[0].querySelectorAll(
-				".limber-grid-view-debug-stack-rects"
-			)
+			context,
+			e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-rects")
 		);
 	}
 };
 
-export const printMergedTempRects = (obj) => {
+export const printMergedTempRects = (context, obj) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		const node = document.createElement("div");
 		node.setAttribute(
 			"class",
@@ -265,28 +268,30 @@ export const printMergedTempRects = (obj) => {
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
 		node.style.width = obj.rect.width + "px";
 		node.style.height = obj.rect.height + "px";
-		e.$limberGridView[0].appendChild(node);
+		e.$limberGridView.appendChild(node);
 
 		set$limberGridViewDebugMergedTempRects(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-merged-temp-rects"
 			)
 		);
 	}
 };
 
-export const printStackTopRect = (obj) => {
+export const printStackTopRect = (context, obj) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		if (!obj) {
 			if (e.$limberGridViewDebugStackTopRect) {
-				e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopRect);
-				set$limberGridViewDebugStackTopRect(undefined);
+				e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopRect);
+				set$limberGridViewDebugStackTopRect(context, undefined);
 			}
 			return;
 		}
 
 		if (e.$limberGridViewDebugStackTopRect) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopRect);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopRect);
 		}
 
 		const node = document.createElement("div");
@@ -306,10 +311,11 @@ export const printStackTopRect = (obj) => {
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
 		node.style.width = obj.rect.width + "px";
 		node.style.height = obj.rect.height + "px";
-		e.$limberGridView[0].appendChild(node);
+		e.$limberGridView.appendChild(node);
 
 		set$limberGridViewDebugStackTopRect(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-stack-top-rect"
 			)[0]
 		);
@@ -317,18 +323,19 @@ export const printStackTopRect = (obj) => {
 	}
 };
 
-export const printStackTopAdjRect = (obj) => {
+export const printStackTopAdjRect = (context, obj) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		if (!obj) {
 			if (e.$limberGridViewDebugStackTopAdjRect) {
-				e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopAdjRect);
-				set$limberGridViewDebugStackTopAdjRect(undefined);
+				e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopAdjRect);
+				set$limberGridViewDebugStackTopAdjRect(context, undefined);
 			}
 			return;
 		}
 
 		if (e.$limberGridViewDebugStackTopAdjRect) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugStackTopAdjRect);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopAdjRect);
 		}
 
 		const node = document.createElement("div");
@@ -348,10 +355,11 @@ export const printStackTopAdjRect = (obj) => {
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
 		node.style.width = obj.rect.width + "px";
 		node.style.height = obj.rect.height + "px";
-		e.$limberGridView[0].appendChild(node);
+		e.$limberGridView.appendChild(node);
 
 		set$limberGridViewDebugStackTopAdjRect(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-stack-top-adj-rect"
 			)[0]
 		);
@@ -359,18 +367,19 @@ export const printStackTopAdjRect = (obj) => {
 	}
 };
 
-export const printMergedRect = (obj) => {
+export const printMergedRect = (context, obj) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		if (!obj) {
 			if (e.$limberGridViewDebugMergedRect) {
-				e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRect);
-				set$limberGridViewDebugMergedRect(undefined);
+				e.$limberGridView.removeChild(e.$limberGridViewDebugMergedRect);
+				set$limberGridViewDebugMergedRect(context, undefined);
 			}
 			return;
 		}
 
 		if (e.$limberGridViewDebugMergedRect) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugMergedRect);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugMergedRect);
 		}
 
 		const node = document.createElement("div");
@@ -390,10 +399,11 @@ export const printMergedRect = (obj) => {
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
 		node.style.width = obj.rect.width + "px";
 		node.style.height = obj.rect.height + "px";
-		e.$limberGridView[0].appendChild(node);
+		e.$limberGridView.appendChild(node);
 
 		set$limberGridViewDebugMergedRect(
-			e.$limberGridView[0].querySelectorAll(
+			context,
+			e.$limberGridView.querySelectorAll(
 				".limber-grid-view-debug-merged-rect"
 			)[0]
 		);
@@ -401,18 +411,19 @@ export const printMergedRect = (obj) => {
 	}
 };
 
-export const printAdjRect = (obj) => {
+export const printAdjRect = (context, obj) => {
 	if (process.env.NODE_ENV === "development") {
+		const e = getElements(context);
 		if (!obj) {
 			if (e.$limberGridViewDebugAdjRect) {
-				e.$limberGridView[0].removeChild(e.$limberGridViewDebugAdjRect);
-				set$limberGridViewDebugAdjRect(undefined);
+				e.$limberGridView.removeChild(e.$limberGridViewDebugAdjRect);
+				set$limberGridViewDebugAdjRect(context, undefined);
 			}
 			return;
 		}
 
 		if (e.$limberGridViewDebugAdjRect) {
-			e.$limberGridView[0].removeChild(e.$limberGridViewDebugAdjRect);
+			e.$limberGridView.removeChild(e.$limberGridViewDebugAdjRect);
 		}
 
 		const node = document.createElement("div");
@@ -432,12 +443,11 @@ export const printAdjRect = (obj) => {
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
 		node.style.width = obj.rect.width + "px";
 		node.style.height = obj.rect.height + "px";
-		e.$limberGridView[0].appendChild(node);
+		e.$limberGridView.appendChild(node);
 
 		set$limberGridViewDebugAdjRect(
-			e.$limberGridView[0].querySelectorAll(
-				".limber-grid-view-debug-adj-rect"
-			)[0]
+			context,
+			e.$limberGridView.querySelectorAll(".limber-grid-view-debug-adj-rect")[0]
 		);
 		// console.log(e.$limberGridViewDebugAdjRect);
 	}
