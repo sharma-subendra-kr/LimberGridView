@@ -67,6 +67,7 @@ import getPublicConstants, {
 import { checkPositionData } from "../libs/renderers/rendererUtils";
 import { getRandomString } from "../libs/utils/utils";
 import { arrangeFromHeight } from "../libs/arrange/arrange";
+import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 
 export const init = async function (context, isResize, autoArrange) {
 	// if (typeof options.el === "string") {
@@ -370,7 +371,7 @@ export const initConstantsAndFlags = function (options) {
 
 	if (
 		options?.publicConstants?.deskInteractionMode &&
-		!isNaN(options.publicConstants.deskInteractionMode)
+		DESK_INTERACTION_MODE[options.publicConstants.deskInteractionMode]
 	) {
 		setPublicConstantByName(
 			this,
@@ -379,16 +380,33 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.latchMovedItem &&
-		!isNaN(options.publicConstants.latchMovedItem)
-	) {
+	if (typeof options?.publicConstants?.latchMovedItem === "boolean") {
 		setPublicConstantByName(
 			this,
 			"LATCH_MOVED_ITEM",
 			options.publicConstants.latchMovedItem
 		);
 	}
+
+	if (typeof options?.publicConstants?.animateMovedItem === "boolean") {
+		setPublicConstantByName(
+			this,
+			"ANIMATE_MOVED_ITEM",
+			options.publicConstants.animateMovedItem
+		);
+	}
+
+	if (
+		options?.publicConstants?.animateTime &&
+		!isNaN(options.publicConstants.animateTime)
+	) {
+		setPublicConstantByName(
+			this,
+			"ANIMATE_TIME",
+			options.publicConstants.animateTime
+		);
+	}
+
 	// Public Constants ENDED
 
 	// Miscellaneous BEGIN

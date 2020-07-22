@@ -185,6 +185,8 @@ LimberGridView.prototype.constructor = LimberGridView;
 			deskInteractionMode: "ADD"/"CUTSPACE"
 
 			latchMovedItem: boolean
+			animateMovedItem: boolean
+			animateTime: number
 		}
 	}
 	*/
@@ -387,18 +389,13 @@ LimberGridView.prototype.initializeStore = function () {
 				DESK_INTERACTION_MODE: "ADD",
 
 				LATCH_MOVED_ITEM: true,
+
+				ANIMATE_MOVED_ITEM: false,
+				ANIMATE_TIME: 250,
 			},
 		},
 	};
 };
-
-// LimberGridView.prototype.initConstantsAndFlags = function (options) {
-
-// };
-
-// LimberGridView.prototype.initRender = function () {
-
-// };
 
 LimberGridView.prototype.renderItem = function (index) {
 	_renderItem(this, index);
@@ -443,10 +440,6 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 		setPublicConstantByName(this, "LATCH_MOVED_ITEM", flag);
 	}
 };
-
-// LimberGridView.prototype.render = render;
-
-// LimberGridView.prototype.removeItems = removeItems;
 
 LimberGridView.prototype.addItem = function (item) {
 	_addItem(this, item);

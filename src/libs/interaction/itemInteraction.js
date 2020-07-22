@@ -198,12 +198,12 @@ export const moveItem = async function (index, toX, toY) {
 	e.$limberGridViewItems[
 		index
 	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
-	if (true) {
+	if (!publicConstants.ANIMATE_MOVED_ITEM) {
 		// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
 		e.$limberGridViewItems[index].style.transition = "none";
 		setTimeout(() => {
 			e.$limberGridViewItems[index].style.transition = "";
-		}, 500);
+		}, publicConstants.ANIMATE_TIME);
 	}
 
 	const arrangedArr = Object.keys(arranged);
