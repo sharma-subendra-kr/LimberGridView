@@ -27,6 +27,9 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 import { getOptions } from "../store/variables/options";
 import {
 	getPositionData,
+	setPositionData,
+	getModifiedPositionData,
+	setModifiedPositionData,
 	setPseudoContainerId,
 	getPseudoContainerId,
 } from "../store/variables/essentials";
@@ -63,8 +66,9 @@ import getPublicConstants, {
 } from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
 import { getRandomString } from "../libs/utils/utils";
+import { arrangeFromHeight } from "../libs/arrange/arrange";
 
-export const init = function (context, isResize, autoArrange) {
+export const init = async function (context, isResize, autoArrange) {
 	// if (typeof options.el === "string") {
 	// 	const el = document.getElementById(options.el);
 	// 	if (!el) {
@@ -105,6 +109,34 @@ export const init = function (context, isResize, autoArrange) {
 	const privateConstants = getPrivateConstants(context);
 	const publicConstants = getPublicConstants(context);
 	const pd = getPositionData(context);
+
+	if (autoArrange === true || !checkPositionData(pd)) {
+		console.warn("Auto-arranging");
+
+		setModifiedPositionData(context, pd);
+		const mpd = getModifiedPositionData(context);
+		const len = pd.length;
+		const arr = new Array(len);
+		for (let i = 0; i < len; i++) {
+			arr[i] = i;
+			mpd[i].x = undefined;
+			mpd[i].y = undefined;
+
+			pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].y /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].height /= privateConstants.WIDTH_SCALE_FACTOR;
+		}
+
+		setWidth(context, privateConstants.GRID_WIDTH);
+		setHeight(context, privateConstants.GRID_HEIGHT);
+		setMargin(context, privateConstants.GRID_MARGIN);
+		setWidthScaleFactor(context, 1);
+		setDefinedMinHeightAndWidth(context, privateConstants.MIN_HEIGHT_AND_WIDTH);
+
+		await arrangeFromHeight(context, arr, privateConstants.MARGIN);
+		setPositionData(context, mpd);
+	}
 
 	setPaddingLeft(
 		context,
@@ -190,27 +222,6 @@ export const init = function (context, isResize, autoArrange) {
 		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
 			privateConstants.WIDTH_SCALE_FACTOR
 	);
-
-	if (autoArrange === true || !checkPositionData(pd)) {
-		// var _positionData = JSON.parse(JSON.stringify(positionData));
-		// var remainingItems = [];
-		// var length_0 = _positionData.length;
-		// for (var i = 0; i < length_0; i++) {
-		// 	remainingItems.push(i);
-		// 	_positionData[i].width =
-		// 		_positionData[i].width * privateConstants.WIDTH_SCALE_FACTOR;
-		// 	_positionData[i].height =
-		// 		_positionData[i].height * privateConstants.WIDTH_SCALE_FACTOR;
-		// 	if (_positionData[i].width > privateConstants.WIDTH) {
-		// 		_positionData[i].width = privateConstants.WIDTH;
-		// 	}
-		// }
-		// setPositionData(
-		// 	this,
-		// 	fitRemainingItemsBelowDeepestLine(0, _positionData, remainingItems, [])
-		// 		.positionData
-		// );
-	}
 };
 
 export const initConstantsAndFlags = function (options) {

@@ -253,8 +253,12 @@ function LimberGridView(options) {
 		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
 	}
 
-	init(this, false, options.autoArrange);
-	render(this, true);
+	setTimeout(
+		async function () {
+			await init(this, false, options.autoArrange);
+			render(this, true);
+		}.bind(this)
+	);
 }
 
 LimberGridView.prototype.initializeStore = function () {

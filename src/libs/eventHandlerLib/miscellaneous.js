@@ -44,8 +44,8 @@ export const onWindowResize = function (event) {
 	window.removeEventListener("resize", getBindedFunctions(this).onWindowResize);
 };
 
-export const onWindowResizeTimerCallback = function (event) {
-	init(this, true, false);
+export const onWindowResizeTimerCallback = async function (event) {
+	await init(this, true, false);
 	render(this);
 
 	const options = getOptions(this);

@@ -398,7 +398,7 @@ var main = function () {
 		// enableTouchInteraction: true,
 		// dataType: "string", // string or node
 		// pseudoElementContainer: "limber-grid-controls",
-		autoArrange: false,
+		autoArrange: true,
 		reRenderOnResize: true,
 		// itemMouseDownMoveCheck: itemMouseDownMoveCheck,
 		// itemMouseDownResizeCheck: itemMouseDownResizeCheck,
