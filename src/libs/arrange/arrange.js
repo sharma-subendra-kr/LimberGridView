@@ -192,7 +192,7 @@ export const arrangeMove = async (
 		assignAdjacentRects(freeRectsItY);
 
 		// DEBUG:
-		// printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+		// printUnmergedFreeRects(context, freeRectsArr.map((o) => o.d));
 
 		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
 			freeRectsArr,
@@ -201,12 +201,12 @@ export const arrangeMove = async (
 		idCount.idCount = lastId2;
 
 		// DEBUG:
-		// printMergedFreeRects(mergedRects.map((o) => o.d));
+		// printMergedFreeRects(context, mergedRects.map((o) => o.d));
 
 		const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
-		// printMergedFreeRects(overlappedRects.map((o) => o.d));
+		// printMergedFreeRects(context, overlappedRects.map((o) => o.d));
 
 		const {
 			arranged: _arranged,
@@ -410,8 +410,6 @@ export const arrangeResize = async (
 	let arrangedCount = 0;
 	let workSpaceResizeCount = 0;
 
-	let DEBUG_COUNT = 0;
-
 	while (arrangedCount !== iToALen) {
 		let freeRectsItY;
 		if (passCount === 0) {
@@ -442,7 +440,7 @@ export const arrangeResize = async (
 			);
 			itemsInCombinedWorkSpace = _itemsInCombinedWorkSpace;
 			itemsToArrange = updatedItemsToArrange;
-			iToALen = updatedItemsToArrange.length;
+			iToALen = updatedItemsToArrange.length + arrangedCount;
 			passCount++;
 			continue;
 		} else if (passCount >= 2) {
@@ -466,7 +464,10 @@ export const arrangeResize = async (
 		assignAdjacentRects(freeRectsItY);
 
 		// DEBUG:
-		// printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+		// printUnmergedFreeRects(
+		// 	context,
+		// 	freeRectsArr.map((o) => o.d)
+		// );
 
 		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
 			freeRectsArr,
@@ -475,12 +476,18 @@ export const arrangeResize = async (
 		idCount.idCount = lastId2;
 
 		// DEBUG:
-		// printMergedFreeRects(mergedRects.map((o) => o.d));
+		// printMergedFreeRects(
+		// 	context,
+		// 	mergedRects.map((o) => o.d)
+		// );
 
 		const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
-		// printMergedFreeRects(overlappedRects.map((o) => o.d));
+		// printMergedFreeRects(
+		// 	context,
+		// 	overlappedRects.map((o) => o.d)
+		// );
 
 		const { arranged: _arranged, idCount: lastId3 } = await arrange(
 			context,
@@ -511,8 +518,7 @@ export const arrangeResize = async (
 
 		passCount++;
 
-		DEBUG_COUNT++;
-		if (DEBUG_COUNT > 50) {
+		if (passCount > 50) {
 			throw "Arrange time out";
 		}
 	}
@@ -602,7 +608,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		assignAdjacentRects(freeRectsItY);
 
 		// DEBUG:
-		// printUnmergedFreeRects(freeRectsArr.map((o) => o.d));
+		// printUnmergedFreeRects(context, freeRectsArr.map((o) => o.d));
 
 		const { mergedRects, idCount: lastId2 } = await mergeFreeRects(
 			freeRectsArr,
@@ -611,12 +617,12 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		idCount.idCount = lastId2;
 
 		// DEBUG:
-		// printMergedFreeRects(mergedRects.map((o) => o.d));
+		// printMergedFreeRects(context, mergedRects.map((o) => o.d));
 
 		const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
-		// printMergedFreeRects(overlappedRects.map((o) => o.d));
+		// printMergedFreeRects(context, overlappedRects.map((o) => o.d));
 
 		const { arranged: _arranged, idCount: lastId3 } = await arrange(
 			context,
@@ -1157,7 +1163,7 @@ export const arrange = async (
 		}
 
 		// DEBUG:
-		// printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+		// printMergedFreeRects(context, wCBST.getDataInArray().map((o) => o.d));
 
 		const { result, idCount: lastId1 } = await arrangeCleanUp(
 			context,
@@ -1174,7 +1180,7 @@ export const arrange = async (
 			wCBST.insert(result[i]);
 		}
 		// DEBUG:
-		// printMergedFreeRects(wCBST.getDataInArray().map((o) => o.d));
+		// printMergedFreeRects(context, wCBST.getDataInArray().map((o) => o.d));
 	}
 
 	return {
@@ -1281,7 +1287,7 @@ export const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
 	}
 
 	// now merge the rects in diff stack and put the merged rects in wCBST tree
-	// printUnmergedFreeRects(diffStack.getData().map((o) => o.d));
+	// printUnmergedFreeRects(context, diffStack.getData().map((o) => o.d));
 	const diffStackData = diffStack.getData();
 	const diffStackDataLen = diffStackData.length;
 	const it = new IntervalTreesIterative();
@@ -1320,7 +1326,7 @@ export const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
 
 	const filteredOverlappedRects = filter(overlappedRects);
 
-	// printMergedFreeRects(filteredOverlappedRects.map((o) => o.d));
+	// printMergedFreeRects(context, filteredOverlappedRects.map((o) => o.d));
 
 	return { result: filteredOverlappedRects, idCount: lastId1 };
 };
