@@ -24,8 +24,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 */
 
-import { IntervalTreesIterative } from "interval-trees";
-import { ClosestBST } from "closest-bst";
+import { IntervalTreesIterative } from "IntervalTreeJS";
+import { ClosestBST } from "ClosestBST";
 import {
 	getPositionData,
 	getModifiedPositionData,
@@ -186,7 +186,7 @@ export const arrangeMove = async (
 		);
 		idCount.idCount = lastId1;
 
-		const freeRectsArr = freeRectsItY.getDataInArray();
+		const freeRectsArr = freeRectsItY.getSortedData();
 		shuffle(freeRectsArr);
 
 		assignAdjacentRects(freeRectsItY);
@@ -460,7 +460,7 @@ export const arrangeResize = async (
 			idCount.idCount = lastId1;
 		}
 
-		const freeRectsArr = freeRectsItY.getDataInArray();
+		const freeRectsArr = freeRectsItY.getSortedData();
 		shuffle(freeRectsArr);
 
 		assignAdjacentRects(freeRectsItY);
@@ -604,7 +604,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		);
 		idCount.idCount = lastId1;
 
-		const freeRectsArr = freeRectsItY.getDataInArray();
+		const freeRectsArr = freeRectsItY.getSortedData();
 		shuffle(freeRectsArr);
 
 		assignAdjacentRects(freeRectsItY);
@@ -864,7 +864,7 @@ export const sweepLine = (context, area, areaCo, items, lastId) => {
 };
 
 export const assignAdjacentRects = (rectsItY) => {
-	const rectItYArr = rectsItY.getDataInArray();
+	const rectItYArr = rectsItY.getSortedData();
 
 	const len = rectItYArr.length;
 	let resY, lenY;
@@ -964,7 +964,7 @@ export const mergeFreeRects = async (freeRectsArr, lastId) => {
 		}
 	}
 
-	return { mergedRects: resultIt.getDataInArray(), idCount };
+	return { mergedRects: resultIt.getSortedData(), idCount };
 };
 
 export const isRectIdenticalOrInside = (it, obj) => {
@@ -1025,7 +1025,7 @@ export const findOverlapped = (mergedRects) => {
 	}
 
 	const completeOverlapped = {};
-	const itArr = it.getDataInArray();
+	const itArr = it.getSortedData();
 
 	let res, rlen;
 
@@ -1165,7 +1165,7 @@ export const arrange = async (
 		}
 
 		// DEBUG:
-		// printMergedFreeRects(context, wCBST.getDataInArray().map((o) => o.d));
+		// printMergedFreeRects(context, wCBST.getSortedData().map((o) => o.d));
 
 		const { result, idCount: lastId1 } = await arrangeCleanUp(
 			context,
@@ -1182,7 +1182,7 @@ export const arrange = async (
 			wCBST.insert(result[i]);
 		}
 		// DEBUG:
-		// printMergedFreeRects(context, wCBST.getDataInArray().map((o) => o.d));
+		// printMergedFreeRects(context, wCBST.getSortedData().map((o) => o.d));
 	}
 
 	return {

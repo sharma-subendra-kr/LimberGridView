@@ -43,7 +43,7 @@
     "webpack-notifier": "^1.8.0"
   },
   "dependencies": {
-    "interval-trees": "file:./node_modules/interval-trees",
-    "closest-bst": "file:./node_modules/closest-bst"
+    "IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git",
+    "ClosestBST": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/ClosestBST.git"
   }
 }
