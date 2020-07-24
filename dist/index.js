@@ -7339,7 +7339,6 @@ const onDeskTouchMove = function (event) {
 const onDeskMouseUp = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
-  const callbacks = getCallbacks(this);
   const dkiv = getDeskInteractionVars(this);
   clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
   clearTimeout(dkiv.longPressCheck);
@@ -7374,17 +7373,10 @@ const onDeskMouseUp = function (event) {
 
   onDeskContextMenu.call(this);
   event.stopPropagation();
-
-  if (callbacks.addCompleteCallback != undefined && callbacks.addCompleteCallback != null) {
-    if (itemAddedFlag == true) {
-      callbacks.addCompleteCallback(renderDetails.items, item.width, item.height, "addItemInteractive");
-    }
-  }
 };
 const onDeskTouchEnd = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
-  const callbacks = getCallbacks(this);
   const dkiv = getDeskInteractionVars(this);
   clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
   clearTimeout(dkiv.longTouchCheck);
@@ -7421,12 +7413,6 @@ const onDeskTouchEnd = function (event) {
   onDeskContextMenu.call(this); // initializeItemTouchEvents.call(this);
 
   event.stopPropagation();
-
-  if (callbacks.addCompleteCallback != undefined && callbacks.addCompleteCallback != null) {
-    if (itemAddedFlag == true) {
-      callbacks.addCompleteCallback(renderDetails.items, item.width, item.height, "addItemInteractive");
-    }
-  }
 };
 const onDeskTouchCancel = function (event) {
   // const dkiv = getDeskInteractionVars(this);
@@ -8214,19 +8200,16 @@ const onItemTouchMove = function (event) {
 };
 const onItemMouseUp = async function (event) {
   const e = variables_elements(this);
-  const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
   const iiv = getItemInteractionVars(this);
   const bf = getBindedFunctions(this);
   clearTimeout(iiv.showMoveDemoTimeOutVariable);
   clearTimeout(iiv.showResizeDemoTimeOutVariable);
-  var itemResizeFlag = false;
-  var itemMoveFlag = false;
 
   if (iiv.mouseDownTimerComplete === true) {
     if (iiv.userActionData.type === "move") {
-      unloadMoveState(this, iiv.userActionData);
-      unloadOnMoveState(this);
+      // unloadMoveState(this, iiv.userActionData);
+      // unloadOnMoveState(this);
       const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
       var updatedCoordinates = {};
 
@@ -8235,7 +8218,6 @@ const onItemMouseUp = async function (event) {
           await moveItem.call(this, iiv.userActionData.itemIndex, mousePositionOnLimberGrid.x, mousePositionOnLimberGrid.y);
           updatedCoordinates.x = mousePositionOnLimberGrid.x;
           updatedCoordinates.y = mousePositionOnLimberGrid.y;
-          itemMoveFlag = true;
         } else {
           throw "Mouse position outside grid area.";
         }
@@ -8244,16 +8226,14 @@ const onItemMouseUp = async function (event) {
         revertShowMoveOrResizeDemo(this);
       }
     } else {
-      unloadResizingState(this, iiv.userActionData);
-      unloadOnMoveState(this);
-
+      // unloadResizingState(this, iiv.userActionData);
+      // unloadOnMoveState(this);
       try {
         var newWidth = iiv.userActionData.newWidth;
         var newHeight = iiv.userActionData.newHeight;
         await resizeItem.call(this, iiv.userActionData.itemIndex, newWidth, newHeight);
       } catch (error) {
         revertShowMoveOrResizeDemo(this);
-        itemResizeFlag = true;
       }
     }
   } else {
@@ -8267,48 +8247,22 @@ const onItemMouseUp = async function (event) {
   // document.removeEventListener("contextmenu", bf.onItemContextMenu);
   // event.preventDefault();
   // event.stopPropagation();
-  //
-
-  if (callbacks.moveCompleteCallback != undefined && callbacks.moveCompleteCallback != null) {
-    if (itemMoveFlag == true) {
-      updatedCoordinates.width = pd[iiv.userActionData.itemIndex].width;
-      updatedCoordinates.height = pd[iiv.userActionData.itemIndex].height;
-      callbacks.moveCompleteCallback(true, iiv.userActionData.itemIndex, updatedCoordinates);
-    } else if (iiv.userActionData.type == "move") {
-      callbacks.moveCompleteCallback(false, iiv.userActionData.itemIndex, event);
-    }
-  }
-
-  if (callbacks.resizeCompleteCallback != undefined && callbacks.resizeCompleteCallback != null) {
-    if (itemResizeFlag == true) {
-      callbacks.resizeCompleteCallback(iiv.userActionData.itemIndex, {
-        x: pd[iiv.userActionData.itemIndex].x,
-        y: pd[iiv.userActionData.itemIndex].y,
-        height: newHeight,
-        width: newWidth
-      });
-    }
-  } //
-
 
   iiv.userActionData = {};
 };
 const onItemTouchEnd = async function (event) {
   console.log("onItemTouchEnd");
   const e = variables_elements(this);
-  const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
   const iiv = getItemInteractionVars(this);
   const bf = getBindedFunctions(this);
   clearTimeout(iiv.showMoveDemoTimeOutVariable);
   clearTimeout(iiv.showResizeDemoTimeOutVariable);
-  var itemResizeFlag = false;
-  var itemMoveFlag = false;
 
   if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
     if (iiv.userActionData.type === "move") {
-      unloadMoveState(this, iiv.userActionData);
-      unloadOnMoveState(this);
+      // unloadMoveState(this, iiv.userActionData);
+      // unloadOnMoveState(this);
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
       var updatedCoordinates = {};
 
@@ -8317,7 +8271,6 @@ const onItemTouchEnd = async function (event) {
           await moveItem.call(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid.x, touchPositionOnLimberGrid.y);
           updatedCoordinates.x = touchPositionOnLimberGrid.x;
           updatedCoordinates.y = touchPositionOnLimberGrid.y;
-          itemMoveFlag = true;
         } else {
           throw "Touch position outside grid area.";
         }
@@ -8326,16 +8279,14 @@ const onItemTouchEnd = async function (event) {
         revertShowMoveOrResizeDemo(this);
       }
     } else {
-      unloadResizingState(this, iiv.userActionData);
-      unloadOnMoveState(this);
-
+      // unloadResizingState(this, iiv.userActionData);
+      // unloadOnMoveState(this);
       try {
         var newWidth = iiv.userActionData.newWidth;
         var newHeight = iiv.userActionData.newHeight;
         await resizeItem.call(this, iiv.userActionData.itemIndex, newWidth, newHeight);
       } catch (error) {
         revertShowMoveOrResizeDemo(this);
-        itemResizeFlag = true;
       }
     }
   } else {
@@ -8351,30 +8302,7 @@ const onItemTouchEnd = async function (event) {
   // document.removeEventListener("touchcancel", bf.onItemTouchCancel);
   // e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 
-  event.stopPropagation(); //
-
-  if (callbacks.moveCompleteCallback != undefined && callbacks.moveCompleteCallback != null) {
-    if (itemMoveFlag == true) {
-      updatedCoordinates.width = pd[iiv.userActionData.itemIndex].width;
-      updatedCoordinates.height = pd[iiv.userActionData.itemIndex].height;
-      callbacks.moveCompleteCallback(true, iiv.userActionData.itemIndex, updatedCoordinates);
-    } else if (iiv.userActionData.type == "move") {
-      callbacks.moveCompleteCallback(false, iiv.userActionData.itemIndex, event);
-    }
-  }
-
-  if (callbacks.resizeCompleteCallback != undefined && callbacks.resizeCompleteCallback != null) {
-    if (itemResizeFlag == true) {
-      callbacks.resizeCompleteCallback(iiv.userActionData.itemIndex, {
-        x: pd[iiv.userActionData.itemIndex].x,
-        y: pd[iiv.userActionData.itemIndex].y,
-        height: newHeight,
-        width: newWidth
-      });
-    }
-  } //
-
-
+  event.stopPropagation();
   iiv.userActionData = {};
 };
 const onItemContextMenu = function (event) {
