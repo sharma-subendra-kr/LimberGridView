@@ -3357,7 +3357,7 @@ const loadMoveState = (context, userActionData, event) => {
   e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
   e.$limberGridViewHeightAdjustGuide.classList.add("limber-grid-view-height-adjust-guide-active");
   e.$limberGridViewItems[userActionData.itemIndex].classList.add("limber-grid-view-item-demo");
-  e.$pseudoContainerItem.classList.add("limber-Grid-View-pseudo-container-item-active");
+  e.$pseudoContainerItem.classList.add("limber-grid-View-pseudo-container-item-active");
   e.$pseudoContainerItem.style.width = item.width + "px";
   e.$pseudoContainerItem.style.height = item.height + "px";
 
