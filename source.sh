@@ -19,7 +19,7 @@
 
 # Written by Subendra Kumar Sharma.
 
-export NODE_ENV="development"
+export NODE_ENV="production"
 export PORT=3000
 export VERSION="1.0.0-beta.0"
 export MINIMIZE=false

@@ -2,7 +2,7 @@
   "name": "limbergridview",
   "version": "1.0.0",
   "description": "![](https://github.com/sharma-subendra-kr/test/raw/master/final.gif)",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/webpack && ./node_modules/.bin/webpack-dev-server"

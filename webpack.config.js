@@ -27,9 +27,7 @@ var fs = require("fs");
 var path = require("path");
 
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
-var miniCssExtractPlugin = new MiniCssExtractPlugin({
-  filename: "limberGridView-" + process.env.VERSION + ".css",
-});
+var miniCssExtractPlugin = new MiniCssExtractPlugin({ filename: "index.css" });
 var WebpackNotifierPlugin = require("webpack-notifier");
 var webpackNotifierPlugin = new WebpackNotifierPlugin({
   title: "LimberGridView",
@@ -50,7 +48,7 @@ module.exports = {
         ? __dirname + "/public/assets"
         : __dirname + "/dist",
     publicPath: "assets",
-    filename: "limberGridView-" + process.env.VERSION + ".js",
+    filename: "index.js",
     library: "LimberGridView",
     libraryTarget: "umd",
   },
