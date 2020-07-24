@@ -97,11 +97,7 @@ const getModifiedPositionData = function (context) {
 // };
 
 const setGridData = function (context, grid) {
-	emptyObject(context.store.variables.essentials.gridData);
-	Object.assign(
-		context.store.variables.essentials.gridData,
-		JSON.parse(JSON.stringify(grid))
-	);
+	context.store.variables.essentials.gridData = grid;
 };
 
 const getGridData = function (context) {
@@ -109,24 +105,11 @@ const getGridData = function (context) {
 };
 
 const setCallbacks = function (context, cbs) {
-	emptyObject(context.store.variables.essentials.callbacks);
-	Object.assign(context.store.variables.essentials.callbacks, cbs);
+	context.store.variables.essentials.callbacks = cbs;
 };
 
 const getCallbacks = function (context) {
 	return context.store.variables.essentials.callbacks;
-};
-
-const setSerializedPositionData = function (context, serPos) {
-	emptyObject(context.store.variables.essentials.serializedPositionData);
-	Object.assign(
-		context.store.variables.essentials.serializedPositionData,
-		serPos
-	);
-};
-
-const getSerializedPositionData = function (context) {
-	return context.store.variables.essentials.serializedPositionData;
 };
 
 export default getEssentialVariables;
@@ -144,6 +127,4 @@ export {
 	getGridData,
 	setCallbacks,
 	getCallbacks,
-	setSerializedPositionData,
-	getSerializedPositionData,
 };

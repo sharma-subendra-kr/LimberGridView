@@ -228,7 +228,6 @@ LimberGridView.prototype.constructor = LimberGridView;
 function LimberGridView(options) {
 	this.initializeStore();
 	setOptions(this, options);
-	setGridData(this, options.gridData);
 	setPositionData(this, options.positionData);
 	setCallbacks(this, options.callbacks);
 
