@@ -82,8 +82,8 @@ export const render = function (context, scale = true) {
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", i);
 			itemEl.style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
-			itemEl.style.width = pd[i].width;
-			itemEl.style.height = pd[i].height;
+			itemEl.style.width = `${pd[i].width}px`;
+			itemEl.style.height = `${pd[i].height}px`;
 
 			const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
 			if (typeof renderData === "string") {
@@ -113,8 +113,8 @@ export const render = function (context, scale = true) {
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", spd[i].index);
-			itemEl.style.width = spd[i].width;
-			itemEl.style.height = spd[i].height;
+			itemEl.style.width = `${spd[i].width}px`;
+			itemEl.style.height = `${spd[i].height}px`;
 
 			const renderData = callbacks.renderContent(
 				i,
@@ -241,8 +241,8 @@ export const addItem = async function (context, item) {
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", index);
 			itemEl.style.transform = `translate(${pd[index].x}px, ${pd[index].y}px)`;
-			itemEl.style.width = pd[index].width;
-			itemEl.style.height = pd[index].height;
+			itemEl.style.width = `${pd[index].width}px`;
+			itemEl.style.height = `${pd[index].height}px`;
 
 			callbacks.renderContent(
 				index,
@@ -256,9 +256,10 @@ export const addItem = async function (context, item) {
 
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", index);
-			itemEl.style.width = privateConstants.WIDTH;
-			itemEl.style.height =
-				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
+			itemEl.style.width = `${privateConstants.WIDTH}px`;
+			itemEl.style.height = `${
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO
+			}px`;
 
 			callbacks.renderContent(
 				index,

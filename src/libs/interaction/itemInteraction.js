@@ -92,8 +92,8 @@ export const resizeItem = async function (index, width, height) {
 
 	setPositionData(this, mpd);
 
-	e.$limberGridViewItems[index].style.width = mpd[index].width;
-	e.$limberGridViewItems[index].style.height = mpd[index].height;
+	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;
