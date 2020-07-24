@@ -530,6 +530,7 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 	let minY = Number.MAX_SAFE_INTEGER;
 	let maxY = 0;
 
+	let atLeastOneOverlapping = false;
 	let isOverlapping;
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
@@ -553,6 +554,7 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 			);
 
 		if (isOverlapping) {
+			atLeastOneOverlapping = true;
 			const topPoint = {
 				x: pd[i].x,
 				y: pd[i].y - privateConstants.MARGIN,
@@ -579,17 +581,21 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 		}
 	}
 
-	if (minY === Number.MAX_SAFE_INTEGER) {
-		minY = y;
+	if (atLeastOneOverlapping) {
+		if (minY === Number.MAX_SAFE_INTEGER) {
+			minY = y;
+		}
+
+		if (maxY === 0) {
+			maxY = y + height;
+		}
+
+		if (minY - maxY > 0) {
+			return { y: maxY, shiftHeight: minY - maxY };
+		} else {
+			return false;
+		}
 	}
 
-	if (maxY === 0) {
-		maxY = y + height;
-	}
-
-	if (minY - maxY > 0) {
-		return { y: maxY, shiftHeight: minY - maxY };
-	}
-
-	return false;
+	return { y: y, shiftHeight: height };
 };
