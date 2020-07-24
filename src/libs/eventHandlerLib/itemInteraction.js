@@ -457,7 +457,6 @@ export const onItemTouchMove = function (event) {
 
 export const onItemMouseUp = async function (event) {
 	const e = getElements(this);
-	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
 
 	const iiv = getItemInteractionVars(this);
@@ -465,12 +464,11 @@ export const onItemMouseUp = async function (event) {
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
-	var itemResizeFlag = false;
-	var itemMoveFlag = false;
+
 	if (iiv.mouseDownTimerComplete === true) {
 		if (iiv.userActionData.type === "move") {
-			unloadMoveState(this, iiv.userActionData);
-			unloadOnMoveState(this);
+			// unloadMoveState(this, iiv.userActionData);
+			// unloadOnMoveState(this);
 
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
 			var updatedCoordinates = {};
@@ -484,7 +482,6 @@ export const onItemMouseUp = async function (event) {
 					);
 					updatedCoordinates.x = mousePositionOnLimberGrid.x;
 					updatedCoordinates.y = mousePositionOnLimberGrid.y;
-					itemMoveFlag = true;
 				} else {
 					throw "Mouse position outside grid area.";
 				}
@@ -493,8 +490,8 @@ export const onItemMouseUp = async function (event) {
 				revertShowMoveOrResizeDemo(this);
 			}
 		} else {
-			unloadResizingState(this, iiv.userActionData);
-			unloadOnMoveState(this);
+			// unloadResizingState(this, iiv.userActionData);
+			// unloadOnMoveState(this);
 
 			try {
 				var newWidth = iiv.userActionData.newWidth;
@@ -508,7 +505,6 @@ export const onItemMouseUp = async function (event) {
 				);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
-				itemResizeFlag = true;
 			}
 		}
 	} else {
@@ -527,49 +523,12 @@ export const onItemMouseUp = async function (event) {
 	// event.preventDefault();
 	// event.stopPropagation();
 
-	//
-	if (
-		callbacks.moveCompleteCallback != undefined &&
-		callbacks.moveCompleteCallback != null
-	) {
-		if (itemMoveFlag == true) {
-			updatedCoordinates.width = pd[iiv.userActionData.itemIndex].width;
-			updatedCoordinates.height = pd[iiv.userActionData.itemIndex].height;
-			callbacks.moveCompleteCallback(
-				true,
-				iiv.userActionData.itemIndex,
-				updatedCoordinates
-			);
-		} else if (iiv.userActionData.type == "move") {
-			callbacks.moveCompleteCallback(
-				false,
-				iiv.userActionData.itemIndex,
-				event
-			);
-		}
-	}
-	if (
-		callbacks.resizeCompleteCallback != undefined &&
-		callbacks.resizeCompleteCallback != null
-	) {
-		if (itemResizeFlag == true) {
-			callbacks.resizeCompleteCallback(iiv.userActionData.itemIndex, {
-				x: pd[iiv.userActionData.itemIndex].x,
-				y: pd[iiv.userActionData.itemIndex].y,
-				height: newHeight,
-				width: newWidth,
-			});
-		}
-	}
-	//
-
 	iiv.userActionData = {};
 };
 
 export const onItemTouchEnd = async function (event) {
 	console.log("onItemTouchEnd");
 	const e = getElements(this);
-	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
 
 	const iiv = getItemInteractionVars(this);
@@ -577,12 +536,11 @@ export const onItemTouchEnd = async function (event) {
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
-	var itemResizeFlag = false;
-	var itemMoveFlag = false;
+
 	if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
 		if (iiv.userActionData.type === "move") {
-			unloadMoveState(this, iiv.userActionData);
-			unloadOnMoveState(this);
+			// unloadMoveState(this, iiv.userActionData);
+			// unloadOnMoveState(this);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 			var updatedCoordinates = {};
@@ -596,7 +554,6 @@ export const onItemTouchEnd = async function (event) {
 					);
 					updatedCoordinates.x = touchPositionOnLimberGrid.x;
 					updatedCoordinates.y = touchPositionOnLimberGrid.y;
-					itemMoveFlag = true;
 				} else {
 					throw "Touch position outside grid area.";
 				}
@@ -605,8 +562,8 @@ export const onItemTouchEnd = async function (event) {
 				revertShowMoveOrResizeDemo(this);
 			}
 		} else {
-			unloadResizingState(this, iiv.userActionData);
-			unloadOnMoveState(this);
+			// unloadResizingState(this, iiv.userActionData);
+			// unloadOnMoveState(this);
 
 			try {
 				var newWidth = iiv.userActionData.newWidth;
@@ -620,7 +577,6 @@ export const onItemTouchEnd = async function (event) {
 				);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
-				itemResizeFlag = true;
 			}
 		}
 	} else {
@@ -641,42 +597,6 @@ export const onItemTouchEnd = async function (event) {
 	// e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 
 	event.stopPropagation();
-
-	//
-	if (
-		callbacks.moveCompleteCallback != undefined &&
-		callbacks.moveCompleteCallback != null
-	) {
-		if (itemMoveFlag == true) {
-			updatedCoordinates.width = pd[iiv.userActionData.itemIndex].width;
-			updatedCoordinates.height = pd[iiv.userActionData.itemIndex].height;
-			callbacks.moveCompleteCallback(
-				true,
-				iiv.userActionData.itemIndex,
-				updatedCoordinates
-			);
-		} else if (iiv.userActionData.type == "move") {
-			callbacks.moveCompleteCallback(
-				false,
-				iiv.userActionData.itemIndex,
-				event
-			);
-		}
-	}
-	if (
-		callbacks.resizeCompleteCallback != undefined &&
-		callbacks.resizeCompleteCallback != null
-	) {
-		if (itemResizeFlag == true) {
-			callbacks.resizeCompleteCallback(iiv.userActionData.itemIndex, {
-				x: pd[iiv.userActionData.itemIndex].x,
-				y: pd[iiv.userActionData.itemIndex].y,
-				height: newHeight,
-				width: newWidth,
-			});
-		}
-	}
-	//
 
 	iiv.userActionData = {};
 };

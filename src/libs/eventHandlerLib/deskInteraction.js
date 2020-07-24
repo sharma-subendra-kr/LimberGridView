@@ -412,7 +412,6 @@ export const onDeskTouchMove = function (event) {
 export const onDeskMouseUp = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
-	const callbacks = getCallbacks(this);
 
 	const dkiv = getDeskInteractionVars(this);
 
@@ -467,26 +466,11 @@ export const onDeskMouseUp = function (event) {
 	}
 	onDeskContextMenu.call(this);
 	event.stopPropagation();
-
-	if (
-		callbacks.addCompleteCallback != undefined &&
-		callbacks.addCompleteCallback != null
-	) {
-		if (itemAddedFlag == true) {
-			callbacks.addCompleteCallback(
-				renderDetails.items,
-				item.width,
-				item.height,
-				"addItemInteractive"
-			);
-		}
-	}
 };
 
 export const onDeskTouchEnd = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
-	const callbacks = getCallbacks(this);
 
 	const dkiv = getDeskInteractionVars(this);
 
@@ -544,20 +528,6 @@ export const onDeskTouchEnd = function (event) {
 	// initializeItemTouchEvents.call(this);
 
 	event.stopPropagation();
-
-	if (
-		callbacks.addCompleteCallback != undefined &&
-		callbacks.addCompleteCallback != null
-	) {
-		if (itemAddedFlag == true) {
-			callbacks.addCompleteCallback(
-				renderDetails.items,
-				item.width,
-				item.height,
-				"addItemInteractive"
-			);
-		}
-	}
 };
 
 export const onDeskTouchCancel = function (event) {
