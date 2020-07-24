@@ -204,7 +204,7 @@ export const loadMoveState = (context, userActionData, event) => {
 	);
 
 	e.$pseudoContainerItem.classList.add(
-		"limber-grid-View-pseudo-container-item-active"
+		"limber-grid-view-pseudo-container-item-active"
 	);
 
 	e.$pseudoContainerItem.style.width = item.width + "px";
