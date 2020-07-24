@@ -6509,8 +6509,8 @@ const render = function (context, scale = true) {
       itemEl.setAttribute("class", classList);
       itemEl.setAttribute("data-index", i);
       itemEl.style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
-      itemEl.style.width = pd[i].width;
-      itemEl.style.height = pd[i].height;
+      itemEl.style.width = `${pd[i].width}px`;
+      itemEl.style.height = `${pd[i].height}px`;
       const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
 
       if (typeof renderData === "string") {
@@ -6537,8 +6537,8 @@ const render = function (context, scale = true) {
       const itemEl = document.createElement("div");
       itemEl.setAttribute("class", classList);
       itemEl.setAttribute("data-index", spd[i].index);
-      itemEl.style.width = spd[i].width;
-      itemEl.style.height = spd[i].height;
+      itemEl.style.width = `${spd[i].width}px`;
+      itemEl.style.height = `${spd[i].height}px`;
       const renderData = callbacks.renderContent(i, spd[i].width, spd[i].height);
 
       if (typeof renderData === "string") {
@@ -6644,15 +6644,15 @@ const addItem = async function (context, item) {
       itemEl.setAttribute("class", classList);
       itemEl.setAttribute("data-index", index);
       itemEl.style.transform = `translate(${pd[index].x}px, ${pd[index].y}px)`;
-      itemEl.style.width = pd[index].width;
-      itemEl.style.height = pd[index].height;
+      itemEl.style.width = `${pd[index].width}px`;
+      itemEl.style.height = `${pd[index].height}px`;
       callbacks.renderContent(index, pd[index].width, pd[index].height, "isAdd");
     } else {
       const classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
       itemEl.setAttribute("class", classList);
       itemEl.setAttribute("data-index", index);
-      itemEl.style.width = privateConstants.WIDTH;
-      itemEl.style.height = privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
+      itemEl.style.width = `${privateConstants.WIDTH}px`;
+      itemEl.style.height = `${privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO}px`;
       callbacks.renderContent(index, privateConstants.WIDTH, privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO, "isAdd");
     }
 
@@ -7766,8 +7766,8 @@ const resizeItem = async function (index, width, height) {
   const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
   const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width);
   setPositionData(this, mpd);
-  e.$limberGridViewItems[index].style.width = mpd[index].width;
-  e.$limberGridViewItems[index].style.height = mpd[index].height;
+  e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+  e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
   const arrangedArr = Object.keys(arranged);
   const len = arrangedArr.length;
 
