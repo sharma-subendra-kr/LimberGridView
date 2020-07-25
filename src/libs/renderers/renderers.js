@@ -86,13 +86,7 @@ export const render = function (context, scale = true) {
 			itemEl.style.height = `${pd[i].height}px`;
 
 			const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
-			if (typeof renderData === "string") {
-				itemEl.innerHTML = renderData;
-			} else if (renderData instanceof Element) {
-				itemEl.appendChild(renderData);
-			} else {
-				throw "Invalid render data received";
-			}
+			renderItemContent(context, renderData, itemEl);
 
 			nodes[i] = itemEl;
 		}
@@ -121,13 +115,7 @@ export const render = function (context, scale = true) {
 				spd[i].width,
 				spd[i].height
 			);
-			if (typeof renderData === "string") {
-				itemEl.innerHTML = renderData;
-			} else if (renderData instanceof Element) {
-				itemEl.appendChild(renderData);
-			} else {
-				throw "Invalid render data received";
-			}
+			renderItemContent(context, renderData, itemEl);
 
 			nodes[i] = itemEl;
 		}
@@ -166,13 +154,7 @@ export const renderItem = function (context, index) {
 		pd[index].height
 	);
 	e.$limberGridViewItems[index].innerHTML = "";
-	if (typeof renderData === "string") {
-		e.$limberGridViewItems[index].innerHTML = renderData;
-	} else if (renderData instanceof Element) {
-		e.$limberGridViewItems[index].appendChild(renderData);
-	} else {
-		throw "Invalid render data received";
-	}
+	renderItemContent(context, renderData, e.$limberGridViewItems[index]);
 
 	if (callbacks.renderComplete) {
 		callbacks.renderComplete(index);
@@ -269,14 +251,7 @@ export const addItem = async function (context, item) {
 				"isAdd"
 			);
 		}
-
-		if (typeof renderData === "string") {
-			itemEl.innerHTML = renderData;
-		} else if (renderData instanceof Element) {
-			itemEl.appendChild(renderData);
-		} else {
-			throw "Invalid render data received";
-		}
+		renderItemContent(context, renderData, itemEl);
 
 		e.$limberGridView.appendChild(itemEl);
 
@@ -330,6 +305,19 @@ export const getSerializedPositionData = (pd) => {
 		}
 		return a.y - b.y;
 	});
+};
+
+export const renderItemContent = (context, renderData, itemEl) => {
+	const callbacks = getCallbacks(context);
+	if (typeof renderData === "string") {
+		itemEl.innerHTML = renderData;
+	} else if (renderData instanceof Element) {
+		itemEl.appendChild(renderData);
+	} else if (callbacks.renderPlugin) {
+		callbacks.renderPlugin(renderData, itemEl);
+	} else {
+		throw "Invalid render data received";
+	}
 };
 
 // export const renderPseudoElements = function (_positionData) {
