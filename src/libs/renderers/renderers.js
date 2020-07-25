@@ -230,6 +230,7 @@ export const addItem = async function (context, item) {
 		const pd = getPositionData(context);
 		const len = pd.length;
 		const index = len - 1;
+		let renderData;
 
 		const itemEl = document.createElement("div");
 		if (!isMobile(context)) {
@@ -244,7 +245,7 @@ export const addItem = async function (context, item) {
 			itemEl.style.width = `${pd[index].width}px`;
 			itemEl.style.height = `${pd[index].height}px`;
 
-			callbacks.renderContent(
+			renderData = callbacks.renderContent(
 				index,
 				pd[index].width,
 				pd[index].height,
@@ -261,12 +262,20 @@ export const addItem = async function (context, item) {
 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO
 			}px`;
 
-			callbacks.renderContent(
+			renderData = callbacks.renderContent(
 				index,
 				privateConstants.WIDTH,
 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO,
 				"isAdd"
 			);
+		}
+
+		if (typeof renderData === "string") {
+			itemEl.innerHTML = renderData;
+		} else if (renderData instanceof Element) {
+			itemEl.appendChild(renderData);
+		} else {
+			throw "Invalid render data received";
 		}
 
 		e.$limberGridView.appendChild(itemEl);
