@@ -337,8 +337,6 @@ export const renderItemContent = (context, renderData, itemEl) => {
 		itemEl.appendChild(renderData);
 	} else if (callbacks.renderPlugin) {
 		callbacks.renderPlugin(renderData, itemEl);
-	} else {
-		throw "Invalid render data received";
 	}
 };
 
