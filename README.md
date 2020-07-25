@@ -1,13 +1,11 @@
 # Limber GridView
 
-![](https://github.com/sharma-subendra-kr/test/raw/master/final.gif)
+# [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
+**[View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)**
 
-/---------------------------------------------------------------------------------------------------/
+## LimberGridView 1.0.0-beta.0 is finally here!
 
-This is a release of LimberGridView 0.0.0, brought to you by Subendra Kumar Sharma.
-This software is released under the GNU General Public License version 3, or (at your option) any later version.
-
-LimberGridView, a powerful JavaScript Libary that gives you flexible, movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
 Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved.
 
@@ -26,27 +24,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
-/---------------------------------------------------------------------------------------------------/
+Written by Subendra Kumar Sharma.
 
 For api Reference and Documentation please read the Wiki Page.
 
-There is a folder named example. You can can select the current version and run the .html file to test this feature.
+### This is free software (Free as in freedom not the price). If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact _reach.subendra.kr@gmx.com_.
 
-This is free software (Free as in freedom not the price).
-If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact reach.subendra.kr@gmx.com.
+### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
 
-If you want to donate to this project so I can test on various other touch devices (this version works with touch devices but extensive testing is not done) you can contact reach.subendra.kr@gmx.com.
+## The is a beta release. This version is unstable.
+* **You might encounter unusual behaviour while resizing or moving (like items overlapping). This issue is noted and will be fixed with utmost priority in the upcoming releases. I would try to ship it by end of August 2020.**
 
-The is a beta release. Although this version is fairly stable (stable with algorithms) and apis are standard, this is released as beta version since extensive testing for touch devices is not done from my part. The stable version will be released very shortly. The stable release version number will start as 1.0.0.
+###### What's New ######
+* **A Whole new algorithm to arrange items on your desk.**
+* **Complete Rewrite from 0.0.0**
+* **renderPlugin and removePlugin, these callbacks help you to render React JSX inside any item. (These might help in someother framework as well. I haven't used other frameworks.)**
 
-**A new auto arranging algorithm will be released shortly once it has been tested. This algorithm will be more accurate and reduces free spaces dramatically.**
+###### Features to watch out for in the next releases. ######
+* **Undo and Redo**
+* **Improved Stability**
 
-Improvements for the autoarranging algorithm will also be done in patches, this doesn't affect the apis.
+**I am constantly trying to improve the arranging algorithm and this will be done in patches.**
 
-If you find a bug or an error please report.
-
-// OFF TOPIC
-
-I am looking for a job as a Software Engineer. If you want to hire me as a full stack engineer you can contact me via email reach.subendra.kr@gmx.com. I have experience in C, C++, Java, Python, JavaScript, Andoird, OpenGL.
-
-// OFF TOPIC END
+If you find a bug or an error please report by sending an email to _reach.subendra.kr@gmx.com_.
