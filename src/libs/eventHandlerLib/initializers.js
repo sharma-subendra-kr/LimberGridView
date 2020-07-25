@@ -27,17 +27,7 @@ import getOptions from "../../store/variables/options";
 import getElements from "../../store/variables/elements";
 import { isMobile } from "../utils/utils";
 import { getCallbacks } from "../../store/variables/essentials";
-// import { onItemMouseDown, onItemTouchStart } from "./itemInteraction";
-// import {
-// 	onLimberGridMouseDown,
-// 	onLimberGridTouchStart,
-// } from "./deskInteraction";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
-// import {
-// 	getItemInteractionVars,
-// 	getDeskInteractionVars,
-// } from "../../store/variables/eventSpecific";
-// import { onItemClick } from "./miscellaneous";
 
 export const reInitializeEvents = function () {
 	unInitializeEvents();

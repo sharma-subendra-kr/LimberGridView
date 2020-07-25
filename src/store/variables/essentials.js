@@ -23,23 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { emptyObject } from "../../libs/utils/utils";
-
-// const ev = {
-// 	// elementID: "",
-// 	pseudoElementId: "",
-// };
-// const positionData = [];
-// const modifiedPositionData = [];
-// const initialPositionData = [];
-// const initialGridData = {};
-// let callbacks = {};
-// const serializedPositionData = {};
-
-// const setElementId = function (id) {
-// 	ev.elementID = id;
-// };
-
 const setEssentialVariables = function (context, ev) {
 	context.store.variables.essentials = ev;
 };
@@ -83,18 +66,6 @@ const setModifiedPositionData = function (context, pd) {
 const getModifiedPositionData = function (context) {
 	return context.store.variables.essentials.modifiedPositionData;
 };
-
-// const setInitialPositionData = function (context, pos) {
-// 	context.store.variables.essentials.initialPositionData.length = 0;
-// 	Object.assign(
-// 		context.store.variables.essentials.initialPositionData,
-// 		JSON.parse(JSON.stringify(pos))
-// 	);
-// };
-
-// const getInitialPositionData = function (context) {
-// 	return context.store.variables.essentials.initialPositionData;
-// };
 
 const setGridData = function (context, grid) {
 	context.store.variables.essentials.gridData = grid;

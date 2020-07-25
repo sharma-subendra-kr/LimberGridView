@@ -40,19 +40,6 @@ import {
 } from "../rect/rectUtils";
 import { filter } from "../utils/utils";
 
-export const isFlippingPosPossible = (context) => {
-	const pd = getPositionData(context);
-
-	if (affectedItems.length === 2) {
-		const diff = Math.abs(pd[affectedItems[0]].y - pd[affectedItems[1]].y);
-		if (diff > privateConstants.HEIGHT) {
-			// to check if both lie on th visible screen or viewport
-			return false;
-		}
-		return true;
-	}
-};
-
 export const getMinMaxXY = (
 	context,
 	affectedItems,
@@ -264,12 +251,6 @@ export const getResizeWSItemsDetail = (
 	const bottomWs = getRectObjectFromCo(bottomWsCo);
 	const cWs = getRectObjectFromCo(cWsCo);
 
-	// const itemsToArrangeMap = {};
-	// const iToALen = itemsToArrange.length;
-	// for (let i = 0; i < iToALen; i++) {
-	// 	itemsToArrangeMap[itemsToArrange[i]] = true;
-	// }
-
 	let count = 0;
 	const iToALen = itemsToArrange.length;
 	const _itemsToArrange = new Array(iToALen);
@@ -366,28 +347,6 @@ export const cBSTRComp = function () {
 export const getScore = (rect, maxHWSum) => {
 	return (rect.width + rect.height) / maxHWSum;
 };
-
-// export const assignScoreToFreeRects = (freeRects) => {
-// 	const len = freeRects.length;
-
-// 	let maxHWSum = 0;
-// 	let sum = 0;
-// 	for (let i = 0; i < len; i++) {
-// 		sum = freeRects[i].d.rect.width + freeRects[i].d.rect.height;
-// 		if (sum > maxHWSum) {
-// 			maxHWSum = sum;
-// 		}
-// 	}
-
-// 	let maxScore = 0;
-// 	for (let i = 0; i < len; i++) {
-// 		freeRects[i].d.score = getScore(freeRects[i].d.rect, maxHWSum);
-// 		if (freeRects[i].d.score > maxScore) {
-// 			maxScore = freeRects[i].d.score;
-// 		}
-// 	}
-// 	return { maxScore, maxHWSum };
-// };
 
 export const getItemsToArrangeScore = (context, affectedItems) => {
 	const mpd = getModifiedPositionData(context);

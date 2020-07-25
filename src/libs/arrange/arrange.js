@@ -25,17 +25,8 @@ Written by Subendra Kumar Sharma.
 
 import { IntervalTreesIterative } from "IntervalTreeJS";
 import { ClosestBST } from "ClosestBST";
-import {
-	getPositionData,
-	getModifiedPositionData,
-} from "../../store/variables/essentials";
-import getElements from "../../store/variables/elements";
-import getPrivateConstants, {
-	getPrivateConstantByName,
-} from "../../store/constants/privateConstants";
-import getPublicConstants, {
-	getPublicConstantByName,
-} from "../../store/constants/publicConstants";
+import { getModifiedPositionData } from "../../store/variables/essentials";
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getMinMaxXY,
 	getTopBottomWS,
@@ -43,7 +34,6 @@ import {
 	getItemsBelowBottomWorkSpace,
 	getItemDimenWithMargin,
 	getItemsToArrangeScore,
-	// assignScoreToFreeRects,
 	cBSTRectComparator,
 	cBSTLComp,
 	cBSTRComp,
@@ -86,7 +76,6 @@ export const arrangeMove = async (
 	isDemo = false
 ) => {
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
 	const mpd = getModifiedPositionData(context);
 
 	const p1 = performance.now();
@@ -299,7 +288,6 @@ export const arrangeResize = async (
 	isDemo = false
 ) => {
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
 
 	const p1 = performance.now();
 
@@ -534,7 +522,6 @@ export const arrangeResize = async (
 
 export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
 
 	const p1 = performance.now();
 

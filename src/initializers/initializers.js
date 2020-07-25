@@ -30,7 +30,6 @@ import {
 	getModifiedPositionData,
 	setModifiedPositionData,
 	setPseudoContainerId,
-	getPseudoContainerId,
 } from "../store/variables/essentials";
 import getElements, {
 	set$body,
@@ -54,7 +53,6 @@ import getPrivateConstants, {
 	setWidthScaleFactor,
 	setMargin,
 	setDefinedMinHeightAndWidth,
-	getDefinedMinHeightAndWidth,
 	setGridWidth,
 	setGridHeight,
 	setGridMargin,
@@ -69,45 +67,8 @@ import { arrangeFromHeight } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 
 export const init = async function (context, isResize, autoArrange) {
-	// if (typeof options.el === "string") {
-	// 	const el = document.getElementById(options.el);
-	// 	if (!el) {
-	// 		throw `No for element found for id ${options.el}`;
-	// 	}
-	// 	set$el(el);
-	// } else if (options.el instanceof Element) {
-	// 	set$el(options.el);
-	// } else {
-	// 	throw "Valid DOM Element or Id required";
-	// }
-
-	// set$body(context, document.getElementsByTagName("body")[0]);
-	// setPseudoElementId(
-	// 	context,
-	// 	"limber-grid-view-pseudo-container-" + getRandomString()
-	// );
-	// e.$body[0].insertAdjacentHTML(
-	// 	"beforeend",
-	// 	`<div id = ${getPseudoElementId(
-	// 		context
-	// 	)} class = "limber-grid-view-pseudo-container"></div>`
-	// );
-	// set$bodyPseudoEl(
-	// 	context,
-	// 	document.getElementById(getPseudoElementId(context))
-	// );
-
-	// e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
-	// set$limberGridViewContainer(
-	// 	context,
-	// 	e.$el.querySelectorAll(".limber-grid-view-container")[0]
-	// );
-	// set$limberGridViewStyle(context, e.$el.getElementsByTagName("style")[0]);
-	// set$limberGridView(context, e.$el.querySelectorAll(".limber-grid-view")[0]);
-
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
 	const pd = getPositionData(context);
 
 	if (autoArrange === true || !checkPositionData(pd)) {
@@ -184,15 +145,6 @@ export const init = async function (context, isResize, autoArrange) {
 			privateConstants.PADDING_TOP -
 			privateConstants.PADDING_BOTTOM
 	);
-
-	// privateConstants.WIDTH =
-	// 	e.$limberGridView.clientWidth -
-	// 	privateConstants.PADDING_LEFT -
-	// 	privateConstants.PADDING_RIGHT;
-	// privateConstants.HEIGHT =
-	// 	e.$limberGridView.clientHeight -
-	// 	privateConstants.PADDING_TOP -
-	// 	privateConstants.PADDING_BOTTOM;
 
 	if (isResize) {
 		// resiet item x, y, width, height; MARGIN, MIN_HEIGHT_AND_WIDTH

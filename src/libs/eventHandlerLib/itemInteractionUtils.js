@@ -26,7 +26,6 @@ Written by Subendra Kumar Sharma.
 import getElements from "../../store/variables/elements";
 import getOptions from "../../store/variables/options";
 import { getPositionData } from "../../store/variables/essentials";
-import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
 import { calculateTouchPosOnItem } from "./eventHandlerUtils";
 
@@ -58,7 +57,6 @@ export const getUserActionData = (context, event) => {
 		Y = touchPosOnLimberGridItem.y;
 	} else {
 		return false;
-		// throw "Unidentified event";
 	}
 
 	const resizeUIBox = {
@@ -173,9 +171,6 @@ export const loadResizingState = (context, userActionData) => {
 
 export const unloadResizingState = (context, userActionData) => {
 	const e = getElements(context);
-	const pd = getPositionData(context);
-
-	const item = pd[userActionData.itemIndex];
 
 	e.$limberGridViewHeightAdjustGuide.classList.remove(
 		"limber-grid-view-height-adjust-guide-active"
@@ -233,9 +228,6 @@ export const loadMoveState = (context, userActionData, event) => {
 
 export const unloadMoveState = (context, userActionData) => {
 	const e = getElements(context);
-	const pd = getPositionData(context);
-
-	const item = pd[userActionData.itemIndex];
 
 	e.$limberGridViewHeightAdjustGuide.classList.remove(
 		"limber-grid-view-height-adjust-guide-active"
@@ -259,9 +251,6 @@ export const unloadMoveState = (context, userActionData) => {
 
 export const loadOnMoveState = (context, userActionData, event, type) => {
 	const e = getElements(context);
-	const pd = getPositionData(context);
-
-	const item = pd[userActionData.itemIndex];
 
 	if (type === "move") {
 		e.$limberGridViewMoveGuide.classList.remove(

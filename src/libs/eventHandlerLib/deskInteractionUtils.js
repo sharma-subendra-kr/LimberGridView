@@ -24,8 +24,6 @@ Written by Subendra Kumar Sharma.
 */
 
 import getElements from "../../store/variables/elements";
-import { getPositionData } from "../../store/variables/essentials";
-import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
 
 export const loadInitState = (context) => {
@@ -49,11 +47,6 @@ export const loadInitState = (context) => {
 			"limber-grid-view-pseudo-item-resizing-state"
 		);
 	}
-
-	// e.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
-	// e.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
-	// e.$limberGridViewAddItemGuide[0].style.transform =
-	// 	"translate(" + x + "px, " + y + "px)";
 
 	if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 		e.$limberGridViewAddCutGuide.classList.add(

@@ -23,27 +23,22 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import getPublicConstants from "../../store/constants/publicConstants";
-import getPrivateConstants from "../../store/constants/privateConstants";
-
 export const emptyObject = function (obj) {
-	let keys = Object.keys(obj);
-	let length = keys.length;
+	const keys = Object.keys(obj);
+	const length = keys.length;
 	for (let i = 0; i < length; i++) {
 		delete obj[keys[i]];
 	}
 };
 
-export let isMobile = function (context) {
+export const isMobile = function (context) {
 	const isMobileFunction = context.options.isMobileCheck;
 
 	if (isMobileFunction) {
 		return isMobileFunction();
 	}
 
-	// production
 	return window.matchMedia(
-		// "only screen and (max-width: 1033px) and (min-width : 1px)"
 		"only screen and (max-width: 979px) and (min-width : 1px)"
 	).matches;
 };

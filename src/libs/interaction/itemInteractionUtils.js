@@ -29,14 +29,10 @@ import {
 	isPointInsideRect,
 	doesPointTouchRect,
 } from "../rect/rectUtils";
-import getPublicConstants, {
-	getPublicConstantByName,
-} from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
 	getModifiedPositionData,
-	setModifiedPositionData,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 

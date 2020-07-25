@@ -24,9 +24,8 @@ Written by Subendra Kumar Sharma.
 */
 
 export const shuffle = (arr) => {
-	let temp,
-		len = arr.length,
-		j;
+	let temp, j;
+	const len = arr.length;
 	for (let i = 0; i < len; i++) {
 		j = Math.floor(Math.random() * (i + 1));
 		temp = arr[i];

@@ -23,25 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// const constants = {
-// 	WIDTH: 0,
-// 	HEIGHT: 0,
-
-// 	PADDING_LEFT: 0,
-// 	PADDING_RIGHT: 0,
-// 	PADDING_TOP: 0,
-// 	PADDING_BOTTOM: 0,
-
-// 	WIDTH_SCALE_FACTOR: 0,
-
-// 	GRID_WIDTH: 1080,
-// 	GRID_HEIGHT: 1920,
-// 	GRID_MARGIN: 5,
-// 	MARGIN: 5,
-
-// 	MIN_HEIGHT_AND_WIDTH: 150,
-// };
-
 const setPrivateConstants = function (context, val) {
 	context.store.constants.privateConstants = val;
 };

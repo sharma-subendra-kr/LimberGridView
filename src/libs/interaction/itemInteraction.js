@@ -23,21 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// import {
-// 	findFreeSpaces,
-// 	mergeFreeSpaces,
-// 	findAffectedItemsOnMove,
-// 	findAffectedItemsOnResize,
-// 	fitItemsIntoFreeSpaces,
-// 	findMatchingSpace,
-// 	fitRemainingItems,
-// 	fitRemainingItemsAboveDeepestLine,
-// 	fitRemainingItemsBelowDeepestLine,
-// 	getItemsFromPointDepth,
-// 	shitftItemsBelow,
-// 	mergePlains,
-// 	subtractPlanes,
-// } from "./calcUtils";
 import {
 	getResizeAffectedItems,
 	getMoveAffectedItems,
@@ -47,7 +32,6 @@ import {
 	movePointAdjust,
 } from "./itemInteractionUtils";
 import { arrangeMove, arrangeResize } from "../arrange/arrange";
-import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getPositionData,
@@ -57,8 +41,6 @@ import {
 	getCallbacks,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
-
-// import { renderItems } from "../renderers/renderers";
 
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
@@ -160,8 +142,6 @@ export const moveItem = async function (index, toX, toY) {
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
-		// provide a flag for developers to switch it on or off any time from UI by the user
-		// maybe "LATCH_MOVED_ITEM"
 		const adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
@@ -228,7 +208,6 @@ export const moveItemDemo = async function (index, toX, toY) {
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
-		// provide a flag for developers to switch it on or off any time from UI by the user
 		const adjustedPt = movePointAdjust(this, toX, toY);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;

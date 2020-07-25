@@ -23,33 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// import { emptyObject } from "../libs/utils/utils";
-
-// const e = {
-// 	$body: [],
-// 	$bodyPseudoEl: {},
-// 	$limberGridViewBodyPseudoItem: [],
-// 	$el: {},
-// 	$limberGridView: [],
-// 	$limberGridViewItems: [],
-// 	$limberGridViewDebugMergedTempRects: [],
-// 	$limberGridViewDebugStackTopRect: undefined,
-// 	$limberGridViewDebugStackTopAdjRect: undefined,
-// 	$limberGridViewDebugMergedRect: undefined,
-// 	$limberGridViewDebugAdjRect: undefined,
-// 	$limberGridViewDebugResultStackRects: [],
-// 	$limberGridViewDebugStackRects: [],
-// 	$limberGridViewDebugUnmergedRects: [],
-// 	$limberGridViewDebugMergedFreeRects: [],
-// 	$limberGridViewContainer: undefined,
-// 	$limberGridViewStyle: [],
-// 	$limberGridViewGridPseudoItem: undefined,
-// 	$limberGridViewMoveGuide: [],
-// 	$limberGridViewHeightAdjustGuide: [],
-// 	$limberGridViewAddItemGuide: [],
-// 	$limberGridViewAddItemOnTouchHoldGuide: [],
-// };
-
 const getElements = function (context) {
 	return context.store.variables.elements;
 };

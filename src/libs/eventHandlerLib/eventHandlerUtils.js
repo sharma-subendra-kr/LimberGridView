@@ -24,9 +24,7 @@ Written by Subendra Kumar Sharma.
 */
 
 import getElements from "../../store/variables/elements";
-import { getPositionData } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
-import getPublicConstants from "../../store/constants/publicConstants";
 
 export const calculateMousePosOnDesk = function (context, event) {
 	const e = getElements(context);

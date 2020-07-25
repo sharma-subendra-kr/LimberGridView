@@ -24,7 +24,6 @@ Written by Subendra Kumar Sharma.
 */
 
 import getPublicConstants from "../../store/constants/publicConstants";
-// import getPrivateConstants from "../../store/constants/privateConstants";
 import getOptions from "../../store/variables/options";
 import { getCallbacks } from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
@@ -36,9 +35,7 @@ export const onWindowResize = function (event) {
 
 	setTimeout(
 		getBindedFunctions(this).onWindowResizeTimerCallback,
-		// onWindowResizeTimerCallback,
 		publicConstants.WINDOW_RESIZE_WAIT_TIME
-		// this
 	);
 	window.removeEventListener("resize", getBindedFunctions(this).onWindowResize);
 };
