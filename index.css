@@ -1,6 +1,6 @@
 .footer{height:200px;background-color:#172030;color:white;overflow:hidden;font-size:10px;padding:10px}.footer a{color:white}.footer b{text-decoration:underline}
 
-.header{display:-ms-flexbox;display:flex;height:50px;background-color:#24292e;color:#f9ffff;padding:7px}.header .header-banner{width:250px}.header .star-on-github{text-align:center;-ms-flex:1;flex:1;color:white;font-size:30px}.header .star-on-github span{font-size:30px;margin:0 5px}.header .star-on-github svg{color:white}.header .view-example-code{color:white;font-size:12px}.header .view-example-code span{margin:0 5px}
+.header{display:-ms-flexbox;display:flex;height:50px;background-color:#24292e;color:#f9ffff;padding:7px}.header .header-banner{width:270px}.header .star-on-github{text-align:center;-ms-flex:1;flex:1;color:white;font-size:30px}.header .star-on-github span{font-size:30px;margin:0 5px}.header .star-on-github svg{color:white}.header .view-example-code{color:white;font-size:12px}.header .view-example-code span{margin:0 5px}
 
 .lgv-tools{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end}.lgv-tools .lgv-tool{margin:0px 10px;cursor:pointer}.lgv-tools .lgv-tool svg{margin:0px 10px}.lgv-tools .lgv-tool:hover{text-decoration:underline}.lgv-tools .lgv-tool-latch{display:-ms-flexbox;display:flex;cursor:default}.lgv-tools .lgv-tool-latch input{margin:0;cursor:pointer}.lgv-tools .lgv-tool-latch:hover{text-decoration:none}
 
@@ -20,7 +20,7 @@
 
 .page-home{height:calc(100% - 50px)}.page-home .tools-container{display:-ms-flexbox;display:flex;height:20px;padding:0px 10px}.page-home .tools-container button{background-color:transparent;color:#151d2d;height:20px;margin:0px 10px}.page-home .tools-container .button-active{color:blue;text-decoration:underline}.page-home .tools-container .lgv-tools-container{-ms-flex:1;flex:1;padding:3px 10px 0px 10px}.page-home .lgv-container{height:calc(100% - 20px)}
 
-*{box-sizing:border-box;font-family:helvetica;font-size:12px}html{height:100%}body{width:100%;height:100%;margin:0px;background-color:#f1f2f3;color:#151d2d}p{margin:0}.button{background-color:#666;border:none;min-width:100px;height:30px;color:#fff;border-radius:5px;margin:5px 10px;cursor:pointer}.button:disabled{cursor:not-allowed}
+*{box-sizing:border-box;font-family:Arial;font-size:12px}html{height:100%}body{width:100%;height:100%;margin:0px;background-color:#f1f2f3;color:#151d2d}p{margin:0}.button{background-color:#666;border:none;min-width:100px;height:30px;color:#fff;border-radius:5px;margin:5px 10px;cursor:pointer}.button:disabled{cursor:not-allowed}
 
 /** @license LimberGridView
  *
