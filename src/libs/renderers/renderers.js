@@ -295,6 +295,10 @@ export const removeItem = function (context, index) {
 
 	pd.splice(index, 1);
 
+	if (callbacks.removePlugin) {
+		callbacks.removePlugin(e.$limberGridViewItems[index]);
+	}
+
 	e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
 	set$limberGridViewItems(context, [
 		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),

@@ -157,6 +157,8 @@ LimberGridView.prototype.constructor = LimberGridView;
 			removeComplete: function(index){}
 			moveComplete: function(index, toX, toY, arrangedIndices) {}
 			resizeComplete: function(index, width, height, arrangedIndices){}
+			renderPlugin: function (renderData, element) {}
+			removePlugin: function(element){}
 
 			//getItemRenderDataCallback : function(index, width, height, processType){}, 			// callback to get string or node object to render inside the item
 			onItemClickCallback : function(event){},											// click callback for item

@@ -3282,7 +3282,7 @@ const getUserActionData = (context, event) => {
   };
 
   if (options.itemMouseDownMoveCheck && options.itemMouseDownMoveCheck(X, Y, { ...pd[itemIndex]
-  }, itemIndex)) {
+  }, itemIndex, event.currentTarget)) {
     // call developer defined function to check if mousedown for MOVE is in a valid place
     return {
       type: "move",
@@ -3298,7 +3298,7 @@ const getUserActionData = (context, event) => {
   }
 
   if (options.itemMouseDownResizeCheck && options.itemMouseDownResizeCheck(X, Y, { ...pd[itemIndex]
-  }, itemIndex)) {
+  }, itemIndex, event.currentTarget)) {
     // call developer defined function to check if mousedown for RESIZE is in a valid place
     return {
       type: "resize",
@@ -6670,6 +6670,11 @@ const removeItem = function (context, index) {
   const pd = getPositionData(context);
   unInitializeEvents.call(context);
   pd.splice(index, 1);
+
+  if (callbacks.removePlugin) {
+    callbacks.removePlugin(e.$limberGridViewItems[index]);
+  }
+
   e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
   set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
 
@@ -8848,6 +8853,8 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 			removeComplete: function(index){}
 			moveComplete: function(index, toX, toY, arrangedIndices) {}
 			resizeComplete: function(index, width, height, arrangedIndices){}
+			renderPlugin: function (renderData, element) {}
+			removePlugin: function(element){}
 
 			//getItemRenderDataCallback : function(index, width, height, processType){}, 			// callback to get string or node object to render inside the item
 			onItemClickCallback : function(event){},											// click callback for item
