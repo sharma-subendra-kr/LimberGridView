@@ -6492,6 +6492,7 @@ const render = function (context, scale = true) {
   }
 
   const nodes = new Array(len);
+  let spd;
 
   if (!isMobile(context)) {
     let classList = "limber-grid-view-item";
@@ -6510,14 +6511,14 @@ const render = function (context, scale = true) {
       itemEl.setAttribute("data-index", i);
       itemEl.style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
       itemEl.style.width = `${pd[i].width}px`;
-      itemEl.style.height = `${pd[i].height}px`;
-      const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
-      renderItemContent(context, renderData, itemEl);
+      itemEl.style.height = `${pd[i].height}px`; // const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+      // renderItemContent(context, renderData, itemEl);
+
       nodes[i] = itemEl;
     }
   } else {
     const classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
-    const spd = getSerializedPositionData(pd);
+    spd = getSerializedPositionData(pd);
 
     for (let i = 0; i < len; i++) {
       pd[i].x *= WIDTH_SCALE_FACTOR;
@@ -6530,9 +6531,13 @@ const render = function (context, scale = true) {
       itemEl.setAttribute("class", classList);
       itemEl.setAttribute("data-index", spd[i].index);
       itemEl.style.width = `${spd[i].width}px`;
-      itemEl.style.height = `${spd[i].height}px`;
-      const renderData = callbacks.renderContent(i, spd[i].width, spd[i].height);
-      renderItemContent(context, renderData, itemEl);
+      itemEl.style.height = `${spd[i].height}px`; // const renderData = callbacks.renderContent(
+      // 	i,
+      // 	spd[i].width,
+      // 	spd[i].height
+      // );
+      // renderItemContent(context, renderData, itemEl);
+
       nodes[i] = itemEl;
     }
   } // e.$limberGridView.innerHTML = "";
@@ -6546,6 +6551,18 @@ const render = function (context, scale = true) {
 
   for (let i = 0; i < len; i++) {
     e.$limberGridView.appendChild(nodes[i]);
+  }
+
+  for (let i = 0; i < len; i++) {
+    const itemEl = nodes[i];
+
+    if (!isMobile(context)) {
+      const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+      renderItemContent(context, renderData, itemEl);
+    } else {
+      const renderData = callbacks.renderContent(i, spd[i].width, spd[i].height);
+      renderItemContent(context, renderData, itemEl);
+    }
   }
 
   set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]); // initializeVariables();

@@ -65,6 +65,7 @@ export const render = function (context, scale = true) {
 	}
 
 	const nodes = new Array(len);
+	let spd;
 
 	if (!isMobile(context)) {
 		let classList = "limber-grid-view-item";
@@ -85,14 +86,14 @@ export const render = function (context, scale = true) {
 			itemEl.style.width = `${pd[i].width}px`;
 			itemEl.style.height = `${pd[i].height}px`;
 
-			const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
-			renderItemContent(context, renderData, itemEl);
+			// const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+			// renderItemContent(context, renderData, itemEl);
 
 			nodes[i] = itemEl;
 		}
 	} else {
 		const classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
-		const spd = getSerializedPositionData(pd);
+		spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
 			pd[i].x *= WIDTH_SCALE_FACTOR;
@@ -110,12 +111,12 @@ export const render = function (context, scale = true) {
 			itemEl.style.width = `${spd[i].width}px`;
 			itemEl.style.height = `${spd[i].height}px`;
 
-			const renderData = callbacks.renderContent(
-				i,
-				spd[i].width,
-				spd[i].height
-			);
-			renderItemContent(context, renderData, itemEl);
+			// const renderData = callbacks.renderContent(
+			// 	i,
+			// 	spd[i].width,
+			// 	spd[i].height
+			// );
+			// renderItemContent(context, renderData, itemEl);
 
 			nodes[i] = itemEl;
 		}
@@ -129,6 +130,21 @@ export const render = function (context, scale = true) {
 
 	for (let i = 0; i < len; i++) {
 		e.$limberGridView.appendChild(nodes[i]);
+	}
+
+	for (let i = 0; i < len; i++) {
+		const itemEl = nodes[i];
+		if (!isMobile(context)) {
+			const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+			renderItemContent(context, renderData, itemEl);
+		} else {
+			const renderData = callbacks.renderContent(
+				i,
+				spd[i].width,
+				spd[i].height
+			);
+			renderItemContent(context, renderData, itemEl);
+		}
 	}
 
 	set$limberGridViewItems(context, [
@@ -251,9 +267,10 @@ export const addItem = async function (context, item) {
 				"isAdd"
 			);
 		}
-		renderItemContent(context, renderData, itemEl);
 
 		e.$limberGridView.appendChild(itemEl);
+
+		renderItemContent(context, renderData, itemEl);
 
 		set$limberGridViewItems(context, [
 			...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
