@@ -34,7 +34,7 @@ var main = function () {
 
 	var onAddButtonIconClick = function (event) {
 		// console.log(event);
-		window.limberGridView.addItems(1);
+		window.limberGridView.addItem();
 	};
 
 	$toggleModeButton[0].addEventListener("click", onToggleModeClick);
