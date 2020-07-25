@@ -26,7 +26,7 @@ Written by Subendra Kumar Sharma.
 // SEE index.js for options format
 
 const setOptions = function (context, options) {
-	context.options = options;
+	Object.assign(context.options, options);
 };
 
 const getOptions = function (context) {

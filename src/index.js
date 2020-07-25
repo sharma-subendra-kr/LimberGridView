@@ -262,7 +262,12 @@ function LimberGridView(options) {
 }
 
 LimberGridView.prototype.initializeStore = function () {
-	this.options = undefined;
+	this.options = {
+		editable: true,
+		reRenderOnResize: true,
+		enableInteractiveAddAndCut: true,
+		enableTouchInteraction: true,
+	};
 	this.store = {
 		variables: {
 			elements: {

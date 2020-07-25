@@ -394,13 +394,13 @@ var main = function () {
 
 	var obj = {
 		el: "limber-grid-view-implement",
-		editable: true,
+		// editable: true,
 		// enableInteractiveAddAndCut: true,
 		// enableTouchInteraction: true,
 		// dataType: "string", // string or node
 		// pseudoElementContainer: "limber-grid-controls",
 		autoArrange: true,
-		reRenderOnResize: true,
+		// reRenderOnResize: true,
 		// itemMouseDownMoveCheck: itemMouseDownMoveCheck,
 		// itemMouseDownResizeCheck: itemMouseDownResizeCheck,
 		callbacks: {
