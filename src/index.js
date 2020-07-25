@@ -249,7 +249,7 @@ function LimberGridView(options) {
 
 	// INITIALIZATION ENDED
 
-	if (options.reRenderOnResize === true) {
+	if (this.options.reRenderOnResize === true) {
 		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
 	}
 
