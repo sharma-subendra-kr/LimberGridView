@@ -376,7 +376,7 @@ Written by Subendra Kumar Sharma.
 	width: 10px;
 	border: solid 1px black;
 	border-radius: 10px;
-	display: block;
+	display: inline-block;
 	vertical-align: top;
 	font-size: 8px;
 	text-align: center;
@@ -386,7 +386,7 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-license-icon:hover + .limber-grid-view-license-details {
-	display: block;
+	display: inline-block;
 }
 
 .limber-grid-view-debug-unmerged-rect {
