@@ -3282,7 +3282,7 @@ const getUserActionData = (context, event) => {
   };
 
   if (options.itemMouseDownMoveCheck && options.itemMouseDownMoveCheck(X, Y, { ...pd[itemIndex]
-  }, itemIndex, event.currentTarget)) {
+  }, itemIndex, event.target)) {
     // call developer defined function to check if mousedown for MOVE is in a valid place
     return {
       type: "move",
@@ -3298,7 +3298,7 @@ const getUserActionData = (context, event) => {
   }
 
   if (options.itemMouseDownResizeCheck && options.itemMouseDownResizeCheck(X, Y, { ...pd[itemIndex]
-  }, itemIndex, event.currentTarget)) {
+  }, itemIndex, event.target)) {
     // call developer defined function to check if mousedown for RESIZE is in a valid place
     return {
       type: "resize",

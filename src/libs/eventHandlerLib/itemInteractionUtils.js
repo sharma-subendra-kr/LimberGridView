@@ -83,7 +83,7 @@ export const getUserActionData = (context, event) => {
 			Y,
 			{ ...pd[itemIndex] },
 			itemIndex,
-			event.currentTarget
+			event.target
 		)
 	) {
 		// call developer defined function to check if mousedown for MOVE is in a valid place
@@ -110,7 +110,7 @@ export const getUserActionData = (context, event) => {
 			Y,
 			{ ...pd[itemIndex] },
 			itemIndex,
-			event.currentTarget
+			event.target
 		)
 	) {
 		// call developer defined function to check if mousedown for RESIZE is in a valid place
