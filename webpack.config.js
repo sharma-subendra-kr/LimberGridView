@@ -58,6 +58,20 @@ module.exports = {
     port: process.env.PORT,
     host: "0.0.0.0",
   },
+  externals: {
+    IntervalTreeJS: {
+      commonjs: "IntervalTreeJS",
+      commonjs2: "IntervalTreeJS",
+      amd: "IntervalTreeJS",
+      root: "IntervalTreeJS",
+    },
+    ClosestBST: {
+      commonjs: "ClosestBST",
+      commonjs2: "ClosestBST",
+      amd: "ClosestBST",
+      root: "ClosestBST",
+    },
+  },
   module: {
     rules: [
       {
