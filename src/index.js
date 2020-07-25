@@ -440,6 +440,14 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 };
 
 LimberGridView.prototype.addItem = function (item) {
+	if (!item) {
+		const privateConstants = getPrivateConstants(this);
+		item = {
+			width: privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH,
+			height: privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH,
+		};
+	}
+
 	_addItem(this, item);
 };
 
