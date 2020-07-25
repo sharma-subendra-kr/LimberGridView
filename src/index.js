@@ -99,6 +99,7 @@ import {
 	render,
 	renderItem as _renderItem,
 	addItem as _addItem,
+	removeItem as _removeItem,
 } from "./libs/renderers/renderers";
 // import { removeItems, addItems } from "./libs/renderers/addOrRemoveItems";
 import {
@@ -456,6 +457,12 @@ LimberGridView.prototype.addItem = function (item) {
 	}
 
 	_addItem(this, item);
+};
+
+LimberGridView.prototype.removeItem = function (index) {
+	if (Number.isInteger(index)) {
+		_removeItem(this, index);
+	}
 };
 
 LimberGridView.prototype.setIsMobileCheck = function (f) {

@@ -380,8 +380,8 @@ var main = function () {
 	};
 
 	var removeComplete = function (indices) {
-		// console.log("removeCompleteCallback");
-		// console.log(indices);
+		console.log("removeCompleteCallback");
+		console.log(indices);
 	};
 
 	var itemMouseDownMoveCheck = function (x, y, item, index) {

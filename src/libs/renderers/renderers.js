@@ -304,6 +304,11 @@ export const removeItem = function (context, index) {
 		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
 	]);
 
+	const len = pd.length;
+	for (let i = 0; i < len; i++) {
+		e.$limberGridViewItems[i].setAttribute("data-index", i);
+	}
+
 	if (callbacks.removeComplete) {
 		callbacks.removeComplete(index, e.$limberGridViewItems[index]);
 	}

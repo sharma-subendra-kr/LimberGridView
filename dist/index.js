@@ -6677,6 +6677,11 @@ const removeItem = function (context, index) {
 
   e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
   set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
+  const len = pd.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridViewItems[i].setAttribute("data-index", i);
+  }
 
   if (callbacks.removeComplete) {
     callbacks.removeComplete(index, e.$limberGridViewItems[index]);
@@ -9126,6 +9131,12 @@ LimberGridView.prototype.addItem = function (item) {
   }
 
   addItem(this, item);
+};
+
+LimberGridView.prototype.removeItem = function (index) {
+  if (Number.isInteger(index)) {
+    removeItem(this, index);
+  }
 };
 
 LimberGridView.prototype.setIsMobileCheck = function (f) {
