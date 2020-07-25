@@ -6651,8 +6651,8 @@ const addItem = async function (context, item) {
       renderData = callbacks.renderContent(index, privateConstants.WIDTH, privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO, "isAdd");
     }
 
-    renderItemContent(context, renderData, itemEl);
     e.$limberGridView.appendChild(itemEl);
+    renderItemContent(context, renderData, itemEl);
     set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
 
     if (callbacks.addComplete) {
