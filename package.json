@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/webpack && ./node_modules/.bin/webpack-dev-server",
-    "build": "./node_modules/.bin/webpack && mv ./dist/umd/index.css ./dist/"
+    "start": "./node_modules/.bin/webpack-dev-server --config webpack.dev.js",
+    "build": "./node_modules/.bin/webpack --config webpack.prod.js && mv ./dist/umd/index.css ./dist/"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.0.9",
     "webpack-notifier": "^1.8.0"
   },
   "dependencies": {

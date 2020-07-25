@@ -180,20 +180,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
-// const constants = {
-// 	WIDTH: 0,
-// 	HEIGHT: 0,
-// 	PADDING_LEFT: 0,
-// 	PADDING_RIGHT: 0,
-// 	PADDING_TOP: 0,
-// 	PADDING_BOTTOM: 0,
-// 	WIDTH_SCALE_FACTOR: 0,
-// 	GRID_WIDTH: 1080,
-// 	GRID_HEIGHT: 1920,
-// 	GRID_MARGIN: 5,
-// 	MARGIN: 5,
-// 	MIN_HEIGHT_AND_WIDTH: 150,
-// };
 const setPrivateConstants = function (context, val) {
   context.store.constants.privateConstants = val;
 };
@@ -344,23 +330,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
- // const constants = {
-// 	MOVE_GUIDE_RADIUS: 10,
-// 	RESIZE_SQUARE_GUIDE_LENGTH: 10,
-// 	RESIZE_SQUARE_BORDER_GUIDE_WIDTH: 3,
-// 	AUTO_SCROLL_DISTANCE: 50,
-// 	AUTO_SCROLL_POINT: 50,
-// 	MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
-// 	MOUSE_DOWN_TIME: 500,
-// 	TOUCH_HOLD_TIME: 300,
-// 	DEMO_WAIT_TIME: 500,
-// 	WINDOW_RESIZE_WAIT_TIME: 1000,
-// 	MARGIN: 5,
-// 	MOBILE_ASPECT_RATIO: 16 / 9,
-// 	ADD_OR_CUTSPACE_TOGGLE: "ADD",
-// 	DEFINED_MIN_HEIGHT_AND_WIDTH: 150,
-// };
-
 const setPublicConstants = function (context, val) {
   context.store.constants.publicConstants = val;
 };
@@ -380,207 +349,6 @@ const getPublicConstantByName = function (context, name) {
 };
 
 /* harmony default export */ var constants_publicConstants = (getPublicConstants);
-
-// CONCATENATED MODULE: ./src/libs/utils/utils.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-
-
-const emptyObject = function (obj) {
-  let keys = Object.keys(obj);
-  let length = keys.length;
-
-  for (let i = 0; i < length; i++) {
-    delete obj[keys[i]];
-  }
-};
-let isMobile = function (context) {
-  const isMobileFunction = context.options.isMobileCheck;
-
-  if (isMobileFunction) {
-    return isMobileFunction();
-  } // production
-
-
-  return window.matchMedia( // "only screen and (max-width: 1033px) and (min-width : 1px)"
-  "only screen and (max-width: 979px) and (min-width : 1px)").matches;
-};
-const fixTo = (num, to = 6) => {
-  return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
-};
-const filter = arr => {
-  const len = arr.length;
-  const temp = new Array(len);
-  let count = 0;
-
-  for (let i = 0; i < len; i++) {
-    if (arr[i] !== null && arr[i] !== undefined) {
-      temp[count++] = arr[i];
-    }
-  }
-
-  const res = new Array(count);
-
-  for (let i = 0; i < count; i++) {
-    res[i] = temp[i];
-  }
-
-  return res;
-};
-const getRandomString = (len = 22) => {
-  const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
-  const arr = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    arr[i] = alpNum[Math.floor(Math.random() * 36)];
-  }
-
-  return arr.join("");
-};
-const getItemDimenWithMargin = (MARGIN, item) => {
-  return {
-    x: item.x - MARGIN,
-    y: item.y - MARGIN,
-    width: item.width + MARGIN * 2,
-    height: item.height + MARGIN * 2
-  };
-};
-// CONCATENATED MODULE: ./src/store/variables/essentials.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
- // const ev = {
-// 	// elementID: "",
-// 	pseudoElementId: "",
-// };
-// const positionData = [];
-// const modifiedPositionData = [];
-// const initialPositionData = [];
-// const initialGridData = {};
-// let callbacks = {};
-// const serializedPositionData = {};
-// const setElementId = function (id) {
-// 	ev.elementID = id;
-// };
-
-const setEssentialVariables = function (context, ev) {
-  context.store.variables.essentials = ev;
-};
-
-const getEssentialVariables = function (context) {
-  return context.store.variables.essentials;
-};
-
-const setPseudoContainerId = function (context, id) {
-  context.store.variables.essentials.pseudoContainerId = id;
-};
-
-const getPseudoContainerId = function (context) {
-  return context.store.variables.essentials.pseudoContainerId;
-};
-
-const setPositionData = function (context, pd) {
-  const len = pd.length;
-  const arr = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    arr[i] = { ...pd[i]
-    };
-  }
-
-  context.store.variables.essentials.positionData = arr;
-};
-
-const getPositionData = function (context) {
-  return context.store.variables.essentials.positionData;
-};
-
-const setModifiedPositionData = function (context, pd) {
-  const len = pd.length;
-  const arr = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    arr[i] = { ...pd[i]
-    };
-  }
-
-  context.store.variables.essentials.modifiedPositionData = arr;
-};
-
-const getModifiedPositionData = function (context) {
-  return context.store.variables.essentials.modifiedPositionData;
-}; // const setInitialPositionData = function (context, pos) {
-// 	context.store.variables.essentials.initialPositionData.length = 0;
-// 	Object.assign(
-// 		context.store.variables.essentials.initialPositionData,
-// 		JSON.parse(JSON.stringify(pos))
-// 	);
-// };
-// const getInitialPositionData = function (context) {
-// 	return context.store.variables.essentials.initialPositionData;
-// };
-
-
-const setGridData = function (context, grid) {
-  context.store.variables.essentials.gridData = grid;
-};
-
-const getGridData = function (context) {
-  return context.store.variables.essentials.gridData;
-};
-
-const setCallbacks = function (context, cbs) {
-  context.store.variables.essentials.callbacks = cbs;
-};
-
-const getCallbacks = function (context) {
-  return context.store.variables.essentials.callbacks;
-};
-
-/* harmony default export */ var essentials = (getEssentialVariables);
 
 // CONCATENATED MODULE: ./src/store/variables/elements.js
 /*
@@ -607,31 +375,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
-// import { emptyObject } from "../libs/utils/utils";
-// const e = {
-// 	$body: [],
-// 	$bodyPseudoEl: {},
-// 	$limberGridViewBodyPseudoItem: [],
-// 	$el: {},
-// 	$limberGridView: [],
-// 	$limberGridViewItems: [],
-// 	$limberGridViewDebugMergedTempRects: [],
-// 	$limberGridViewDebugStackTopRect: undefined,
-// 	$limberGridViewDebugStackTopAdjRect: undefined,
-// 	$limberGridViewDebugMergedRect: undefined,
-// 	$limberGridViewDebugAdjRect: undefined,
-// 	$limberGridViewDebugResultStackRects: [],
-// 	$limberGridViewDebugStackRects: [],
-// 	$limberGridViewDebugUnmergedRects: [],
-// 	$limberGridViewDebugMergedFreeRects: [],
-// 	$limberGridViewContainer: undefined,
-// 	$limberGridViewStyle: [],
-// 	$limberGridViewGridPseudoItem: undefined,
-// 	$limberGridViewMoveGuide: [],
-// 	$limberGridViewHeightAdjustGuide: [],
-// 	$limberGridViewAddItemGuide: [],
-// 	$limberGridViewAddItemOnTouchHoldGuide: [],
-// };
 const getElements = function (context) {
   return context.store.variables.elements;
 };
@@ -839,188 +582,6 @@ Written by Subendra Kumar Sharma.
 
 
 
-
-const getPlainFrom4Points = function (pointsArray) {
-  var minX = -1;
-  var minY = -1;
-  var maxX = -1;
-  var maxY = -1;
-  var length_0 = pointsArray.length;
-
-  for (var i = 0; i < length_0; i++) {
-    if (pointsArray[i][0] < minX || minX < 0) {
-      minX = pointsArray[i][0];
-    }
-
-    if (pointsArray[i][0] > maxX) {
-      maxX = pointsArray[i][0];
-    }
-
-    if (pointsArray[i][1] < minY || minY < 0) {
-      minY = pointsArray[i][1];
-    }
-
-    if (pointsArray[i][1] > maxY) {
-      maxY = pointsArray[i][1];
-    }
-  }
-
-  var plane = {};
-  plane.x = minX;
-  plane.y = minY;
-  plane.width = maxX - minX;
-  plane.height = maxY - minY;
-  return plane;
-};
-const getCoordinates = function (item) {
-  var itemTopLeft = [item.x, item.y];
-  var itemTopRight = [item.x + item.width, item.y];
-  var itemBottomLeft = [item.x, item.y + item.height];
-  var itemBottomRight = [item.x + item.width, item.y + item.height];
-  var itemCoordinatesArr = [itemTopLeft, itemTopRight, itemBottomRight, itemBottomLeft];
-  return itemCoordinatesArr;
-};
-const getLines = function (item) {
-  var itemTopLeft = JSON.parse(JSON.stringify([item.x, item.y]));
-  var itemTopRight = JSON.parse(JSON.stringify([item.x + item.width, item.y]));
-  var itemBottomLeft = JSON.parse(JSON.stringify([item.x, item.y + item.height]));
-  var itemBottomRight = JSON.parse(JSON.stringify([item.x + item.width, item.y + item.height]));
-  var topLine = [itemTopLeft, itemTopRight];
-  var rightLine = [itemTopRight, itemBottomRight];
-  var bottomLine = [itemBottomLeft, itemBottomRight];
-  var leftLine = [itemTopLeft, itemBottomLeft];
-  var allLines = [topLine, rightLine, bottomLine, leftLine];
-  return allLines;
-};
-const arePlainsSame = function (A, B) {
-  if (A.x == B.x && A.y == B.y && A.width == B.width && A.height == B.height) {
-    return true;
-  } else {
-    return false;
-  }
-};
-const arePlainsIdentical = function (A, B) {
-  if (A.width == B.width && A.height == B.height) {
-    return true;
-  } else {
-    return false;
-  }
-};
-const isValidPlane = function (plane) {
-  if (plane.x >= 0 && plane.y >= 0 && plane.width > 0 && plane.height > 0) {
-    return true;
-  } else {
-    return false;
-  }
-};
-const sortPlainsByArea = function (planes, order = "dec") {
-  if (order == "asc") {
-    planes.sort(function (a, b) {
-      return (a.x + a.width) * (a.y + a.height) - (b.x + b.width) * (b.y + b.height);
-    });
-  } else {
-    planes.sort(function (a, b) {
-      return (b.x + b.width) * (b.y + b.height) - (a.x + a.width) * (a.y + a.height);
-    });
-  }
-
-  return planes;
-};
-const sortPlainsByHeight = function (planes, order = "dec") {
-  if (order == "asc") {
-    planes.sort(function (a, b) {
-      return a.height - b.height;
-    });
-  } else {
-    planes.sort(function (a, b) {
-      return b.height - a.height;
-    });
-  }
-
-  return planes;
-};
-const sortPlainsByDepth = function (planes, order = "dec") {
-  if (order == "asc") {
-    planes.sort(function (a, b) {
-      return a.y + a.height - (b.y + b.height);
-    });
-  } else {
-    planes.sort(function (a, b) {
-      return b.y + b.height - (a.y + a.height);
-    });
-  }
-
-  return planes;
-};
-const divideEqualNumber = function (a, DEFAULT = 0) {
-  var res = a / a;
-
-  if (res == NaN) {
-    return 0;
-  } else {
-    return 1;
-  }
-};
-const getMarginAtPoint = function (a) {
-  if (a == 0) {
-    return 0;
-  } else {
-    return publicConstants.MARGIN;
-  }
-};
-const getRowSequence = function (serialize) {
-  var rows = {};
-  var rowsArr = [];
-  var columns = {};
-  var length_0 = positionData.length;
-
-  for (var i = 0; i < length_0; i++) {
-    if (rows.hasOwnProperty(positionData[i].y)) {
-      rows[positionData[i].y].push(i);
-    } else {
-      rows[positionData[i].y] = [];
-      rowsArr.push(Number(positionData[i].y));
-      rows[positionData[i].y].push(i);
-    }
-  }
-
-  rowsArr.sort(function (a, b) {
-    return a - b;
-  });
-  var length_0 = rowsArr.length;
-
-  for (var i = 0; i < length_0; i++) {
-    rows[rowsArr[i]].sort(function (a, b) {
-      return positionData[a].x - positionData[b].x;
-    });
-  }
-
-  if (serialize != true) {
-    return {
-      rowOrder: rowsArr,
-      rows: rows
-    };
-  } else {
-    var arr = [];
-    var map = {};
-    var count = 0;
-    var length_0 = rowsArr.length;
-
-    for (var i = 0; i < length_0; i++) {
-      var length_1 = rows[rowsArr[i]].length;
-
-      for (var j = 0; j < length_1; j++) {
-        arr.push(rows[rowsArr[i]][j]);
-        map[rows[rowsArr[i]][j]] = count++;
-      }
-    }
-
-    return {
-      list: arr,
-      map: map
-    };
-  }
-};
 const adjustHeight = function (context, yMouseOrTouchPosition) {
   const e = variables_elements(context);
   const publicConstants = constants_publicConstants(context);
@@ -1062,6 +623,97 @@ const adjustScroll = function (context, limberGridViewOnVisibleAreaY, limberGrid
 
   return programScrolled;
 };
+// CONCATENATED MODULE: ./src/store/variables/essentials.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const setEssentialVariables = function (context, ev) {
+  context.store.variables.essentials = ev;
+};
+
+const getEssentialVariables = function (context) {
+  return context.store.variables.essentials;
+};
+
+const setPseudoContainerId = function (context, id) {
+  context.store.variables.essentials.pseudoContainerId = id;
+};
+
+const getPseudoContainerId = function (context) {
+  return context.store.variables.essentials.pseudoContainerId;
+};
+
+const setPositionData = function (context, pd) {
+  const len = pd.length;
+  const arr = new Array(len);
+
+  for (let i = 0; i < len; i++) {
+    arr[i] = { ...pd[i]
+    };
+  }
+
+  context.store.variables.essentials.positionData = arr;
+};
+
+const getPositionData = function (context) {
+  return context.store.variables.essentials.positionData;
+};
+
+const setModifiedPositionData = function (context, pd) {
+  const len = pd.length;
+  const arr = new Array(len);
+
+  for (let i = 0; i < len; i++) {
+    arr[i] = { ...pd[i]
+    };
+  }
+
+  context.store.variables.essentials.modifiedPositionData = arr;
+};
+
+const getModifiedPositionData = function (context) {
+  return context.store.variables.essentials.modifiedPositionData;
+};
+
+const setGridData = function (context, grid) {
+  context.store.variables.essentials.gridData = grid;
+};
+
+const getGridData = function (context) {
+  return context.store.variables.essentials.gridData;
+};
+
+const setCallbacks = function (context, cbs) {
+  context.store.variables.essentials.callbacks = cbs;
+};
+
+const getCallbacks = function (context) {
+  return context.store.variables.essentials.callbacks;
+};
+
+/* harmony default export */ var essentials = (getEssentialVariables);
+
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/eventHandlerUtils.js
 /*
 
@@ -1087,8 +739,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
-
-
 
 
 const calculateMousePosOnDesk = function (context, event) {
@@ -1234,7 +884,6 @@ Written by Subendra Kumar Sharma.
 
 
 
-
 const getUserActionData = (context, event) => {
   const publicConstants = constants_publicConstants(context);
   const options = variables_options(context);
@@ -1254,7 +903,7 @@ const getUserActionData = (context, event) => {
     X = touchPosOnLimberGridItem.x;
     Y = touchPosOnLimberGridItem.y;
   } else {
-    return false; // throw "Unidentified event";
+    return false;
   }
 
   const resizeUIBox = {
@@ -1319,8 +968,6 @@ const loadResizingState = (context, userActionData) => {
 };
 const unloadResizingState = (context, userActionData) => {
   const e = variables_elements(context);
-  const pd = getPositionData(context);
-  const item = pd[userActionData.itemIndex];
   e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
   e.$limberGridViewPseudoItem.classList.remove("limber-grid-view-pseudo-item-active");
   e.$limberGridViewPseudoItem.style.transform = `translate(0px, 0px)`;
@@ -1354,8 +1001,6 @@ const loadMoveState = (context, userActionData, event) => {
 };
 const unloadMoveState = (context, userActionData) => {
   const e = variables_elements(context);
-  const pd = getPositionData(context);
-  const item = pd[userActionData.itemIndex];
   e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
   e.$limberGridViewItems[userActionData.itemIndex].classList.remove("limber-grid-view-item-demo");
   e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-active");
@@ -1366,8 +1011,6 @@ const unloadMoveState = (context, userActionData) => {
 };
 const loadOnMoveState = (context, userActionData, event, type) => {
   const e = variables_elements(context);
-  const pd = getPositionData(context);
-  const item = pd[userActionData.itemIndex];
 
   if (type === "move") {
     e.$limberGridViewMoveGuide.classList.remove("limber-grid-view-move-guide-active");
@@ -1412,7 +1055,7 @@ Written by Subendra Kumar Sharma.
 
 */
 const isPointInsideRect = (rect, point) => {
-  const rectCo = rectUtils_getCoordinates(rect);
+  const rectCo = getCoordinates(rect);
 
   try {
     if (point.x > rectCo.tl.x && point.x < rectCo.tr.x && point.y > rectCo.tl.y && point.y < rectCo.bl.y) {
@@ -1425,7 +1068,7 @@ const isPointInsideRect = (rect, point) => {
   }
 };
 const doesPointTouchRect = (rect, point) => {
-  const rectCo = rectUtils_getCoordinates(rect);
+  const rectCo = getCoordinates(rect);
 
   try {
     if (point.x >= rectCo.tl.x && point.x <= rectCo.tr.x && point.y >= rectCo.tl.y && point.y <= rectCo.bl.y && !isPointInsideRect(rect, point)) {
@@ -1516,8 +1159,8 @@ const subtractRect = (rectA, rectB, oCoForm) => {
     return null;
   }
 
-  const rectACo = rectUtils_getCoordinates(rectA);
-  const rectBCo = rectUtils_getCoordinates(rectB);
+  const rectACo = getCoordinates(rectA);
+  const rectBCo = getCoordinates(rectB);
   /*
   	____|_______________|___
   	|	|				|	|
@@ -1838,7 +1481,7 @@ const isValidRectCoForm = function (rect) {
     return null;
   }
 };
-const rectUtils_getCoordinates = function (rect) {
+const getCoordinates = function (rect) {
   const tl = {
     x: rect.x,
     y: rect.y
@@ -1872,8 +1515,8 @@ const getRectObjectFromCo = function (rect) {
   };
 };
 const areRectsAdjacent = (rectA, rectB) => {
-  const rectACo = rectUtils_getCoordinates(rectA);
-  const rectBCo = rectUtils_getCoordinates(rectB); // if (!doRectsOnlyTouch(rectA, rectB)) {
+  const rectACo = getCoordinates(rectA);
+  const rectBCo = getCoordinates(rectB); // if (!doRectsOnlyTouch(rectA, rectB)) {
   // 	return false;
   // }
 
@@ -1893,8 +1536,8 @@ const mergeRects = (rectA, rectB, oCoForm) => {
   // if (doRectsOverlap(rectA, rectB)) {
   // 	return false;
   // }
-  const rectACo = rectUtils_getCoordinates(rectA);
-  const rectBCo = rectUtils_getCoordinates(rectB);
+  const rectACo = getCoordinates(rectA);
+  const rectBCo = getCoordinates(rectB);
   let result;
 
   const merge = (rectACo, rectBCo) => {
@@ -2126,8 +1769,8 @@ const mergeRects = (rectA, rectB, oCoForm) => {
 };
 const isRectInside = (rectA, rectB) => {
   // is rectB inside rectA
-  const rectACo = rectUtils_getCoordinates(rectA);
-  const rectBCo = rectUtils_getCoordinates(rectB);
+  const rectACo = getCoordinates(rectA);
+  const rectBCo = getCoordinates(rectB);
 
   if (rectACo.tl.x <= rectBCo.tl.x && rectACo.tr.x >= rectBCo.tr.x && rectACo.tl.y <= rectBCo.tl.y && rectACo.bl.y >= rectBCo.bl.y) {
     return true;
@@ -2156,7 +1799,7 @@ const areRectsIdentical = (rectA, rectB) => {
 
   return false;
 };
-// CONCATENATED MODULE: ./src/libs/eventHandlerLib/deskInteractionUtils.js
+// CONCATENATED MODULE: ./src/libs/interaction/itemInteractionUtils.js
 /*
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
@@ -2185,47 +1828,278 @@ Written by Subendra Kumar Sharma.
 
 
 
-const loadInitState = context => {
-  const e = variables_elements(context);
-  const publicConstants = constants_publicConstants(context);
-  e.$body.classList.add("limber-grid-view-body-tag-state-editing", "limber-grid-view-body-tag-state-editing-adding-cutting");
-  const len = e.$limberGridViewItems.length;
+const getResizeAffectedItems = (context, item, index) => {
+  const pd = getPositionData(context);
+  const mpd = getModifiedPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const len = pd.length;
+  const affectedArr = new Array(len);
+  let count = 0;
+  const _item = { ...item
+  };
+  _item.x -= privateConstants.MARGIN;
+  _item.y -= privateConstants.MARGIN;
+  _item.width += privateConstants.MARGIN;
+  _item.height += privateConstants.MARGIN;
+  const temp = {
+    x: 0,
+    y: 0,
+    height: 0,
+    width: 0
+  };
 
   for (let i = 0; i < len; i++) {
-    e.$limberGridViewItems[i].classList.add("limber-grid-view-item-resizing-state");
+    temp.x = pd[i].x - privateConstants.MARGIN;
+    temp.y = pd[i].y - privateConstants.MARGIN;
+    temp.width = pd[i].width + privateConstants.MARGIN;
+    temp.height = pd[i].height + privateConstants.MARGIN;
+
+    if ((doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) && i !== index) {
+      affectedArr[count++] = i;
+      mpd[i].x = undefined;
+      mpd[i].y = undefined;
+    }
   }
 
-  for (let i = 0; i < len; i++) {
-    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resizing-state");
-  } // e.$limberGridViewAddItemGuide[0].style.height = 1 + "px";
-  // e.$limberGridViewAddItemGuide[0].style.width = 1 + "px";
-  // e.$limberGridViewAddItemGuide[0].style.transform =
-  // 	"translate(" + x + "px, " + y + "px)";
+  const result = new Array(count + 1);
 
-
-  if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
-    e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-active");
-  } else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
-    e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-active", "limber-grid-view-add-cut-guide-cut-mode");
+  for (let i = 0; i < count; i++) {
+    result[i] = affectedArr[i];
   }
 
-  e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
-  e.$limberGridViewHeightAdjustGuide.classList.add("limber-grid-view-height-adjust-guide-active");
+  result[count] = index;
+  return result;
 };
-const unloadInitState = context => {
+const getMoveAffectedItems = (context, item, index) => {
+  const pd = getPositionData(context);
+  const mpd = getModifiedPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const len = pd.length;
+  const affectedArr = new Array(len);
+  let count = 0;
+  const _item = { ...item
+  };
+  _item.x -= privateConstants.MARGIN;
+  _item.y -= privateConstants.MARGIN;
+  _item.width += privateConstants.MARGIN;
+  _item.height += privateConstants.MARGIN;
+  const temp = {
+    x: 0,
+    y: 0,
+    height: 0,
+    width: 0
+  };
+
+  for (let i = 0; i < len; i++) {
+    temp.x = pd[i].x - privateConstants.MARGIN;
+    temp.y = pd[i].y - privateConstants.MARGIN;
+    temp.width = pd[i].width + privateConstants.MARGIN;
+    temp.height = pd[i].height + privateConstants.MARGIN;
+
+    if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+      if (i !== index) {
+        affectedArr[count++] = i;
+        mpd[i].x = undefined;
+        mpd[i].y = undefined;
+      }
+    }
+  }
+
+  const result = new Array(count + 1);
+
+  for (let i = 0; i < count; i++) {
+    result[i] = affectedArr[i];
+  }
+
+  result[count] = index;
+  return result;
+};
+const resizeItemInitialChecks = (context, index, width, height) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+
+  if (index < 0 || index >= pd.length) {
+    // invalid index
+    throw "Index out of bounds.";
+  }
+
+  if (typeof width !== "number" || typeof height !== "number") {
+    throw "Width or Height is not a number.";
+  }
+
+  if (pd[index].x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
+    // falls outside
+    throw "Right edges falls outside the grid area.";
+  }
+
+  if (width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH || height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
+    // very small. TO DO: let the developers decide the smallest item size but can't be less than 150
+    throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
+  }
+
+  return true;
+};
+const moveItemInitialChecks = (context, index, toX, toY) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+
+  if (index < 0 || index >= pd.length) {
+    // invalid index
+    throw "Index out of bounds.";
+  }
+
+  if (typeof toX !== "number" || typeof toY !== "number") {
+    throw "toX or toY is not a number.";
+  }
+
+  if (toX < privateConstants.MARGIN || toY < privateConstants.MARGIN) {
+    // falls outside
+    throw "Left edges falls outside the grid area.";
+  }
+
+  if (toX + pd[index].width + privateConstants.MARGIN > privateConstants.WIDTH) {
+    // falls outside
+    throw "Right edges falls outside the grid area.";
+  }
+
+  return true;
+};
+const resetDemoUIChanges = context => {
+  const pd = getPositionData(context);
   const e = variables_elements(context);
-  e.$body.classList.remove("limber-grid-view-body-tag-state-editing", "limber-grid-view-body-tag-state-editing-adding-cutting");
-  const len = e.$limberGridViewItems.length;
+  const len = pd.length;
 
   for (var i = 0; i < len; i++) {
-    e.$limberGridViewItems[i].classList.remove("limber-grid-view-item-resizing-state");
-    e.$limberGridViewPseudoItem.classList.remove("limber-grid-view-pseudo-item-resizing-state");
+    e.$limberGridViewItems[i].style.transform = "translate(" + pd[i].x + "px, " + pd[i].y + "px)";
+    e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
+  }
+};
+const movePointAdjust = (context, toX, toY) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const len = pd.length;
+  const temp = {
+    x: 0,
+    y: 0,
+    height: 0,
+    width: 0
+  };
+  const pt = {
+    x: toX,
+    y: toY
+  };
+  let inside;
+
+  for (let i = 0; i < len; i++) {
+    temp.x = pd[i].x - privateConstants.MARGIN;
+    temp.y = pd[i].y - privateConstants.MARGIN;
+    temp.width = pd[i].width + privateConstants.MARGIN * 2;
+    temp.height = pd[i].height + privateConstants.MARGIN * 2;
+
+    if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
+      inside = i;
+      break;
+    }
   }
 
-  e.$limberGridViewAddCutGuide.classList.remove("limber-grid-view-add-cut-guide-active", "limber-grid-view-add-cut-guide-cut-mode", "limber-grid-view-add-cut-guide-add-allow", "limber-grid-view-add-cut-guide-add-disallow");
-  e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
-  e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
-  e.$limberGridViewTouchHoldGuide.classList.remove("limber-grid-view-touch-hold-guide-active");
+  if (inside !== undefined) {
+    toX = pd[inside].x;
+    toY = pd[inside].y;
+  }
+
+  return {
+    toX,
+    toY,
+    overlappedItemIndex: inside
+  };
+};
+// EXTERNAL MODULE: external {"commonjs":"IntervalTreeJS","commonjs2":"IntervalTreeJS","amd":"IntervalTreeJS","root":"IntervalTreeJS"}
+var external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_ = __webpack_require__(0);
+
+// EXTERNAL MODULE: external {"commonjs":"ClosestBST","commonjs2":"ClosestBST","amd":"ClosestBST","root":"ClosestBST"}
+var external_commonjs_ClosestBST_commonjs2_ClosestBST_amd_ClosestBST_root_ClosestBST_ = __webpack_require__(1);
+
+// CONCATENATED MODULE: ./src/libs/utils/utils.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const emptyObject = function (obj) {
+  const keys = Object.keys(obj);
+  const length = keys.length;
+
+  for (let i = 0; i < length; i++) {
+    delete obj[keys[i]];
+  }
+};
+const isMobile = function (context) {
+  const isMobileFunction = context.options.isMobileCheck;
+
+  if (isMobileFunction) {
+    return isMobileFunction();
+  }
+
+  return window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px)").matches;
+};
+const fixTo = (num, to = 6) => {
+  return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
+};
+const filter = arr => {
+  const len = arr.length;
+  const temp = new Array(len);
+  let count = 0;
+
+  for (let i = 0; i < len; i++) {
+    if (arr[i] !== null && arr[i] !== undefined) {
+      temp[count++] = arr[i];
+    }
+  }
+
+  const res = new Array(count);
+
+  for (let i = 0; i < count; i++) {
+    res[i] = temp[i];
+  }
+
+  return res;
+};
+const getRandomString = (len = 22) => {
+  const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
+  const arr = new Array(len);
+
+  for (let i = 0; i < len; i++) {
+    arr[i] = alpNum[Math.floor(Math.random() * 36)];
+  }
+
+  return arr.join("");
+};
+const getItemDimenWithMargin = (MARGIN, item) => {
+  return {
+    x: item.x - MARGIN,
+    y: item.y - MARGIN,
+    width: item.width + MARGIN * 2,
+    height: item.height + MARGIN * 2
+  };
 };
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeUtils.js
 /*
@@ -2258,20 +2132,6 @@ Written by Subendra Kumar Sharma.
 
 
 
-const isFlippingPosPossible = context => {
-  const pd = getPositionData(context);
-
-  if (affectedItems.length === 2) {
-    const diff = Math.abs(pd[affectedItems[0]].y - pd[affectedItems[1]].y);
-
-    if (diff > privateConstants.HEIGHT) {
-      // to check if both lie on th visible screen or viewport
-      return false;
-    }
-
-    return true;
-  }
-};
 const getMinMaxXY = (context, affectedItems, resizedRightX, resizedBottomY, toY, movedBottomY) => {
   const pd = getPositionData(context);
   const privateConstants = constants_privateConstants(context);
@@ -2467,12 +2327,7 @@ const getResizeWSItemsDetail = (context, wsCo, topWsCo, bottomWsCo, cWsCo, arran
   };
   const wsPlusTopWs = getRectObjectFromCo(wsPlusTopWsCo);
   const bottomWs = getRectObjectFromCo(bottomWsCo);
-  const cWs = getRectObjectFromCo(cWsCo); // const itemsToArrangeMap = {};
-  // const iToALen = itemsToArrange.length;
-  // for (let i = 0; i < iToALen; i++) {
-  // 	itemsToArrangeMap[itemsToArrange[i]] = true;
-  // }
-
+  const cWs = getRectObjectFromCo(cWsCo);
   let count = 0;
   const iToALen = itemsToArrange.length;
 
@@ -2558,26 +2413,7 @@ const cBSTRComp = function () {
 };
 const getScore = (rect, maxHWSum) => {
   return (rect.width + rect.height) / maxHWSum;
-}; // export const assignScoreToFreeRects = (freeRects) => {
-// 	const len = freeRects.length;
-// 	let maxHWSum = 0;
-// 	let sum = 0;
-// 	for (let i = 0; i < len; i++) {
-// 		sum = freeRects[i].d.rect.width + freeRects[i].d.rect.height;
-// 		if (sum > maxHWSum) {
-// 			maxHWSum = sum;
-// 		}
-// 	}
-// 	let maxScore = 0;
-// 	for (let i = 0; i < len; i++) {
-// 		freeRects[i].d.score = getScore(freeRects[i].d.rect, maxHWSum);
-// 		if (freeRects[i].d.score > maxScore) {
-// 			maxScore = freeRects[i].d.score;
-// 		}
-// 	}
-// 	return { maxScore, maxHWSum };
-// };
-
+};
 const getItemsToArrangeScore = (context, affectedItems) => {
   const mpd = getModifiedPositionData(context);
   const len = affectedItems.length;
@@ -2756,204 +2592,6 @@ const cutSpaceAllowCheck = function (context, x, y, width, height) {
     shiftHeight: height
   };
 };
-// CONCATENATED MODULE: ./src/store/variables/bindedFunctions.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-const getBindedFunctions = context => {
-  return context.store.variables.bindedFunctions;
-};
-// CONCATENATED MODULE: ./src/libs/eventHandlerLib/initializers.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-
-
-
- // import { onItemMouseDown, onItemTouchStart } from "./itemInteraction";
-// import {
-// 	onLimberGridMouseDown,
-// 	onLimberGridTouchStart,
-// } from "./deskInteraction";
-
- // import {
-// 	getItemInteractionVars,
-// 	getDeskInteractionVars,
-// } from "../../store/variables/eventSpecific";
-// import { onItemClick } from "./miscellaneous";
-
-const reInitializeEvents = function () {
-  unInitializeEvents();
-  initializeEvents();
-};
-const initializeVariables = function () {};
-const initializeEvents = function () {
-  const options = variables_options(this);
-  const e = variables_elements(this);
-  const callbacks = getCallbacks(this);
-  const bf = getBindedFunctions(this);
-
-  if (options.editable === true) {
-    if (!isMobile(this)) {
-      if (options.enableInteractiveAddAndCut !== false) {
-        e.$limberGridView.addEventListener("mousedown", bf.onDeskMouseDown);
-
-        if (options.enableTouchInteraction !== false) {
-          e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
-        }
-      }
-    }
-
-    var len = e.$limberGridViewItems.length;
-
-    for (var i = 0; i < len; i++) {
-      if (!isMobile(this)) {
-        e.$limberGridViewItems[i].addEventListener("mousedown", bf.onItemMouseDown);
-
-        if (options.enableTouchInteraction !== false) {
-          e.$limberGridViewItems[i].addEventListener("touchstart", bf.onItemTouchStart);
-        }
-      }
-
-      if (callbacks.onItemClickCallback) {
-        e.$limberGridViewItems[i].addEventListener("click", bf.onItemClick);
-      }
-    }
-  }
-};
-const unInitializeEvents = function () {
-  const options = variables_options(this);
-  const e = variables_elements(this);
-  const bf = getBindedFunctions(this);
-
-  if (options.editable === true) {
-    if (e.$limberGridView !== undefined) {
-      e.$limberGridView.removeEventListener("mousedown", bf.onDeskMouseDown);
-      e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
-    }
-
-    if (e.$limberGridViewItems !== undefined) {
-      const len = e.$limberGridViewItems.length;
-
-      for (let i = 0; i < len; i++) {
-        e.$limberGridViewItems[i].removeEventListener("mousedown", bf.onItemMouseDown);
-        e.$limberGridViewItems[i].removeEventListener("touchstart", bf.onItemTouchStart);
-        e.$limberGridViewItems[i].removeEventListener("click", bf.onItemClick);
-      }
-    }
-  }
-};
-const initializeItemTouchEvents = function () {
-  const e = variables_elements(this);
-  const bf = getBindedFunctions(this);
-
-  if (e.$limberGridViewItems !== undefined) {
-    const len = e.$limberGridViewItems.length;
-
-    for (let i = 0; i < len; i++) {
-      e.$limberGridViewItems[i].addEventListener("mousedown", bf.onItemMouseDown);
-      e.$limberGridViewItems[i].addEventListener("touchstart", bf.onItemTouchStart);
-    }
-  }
-};
-const unInitializeItemTouchEvents = function () {
-  const e = variables_elements(this);
-  const bf = getBindedFunctions(this);
-
-  if (e.$limberGridViewItems !== undefined) {
-    const len = e.$limberGridViewItems.length;
-
-    for (let i = 0; i < len; i++) {
-      e.$limberGridViewItems[i].removeEventListener("mousedown", bf.onItemMouseDown);
-      e.$limberGridViewItems[i].removeEventListener("touchstart", bf.onItemTouchStart);
-    }
-  }
-};
-// CONCATENATED MODULE: ./src/store/variables/eventSpecific.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-const getItemInteractionVars = function (context) {
-  return context.store.variables.eventSpecific.itemInteraction;
-};
-const setItemInteractionVarsByName = function (context, name, value) {
-  context.store.variables.eventSpecific.itemInteraction[name] = value;
-};
-const getDeskInteractionVars = function (context) {
-  return context.store.variables.eventSpecific.deskInteraction;
-};
-const setDeskInteractionVarsByName = function (context, name, value) {
-  context.store.variables.eventSpecific.deskInteraction[name] = value;
-};
-// EXTERNAL MODULE: external {"commonjs":"IntervalTreeJS","commonjs2":"IntervalTreeJS","amd":"IntervalTreeJS","root":"IntervalTreeJS"}
-var external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_ = __webpack_require__(0);
-
-// EXTERNAL MODULE: external {"commonjs":"ClosestBST","commonjs2":"ClosestBST","amd":"ClosestBST","root":"ClosestBST"}
-var external_commonjs_ClosestBST_commonjs2_ClosestBST_amd_ClosestBST_root_ClosestBST_ = __webpack_require__(1);
-
 // CONCATENATED MODULE: ./src/libs/array/arrayUtils.js
 /*
 
@@ -2980,9 +2618,8 @@ Written by Subendra Kumar Sharma.
 
 */
 const shuffle = arr => {
-  let temp,
-      len = arr.length,
-      j;
+  let temp, j;
+  const len = arr.length;
 
   for (let i = 0; i < len; i++) {
     j = Math.floor(Math.random() * (i + 1));
@@ -3221,11 +2858,8 @@ Written by Subendra Kumar Sharma.
 
 
 
-
-
 const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = false) => {
   const privateConstants = constants_privateConstants(context);
-  const publicConstants = constants_publicConstants(context);
   const mpd = getModifiedPositionData(context);
   const p1 = performance.now();
   const idCount = {
@@ -3396,7 +3030,6 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
 };
 const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRightX, isDemo = false) => {
   const privateConstants = constants_privateConstants(context);
-  const publicConstants = constants_publicConstants(context);
   const p1 = performance.now();
   const idCount = {
     idCount: 0
@@ -3625,7 +3258,6 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
 };
 const arrangeFromHeight = async (context, itemsToArrange, height) => {
   const privateConstants = constants_privateConstants(context);
-  const publicConstants = constants_publicConstants(context);
   const p1 = performance.now();
   const idCount = {
     idCount: 0
@@ -3805,7 +3437,7 @@ const sweepLineTop = (area, items) => {
     breakSig = false;
 
     for (let j = 0; j < rLen; j++) {
-      if (areRectsOnSameYAxisExPath(rectUtils_getCoordinates(items[i]), rectUtils_getCoordinates(res[j].d.rect)) && !areRectsIdentical(rectUtils_getCoordinates(items[i]), rectUtils_getCoordinates(res[j].d.rect))) {
+      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
         breakSig = true;
         break;
       }
@@ -3845,7 +3477,7 @@ const sweepLineBottom = (area, items) => {
     breakSig = false;
 
     for (let j = 0; j < rLen; j++) {
-      if (areRectsOnSameYAxisExPath(rectUtils_getCoordinates(items[i]), rectUtils_getCoordinates(res[j].d.rect)) && !areRectsIdentical(rectUtils_getCoordinates(items[i]), rectUtils_getCoordinates(res[j].d.rect))) {
+      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
         breakSig = true;
         break;
       }
@@ -3889,7 +3521,7 @@ const sweepLine = (context, area, areaCo, items, lastId) => {
   const len = items.length;
 
   for (let i = 0; i < len; i++) {
-    tempItem = rectUtils_getCoordinates(items[i]);
+    tempItem = getCoordinates(items[i]);
     fInterval = {
       low: tempItem.tl.y,
       high: tempItem.bl.y
@@ -4039,7 +3671,7 @@ const isRectIdenticalOrInside = (it, obj) => {
   const len = (res === null || res === void 0 ? void 0 : res.length) || 0;
 
   for (let i = 0; i < len; i++) {
-    if (areRectsIdentical(rectUtils_getCoordinates(obj.d.rect), rectUtils_getCoordinates(res[i].d.rect)) || isRectInside(res[i].d.rect, obj.d.rect)) {
+    if (areRectsIdentical(getCoordinates(obj.d.rect), getCoordinates(res[i].d.rect)) || isRectInside(res[i].d.rect, obj.d.rect)) {
       isIdenticalOrInside = true;
     }
   }
@@ -4359,6 +3991,852 @@ const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
     idCount: lastId1
   };
 };
+// CONCATENATED MODULE: ./src/libs/interaction/itemInteraction.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+
+
+const resizeItem = async function (index, width, height) {
+  const pd = getPositionData(this);
+  const e = variables_elements(this);
+  const callbacks = getCallbacks(this);
+  index = parseInt(index);
+  resizeItemInitialChecks(this, index, width, height);
+  resetDemoUIChanges(this);
+  setModifiedPositionData(this, pd);
+  const mpd = getModifiedPositionData(this);
+  mpd[index].width = width;
+  mpd[index].height = height;
+  const modifiedItem = {
+    x: pd[index].x,
+    y: pd[index].y,
+    width: width,
+    height: height
+  };
+  const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
+  const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width);
+  setPositionData(this, mpd);
+  e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+  e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
+  const arrangedArr = Object.keys(arranged);
+  const len = arrangedArr.length;
+
+  for (let i = 0; i < len; i++) {
+    const key = arrangedArr[i];
+    const item = arranged[key];
+    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
+  }
+
+  if (callbacks.resizeComplete) {
+    callbacks.resizeComplete(index, width, height, arrangedArr);
+  }
+};
+const resizeItemDemo = async function (index, width, height) {
+  const pd = getPositionData(this);
+  const e = variables_elements(this);
+  index = parseInt(index);
+  resizeItemInitialChecks(this, index, width, height);
+  resetDemoUIChanges(this);
+  setModifiedPositionData(this, pd);
+  const mpd = getModifiedPositionData(this);
+  mpd[index].width = width;
+  mpd[index].height = height;
+  const modifiedItem = {
+    x: pd[index].x,
+    y: pd[index].y,
+    width: width,
+    height: height
+  };
+  const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
+  const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width, true);
+  const arrangedArr = Object.keys(arranged);
+  const len = arrangedArr.length;
+
+  for (let i = 0; i < len; i++) {
+    const key = arrangedArr[i];
+    const item = arranged[key];
+    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
+  }
+};
+const moveItem = async function (index, toX, toY) {
+  const pd = getPositionData(this);
+  const e = variables_elements(this);
+  const callbacks = getCallbacks(this);
+  const publicConstants = constants_publicConstants(this);
+  index = parseInt(index);
+
+  if (publicConstants.LATCH_MOVED_ITEM) {
+    // change toX & toY to top left of the overlapping item
+    const adjustedPt = movePointAdjust(this, toX, toY);
+    toX = adjustedPt.toX;
+    toY = adjustedPt.toY;
+  }
+
+  moveItemInitialChecks(this, index, toX, toY);
+  resetDemoUIChanges(this);
+  setModifiedPositionData(this, pd);
+  const mpd = getModifiedPositionData(this);
+  mpd[index].x = toX;
+  mpd[index].y = toY;
+  const modifiedItem = {
+    x: toX,
+    y: toY,
+    width: pd[index].width,
+    height: pd[index].height
+  };
+  const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
+  const arranged = await arrangeMove(this, affectedItems, toY, toY + pd[index].height);
+  setPositionData(this, mpd);
+  e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
+  e.$limberGridViewItems[index].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+
+  if (!publicConstants.ANIMATE_MOVED_ITEM) {
+    // below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
+    e.$limberGridViewItems[index].style.transition = "none";
+    setTimeout(() => {
+      e.$limberGridViewItems[index].style.transition = "";
+    }, publicConstants.ANIMATE_TIME);
+  }
+
+  const arrangedArr = Object.keys(arranged);
+  const len = arrangedArr.length;
+
+  for (let i = 0; i < len; i++) {
+    const key = arrangedArr[i];
+    const item = arranged[key];
+    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
+  }
+
+  if (callbacks.resizeComplete) {
+    callbacks.moveComplete(index, toX, toY, arrangedArr);
+  }
+};
+const moveItemDemo = async function (index, toX, toY) {
+  const pd = getPositionData(this);
+  const e = variables_elements(this);
+  const publicConstants = constants_publicConstants(this);
+  index = parseInt(index);
+
+  if (publicConstants.LATCH_MOVED_ITEM) {
+    // change toX & toY to top left of the overlapping item
+    const adjustedPt = movePointAdjust(this, toX, toY);
+    toX = adjustedPt.toX;
+    toY = adjustedPt.toY;
+
+    if (!isNaN(adjustedPt.overlappedItemIndex)) {
+      e.$limberGridViewMoveGuide.style.transform = "translate(" + toX + "px, " + toY + "px)";
+      e.$limberGridViewMoveGuide.classList.add("limber-grid-view-move-guide-active");
+    }
+  }
+
+  moveItemInitialChecks(this, index, toX, toY);
+  resetDemoUIChanges(this);
+  setModifiedPositionData(this, pd);
+  const mpd = getModifiedPositionData(this);
+  mpd[index].x = toX;
+  mpd[index].y = toY;
+  const modifiedItem = {
+    x: toX,
+    y: toY,
+    width: pd[index].width,
+    height: pd[index].height
+  };
+  const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
+  const arranged = await arrangeMove(this, affectedItems, toY, toY + pd[index].height, true);
+  e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
+  const arrangedArr = Object.keys(arranged);
+  const len = arrangedArr.length;
+
+  for (let i = 0; i < len; i++) {
+    const key = arrangedArr[i];
+    const item = arranged[key];
+    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
+  }
+};
+// CONCATENATED MODULE: ./src/store/variables/bindedFunctions.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const getBindedFunctions = context => {
+  return context.store.variables.bindedFunctions;
+};
+// CONCATENATED MODULE: ./src/store/variables/eventSpecific.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const getItemInteractionVars = function (context) {
+  return context.store.variables.eventSpecific.itemInteraction;
+};
+const setItemInteractionVarsByName = function (context, name, value) {
+  context.store.variables.eventSpecific.itemInteraction[name] = value;
+};
+const getDeskInteractionVars = function (context) {
+  return context.store.variables.eventSpecific.deskInteraction;
+};
+const setDeskInteractionVarsByName = function (context, name, value) {
+  context.store.variables.eventSpecific.deskInteraction[name] = value;
+};
+// CONCATENATED MODULE: ./src/libs/eventHandlerLib/itemInteraction.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+
+
+
+
+
+
+
+const onItemMouseDown = function (event) {
+  const e = variables_elements(this);
+  const publicConstants = constants_publicConstants(this);
+  const pd = getPositionData(this);
+  const iiv = getItemInteractionVars(this);
+  const bf = getBindedFunctions(this);
+
+  if (event.which !== 1) {
+    return;
+  }
+
+  const _userActionData = getUserActionData(this, event);
+
+  if (!_userActionData) {
+    return;
+  }
+
+  Object.assign(iiv.userActionData, _userActionData);
+
+  if (iiv.userActionData.type === "move") {
+    iiv.mouseDownCancel = false;
+    iiv.mouseDownTimerComplete = false;
+    document.addEventListener("mousemove", bf.onItemMouseMove);
+    document.addEventListener("mouseup", bf.onItemMouseUp);
+    document.addEventListener("contextmenu", bf.onItemContextMenu);
+    clearTimeout(iiv.longPressCheck);
+    iiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
+    event.preventDefault();
+  } else if (iiv.userActionData.type === "resize") {
+    iiv.mouseDownCancel = false;
+    iiv.mouseDownTimerComplete = true;
+    e.$limberGridView.addEventListener("mousemove", bf.onItemMouseMove);
+    document.addEventListener("mouseup", bf.onItemMouseUp);
+    document.addEventListener("contextmenu", bf.onItemContextMenu);
+    iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
+    iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
+    loadResizingState(this, iiv.userActionData);
+    event.preventDefault();
+  }
+
+  event.stopPropagation();
+};
+const onItemTouchStart = function (event) {
+  const e = variables_elements(this);
+  const publicConstants = constants_publicConstants(this);
+  const pd = getPositionData(this);
+  const iiv = getItemInteractionVars(this);
+  const bf = getBindedFunctions(this);
+
+  if (event.touches.length !== 1) {
+    onItemTouchContextMenu.call(this, event);
+    return;
+  }
+
+  if (event.which !== 0) {
+    onItemTouchContextMenu.call(this, event);
+    return;
+  }
+
+  const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
+
+  if (touchPosOnLimberGridItem === false) {
+    return;
+  }
+
+  const _userActionData = getUserActionData(this, event);
+
+  if (!_userActionData) {
+    return;
+  }
+
+  Object.assign(iiv.userActionData, _userActionData);
+
+  if (iiv.userActionData.type === "move") {
+    iiv.touchHoldCancel = false;
+    iiv.touchHoldTimerComplete = false;
+    document.addEventListener("touchmove", bf.onItemTouchMove);
+    document.addEventListener("touchend", bf.onItemTouchEnd);
+    document.addEventListener("touchcancel", bf.onItemTouchCancel);
+    document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
+    iiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
+    event.preventDefault();
+  } else if (iiv.userActionData.type === "resize") {
+    iiv.touchHoldCancel = false;
+    iiv.touchHoldTimerComplete = true;
+    e.$limberGridView.addEventListener("touchmove", bf.onItemTouchMove);
+    document.addEventListener("touchend", bf.onItemTouchEnd);
+    document.addEventListener("touchcancel", bf.onItemTouchCancel);
+    document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
+    iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
+    iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
+    loadResizingState(this, iiv.userActionData);
+    event.preventDefault();
+  }
+
+  event.stopPropagation();
+};
+const mouseDownCheck = function (event) {
+  const iiv = getItemInteractionVars(this);
+
+  if (iiv.mouseDownCancel === false) {
+    iiv.mouseDownTimerComplete = true;
+    loadMoveState(this, iiv.userActionData, event);
+  }
+};
+const tapHoldCheck = function (event) {
+  const iiv = getItemInteractionVars(this);
+
+  if (iiv.touchHoldCancel === false) {
+    iiv.touchHoldTimerComplete = true;
+    loadMoveState(this, iiv.userActionData, event);
+  }
+};
+const onItemMouseMove = function (event) {
+  const e = variables_elements(this);
+  const privateConstants = constants_privateConstants(this);
+  const publicConstants = constants_publicConstants(this);
+  const iiv = getItemInteractionVars(this);
+
+  if (iiv.mouseDownTimerComplete === true) {
+    if (iiv.userActionData.type === "move") {
+      loadOnMoveState(this, iiv.userActionData, event, "move");
+      clearTimeout(iiv.showMoveDemoTimeOutVariable);
+      const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+
+      if (mousePositionOnLimberGrid !== false) {
+        const yMousePosition = mousePositionOnLimberGrid.y;
+        adjustHeight(this, yMousePosition);
+        iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, mousePositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
+      }
+    } else {
+      loadOnMoveState(this, iiv.userActionData, event, "resize");
+      clearTimeout(iiv.showResizeDemoTimeOutVariable);
+      const scrollTop = e.$limberGridView.scrollTop;
+      const scrollLeft = e.$limberGridView.scrollLeft;
+      const x = iiv.userActionData.itemX;
+      const y = iiv.userActionData.itemY;
+      const newWidth = event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
+      const newHeight = event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
+      iiv.userActionData.newWidth = newWidth;
+      iiv.userActionData.newHeight = newHeight;
+      const yMousePosition = event.offsetY + scrollTop;
+      adjustHeight(this, yMousePosition);
+
+      if (newWidth > 0 && newHeight > 0) {
+        e.$limberGridViewPseudoItem.style.width = newWidth + "px";
+        e.$limberGridViewPseudoItem.style.height = newHeight + "px";
+        e.$limberGridViewPseudoItem.setAttribute("data-after", `w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`);
+      }
+
+      iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
+    }
+  } else {
+    iiv.mouseDownCancel = true;
+    onItemContextMenu.call(this, event); // canceling mouseHold
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+};
+const onItemTouchMove = function (event) {
+  const e = variables_elements(this);
+  const privateConstants = constants_privateConstants(this);
+  const publicConstants = constants_publicConstants(this);
+  const iiv = getItemInteractionVars(this);
+
+  if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
+    if (iiv.userActionData.type === "move") {
+      loadOnMoveState(this, iiv.userActionData, event, "move");
+      clearTimeout(iiv.showMoveDemoTimeOutVariable);
+      const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+
+      if (touchPositionOnLimberGrid !== false) {
+        const scrollTop = e.$limberGridView.scrollTop;
+        const scrollLeft = e.$limberGridView.scrollLeft;
+        const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
+        const limberGridViewWidthVisibleWidth = e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
+        const limberGridViewHeightVisibleHeight = e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
+        const limberGridViewOnVisibleAreaX = touchPositionOnLimberGrid.x + privateConstants.PADDING_LEFT - scrollLeft;
+        const limberGridViewOnVisibleAreaY = touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
+        const yTouchPosition = touchPositionOnLimberGrid.y;
+        adjustHeight(this, yTouchPosition);
+        const programScrolled = adjustScroll(this, limberGridViewOnVisibleAreaY, limberGridViewHeightVisibleHeight);
+
+        if (programScrolled !== true) {
+          iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
+        }
+      }
+    } else {
+      loadOnMoveState(this, iiv.userActionData, event, "resize");
+      clearTimeout(iiv.showResizeDemoTimeOutVariable);
+      const x = iiv.userActionData.itemX;
+      const y = iiv.userActionData.itemY;
+      const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+      const newWidth = touchPositionOnLimberGrid.x - x;
+      const newHeight = touchPositionOnLimberGrid.y - y;
+
+      if (touchPositionOnLimberGrid !== false) {
+        iiv.userActionData.newWidth = newWidth;
+        iiv.userActionData.newHeight = newHeight;
+
+        if (newWidth > 0 && newHeight > 0) {
+          e.$limberGridViewPseudoItem.style.width = newWidth + "px";
+          e.$limberGridViewPseudoItem.style.height = newHeight + "px";
+          e.$limberGridViewPseudoItem.setAttribute("data-after", `w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`);
+        }
+      }
+
+      if (touchPositionOnLimberGrid !== false) {
+        const scrollTop = e.$limberGridView.scrollTop;
+        const scrollLeft = e.$limberGridView.scrollLeft;
+        const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
+        const limberGridViewWidthVisibleWidth = e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
+        const limberGridViewHeightVisibleHeight = e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
+        const limberGridViewOnVisibleAreaX = touchPositionOnLimberGrid.x + privateConstants.PADDING_LEFT - scrollLeft;
+        const limberGridViewOnVisibleAreaY = touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
+        const yTouchPosition = touchPositionOnLimberGrid.y;
+        adjustHeight(this, yTouchPosition);
+        const programScrolled = adjustScroll(this, limberGridViewOnVisibleAreaY, limberGridViewHeightVisibleHeight);
+
+        if (programScrolled !== true) {
+          iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
+        }
+      }
+    }
+  } else {
+    iiv.touchHoldCancel = true;
+    onItemTouchContextMenu.call(this, event); // canceling taphold
+  }
+
+  event.stopPropagation();
+};
+const onItemMouseUp = async function (event) {
+  const iiv = getItemInteractionVars(this);
+  clearTimeout(iiv.showMoveDemoTimeOutVariable);
+  clearTimeout(iiv.showResizeDemoTimeOutVariable);
+
+  if (iiv.mouseDownTimerComplete === true) {
+    if (iiv.userActionData.type === "move") {
+      const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+      var updatedCoordinates = {};
+
+      try {
+        if (mousePositionOnLimberGrid !== false) {
+          await moveItem.call(this, iiv.userActionData.itemIndex, mousePositionOnLimberGrid.x, mousePositionOnLimberGrid.y);
+          updatedCoordinates.x = mousePositionOnLimberGrid.x;
+          updatedCoordinates.y = mousePositionOnLimberGrid.y;
+        } else {
+          throw "Mouse position outside grid area.";
+        }
+      } catch (error) {
+        console.error(error);
+        revertShowMoveOrResizeDemo(this);
+      }
+    } else {
+      try {
+        var newWidth = iiv.userActionData.newWidth;
+        var newHeight = iiv.userActionData.newHeight;
+        await resizeItem.call(this, iiv.userActionData.itemIndex, newWidth, newHeight);
+      } catch (error) {
+        revertShowMoveOrResizeDemo(this);
+      }
+    }
+  } else {
+    iiv.mouseDownCancel = true;
+  }
+
+  onItemContextMenu.call(this, event);
+  iiv.userActionData = {};
+};
+const onItemTouchEnd = async function (event) {
+  const iiv = getItemInteractionVars(this);
+  clearTimeout(iiv.showMoveDemoTimeOutVariable);
+  clearTimeout(iiv.showResizeDemoTimeOutVariable);
+
+  if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
+    if (iiv.userActionData.type === "move") {
+      const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+      var updatedCoordinates = {};
+
+      try {
+        if (touchPositionOnLimberGrid !== false) {
+          await moveItem.call(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid.x, touchPositionOnLimberGrid.y);
+          updatedCoordinates.x = touchPositionOnLimberGrid.x;
+          updatedCoordinates.y = touchPositionOnLimberGrid.y;
+        } else {
+          throw "Touch position outside grid area.";
+        }
+      } catch (error) {
+        console.error(error);
+        revertShowMoveOrResizeDemo(this);
+      }
+    } else {
+      try {
+        var newWidth = iiv.userActionData.newWidth;
+        var newHeight = iiv.userActionData.newHeight;
+        await resizeItem.call(this, iiv.userActionData.itemIndex, newWidth, newHeight);
+      } catch (error) {
+        revertShowMoveOrResizeDemo(this);
+      }
+    }
+  } else {
+    iiv.touchHoldCancel = true;
+  }
+
+  onItemTouchContextMenu.call(this, event);
+  event.stopPropagation();
+  iiv.userActionData = {};
+};
+const onItemContextMenu = function (event) {
+  const e = variables_elements(this);
+  const iiv = getItemInteractionVars(this);
+  const bf = getBindedFunctions(this);
+  clearTimeout(iiv.showMoveDemoTimeOutVariable);
+  clearTimeout(iiv.showResizeDemoTimeOutVariable);
+  clearTimeout(iiv.longPressCheck);
+  clearTimeout(iiv.longTouchCheck);
+  unloadResizingState(this, iiv.userActionData);
+  unloadMoveState(this, iiv.userActionData);
+  unloadOnMoveState(this);
+  revertShowMoveOrResizeDemo(this);
+  document.removeEventListener("mousemove", bf.onItemMouseMove);
+  e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
+  document.removeEventListener("mouseup", bf.onItemMouseUp);
+  document.removeEventListener("contextmenu", bf.onItemContextMenu);
+  document.removeEventListener("touchmove", bf.onItemTouchMove);
+  e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
+  document.removeEventListener("touchend", bf.onItemTouchEnd);
+  document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
+  document.removeEventListener("touchcancel", bf.onItemTouchCancel);
+  iiv.userActionData = {};
+  event.preventDefault();
+  event.stopPropagation();
+};
+const onItemTouchContextMenu = function (event) {
+  onItemContextMenu.call(this, event);
+};
+const onItemTouchCancel = function (event) {
+  onItemContextMenu.call(this, event);
+};
+const showMoveDemo = async function (index, mousePosition) {
+  const e = variables_elements(this);
+
+  try {
+    if (mousePosition !== false) {
+      await moveItemDemo.call(this, index, mousePosition.x, mousePosition.y);
+      e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-move-disallow");
+      e.$pseudoContainerItem.classList.add("limber-grid-view-pseudo-container-item-move-allow");
+    } else {
+      throw "Invalid mouse position.";
+    }
+  } catch (error) {
+    console.error(error);
+    e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-move-allow");
+    e.$pseudoContainerItem.classList.add("limber-grid-view-pseudo-container-item-move-disallow");
+  }
+};
+const showResizeDemo = async function (index, width, height) {
+  const e = variables_elements(this);
+
+  try {
+    await resizeItemDemo.call(this, index, width, height);
+    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resize-allow");
+  } catch (error) {
+    console.error(error);
+    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resize-disallow");
+  }
+};
+const revertShowMoveOrResizeDemo = function (context) {
+  const e = variables_elements(context);
+  const pd = getPositionData(context);
+  const len = e.$limberGridViewItems.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridViewItems[i].style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
+  }
+};
+// CONCATENATED MODULE: ./src/libs/eventHandlerLib/deskInteractionUtils.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+const loadInitState = context => {
+  const e = variables_elements(context);
+  const publicConstants = constants_publicConstants(context);
+  e.$body.classList.add("limber-grid-view-body-tag-state-editing", "limber-grid-view-body-tag-state-editing-adding-cutting");
+  const len = e.$limberGridViewItems.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridViewItems[i].classList.add("limber-grid-view-item-resizing-state");
+  }
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resizing-state");
+  }
+
+  if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
+    e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-active");
+  } else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
+    e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-active", "limber-grid-view-add-cut-guide-cut-mode");
+  }
+
+  e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
+  e.$limberGridViewHeightAdjustGuide.classList.add("limber-grid-view-height-adjust-guide-active");
+};
+const unloadInitState = context => {
+  const e = variables_elements(context);
+  e.$body.classList.remove("limber-grid-view-body-tag-state-editing", "limber-grid-view-body-tag-state-editing-adding-cutting");
+  const len = e.$limberGridViewItems.length;
+
+  for (var i = 0; i < len; i++) {
+    e.$limberGridViewItems[i].classList.remove("limber-grid-view-item-resizing-state");
+    e.$limberGridViewPseudoItem.classList.remove("limber-grid-view-pseudo-item-resizing-state");
+  }
+
+  e.$limberGridViewAddCutGuide.classList.remove("limber-grid-view-add-cut-guide-active", "limber-grid-view-add-cut-guide-cut-mode", "limber-grid-view-add-cut-guide-add-allow", "limber-grid-view-add-cut-guide-add-disallow");
+  e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
+  e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
+  e.$limberGridViewTouchHoldGuide.classList.remove("limber-grid-view-touch-hold-guide-active");
+};
+// CONCATENATED MODULE: ./src/libs/eventHandlerLib/initializers.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+
+
+const reInitializeEvents = function () {
+  unInitializeEvents();
+  initializeEvents();
+};
+const initializeVariables = function () {};
+const initializeEvents = function () {
+  const options = variables_options(this);
+  const e = variables_elements(this);
+  const callbacks = getCallbacks(this);
+  const bf = getBindedFunctions(this);
+
+  if (options.editable === true) {
+    if (!isMobile(this)) {
+      if (options.enableInteractiveAddAndCut !== false) {
+        e.$limberGridView.addEventListener("mousedown", bf.onDeskMouseDown);
+
+        if (options.enableTouchInteraction !== false) {
+          e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
+        }
+      }
+    }
+
+    var len = e.$limberGridViewItems.length;
+
+    for (var i = 0; i < len; i++) {
+      if (!isMobile(this)) {
+        e.$limberGridViewItems[i].addEventListener("mousedown", bf.onItemMouseDown);
+
+        if (options.enableTouchInteraction !== false) {
+          e.$limberGridViewItems[i].addEventListener("touchstart", bf.onItemTouchStart);
+        }
+      }
+
+      if (callbacks.onItemClickCallback) {
+        e.$limberGridViewItems[i].addEventListener("click", bf.onItemClick);
+      }
+    }
+  }
+};
+const unInitializeEvents = function () {
+  const options = variables_options(this);
+  const e = variables_elements(this);
+  const bf = getBindedFunctions(this);
+
+  if (options.editable === true) {
+    if (e.$limberGridView !== undefined) {
+      e.$limberGridView.removeEventListener("mousedown", bf.onDeskMouseDown);
+      e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
+    }
+
+    if (e.$limberGridViewItems !== undefined) {
+      const len = e.$limberGridViewItems.length;
+
+      for (let i = 0; i < len; i++) {
+        e.$limberGridViewItems[i].removeEventListener("mousedown", bf.onItemMouseDown);
+        e.$limberGridViewItems[i].removeEventListener("touchstart", bf.onItemTouchStart);
+        e.$limberGridViewItems[i].removeEventListener("click", bf.onItemClick);
+      }
+    }
+  }
+};
+const initializeItemTouchEvents = function () {
+  const e = variables_elements(this);
+  const bf = getBindedFunctions(this);
+
+  if (e.$limberGridViewItems !== undefined) {
+    const len = e.$limberGridViewItems.length;
+
+    for (let i = 0; i < len; i++) {
+      e.$limberGridViewItems[i].addEventListener("mousedown", bf.onItemMouseDown);
+      e.$limberGridViewItems[i].addEventListener("touchstart", bf.onItemTouchStart);
+    }
+  }
+};
+const unInitializeItemTouchEvents = function () {
+  const e = variables_elements(this);
+  const bf = getBindedFunctions(this);
+
+  if (e.$limberGridViewItems !== undefined) {
+    const len = e.$limberGridViewItems.length;
+
+    for (let i = 0; i < len; i++) {
+      e.$limberGridViewItems[i].removeEventListener("mousedown", bf.onItemMouseDown);
+      e.$limberGridViewItems[i].removeEventListener("touchstart", bf.onItemTouchStart);
+    }
+  }
+};
 // CONCATENATED MODULE: ./src/libs/renderers/rendererUtils.js
 /*
 
@@ -4397,7 +4875,7 @@ const checkPositionData = pd => {
         return false;
       }
 
-      if (!isValidRectCoForm(rectUtils_getCoordinates(pd[i]))) {
+      if (!isValidRectCoForm(getCoordinates(pd[i]))) {
         return false;
       }
     }
@@ -4494,9 +4972,7 @@ const render = function (context, scale = true) {
       itemEl.setAttribute("data-index", i);
       itemEl.style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
       itemEl.style.width = `${pd[i].width}px`;
-      itemEl.style.height = `${pd[i].height}px`; // const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
-      // renderItemContent(context, renderData, itemEl);
-
+      itemEl.style.height = `${pd[i].height}px`;
       nodes[i] = itemEl;
     }
   } else {
@@ -4514,17 +4990,10 @@ const render = function (context, scale = true) {
       itemEl.setAttribute("class", classList);
       itemEl.setAttribute("data-index", spd[i].index);
       itemEl.style.width = `${spd[i].width}px`;
-      itemEl.style.height = `${spd[i].height}px`; // const renderData = callbacks.renderContent(
-      // 	i,
-      // 	spd[i].width,
-      // 	spd[i].height
-      // );
-      // renderItemContent(context, renderData, itemEl);
-
+      itemEl.style.height = `${spd[i].height}px`;
       nodes[i] = itemEl;
     }
-  } // e.$limberGridView.innerHTML = "";
-
+  }
 
   const itemsLen = e.$limberGridViewItems.length;
 
@@ -4548,8 +5017,7 @@ const render = function (context, scale = true) {
     }
   }
 
-  set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]); // initializeVariables();
-
+  set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
   initializeEvents.call(context);
 
   if (callbacks.renderComplete) {
@@ -4560,8 +5028,7 @@ const renderItem = function (context, index) {
   const e = variables_elements(context);
   const callbacks = getCallbacks(context);
   const pd = getPositionData(context);
-  const renderData = callbacks.renderContent(index, pd[index].width, pd[index].height); // e.$limberGridViewItems[index].innerHTML = "";
-
+  const renderData = callbacks.renderContent(index, pd[index].width, pd[index].height);
   renderItemContent(context, renderData, e.$limberGridViewItems[index]);
 
   if (callbacks.renderComplete) {
@@ -4668,8 +5135,7 @@ const removeItem = function (context, index) {
 
   if (callbacks.removeComplete) {
     callbacks.removeComplete(index, e.$limberGridViewItems[index]);
-  } // initializeVariables();
-
+  }
 
   initializeEvents.call(context);
 };
@@ -4702,358 +5168,7 @@ const renderItemContent = (context, renderData, itemEl) => {
   } else if (callbacks.renderPlugin) {
     callbacks.renderPlugin(renderData, itemEl);
   }
-}; // export const renderPseudoElements = function (_positionData) {
-// 	if (e.$limberGridViewGridPseudoItems != undefined) {
-// 		var length_0 = _positionData.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			e.$limberGridViewGridPseudoItems[0].parentNode.removeChild(
-// 				e.$limberGridViewGridPseudoItems[0]
-// 			);
-// 		}
-// 		e.$limberGridViewGridPseudoItems = undefined;
-// 		set$limberGridViewBodyPseudoItems(undefined);
-// 	}
-// 	var gridHtml = [];
-// 	var bodyHtml = [];
-// 	if (!isMobile()) {
-// 		var length_0 = _positionData.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			var gridFront =
-// 				'<div class = "limberGridViewGridPseudoItem" data-index = "' + i + '" ';
-// 			var bodyFront =
-// 				'<div class = "limberGridViewBodyPseudoItem" data-index = "' + i + '" ';
-// 			var style_1 =
-// 				'style = "transform : translate(' + _positionData[i].x + "px, ";
-// 			var style_2 = _positionData[i].y + "px); ";
-// 			var style_3 = "width : " + _positionData[i].width + "px; ";
-// 			var style_4 = "height : " + _positionData[i].height + "px; ";
-// 			var style_5 = '">';
-// 			var style = style_1 + style_2 + style_3 + style_4 + style_5;
-// 			var end = "</div>";
-// 			var gridItem = gridFront + style + end;
-// 			var bodyItem = bodyFront + style + end;
-// 			gridHtml.push(gridItem);
-// 			bodyHtml.push(bodyItem);
-// 		}
-// 	} else {
-// 		var length_0 = _positionData.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			var gridFront =
-// 				'<div class = "limberGridViewGridPseudoItem" data-index = "' + i + '" ';
-// 			var bodyFront =
-// 				'<div class = "limberGridViewBodyPseudoItem" data-index = "' + i + '" ';
-// 			var style_1 = 'style = "transform : translate(' + 0 + "px, ";
-// 			var style_2 =
-// 				(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO +
-// 					getMarginAtPoint(serializedPositionData.map[i])) *
-// 					serializedPositionData.map[i] +
-// 				"px); ";
-// 			var style_3 = "width : " + privateConstants.WIDTH + "px; ";
-// 			var style_4 =
-// 				"height : " +
-// 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO +
-// 				"px; ";
-// 			var style_5 = "margin : " + publicConstants.MARGIN + 'px;">';
-// 			var style = style_1 + style_2 + style_3 + style_4 + style_5;
-// 			var end = "</div>";
-// 			var gridItem = gridFront + style + end;
-// 			var bodyItem = bodyFront + style + end;
-// 			gridHtml.push(gridItem);
-// 			bodyHtml.push(bodyItem);
-// 		}
-// 	}
-// 	var limberGridViewMoveGuide = '<div class = "limberGridViewMoveGuide"></div>';
-// 	var limberGridViewHeightAdjustGuide =
-// 		'<div class = "limberGridViewHeightAdjustGuide"></div>';
-// 	var limberGridViewAddItemGuide =
-// 		'<div class = "limberGridViewAddItemGuide"></div>';
-// 	var limberGridViewAddItemOnTouchHoldGuide =
-// 		'<div class = "limberGridViewAddItemOnTouchHoldGuide"></div>';
-// 	gridHtml.push(limberGridViewMoveGuide);
-// 	gridHtml.push(limberGridViewHeightAdjustGuide);
-// 	gridHtml.push(limberGridViewAddItemGuide);
-// 	gridHtml.push(limberGridViewAddItemOnTouchHoldGuide);
-// 	e.$bodyPseudoEl.innerHTML = bodyHtml.join("");
-// 	e.$limberGridView[0].insertAdjacentHTML("beforeend", gridHtml.join(""));
-// 	set$limberGridViewGridPseudoItems(
-// 		e.$limberGridView[0].getElementsByClassName("limberGridViewGridPseudoItem")
-// 	);
-// 	set$limberGridViewBodyPseudoItems(
-// 		e.$bodyPseudoEl.getElementsByClassName("limberGridViewBodyPseudoItem")
-// 	);
-// 	set$limberGridViewMoveGuide(
-// 		e.$limberGridView[0].getElementsByClassName("limberGridViewMoveGuide")
-// 	);
-// 	set$limberGridViewHeightAdjustGuide(
-// 		e.$limberGridView[0].getElementsByClassName(
-// 			"limberGridViewHeightAdjustGuide"
-// 		)
-// 	);
-// 	set$limberGridViewAddItemGuide(
-// 		e.$limberGridView[0].getElementsByClassName("limberGridViewAddItemGuide")
-// 	);
-// 	set$limberGridViewAddItemOnTouchHoldGuide(
-// 		e.$limberGridView[0].getElementsByClassName(
-// 			"limberGridViewAddItemOnTouchHoldGuide"
-// 		)
-// 	);
-// };
-// export const renderItems = function (
-// 	items,
-// 	scale = true,
-// 	processType = "onDemand"
-// ) {
-// 	unInitializeEvents();
-// 	var scrollTop = e.$limberGridView[0].scrollTop;
-// 	if (scale == true) {
-// 		var WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
-// 	} else {
-// 		var WIDTH_SCALE_FACTOR = 1;
-// 	}
-// 	var classList = ["limberGridViewItem"];
-// 	if (options.editable == true) {
-// 		classList.push("limberGridViewItemEditable");
-// 	}
-// 	var html = [];
-// 	// dev Code
-// 	var t0 = performance.now();
-// 	// dev Code END
-// 	if (!isMobile()) {
-// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-// 		var length_0 = items.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			positionData[items[i]].width *= WIDTH_SCALE_FACTOR;
-// 			if (positionData[items[i]].width > privateConstants.WIDTH) {
-// 				positionData[items[i]].width = privateConstants.WIDTH;
-// 			}
-// 			var div = document.createElement("div");
-// 			var attribute = document.createAttribute("data-index");
-// 			attribute.value = items[i];
-// 			div.setAttributeNode(attribute);
-// 			if (classList.length > 0) {
-// 				div.classList.add(classList[0]);
-// 				div.classList.add(classList[1]);
-// 			} else {
-// 				div.classList.add(classList[0]);
-// 			}
-// 			div.style.transform =
-// 				"translate(" +
-// 				(positionData[items[i]].x *= WIDTH_SCALE_FACTOR) +
-// 				"px, " +
-// 				(positionData[items[i]].y *= WIDTH_SCALE_FACTOR) +
-// 				"px)";
-// 			div.style.width = positionData[items[i]].width + "px";
-// 			div.style.height =
-// 				(positionData[items[i]].height *= WIDTH_SCALE_FACTOR) + "px";
-// 			var userData = callbacks.getItemRenderDataCallback(
-// 				items[i],
-// 				positionData[items[i]].width,
-// 				positionData[items[i]].height,
-// 				processType
-// 			);
-// 			if (typeof userData == "string") {
-// 				div.innerHTML = userData;
-// 			} else {
-// 				div.appendChild(userData);
-// 			}
-// 			if (
-// 				e.$limberGridViewItems[items[i]] == undefined ||
-// 				e.$limberGridViewItems[items[i]] == null
-// 			) {
-// 				e.$limberGridView[0].appendChild(div);
-// 			} else {
-// 				e.$limberGridView[0].replaceChild(
-// 					div,
-// 					e.$limberGridViewItems[items[i]]
-// 				);
-// 			}
-// 		}
-// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-// 	} else {
-// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-// 		var length_0 = items.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			var div = document.createElement("div");
-// 			var attribute = document.createAttribute("data-index");
-// 			attribute.value = items[i];
-// 			div.setAttributeNode(attribute);
-// 			div.classList.add("limberGridViewItem");
-// 			div.style.transform =
-// 				"translate(" +
-// 				0 +
-// 				"px, " +
-// 				(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO +
-// 					getMarginAtPoint(serializedPositionData.map[items[i]])) *
-// 					serializedPositionData.map[items[i]] +
-// 				"px)";
-// 			div.style.width = privateConstants.WIDTH + "px";
-// 			div.style.height =
-// 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO + "px";
-// 			var userData = callbacks.getItemRenderDataCallback(
-// 				items[i],
-// 				privateConstants.WIDTH,
-// 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO,
-// 				processType
-// 			);
-// 			if (typeof userData == "string") {
-// 				div.innerHTML = userData;
-// 			} else {
-// 				div.appendChild(userData);
-// 			}
-// 			if (
-// 				e.$limberGridViewItems[items[i]] == undefined ||
-// 				e.$limberGridViewItems[items[i]] == null
-// 			) {
-// 				e.$limberGridView[0].appendChild(div);
-// 			} else {
-// 				e.$limberGridView[0].replaceChild(
-// 					div,
-// 					e.$limberGridViewItems[items[i]]
-// 				);
-// 			}
-// 		}
-// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-// 	}
-// 	// dev Code
-// 	var t1 = performance.now();
-// 	console.log(t0);
-// 	console.log(t1);
-// 	console.log(t1 - t0);
-// 	// dev Code END
-// 	e.$limberGridViewItems = e.$limberGridView[0].querySelectorAll(
-// 		".limberGridViewItem"
-// 	);
-// 	renderPseudoItems(items);
-// 	initializeVariables();
-// 	initializeEvents();
-// 	var renderDetails = {
-// 		items: JSON.parse(JSON.stringify(items)),
-// 		scale: scale,
-// 		processType: processType,
-// 	};
-// 	if (
-// 		callbacks.itemsRenderComplete != undefined &&
-// 		callbacks.itemsRenderComplete != null &&
-// 		processType != "addItems" &&
-// 		processType != "resizeItems" &&
-// 		processType != "removeItems" &&
-// 		processType != "addItemInteractive"
-// 	) {
-// 		e.$limberGridView[0].scrollTop = scrollTop;
-// 		callbacks.itemsRenderComplete(
-// 			renderDetails.items,
-// 			scale,
-// 			processType,
-// 			scrollTop
-// 		);
-// 	}
-// 	return renderDetails;
-// };
-// export const renderPseudoItems = function (items) {
-// 	var gridHtml = [];
-// 	var bodyHtml = [];
-// 	if (!isMobile()) {
-// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-// 		e.$body[0].removeChild(e.$bodyPseudoEl);
-// 		var length_0 = items.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			var divGrid = document.createElement("div");
-// 			var attributeGrid = document.createAttribute("data-index");
-// 			attributeGrid.value = items[i];
-// 			divGrid.setAttributeNode(attributeGrid);
-// 			divGrid.classList.add("limberGridViewGridPseudoItem");
-// 			divGrid.style.transform =
-// 				"translate(" +
-// 				positionData[items[i]].x +
-// 				"px, " +
-// 				positionData[items[i]].y +
-// 				"px)";
-// 			divGrid.style.width = positionData[items[i]].width + "px";
-// 			divGrid.style.height = positionData[items[i]].height + "px";
-// 			var divBody = document.createElement("div");
-// 			var attributeBody = document.createAttribute("data-index");
-// 			attributeBody.value = items[i];
-// 			divBody.setAttributeNode(attributeBody);
-// 			divBody.classList.add("limberGridViewBodyPseudoItem");
-// 			divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-// 			divBody.style.width = positionData[items[i]].width + "px";
-// 			divBody.style.height = positionData[items[i]].height + "px";
-// 			if (
-// 				e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
-// 				e.$limberGridViewGridPseudoItems[items[i]] == null
-// 			) {
-// 				e.$limberGridView[0].appendChild(divGrid);
-// 				e.$bodyPseudoEl.appendChild(divBody);
-// 			} else {
-// 				e.$limberGridView[0].replaceChild(
-// 					divGrid,
-// 					e.$limberGridViewGridPseudoItems[items[i]]
-// 				);
-// 				e.$bodyPseudoEl.replaceChild(
-// 					divBody,
-// 					e.$limberGridViewBodyPseudoItems[items[i]]
-// 				);
-// 			}
-// 		}
-// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-// 		e.$body[0].appendChild(e.$bodyPseudoEl);
-// 	} else {
-// 		e.$limberGridViewContainer[0].removeChild(e.$limberGridView[0]);
-// 		e.$body[0].removeChild(e.$bodyPseudoEl);
-// 		var length_0 = items.length;
-// 		for (var i = 0; i < length_0; i++) {
-// 			var divGrid = document.createElement("div");
-// 			var attributeGrid = document.createAttribute("data-index");
-// 			attributeGrid.value = items[i];
-// 			divGrid.setAttributeNode(attributeGrid);
-// 			divGrid.classList.add("limberGridViewGridPseudoItem");
-// 			divGrid.style.transform =
-// 				"translate(" +
-// 				0 +
-// 				"px, " +
-// 				(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO +
-// 					getMarginAtPoint(serializedPositionData.map[i])) *
-// 					serializedPositionData.map[i] +
-// 				"px)";
-// 			divGrid.style.width = privateConstants.WIDTH + "px";
-// 			divGrid.style.height =
-// 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO + "px";
-// 			var divBody = document.createElement("div");
-// 			var attributeBody = document.createAttribute("data-index");
-// 			attributeBody.value = items[i];
-// 			divBody.setAttributeNode(attributeBody);
-// 			divBody.classList.add("limberGridViewBodyPseudoItem");
-// 			divBody.style.transform = "translate(" + 0 + "px, " + 0 + "px)";
-// 			divBody.style.width = privateConstants.WIDTH + "px";
-// 			divBody.style.height =
-// 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO + "px";
-// 			if (
-// 				e.$limberGridViewGridPseudoItems[items[i]] == undefined ||
-// 				e.$limberGridViewGridPseudoItems[items[i]] == null
-// 			) {
-// 				e.$limberGridView[0].appendChild(divGrid);
-// 				e.$bodyPseudoEl.appendChild(divBody);
-// 			} else {
-// 				e.$limberGridView[0].replaceChild(
-// 					divGrid,
-// 					e.$limberGridViewGridPseudoItems[items[i]]
-// 				);
-// 				e.$bodyPseudoEl.replaceChild(
-// 					divBody,
-// 					e.$limberGridViewBodyPseudoItems[items[i]]
-// 				);
-// 			}
-// 		}
-// 		e.$limberGridViewContainer[0].appendChild(e.$limberGridView[0]);
-// 		e.$body[0].appendChild(e.$bodyPseudoEl);
-// 	}
-// 	set$limberGridViewGridPseudoItems(
-// 		e.$limberGridView[0].getElementsByClassName("limberGridViewGridPseudoItem")
-// 	);
-// 	e.$limberGridViewBodyPseudoItems = e.$bodyPseudoEl.getElementsByClassName(
-// 		"limberGridViewBodyPseudoItem"
-// 	);
-// };
+};
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/deskInteraction.js
 /*
 
@@ -5080,10 +5195,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
- // import {
-// 	isPlaneBInsidePlaneA_TouchingIsInside,
-// 	shiftItemsUp,
-// } from "../calc/calcUtils";
 
 
 
@@ -5093,25 +5204,6 @@ Written by Subendra Kumar Sharma.
 
 
 
-
-
-
- // import { addItemsAtPositions } from "../renderers/addOrRemoveItems";
-// let userActionData = {};
-// let mouseDownCancel = false;
-// // let limberGridMouseDownCancel = false;
-// let mouseDownTimerComplete = false;
-// // let limberGridMouseDownTimerComplete = false;
-// let tapHoldCancel = false;
-// // let limberGridTouchStartCancel = false;
-// let tapHoldTimerComplete = false;
-// // let limberGridTouchStartTimerComplete = false;
-// let longPressCheck;
-// // let limberGridMouseDownCheckTimeOutVariable;
-// let longTouchCheck;
-// // let limberGridTouchStartCheckTimeOutVariable;
-// let addItemAllowCheckTimeOutVariable;
-// let cutSpaceAllowCheckTimeOutVariable;
 
 const onDeskMouseDown = function (event) {
   const e = variables_elements(this);
@@ -5132,7 +5224,7 @@ const onDeskMouseDown = function (event) {
   dkiv.mouseDownCancel = false;
   dkiv.mouseDownTimerComplete = false;
   clearTimeout(dkiv.longPressCheck);
-  dkiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event, event.offsetX, event.offsetY), publicConstants.MOUSE_DOWN_TIME);
+  dkiv.longPressCheck = setTimeout(deskInteraction_mouseDownCheck.bind(this, event, event.offsetX, event.offsetY), publicConstants.MOUSE_DOWN_TIME);
   e.$limberGridView.addEventListener("mousemove", bf.onDeskMouseMove);
   document.addEventListener("mouseup", bf.onDeskMouseUp);
   document.addEventListener("contextmenu", bf.onDeskContextMenu);
@@ -5148,17 +5240,10 @@ const onDeskTouchStart = function (event) {
   }
 
   if (event.touches.length !== 1) {
-    // onDeskContextMenu.call(this, event);
     return;
-  } // if (event.target.classList.contains("limber-grid-view")) {
-  // 	event.stopPropagation();
-  // } else {
-  // 	return;
-  // }
-
+  }
 
   if (event.which !== 0) {
-    // onDeskContextMenu.call(this, event);
     return;
   }
 
@@ -5170,11 +5255,10 @@ const onDeskTouchStart = function (event) {
   document.addEventListener("contextmenu", bf.onDeskTouchContextMenu);
   unInitializeItemTouchEvents.call(this);
   clearTimeout(dkiv.longTouchCheck);
-  dkiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
+  dkiv.longTouchCheck = setTimeout(deskInteraction_tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
   event.stopPropagation();
-}; // onLimberGridMouseDownCheck
-
-const mouseDownCheck = function (event, offsetX, offsetY) {
+};
+const deskInteraction_mouseDownCheck = function (event, offsetX, offsetY) {
   const e = variables_elements(this);
   const privateConstants = constants_privateConstants(this);
   const dkiv = getDeskInteractionVars(this);
@@ -5195,11 +5279,9 @@ const mouseDownCheck = function (event, offsetX, offsetY) {
     e.$limberGridViewAddCutGuide.style.transform = `translate(${x}px, ${y}px)`;
     e.$limberGridViewAddCutGuide.setAttribute("data-after", `w: 0px, h: 0px`);
     loadInitState(this);
-  } else {// mouseDown cancel before TimerComplete
   }
-}; // onLimberGridTouchStartCheck
-
-const tapHoldCheck = function (event) {
+};
+const deskInteraction_tapHoldCheck = function (event) {
   const e = variables_elements(this);
   const dkiv = getDeskInteractionVars(this);
 
@@ -5227,7 +5309,6 @@ const tapHoldCheck = function (event) {
     e.$limberGridViewTouchHoldGuide.style.transform = `translate(${x}px, ${y}px)`;
     e.$limberGridViewTouchHoldGuide.classList.add("limber-grid-view-touch-hold-guide-active");
     event.preventDefault();
-  } else {// touchstart cancel before TimerComplete
   }
 };
 const onDeskMouseMove = function (event) {
@@ -5235,7 +5316,6 @@ const onDeskMouseMove = function (event) {
   const privateConstants = constants_privateConstants(this);
   const publicConstants = constants_publicConstants(this);
   const dkiv = getDeskInteractionVars(this);
-  const bf = getBindedFunctions(this);
 
   if (dkiv.mouseDownTimerComplete === true) {
     e.$limberGridViewAddCutGuide.classList.remove("limber-grid-view-add-cut-guide-allow", "limber-grid-view-add-cut-guide-disallow");
@@ -5264,10 +5344,7 @@ const onDeskMouseMove = function (event) {
       dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(cutSpaceAllowCheckTimeOut.bind(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
     }
   } else {
-    onDeskContextMenu.call(this, event); // clearTimeout(dkiv.longPressCheck);
-    // e.$limberGridView.removeEventListener("mousemove", bf.onDeskMouseMove);
-    // document.removeEventListener("mouseup", bf.onDeskMouseUp);
-    // document.removeEventListener("contextmenu", bf.onDeskContextMenu);
+    onDeskContextMenu.call(this, event);
   }
 
   event.stopPropagation();
@@ -5277,7 +5354,6 @@ const onDeskTouchMove = function (event) {
   const privateConstants = constants_privateConstants(this);
   const publicConstants = constants_publicConstants(this);
   const dkiv = getDeskInteractionVars(this);
-  const bf = getBindedFunctions(this);
 
   if (dkiv.tapHoldTimerComplete === true && event.touches.length === 1) {
     e.$limberGridViewAddCutGuide.classList.remove("limber-grid-view-add-cut-guide-allow", "limber-grid-view-add-cut-guide-disallow");
@@ -5327,12 +5403,7 @@ const onDeskTouchMove = function (event) {
 
     event.preventDefault();
   } else {
-    onDeskContextMenu.call(this); // clearTimeout(dkiv.longTouchCheck);
-    // e.$limberGridView.removeEventListener("touchmove", bf.onDeskTouchMove);
-    // document.removeEventListener("touchend", bf.onDeskTouchEnd);
-    // document.removeEventListener("touchcancel", bf.onDeskTouchCancel);
-    // document.removeEventListener("contextmenu", bf.onDeskTouchContextMenu);
-    // initializeItemTouchEvents.call(this);
+    onDeskContextMenu.call(this);
   }
 
   event.stopPropagation();
@@ -5343,7 +5414,6 @@ const onDeskMouseUp = function (event) {
   const dkiv = getDeskInteractionVars(this);
   clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
   clearTimeout(dkiv.longPressCheck);
-  var itemAddedFlag = false;
 
   if (dkiv.mouseDownTimerComplete === true) {
     if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
@@ -5355,17 +5425,14 @@ const onDeskMouseUp = function (event) {
           height: dkiv.userActionData.newHeight
         };
         var scrollTop = e.$limberGridView.scrollTop;
-        var renderDetails = addItem(this, item, false, "addItemInteractive");
-        itemAddedFlag = true;
+        addItem(this, item, false, "addItemInteractive");
         e.$limberGridView.scrollTop = scrollTop;
       }
     } else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
       const cutDetails = cutSpaceAllowCheck(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, dkiv.userActionData.newWidth, dkiv.userActionData.newHeight);
 
       if (cutDetails) {
-        shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight // dkiv.userActionData.addPositionY,
-        // dkiv.userActionData.newHeight
-        );
+        shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
       }
     }
   } else {
@@ -5381,7 +5448,6 @@ const onDeskTouchEnd = function (event) {
   const dkiv = getDeskInteractionVars(this);
   clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
   clearTimeout(dkiv.longTouchCheck);
-  var itemAddedFlag = false;
 
   if (dkiv.tapHoldTimerComplete === true && event.touches.length === 0) {
     if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
@@ -5393,37 +5459,28 @@ const onDeskTouchEnd = function (event) {
           height: dkiv.userActionData.newHeight
         };
         var scrollTop = e.$limberGridView.scrollTop;
-        var renderDetails = addItem(this, item, false, "addItemInteractive");
-        itemAddedFlag = true;
+        addItem(this, item, false, "addItemInteractive");
         e.$limberGridView.scrollTop = scrollTop;
       }
     } else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
       const cutDetails = cutSpaceAllowCheck(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, dkiv.userActionData.newWidth, dkiv.userActionData.newHeight);
 
       if (cutDetails) {
-        shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight // dkiv.userActionData.addPositionY,
-        // dkiv.userActionData.newHeight
-        );
+        shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
       }
     }
   } else {
     dkiv.tapHoldCancel = true;
-  } // dkiv.tapHoldTimerComplete = false;
+  }
 
-
-  onDeskContextMenu.call(this); // initializeItemTouchEvents.call(this);
-
+  onDeskContextMenu.call(this);
   event.stopPropagation();
 };
 const onDeskTouchCancel = function (event) {
-  // const dkiv = getDeskInteractionVars(this);
-  // dkiv.tapHoldCancel = false;
-  // dkiv.tapHoldTimerComplete = false;
-  onDeskContextMenu.call(this); // initializeItemTouchEvents.call(this);
-  // event.stopPropagation();
+  onDeskContextMenu.call(this);
 };
 const onDeskTouchContextMenu = function (event) {
-  event.preventDefault(); // onDeskContextMenu.call(this, event);
+  event.preventDefault();
 };
 const onDeskContextMenu = function (event) {
   const e = variables_elements(this);
@@ -5469,923 +5526,6 @@ const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
   } else {
     e.$limberGridViewAddCutGuide.classList.remove("limber-grid-view-add-cut-guide-disallow");
     e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-allow");
-  }
-};
-// CONCATENATED MODULE: ./src/libs/interaction/itemInteractionUtils.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-
-
-
-
-
-const getResizeAffectedItems = (context, item, index) => {
-  const pd = getPositionData(context);
-  const mpd = getModifiedPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-  const len = pd.length;
-  const affectedArr = new Array(len);
-  let count = 0;
-  const _item = { ...item
-  };
-  _item.x -= privateConstants.MARGIN;
-  _item.y -= privateConstants.MARGIN;
-  _item.width += privateConstants.MARGIN;
-  _item.height += privateConstants.MARGIN;
-  const temp = {
-    x: 0,
-    y: 0,
-    height: 0,
-    width: 0
-  };
-
-  for (let i = 0; i < len; i++) {
-    temp.x = pd[i].x - privateConstants.MARGIN;
-    temp.y = pd[i].y - privateConstants.MARGIN;
-    temp.width = pd[i].width + privateConstants.MARGIN;
-    temp.height = pd[i].height + privateConstants.MARGIN;
-
-    if ((doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) && i !== index) {
-      affectedArr[count++] = i;
-      mpd[i].x = undefined;
-      mpd[i].y = undefined;
-    }
-  }
-
-  const result = new Array(count + 1);
-
-  for (let i = 0; i < count; i++) {
-    result[i] = affectedArr[i];
-  }
-
-  result[count] = index;
-  return result;
-};
-const getMoveAffectedItems = (context, item, index) => {
-  const pd = getPositionData(context);
-  const mpd = getModifiedPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-  const len = pd.length;
-  const affectedArr = new Array(len);
-  let count = 0;
-  const _item = { ...item
-  };
-  _item.x -= privateConstants.MARGIN;
-  _item.y -= privateConstants.MARGIN;
-  _item.width += privateConstants.MARGIN;
-  _item.height += privateConstants.MARGIN;
-  const temp = {
-    x: 0,
-    y: 0,
-    height: 0,
-    width: 0
-  };
-
-  for (let i = 0; i < len; i++) {
-    temp.x = pd[i].x - privateConstants.MARGIN;
-    temp.y = pd[i].y - privateConstants.MARGIN;
-    temp.width = pd[i].width + privateConstants.MARGIN;
-    temp.height = pd[i].height + privateConstants.MARGIN;
-
-    if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
-      if (i !== index) {
-        affectedArr[count++] = i;
-        mpd[i].x = undefined;
-        mpd[i].y = undefined;
-      }
-    }
-  }
-
-  const result = new Array(count + 1);
-
-  for (let i = 0; i < count; i++) {
-    result[i] = affectedArr[i];
-  }
-
-  result[count] = index;
-  return result;
-};
-const resizeItemInitialChecks = (context, index, width, height) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-
-  if (index < 0 || index >= pd.length) {
-    // invalid index
-    throw "Index out of bounds.";
-  }
-
-  if (typeof width !== "number" || typeof height !== "number") {
-    throw "Width or Height is not a number.";
-  }
-
-  if (pd[index].x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
-    // falls outside
-    throw "Right edges falls outside the grid area.";
-  }
-
-  if (width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH || height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
-    // very small. TO DO: let the developers decide the smallest item size but can't be less than 150
-    throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
-  }
-
-  return true;
-};
-const moveItemInitialChecks = (context, index, toX, toY) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-
-  if (index < 0 || index >= pd.length) {
-    // invalid index
-    throw "Index out of bounds.";
-  }
-
-  if (typeof toX !== "number" || typeof toY !== "number") {
-    throw "toX or toY is not a number.";
-  }
-
-  if (toX < privateConstants.MARGIN || toY < privateConstants.MARGIN) {
-    // falls outside
-    throw "Left edges falls outside the grid area.";
-  }
-
-  if (toX + pd[index].width + privateConstants.MARGIN > privateConstants.WIDTH) {
-    // falls outside
-    throw "Right edges falls outside the grid area.";
-  }
-
-  return true;
-};
-const resetDemoUIChanges = context => {
-  const pd = getPositionData(context);
-  const e = variables_elements(context);
-  const len = pd.length;
-
-  for (var i = 0; i < len; i++) {
-    e.$limberGridViewItems[i].style.transform = "translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-    e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
-  }
-};
-const movePointAdjust = (context, toX, toY) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-  const len = pd.length;
-  const temp = {
-    x: 0,
-    y: 0,
-    height: 0,
-    width: 0
-  };
-  const pt = {
-    x: toX,
-    y: toY
-  };
-  let inside;
-
-  for (let i = 0; i < len; i++) {
-    temp.x = pd[i].x - privateConstants.MARGIN;
-    temp.y = pd[i].y - privateConstants.MARGIN;
-    temp.width = pd[i].width + privateConstants.MARGIN * 2;
-    temp.height = pd[i].height + privateConstants.MARGIN * 2;
-
-    if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
-      inside = i;
-      break;
-    }
-  }
-
-  if (inside !== undefined) {
-    toX = pd[inside].x;
-    toY = pd[inside].y;
-  }
-
-  return {
-    toX,
-    toY,
-    overlappedItemIndex: inside
-  };
-};
-// CONCATENATED MODULE: ./src/libs/interaction/itemInteraction.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-// import {
-// 	findFreeSpaces,
-// 	mergeFreeSpaces,
-// 	findAffectedItemsOnMove,
-// 	findAffectedItemsOnResize,
-// 	fitItemsIntoFreeSpaces,
-// 	findMatchingSpace,
-// 	fitRemainingItems,
-// 	fitRemainingItemsAboveDeepestLine,
-// 	fitRemainingItemsBelowDeepestLine,
-// 	getItemsFromPointDepth,
-// 	shitftItemsBelow,
-// 	mergePlains,
-// 	subtractPlanes,
-// } from "./calcUtils";
-
-
-
-
-
- // import { renderItems } from "../renderers/renderers";
-
-const resizeItem = async function (index, width, height) {
-  const pd = getPositionData(this);
-  const e = variables_elements(this);
-  const callbacks = getCallbacks(this);
-  index = parseInt(index);
-  resizeItemInitialChecks(this, index, width, height);
-  resetDemoUIChanges(this);
-  setModifiedPositionData(this, pd);
-  const mpd = getModifiedPositionData(this);
-  mpd[index].width = width;
-  mpd[index].height = height;
-  const modifiedItem = {
-    x: pd[index].x,
-    y: pd[index].y,
-    width: width,
-    height: height
-  };
-  const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
-  const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width);
-  setPositionData(this, mpd);
-  e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
-  e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
-  const arrangedArr = Object.keys(arranged);
-  const len = arrangedArr.length;
-
-  for (let i = 0; i < len; i++) {
-    const key = arrangedArr[i];
-    const item = arranged[key];
-    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
-  }
-
-  if (callbacks.resizeComplete) {
-    callbacks.resizeComplete(index, width, height, arrangedArr);
-  }
-};
-const resizeItemDemo = async function (index, width, height) {
-  const pd = getPositionData(this);
-  const e = variables_elements(this);
-  index = parseInt(index);
-  resizeItemInitialChecks(this, index, width, height);
-  resetDemoUIChanges(this);
-  setModifiedPositionData(this, pd);
-  const mpd = getModifiedPositionData(this);
-  mpd[index].width = width;
-  mpd[index].height = height;
-  const modifiedItem = {
-    x: pd[index].x,
-    y: pd[index].y,
-    width: width,
-    height: height
-  };
-  const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
-  const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width, true);
-  const arrangedArr = Object.keys(arranged);
-  const len = arrangedArr.length;
-
-  for (let i = 0; i < len; i++) {
-    const key = arrangedArr[i];
-    const item = arranged[key];
-    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
-  }
-};
-const moveItem = async function (index, toX, toY) {
-  const pd = getPositionData(this);
-  const e = variables_elements(this);
-  const callbacks = getCallbacks(this);
-  const publicConstants = constants_publicConstants(this);
-  index = parseInt(index);
-
-  if (publicConstants.LATCH_MOVED_ITEM) {
-    // change toX & toY to top left of the overlapping item
-    // provide a flag for developers to switch it on or off any time from UI by the user
-    // maybe "LATCH_MOVED_ITEM"
-    const adjustedPt = movePointAdjust(this, toX, toY);
-    toX = adjustedPt.toX;
-    toY = adjustedPt.toY;
-  }
-
-  moveItemInitialChecks(this, index, toX, toY);
-  resetDemoUIChanges(this);
-  setModifiedPositionData(this, pd);
-  const mpd = getModifiedPositionData(this);
-  mpd[index].x = toX;
-  mpd[index].y = toY;
-  const modifiedItem = {
-    x: toX,
-    y: toY,
-    width: pd[index].width,
-    height: pd[index].height
-  };
-  const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
-  const arranged = await arrangeMove(this, affectedItems, toY, toY + pd[index].height);
-  setPositionData(this, mpd);
-  e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
-  e.$limberGridViewItems[index].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
-
-  if (!publicConstants.ANIMATE_MOVED_ITEM) {
-    // below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
-    e.$limberGridViewItems[index].style.transition = "none";
-    setTimeout(() => {
-      e.$limberGridViewItems[index].style.transition = "";
-    }, publicConstants.ANIMATE_TIME);
-  }
-
-  const arrangedArr = Object.keys(arranged);
-  const len = arrangedArr.length;
-
-  for (let i = 0; i < len; i++) {
-    const key = arrangedArr[i];
-    const item = arranged[key];
-    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
-  }
-
-  if (callbacks.resizeComplete) {
-    callbacks.moveComplete(index, toX, toY, arrangedArr);
-  }
-};
-const moveItemDemo = async function (index, toX, toY) {
-  const pd = getPositionData(this);
-  const e = variables_elements(this);
-  const publicConstants = constants_publicConstants(this);
-  index = parseInt(index);
-
-  if (publicConstants.LATCH_MOVED_ITEM) {
-    // change toX & toY to top left of the overlapping item
-    // provide a flag for developers to switch it on or off any time from UI by the user
-    const adjustedPt = movePointAdjust(this, toX, toY);
-    toX = adjustedPt.toX;
-    toY = adjustedPt.toY;
-
-    if (!isNaN(adjustedPt.overlappedItemIndex)) {
-      e.$limberGridViewMoveGuide.style.transform = "translate(" + toX + "px, " + toY + "px)";
-      e.$limberGridViewMoveGuide.classList.add("limber-grid-view-move-guide-active");
-    }
-  }
-
-  moveItemInitialChecks(this, index, toX, toY);
-  resetDemoUIChanges(this);
-  setModifiedPositionData(this, pd);
-  const mpd = getModifiedPositionData(this);
-  mpd[index].x = toX;
-  mpd[index].y = toY;
-  const modifiedItem = {
-    x: toX,
-    y: toY,
-    width: pd[index].width,
-    height: pd[index].height
-  };
-  const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
-  const arranged = await arrangeMove(this, affectedItems, toY, toY + pd[index].height, true);
-  e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
-  const arrangedArr = Object.keys(arranged);
-  const len = arrangedArr.length;
-
-  for (let i = 0; i < len; i++) {
-    const key = arrangedArr[i];
-    const item = arranged[key];
-    e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
-  }
-};
-// CONCATENATED MODULE: ./src/libs/eventHandlerLib/itemInteraction.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
- // import {
-// 	resizePlane,
-// 	resizePlaneDemo,
-// 	movePlane,
-// 	movePlaneDemo,
-// } from "../calc/calcPosition";
-
-
-
-
-
-
-
-
-
-
- // let userActionData = {};
-// let mouseDownCancel = false;
-// let mouseDownTimerComplete = true;
-// let touchHoldCancel = false;
-// // let tapHoldCancel = false;
-// let touchHoldTimerComplete = false;
-// // let tapHoldTimerComplete = false;
-// let longPressCheck;
-// let longTouchCheck;
-// let showResizeDemoTimeOutVariable;
-// let showMoveDemoTimeOutVariable;
-
-const onItemMouseDown = function (event) {
-  const e = variables_elements(this);
-  const publicConstants = constants_publicConstants(this);
-  const pd = getPositionData(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-
-  if (event.which !== 1) {
-    onItemContextMenu.call(this, event);
-    return;
-  }
-
-  const _userActionData = getUserActionData(this, event);
-
-  if (!_userActionData) {
-    return;
-  }
-
-  Object.assign(iiv.userActionData, _userActionData);
-
-  if (iiv.userActionData.type === "move") {
-    iiv.mouseDownCancel = false;
-    iiv.mouseDownTimerComplete = false;
-    document.addEventListener("mousemove", bf.onItemMouseMove);
-    document.addEventListener("mouseup", bf.onItemMouseUp);
-    document.addEventListener("contextmenu", bf.onItemContextMenu);
-    clearTimeout(iiv.longPressCheck);
-    iiv.longPressCheck = setTimeout(itemInteraction_mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
-    event.preventDefault();
-  } else if (iiv.userActionData.type === "resize") {
-    iiv.mouseDownCancel = false;
-    iiv.mouseDownTimerComplete = true;
-    e.$limberGridView.addEventListener("mousemove", bf.onItemMouseMove);
-    document.addEventListener("mouseup", bf.onItemMouseUp);
-    document.addEventListener("contextmenu", bf.onItemContextMenu);
-    iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
-    iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
-    loadResizingState(this, iiv.userActionData);
-    event.preventDefault();
-  } //
-
-
-  event.stopPropagation();
-};
-const onItemTouchStart = function (event) {
-  const e = variables_elements(this);
-  const publicConstants = constants_publicConstants(this);
-  const pd = getPositionData(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-
-  if (event.touches.length !== 1) {
-    onItemTouchContextMenu.call(this, event);
-    return;
-  }
-
-  if (event.which !== 0) {
-    onItemTouchContextMenu.call(this, event);
-    return;
-  }
-
-  const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
-
-  if (touchPosOnLimberGridItem === false) {
-    return;
-  }
-
-  const _userActionData = getUserActionData(this, event);
-
-  if (!_userActionData) {
-    return;
-  }
-
-  Object.assign(iiv.userActionData, _userActionData);
-
-  if (iiv.userActionData.type === "move") {
-    iiv.touchHoldCancel = false;
-    iiv.touchHoldTimerComplete = false; // e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
-
-    document.addEventListener("touchmove", bf.onItemTouchMove);
-    document.addEventListener("touchend", bf.onItemTouchEnd);
-    document.addEventListener("touchcancel", bf.onItemTouchCancel);
-    document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
-    iiv.longTouchCheck = setTimeout(itemInteraction_tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
-    event.preventDefault();
-  } else if (iiv.userActionData.type === "resize") {
-    iiv.touchHoldCancel = false;
-    iiv.touchHoldTimerComplete = true; // e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
-
-    e.$limberGridView.addEventListener("touchmove", bf.onItemTouchMove);
-    document.addEventListener("touchend", bf.onItemTouchEnd);
-    document.addEventListener("touchcancel", bf.onItemTouchCancel); //
-
-    document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
-    iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
-    iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
-    loadResizingState(this, iiv.userActionData);
-    event.preventDefault();
-  }
-
-  event.stopPropagation();
-};
-const itemInteraction_mouseDownCheck = function (event) {
-  const iiv = getItemInteractionVars(this);
-
-  if (iiv.mouseDownCancel === false) {
-    iiv.mouseDownTimerComplete = true;
-    loadMoveState(this, iiv.userActionData, event);
-  }
-};
-const itemInteraction_tapHoldCheck = function (event) {
-  const iiv = getItemInteractionVars(this);
-
-  if (iiv.touchHoldCancel === false) {
-    iiv.touchHoldTimerComplete = true;
-    loadMoveState(this, iiv.userActionData, event);
-  }
-};
-const onItemMouseMove = function (event) {
-  const e = variables_elements(this);
-  const privateConstants = constants_privateConstants(this);
-  const publicConstants = constants_publicConstants(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-
-  if (iiv.mouseDownTimerComplete === true) {
-    if (iiv.userActionData.type === "move") {
-      loadOnMoveState(this, iiv.userActionData, event, "move");
-      clearTimeout(iiv.showMoveDemoTimeOutVariable);
-      const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
-
-      if (mousePositionOnLimberGrid !== false) {
-        const yMousePosition = mousePositionOnLimberGrid.y;
-        adjustHeight(this, yMousePosition);
-        iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, mousePositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
-      }
-    } else {
-      loadOnMoveState(this, iiv.userActionData, event, "resize");
-      clearTimeout(iiv.showResizeDemoTimeOutVariable);
-      const scrollTop = e.$limberGridView.scrollTop;
-      const scrollLeft = e.$limberGridView.scrollLeft;
-      const x = iiv.userActionData.itemX;
-      const y = iiv.userActionData.itemY;
-      const newWidth = event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
-      const newHeight = event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
-      iiv.userActionData.newWidth = newWidth;
-      iiv.userActionData.newHeight = newHeight;
-      const yMousePosition = event.offsetY + scrollTop;
-      adjustHeight(this, yMousePosition);
-
-      if (newWidth > 0 && newHeight > 0) {
-        e.$limberGridViewPseudoItem.style.width = newWidth + "px";
-        e.$limberGridViewPseudoItem.style.height = newHeight + "px";
-        e.$limberGridViewPseudoItem.setAttribute("data-after", `w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`);
-      }
-
-      iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
-    }
-  } else {
-    iiv.mouseDownCancel = true;
-    onItemContextMenu.call(this, event); // clearTimeout(iiv.longPressCheck);
-    // document.removeEventListener("mousemove", bf.onItemMouseMove);
-    // e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
-    // document.removeEventListener("mouseup", bf.onItemMouseUp);
-    // document.removeEventListener("contextmenu", bf.onItemContextMenu);
-    // canceling mouseHold
-  }
-
-  event.preventDefault();
-  event.stopPropagation();
-};
-const onItemTouchMove = function (event) {
-  const e = variables_elements(this);
-  const privateConstants = constants_privateConstants(this);
-  const publicConstants = constants_publicConstants(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-
-  if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
-    if (iiv.userActionData.type === "move") {
-      loadOnMoveState(this, iiv.userActionData, event, "move");
-      clearTimeout(iiv.showMoveDemoTimeOutVariable);
-      const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
-
-      if (touchPositionOnLimberGrid !== false) {
-        const scrollTop = e.$limberGridView.scrollTop;
-        const scrollLeft = e.$limberGridView.scrollLeft;
-        const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
-        const limberGridViewWidthVisibleWidth = e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
-        const limberGridViewHeightVisibleHeight = e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
-        const limberGridViewOnVisibleAreaX = touchPositionOnLimberGrid.x + privateConstants.PADDING_LEFT - scrollLeft;
-        const limberGridViewOnVisibleAreaY = touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
-        const yTouchPosition = touchPositionOnLimberGrid.y;
-        adjustHeight(this, yTouchPosition);
-        const programScrolled = adjustScroll(this, limberGridViewOnVisibleAreaY, limberGridViewHeightVisibleHeight);
-
-        if (programScrolled !== true) {
-          iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
-        }
-      }
-    } else {
-      loadOnMoveState(this, iiv.userActionData, event, "resize");
-      clearTimeout(iiv.showResizeDemoTimeOutVariable);
-      const x = iiv.userActionData.itemX;
-      const y = iiv.userActionData.itemY;
-      const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
-      const newWidth = touchPositionOnLimberGrid.x - x;
-      const newHeight = touchPositionOnLimberGrid.y - y;
-
-      if (touchPositionOnLimberGrid !== false) {
-        iiv.userActionData.newWidth = newWidth;
-        iiv.userActionData.newHeight = newHeight;
-
-        if (newWidth > 0 && newHeight > 0) {
-          e.$limberGridViewPseudoItem.style.width = newWidth + "px";
-          e.$limberGridViewPseudoItem.style.height = newHeight + "px";
-          e.$limberGridViewPseudoItem.setAttribute("data-after", `w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`);
-        }
-      }
-
-      if (touchPositionOnLimberGrid !== false) {
-        const scrollTop = e.$limberGridView.scrollTop;
-        const scrollLeft = e.$limberGridView.scrollLeft;
-        const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
-        const limberGridViewWidthVisibleWidth = e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
-        const limberGridViewHeightVisibleHeight = e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
-        const limberGridViewOnVisibleAreaX = touchPositionOnLimberGrid.x + privateConstants.PADDING_LEFT - scrollLeft;
-        const limberGridViewOnVisibleAreaY = touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
-        const yTouchPosition = touchPositionOnLimberGrid.y;
-        adjustHeight(this, yTouchPosition);
-        const programScrolled = adjustScroll(this, limberGridViewOnVisibleAreaY, limberGridViewHeightVisibleHeight);
-
-        if (programScrolled !== true) {
-          iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
-        }
-      }
-    }
-  } else {
-    console.log("else");
-    iiv.touchHoldCancel = true;
-    onItemTouchContextMenu.call(this, event); // clearTimeout(iiv.longTouchCheck);
-    // document.removeEventListener("contextmenu", bf.onItemContextMenu);
-    // document.removeEventListener("touchmove", bf.onItemTouchMove);
-    // e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
-    // document.removeEventListener("touchend", bf.onItemTouchEnd);
-    // document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
-    // document.removeEventListener("touchcancel", bf.onItemTouchCancel);
-    // e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
-    // canceling taphold
-  }
-
-  event.stopPropagation();
-};
-const onItemMouseUp = async function (event) {
-  const e = variables_elements(this);
-  const pd = getPositionData(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-  clearTimeout(iiv.showMoveDemoTimeOutVariable);
-  clearTimeout(iiv.showResizeDemoTimeOutVariable);
-
-  if (iiv.mouseDownTimerComplete === true) {
-    if (iiv.userActionData.type === "move") {
-      // unloadMoveState(this, iiv.userActionData);
-      // unloadOnMoveState(this);
-      const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
-      var updatedCoordinates = {};
-
-      try {
-        if (mousePositionOnLimberGrid !== false) {
-          await moveItem.call(this, iiv.userActionData.itemIndex, mousePositionOnLimberGrid.x, mousePositionOnLimberGrid.y);
-          updatedCoordinates.x = mousePositionOnLimberGrid.x;
-          updatedCoordinates.y = mousePositionOnLimberGrid.y;
-        } else {
-          throw "Mouse position outside grid area.";
-        }
-      } catch (error) {
-        console.error(error);
-        revertShowMoveOrResizeDemo(this);
-      }
-    } else {
-      // unloadResizingState(this, iiv.userActionData);
-      // unloadOnMoveState(this);
-      try {
-        var newWidth = iiv.userActionData.newWidth;
-        var newHeight = iiv.userActionData.newHeight;
-        await resizeItem.call(this, iiv.userActionData.itemIndex, newWidth, newHeight);
-      } catch (error) {
-        revertShowMoveOrResizeDemo(this);
-      }
-    }
-  } else {
-    iiv.mouseDownCancel = true; // clearTimeout(iiv.longPressCheck);
-    // canceling mouseHold
-  }
-
-  onItemContextMenu.call(this, event); // document.removeEventListener("mousemove", bf.onItemMouseMove);
-  // e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
-  // document.removeEventListener("mouseup", bf.onItemMouseUp);
-  // document.removeEventListener("contextmenu", bf.onItemContextMenu);
-  // event.preventDefault();
-  // event.stopPropagation();
-
-  iiv.userActionData = {};
-};
-const onItemTouchEnd = async function (event) {
-  console.log("onItemTouchEnd");
-  const e = variables_elements(this);
-  const pd = getPositionData(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-  clearTimeout(iiv.showMoveDemoTimeOutVariable);
-  clearTimeout(iiv.showResizeDemoTimeOutVariable);
-
-  if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
-    if (iiv.userActionData.type === "move") {
-      // unloadMoveState(this, iiv.userActionData);
-      // unloadOnMoveState(this);
-      const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
-      var updatedCoordinates = {};
-
-      try {
-        if (touchPositionOnLimberGrid !== false) {
-          await moveItem.call(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid.x, touchPositionOnLimberGrid.y);
-          updatedCoordinates.x = touchPositionOnLimberGrid.x;
-          updatedCoordinates.y = touchPositionOnLimberGrid.y;
-        } else {
-          throw "Touch position outside grid area.";
-        }
-      } catch (error) {
-        console.error(error);
-        revertShowMoveOrResizeDemo(this);
-      }
-    } else {
-      // unloadResizingState(this, iiv.userActionData);
-      // unloadOnMoveState(this);
-      try {
-        var newWidth = iiv.userActionData.newWidth;
-        var newHeight = iiv.userActionData.newHeight;
-        await resizeItem.call(this, iiv.userActionData.itemIndex, newWidth, newHeight);
-      } catch (error) {
-        revertShowMoveOrResizeDemo(this);
-      }
-    }
-  } else {
-    iiv.touchHoldCancel = true; // clearTimeout(iiv.longTouchCheck);
-    // canceling taphold
-  }
-
-  onItemTouchContextMenu.call(this, event); // document.removeEventListener("contextmenu", bf.onItemContextMenu);
-  // document.removeEventListener("touchmove", bf.onItemTouchMove);
-  // e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
-  // document.removeEventListener("touchend", bf.onItemTouchEnd);
-  // document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
-  // document.removeEventListener("touchcancel", bf.onItemTouchCancel);
-  // e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
-
-  event.stopPropagation();
-  iiv.userActionData = {};
-};
-const onItemContextMenu = function (event) {
-  const e = variables_elements(this);
-  const iiv = getItemInteractionVars(this);
-  const bf = getBindedFunctions(this);
-  clearTimeout(iiv.showMoveDemoTimeOutVariable);
-  clearTimeout(iiv.showResizeDemoTimeOutVariable);
-  clearTimeout(iiv.longPressCheck);
-  clearTimeout(iiv.longTouchCheck);
-  unloadResizingState(this, iiv.userActionData);
-  unloadMoveState(this, iiv.userActionData);
-  unloadOnMoveState(this);
-  revertShowMoveOrResizeDemo(this);
-  document.removeEventListener("mousemove", bf.onItemMouseMove);
-  e.$limberGridView.removeEventListener("mousemove", bf.onItemMouseMove);
-  document.removeEventListener("mouseup", bf.onItemMouseUp);
-  document.removeEventListener("contextmenu", bf.onItemContextMenu);
-  document.removeEventListener("touchmove", bf.onItemTouchMove);
-  e.$limberGridView.removeEventListener("touchmove", bf.onItemTouchMove);
-  document.removeEventListener("touchend", bf.onItemTouchEnd);
-  document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
-  document.removeEventListener("touchcancel", bf.onItemTouchCancel);
-  iiv.userActionData = {}; //
-  // iiv.mouseDownCancel = false;
-  // iiv.mouseDownTimerComplete = false;
-  //
-
-  event.preventDefault();
-  event.stopPropagation();
-};
-const onItemTouchContextMenu = function (event) {
-  // event.preventDefault();
-  onItemContextMenu.call(this, event);
-};
-const onItemTouchCancel = function (event) {
-  // const e = getElements(this);
-  // const iiv = getItemInteractionVars(this);
-  // const bf = getBindedFunctions(this);
-  onItemContextMenu.call(this, event); // iiv.touchHoldTimerComplete = false;
-  // e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
-};
-const showMoveDemo = async function (index, mousePosition) {
-  const e = variables_elements(this);
-
-  try {
-    if (mousePosition !== false) {
-      await moveItemDemo.call(this, index, mousePosition.x, mousePosition.y); // e.$limberGridViewMoveGuide.style.transform =
-      // 	"translate(" + mousePosition.x + "px, " + mousePosition.y + "px)";
-      // e.$limberGridViewMoveGuide.classList.add(
-      // 	"limber-grid-view-move-guide-active"
-      // );
-
-      e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-move-disallow");
-      e.$pseudoContainerItem.classList.add("limber-grid-view-pseudo-container-item-move-allow");
-    } else {
-      throw "Invalid mouse position.";
-    }
-  } catch (error) {
-    console.error(error);
-    e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-move-allow");
-    e.$pseudoContainerItem.classList.add("limber-grid-view-pseudo-container-item-move-disallow");
-  }
-};
-const showResizeDemo = async function (index, width, height) {
-  const e = variables_elements(this);
-
-  try {
-    await resizeItemDemo.call(this, index, width, height);
-    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resize-allow");
-  } catch (error) {
-    console.error(error);
-    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resize-disallow");
-  }
-};
-const revertShowMoveOrResizeDemo = function (context) {
-  const e = variables_elements(context);
-  const pd = getPositionData(context);
-  const len = e.$limberGridViewItems.length;
-
-  for (let i = 0; i < len; i++) {
-    e.$limberGridViewItems[i].style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
   }
 };
 // CONCATENATED MODULE: ./src/store/flags/flagDetails.js
@@ -6456,42 +5596,8 @@ Written by Subendra Kumar Sharma.
 
 
 const init = async function (context, isResize, autoArrange) {
-  // if (typeof options.el === "string") {
-  // 	const el = document.getElementById(options.el);
-  // 	if (!el) {
-  // 		throw `No for element found for id ${options.el}`;
-  // 	}
-  // 	set$el(el);
-  // } else if (options.el instanceof Element) {
-  // 	set$el(options.el);
-  // } else {
-  // 	throw "Valid DOM Element or Id required";
-  // }
-  // set$body(context, document.getElementsByTagName("body")[0]);
-  // setPseudoElementId(
-  // 	context,
-  // 	"limber-grid-view-pseudo-container-" + getRandomString()
-  // );
-  // e.$body[0].insertAdjacentHTML(
-  // 	"beforeend",
-  // 	`<div id = ${getPseudoElementId(
-  // 		context
-  // 	)} class = "limber-grid-view-pseudo-container"></div>`
-  // );
-  // set$bodyPseudoEl(
-  // 	context,
-  // 	document.getElementById(getPseudoElementId(context))
-  // );
-  // e.$el.innerHTML = `<div class = "limber-grid-view-container"><style></style><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
-  // set$limberGridViewContainer(
-  // 	context,
-  // 	e.$el.querySelectorAll(".limber-grid-view-container")[0]
-  // );
-  // set$limberGridViewStyle(context, e.$el.getElementsByTagName("style")[0]);
-  // set$limberGridView(context, e.$el.querySelectorAll(".limber-grid-view")[0]);
   const e = variables_elements(context);
   const privateConstants = constants_privateConstants(context);
-  const publicConstants = constants_publicConstants(context);
   const pd = getPositionData(context);
 
   if (autoArrange === true || !checkPositionData(pd)) {
@@ -6525,14 +5631,7 @@ const init = async function (context, isResize, autoArrange) {
   setPaddingTop(context, parseInt(window.getComputedStyle(e.$limberGridView, null).getPropertyValue("padding-top")));
   setPaddingBottom(context, parseInt(window.getComputedStyle(e.$limberGridView, null).getPropertyValue("padding-bottom")));
   setWidth(context, e.$limberGridView.clientWidth - privateConstants.PADDING_LEFT - privateConstants.PADDING_RIGHT);
-  setHeight(context, e.$limberGridView.clientHeight - privateConstants.PADDING_TOP - privateConstants.PADDING_BOTTOM); // privateConstants.WIDTH =
-  // 	e.$limberGridView.clientWidth -
-  // 	privateConstants.PADDING_LEFT -
-  // 	privateConstants.PADDING_RIGHT;
-  // privateConstants.HEIGHT =
-  // 	e.$limberGridView.clientHeight -
-  // 	privateConstants.PADDING_TOP -
-  // 	privateConstants.PADDING_BOTTOM;
+  setHeight(context, e.$limberGridView.clientHeight - privateConstants.PADDING_TOP - privateConstants.PADDING_BOTTOM);
 
   if (isResize) {
     // resiet item x, y, width, height; MARGIN, MIN_HEIGHT_AND_WIDTH
@@ -6725,7 +5824,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
- // import getPrivateConstants from "../../store/constants/privateConstants";
 
 
 
@@ -6734,9 +5832,7 @@ Written by Subendra Kumar Sharma.
 
 const onWindowResize = function (event) {
   const publicConstants = constants_publicConstants(this);
-  setTimeout(getBindedFunctions(this).onWindowResizeTimerCallback, // onWindowResizeTimerCallback,
-  publicConstants.WINDOW_RESIZE_WAIT_TIME // this
-  );
+  setTimeout(getBindedFunctions(this).onWindowResizeTimerCallback, publicConstants.WINDOW_RESIZE_WAIT_TIME);
   window.removeEventListener("resize", getBindedFunctions(this).onWindowResize);
 };
 const onWindowResizeTimerCallback = async function (event) {
@@ -6790,7 +5886,6 @@ Written by Subendra Kumar Sharma.
 
 
 
- // import { removeItems, addItems } from "./libs/renderers/addOrRemoveItems";
 
 
 LimberGridView.prototype.constructor = LimberGridView; // ----------------------------------------------------------------------------------------- //
@@ -6799,14 +5894,11 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 
 /*
 
-	processTypes : render, addItems, addItemInteractive, removeItems, resizeItems, onDemand(default for invoked), <custom> (for invoked)
-
 	var options = {
 		el : "#",																				// id of the parent element with #
 		editable : true, 																		// true/false (optional default true)
 		enableInteractiveAddAndCut : true,														// true/false (optional default true)
 		enableTouchInteraction : true,															// true/false (optional default true)
-		//dataType : "string", 																	// string/node
 		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
 		reRenderOnResize : true, 																// true/false (optional default true)
 		isMobileCheck: function
@@ -6822,7 +5914,7 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 		},
 		positionData: [																			// position Data
 			{x : <value>, y : <value>, width : <value>, height : <value>},
-				{x : <value>, y : <value>, width : <value>, height : <value>},
+			{x : <value>, y : <value>, width : <value>, height : <value>},
 
 					OR (if autoArrange set to true)
 
@@ -6842,13 +5934,7 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 
-			//getItemRenderDataCallback : function(index, width, height, processType){}, 			// callback to get string or node object to render inside the item
 			onItemClickCallback : function(event){},											// click callback for item
-			//itemsRenderComplete : function([index, index, ...], scale, processType){}, 			// callback for completion of renderItems function
-			//resizeCompleteCallback : function(index, {x, y, width, height}){}, 					// callback for completion of resizing an item
-			//moveCompleteCallback : function(status, index, {x, y, width, height} or event){}, 					// callback for completion of moving an item
-			//addCompleteCallback : function([index, index, ...], width, height, processType){}, 	// callback for completion of adding an item
-			//removeCompleteCallback : function([index, index, ...]){}, 							// callback for completion of removing an item
 		},
 		publicConstants: {
 			mobileAspectRatio : <value>, 															// aspect ratio of for mobile devices
@@ -6876,31 +5962,12 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 // ----------------------------------------------------------------------------------------- //
 // ---------------------------------- INPUT DATA FORMAT END -------------------------------- //
 // ----------------------------------------------------------------------------------------- //
-// ----------------------------------------------------------------------------------------- //
-// ---------------------------------- CONSTANTS YOU CAN CHANGE ----------------------------- //
-// ----------------------------------------------------------------------------------------- //
-// LimberGridView.prototype.MOVE_GUIDE_RADIUS = 10;
-// LimberGridView.prototype.RESIZE_SQUARE_GUIDE_LENGTH = 10;
-// LimberGridView.prototype.RESIZE_SQUARE_BORDER_GUIDE_WIDTH = 3;
-// LimberGridView.prototype.AUTO_SCROLL_DISTANCE = 50;
-// LimberGridView.prototype.AUTO_SCROLL_POINT = 50;
-// LimberGridView.prototype.MOVE_OR_RESIZE_HEIGHT_INCREMENTS = 50;
-// LimberGridView.prototype.MOUSE_DOWN_TIME = 500;
-// LimberGridView.prototype.TOUCH_HOLD_TIME = 300;
-// LimberGridView.prototype.DEMO_WAIT_TIME = 500;
-// LimberGridView.prototype.WINDOW_RESIZE_WAIT_TIME = 1000;
-// LimberGridView.prototype.MARGIN = 5;
-// LimberGridView.prototype.MOBILE_ASPECT_RATIO = 16 / 9;
-// LimberGridView.prototype.ADD_OR_CUTSPACE_TOGGLE = "ADD";
-// ----------------------------------------------------------------------------------------- //
-// ---------------------------------- CONSTANTS YOU CAN CHANGE END ------------------------- //
-// ----------------------------------------------------------------------------------------- //
 
 function LimberGridView(options) {
   this.initializeStore();
   setOptions(this, options);
   setPositionData(this, options.positionData);
-  setCallbacks(this, options.callbacks); // INITIALIZATION BEGIN
+  setCallbacks(this, options.callbacks);
 
   if (typeof options.el === "string") {
     const el = document.getElementById(options.el);
@@ -6917,7 +5984,7 @@ function LimberGridView(options) {
   }
 
   initConstantsAndFlags.call(this, options);
-  initRender.call(this); // INITIALIZATION ENDED
+  initRender.call(this);
 
   if (this.options.reRenderOnResize === true) {
     window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
@@ -6950,9 +6017,7 @@ LimberGridView.prototype.initializeStore = function () {
         $limberGridViewMoveGuide: undefined,
         $limberGridViewHeightAdjustGuide: undefined,
         $limberGridViewAddCutGuide: undefined,
-        // limberGridViewAddItemGuide
         $limberGridViewTouchHoldGuide: undefined,
-        // limberGridViewAddItemOnTouchHoldGuide
         //  DEBUG elements:
         $limberGridViewDebugMergedTempRects: [],
         $limberGridViewDebugStackTopRect: undefined,
@@ -7077,9 +6142,7 @@ LimberGridView.prototype.getGridData = function () {
       width: fixTo(pd[i].width / privateConstants.WIDTH_SCALE_FACTOR),
       height: fixTo(pd[i].height / privateConstants.WIDTH_SCALE_FACTOR)
     };
-  } // TO DO: have to scale positionData to GRID_HEIGHT, GRID_WIDTH and GRID_MARGIN
-  // Have to send a copy since it will be scaled to output specifications
-
+  }
 
   return {
     gridData: {
