@@ -1,4 +1,4 @@
-/*
+/** @license LimberGridView
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
