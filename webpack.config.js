@@ -33,11 +33,16 @@ var webpackNotifierPlugin = new WebpackNotifierPlugin({
   title: "LimberGridView",
   alwaysNotify: true,
 });
+var Webpack = require("webpack");
+var webpackBannerPlugin = new Webpack.BannerPlugin({
+  banner: fs.readFileSync("./license_header", "utf8"),
+  raw: true,
+});
 
 module.exports = {
   mode: process.env.NODE_ENV === "development" ? "development" : "production",
   devtool:
-    process.env.NODE_ENV === "development" ? "inline-source-map" : "source-map",
+    process.env.NODE_ENV === "development" ? "inline-source-map" : "none",
   entry: __dirname + "/src/index.js",
   optimization: {
     minimize: process.env.MINIMIZE === "true" ? true : false,
@@ -46,9 +51,14 @@ module.exports = {
     path:
       process.env.NODE_ENV === "development"
         ? __dirname + "/public/assets"
-        : __dirname + "/dist",
+        : __dirname + "/dist/umd/",
     publicPath: "assets",
-    filename: "index.js",
+    filename:
+      process.env.NODE_ENV === "development"
+        ? "index.js"
+        : process.env.MINIMIZE === "true"
+        ? "limber.grid.view.production.min.js"
+        : "limber.grid.view.development.js",
     library: "LimberGridView",
     libraryTarget: "umd",
   },
@@ -102,7 +112,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [miniCssExtractPlugin, webpackNotifierPlugin],
+  plugins: [miniCssExtractPlugin, webpackNotifierPlugin, webpackBannerPlugin],
   resolve: {
     alias: {
       src: path.resolve(__dirname, "src/"),
