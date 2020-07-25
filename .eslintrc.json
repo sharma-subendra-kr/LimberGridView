@@ -1,0 +1,19 @@
+{
+    "env": {
+        "browser": true,
+        "es2020": true
+    },
+    "extends": ["standard"],
+    "parserOptions": {
+        "ecmaVersion": 11,
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [2, "tab"],
+        "no-tabs": 0,
+        "semi": [2, "always"],
+        "quotes": ["error", "double", { "allowTemplateLiterals": true }],
+        "comma-dangle": "off",
+        "no-throw-literal": "off"
+    }
+}

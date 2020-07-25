@@ -1,0 +1,85 @@
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+export const emptyObject = function (obj) {
+	const keys = Object.keys(obj);
+	const length = keys.length;
+	for (let i = 0; i < length; i++) {
+		delete obj[keys[i]];
+	}
+};
+
+export const isMobile = function (context) {
+	const isMobileFunction = context.options.isMobileCheck;
+
+	if (isMobileFunction) {
+		return isMobileFunction();
+	}
+
+	return window.matchMedia(
+		"only screen and (max-width: 979px) and (min-width : 1px)"
+	).matches;
+};
+
+export const fixTo = (num, to = 6) => {
+	return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
+};
+
+export const filter = (arr) => {
+	const len = arr.length;
+	const temp = new Array(len);
+	let count = 0;
+	for (let i = 0; i < len; i++) {
+		if (arr[i] !== null && arr[i] !== undefined) {
+			temp[count++] = arr[i];
+		}
+	}
+
+	const res = new Array(count);
+	for (let i = 0; i < count; i++) {
+		res[i] = temp[i];
+	}
+
+	return res;
+};
+
+export const getRandomString = (len = 22) => {
+	const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
+
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = alpNum[Math.floor(Math.random() * 36)];
+	}
+	return arr.join("");
+};
+
+export const getItemDimenWithMargin = (MARGIN, item) => {
+	return {
+		x: item.x - MARGIN,
+		y: item.y - MARGIN,
+		width: item.width + MARGIN * 2,
+		height: item.height + MARGIN * 2,
+	};
+};

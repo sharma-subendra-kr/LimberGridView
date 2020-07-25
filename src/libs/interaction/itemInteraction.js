@@ -1,0 +1,260 @@
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+import {
+	getResizeAffectedItems,
+	getMoveAffectedItems,
+	resizeItemInitialChecks,
+	moveItemInitialChecks,
+	resetDemoUIChanges,
+	movePointAdjust,
+} from "./itemInteractionUtils";
+import { arrangeMove, arrangeResize } from "../arrange/arrange";
+import getPublicConstants from "../../store/constants/publicConstants";
+import {
+	getPositionData,
+	getModifiedPositionData,
+	setPositionData,
+	setModifiedPositionData,
+	getCallbacks,
+} from "../../store/variables/essentials";
+import getElements from "../../store/variables/elements";
+
+export const resizeItem = async function (index, width, height) {
+	const pd = getPositionData(this);
+	const e = getElements(this);
+	const callbacks = getCallbacks(this);
+
+	index = parseInt(index);
+	resizeItemInitialChecks(this, index, width, height);
+
+	resetDemoUIChanges(this);
+
+	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
+	mpd[index].width = width;
+	mpd[index].height = height;
+
+	const modifiedItem = {
+		x: pd[index].x,
+		y: pd[index].y,
+		width: width,
+		height: height,
+	};
+	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
+
+	const arranged = await arrangeResize(
+		this,
+		affectedItems,
+		modifiedItem.y + modifiedItem.height,
+		modifiedItem.x + modifiedItem.width
+	);
+
+	setPositionData(this, mpd);
+
+	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
+
+	if (callbacks.resizeComplete) {
+		callbacks.resizeComplete(index, width, height, arrangedArr);
+	}
+};
+
+export const resizeItemDemo = async function (index, width, height) {
+	const pd = getPositionData(this);
+	const e = getElements(this);
+
+	index = parseInt(index);
+	resizeItemInitialChecks(this, index, width, height);
+
+	resetDemoUIChanges(this);
+
+	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
+	mpd[index].width = width;
+	mpd[index].height = height;
+
+	const modifiedItem = {
+		x: pd[index].x,
+		y: pd[index].y,
+		width: width,
+		height: height,
+	};
+	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
+
+	const arranged = await arrangeResize(
+		this,
+		affectedItems,
+		modifiedItem.y + modifiedItem.height,
+		modifiedItem.x + modifiedItem.width,
+		true
+	);
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
+};
+
+export const moveItem = async function (index, toX, toY) {
+	const pd = getPositionData(this);
+	const e = getElements(this);
+	const callbacks = getCallbacks(this);
+	const publicConstants = getPublicConstants(this);
+
+	index = parseInt(index);
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		// change toX & toY to top left of the overlapping item
+		const adjustedPt = movePointAdjust(this, toX, toY);
+		toX = adjustedPt.toX;
+		toY = adjustedPt.toY;
+	}
+
+	moveItemInitialChecks(this, index, toX, toY);
+
+	resetDemoUIChanges(this);
+
+	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
+	mpd[index].x = toX;
+	mpd[index].y = toY;
+
+	const modifiedItem = {
+		x: toX,
+		y: toY,
+		width: pd[index].width,
+		height: pd[index].height,
+	};
+	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
+
+	const arranged = await arrangeMove(
+		this,
+		affectedItems,
+		toY,
+		toY + pd[index].height
+	);
+
+	setPositionData(this, mpd);
+
+	e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
+	e.$limberGridViewItems[
+		index
+	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+	if (!publicConstants.ANIMATE_MOVED_ITEM) {
+		// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
+		e.$limberGridViewItems[index].style.transition = "none";
+		setTimeout(() => {
+			e.$limberGridViewItems[index].style.transition = "";
+		}, publicConstants.ANIMATE_TIME);
+	}
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
+
+	if (callbacks.resizeComplete) {
+		callbacks.moveComplete(index, toX, toY, arrangedArr);
+	}
+};
+
+export const moveItemDemo = async function (index, toX, toY) {
+	const pd = getPositionData(this);
+	const e = getElements(this);
+	const publicConstants = getPublicConstants(this);
+
+	index = parseInt(index);
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		// change toX & toY to top left of the overlapping item
+		const adjustedPt = movePointAdjust(this, toX, toY);
+		toX = adjustedPt.toX;
+		toY = adjustedPt.toY;
+
+		if (!isNaN(adjustedPt.overlappedItemIndex)) {
+			e.$limberGridViewMoveGuide.style.transform =
+				"translate(" + toX + "px, " + toY + "px)";
+			e.$limberGridViewMoveGuide.classList.add(
+				"limber-grid-view-move-guide-active"
+			);
+		}
+	}
+
+	moveItemInitialChecks(this, index, toX, toY);
+
+	resetDemoUIChanges(this);
+
+	setModifiedPositionData(this, pd);
+	const mpd = getModifiedPositionData(this);
+	mpd[index].x = toX;
+	mpd[index].y = toY;
+
+	const modifiedItem = {
+		x: toX,
+		y: toY,
+		width: pd[index].width,
+		height: pd[index].height,
+	};
+	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
+
+	const arranged = await arrangeMove(
+		this,
+		affectedItems,
+		toY,
+		toY + pd[index].height,
+		true
+	);
+
+	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
+
+	const arrangedArr = Object.keys(arranged);
+	const len = arrangedArr.length;
+	for (let i = 0; i < len; i++) {
+		const key = arrangedArr[i];
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	}
+};

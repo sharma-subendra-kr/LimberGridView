@@ -1,0 +1,278 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0px;
+	height: 100%;
+
+	overflow: hidden;
+}
+
+.nav-bar {
+	width: 100%;
+	height: 50px;
+
+	background-color: #404040;
+	color: #f2f2f2;
+
+	padding: 10px;
+
+	font-size: 25px;
+	font-family: "Helvetica";
+}
+
+.limber-grid-controls {
+	width: 100%;
+	height: 30px;
+	display: inline-block;
+	white-space: nowrap;
+	text-align: right;
+	padding-top: 3px;
+	padding-right: 15px;
+}
+
+.toggle-add-or-cut-space {
+	width: 30px;
+	height: 25px;
+	display: inline-block;
+	padding-top: 3px;
+	text-align: center;
+	border: solid 1px #c0c0c0;
+
+	font-family: "Helvetica";
+	font-weight: 900;
+	user-select: none;
+	cursor: pointer;
+}
+
+.activate-cut-space-mode {
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.activate-add-mode {
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.toggle-add-or-cut-space-button-active {
+	display: inline-block;
+}
+
+.add-button {
+	width: 30px;
+	height: 25px;
+	display: inline-block;
+	padding-top: 3px;
+	text-align: center;
+	border: solid 1px #c0c0c0;
+
+	font-family: "Helvetica";
+	font-weight: 900;
+	user-select: none;
+	cursor: pointer;
+}
+
+.add-button-icon {
+}
+
+.footer {
+	width: 100%;
+	height: 20px;
+	text-align: right;
+	font-family: "Helvetica";
+	font-size: 15px;
+	padding-right: 15px;
+}
+
+#limber-grid-view-implement {
+	width: 100%;
+	height: calc(100% - 100px);
+	overflow: hidden;
+	padding: 5px;
+}
+
+#limber-grid-view-implement .limber-grid-view-container .limber-grid-view {
+	padding: 20px;
+	border: solid 1px #c0c0c0;
+	width: 100%;
+}
+
+.limber-grid-view::-webkit-scrollbar {
+	width: 10px;
+	height: 0px;
+}
+
+.limber-grid-view::-webkit-scrollbar-track {
+	background: #f9f9f9;
+}
+
+.limber-grid-view::-webkit-scrollbar-thumb {
+	background: #737373;
+}
+
+.limber-grid-view-item {
+	background-color: #f5f4f5;
+	border: solid 1px #e0e0e0;
+
+	/*box-shadow: 3px 3px 5px #a6a6a6;*/
+}
+
+.limber-grid-view-item-editable.limber-grid-view-item-no-shadow::before {
+	content: "";
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	box-shadow: 0px 0px 10px 5px #1a8cff;
+
+	border-radius: 0px;
+	top: 0px;
+	left: 0px;
+	background-color: transparent;
+	display: block;
+	position: absolute;
+}
+
+.limber-grid-view-item-editable.limber-grid-view-item-glow::before {
+	opacity: 1;
+	transition: opacity 0.75s ease-in-out;
+}
+
+/*.limberGridViewItem.limberGridViewItemEditable::before{
+	height: 40px;
+    width: 40px;
+
+    top: -20px;
+    left: -20px;
+
+}
+
+.limberGridViewItem.limberGridViewItemEditable::after{
+	height: 15px;
+    width: 15px;
+
+    border-right: solid black 5px;
+    border-bottom: solid black 5px;
+
+    top: calc(100% - 15px);
+    left: calc(100% - 15px);
+}*/
+
+.item-layout {
+	width: 100%;
+	height: 25px;
+	border-bottom: solid 1px #c0c0c0;
+	font-family: "Helvetica";
+
+	padding-left: 15px;
+	padding-top: 2px;
+	user-select: none;
+}
+
+.item-drop-down-button {
+	width: 25px;
+	height: 25px;
+	float: right;
+	cursor: pointer;
+
+	font-weight: 900;
+}
+
+.item-drop-down {
+	display: none;
+	width: 55px;
+	height: 50px;
+	position: absolute;
+	top: 25px;
+	right: 0px;
+
+	background-color: white;
+	border: solid 1px #c0c0c0;
+}
+
+.item-drop-down-active {
+	display: inline-block;
+}
+
+.item-drop-down-item {
+	width: 55px;
+	height: 25px;
+	cursor: pointer;
+	padding: 5px;
+
+	font-family: "Helvetica";
+	font-size: 13px;
+	font-weight: normal;
+
+	border-bottom: solid 1px #e0e0e0;
+}
+
+.item-drop-down-item:hover {
+	background-color: #c0c0c0;
+}
+
+.kpi {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.kpi-left {
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+}
+
+.kpi-right {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.kpi-right-top {
+	display: table-cell;
+	vertical-align: bottom;
+	font-family: "Helvetica";
+	text-align: center;
+}
+
+.kpiRightBottom {
+	display: block;
+	font-family: "Helvetica";
+	text-align: center;
+}
+
+.stock-up {
+	width: 0;
+	height: 0;
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+
+	border-bottom: 20px solid green;
+
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	position: absolute;
+
+	transform: translate(0px, -20px);
+}
+
+.stock-down {
+	width: 0;
+	height: 0;
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+
+	border-top: 20px solid #f00;
+
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	position: absolute;
+}
