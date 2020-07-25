@@ -6577,8 +6577,8 @@ const renderItem = function (context, index) {
   const e = variables_elements(context);
   const callbacks = getCallbacks(context);
   const pd = getPositionData(context);
-  const renderData = callbacks.renderContent(index, pd[index].width, pd[index].height);
-  e.$limberGridViewItems[index].innerHTML = "";
+  const renderData = callbacks.renderContent(index, pd[index].width, pd[index].height); // e.$limberGridViewItems[index].innerHTML = "";
+
   renderItemContent(context, renderData, e.$limberGridViewItems[index]);
 
   if (callbacks.renderComplete) {
@@ -6674,7 +6674,7 @@ const removeItem = function (context, index) {
   set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
 
   if (callbacks.removeComplete) {
-    callbacks.removeComplete(index);
+    callbacks.removeComplete(index, e.$limberGridViewItems[index]);
   } // initializeVariables();
 
 
@@ -6704,6 +6704,7 @@ const renderItemContent = (context, renderData, itemEl) => {
   if (typeof renderData === "string") {
     itemEl.innerHTML = renderData;
   } else if (renderData instanceof Element) {
+    itemEl.innerHTML = "";
     itemEl.appendChild(renderData);
   } else if (callbacks.renderPlugin) {
     callbacks.renderPlugin(renderData, itemEl);

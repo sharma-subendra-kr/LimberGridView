@@ -169,7 +169,7 @@ export const renderItem = function (context, index) {
 		pd[index].width,
 		pd[index].height
 	);
-	e.$limberGridViewItems[index].innerHTML = "";
+	// e.$limberGridViewItems[index].innerHTML = "";
 	renderItemContent(context, renderData, e.$limberGridViewItems[index]);
 
 	if (callbacks.renderComplete) {
@@ -301,7 +301,7 @@ export const removeItem = function (context, index) {
 	]);
 
 	if (callbacks.removeComplete) {
-		callbacks.removeComplete(index);
+		callbacks.removeComplete(index, e.$limberGridViewItems[index]);
 	}
 
 	// initializeVariables();
@@ -329,6 +329,7 @@ export const renderItemContent = (context, renderData, itemEl) => {
 	if (typeof renderData === "string") {
 		itemEl.innerHTML = renderData;
 	} else if (renderData instanceof Element) {
+		itemEl.innerHTML = "";
 		itemEl.appendChild(renderData);
 	} else if (callbacks.renderPlugin) {
 		callbacks.renderPlugin(renderData, itemEl);
