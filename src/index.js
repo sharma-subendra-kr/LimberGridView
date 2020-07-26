@@ -92,7 +92,7 @@ LimberGridView.prototype.constructor = LimberGridView;
 
 /*
 
-	var options = {
+	const options = {
 		el : "#",																				// id of the parent element with #
 		editable : true, 																		// true/false (optional default true)
 		enableInteractiveAddAndCut : true,														// true/false (optional default true)
@@ -105,8 +105,8 @@ LimberGridView.prototype.constructor = LimberGridView;
 		itemMouseDownResizeCheck: function 														// x clicked/touched, y clicked/touched, item, index
 
 		gridData : {
-			WIDTH : 1920,																	// width of limberGridView
-			HEIGHT : 1080, 																	// height of limberGridView
+			WIDTH : 1920,																		// width of limberGridView
+			HEIGHT : 1080, 																		// height of limberGridView
 			MARGIN : 8, 																		// margin for items
 			MIN_HEIGHT_AND_WIDTH: 150 															// min height and width of items
 		},
@@ -114,16 +114,16 @@ LimberGridView.prototype.constructor = LimberGridView;
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 
-					OR (if autoArrange set to true)
+			OR (if autoArrange set to true)
 
-				{width : <value>, height : <value>},
-				{width : <value>, height : <value>},
-				...,
-				...,
-				...
+			{width : <value>, height : <value>},
+			{width : <value>, height : <value>},
+			...,
+			...,
+			...
 		],
 		callbacks : {
-			renderComplete : function(){}, 														// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
+			renderComplete : function(){}, 															// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
 			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
 			addComplete : function(index){}
 			removeComplete: function(index){}
@@ -132,7 +132,7 @@ LimberGridView.prototype.constructor = LimberGridView;
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 
-			onItemClickCallback : function(event){},											// click callback for item
+			onItemClickCallback : function(event){},												// click callback for item
 		},
 		publicConstants: {
 			mobileAspectRatio : <value>, 															// aspect ratio of for mobile devices
