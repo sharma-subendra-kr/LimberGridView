@@ -392,6 +392,17 @@ var main = function () {
 		return true;
 	};
 
+	var isMobileCheck = function () {
+		return (
+			window.matchMedia(
+				"only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)"
+			).matches ||
+			window.matchMedia(
+				"only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)"
+			).matches
+		);
+	};
+
 	var obj = {
 		el: "limber-grid-view-implement",
 		// editable: true,
@@ -403,6 +414,7 @@ var main = function () {
 		// reRenderOnResize: true,
 		// itemMouseDownMoveCheck: itemMouseDownMoveCheck,
 		// itemMouseDownResizeCheck: itemMouseDownResizeCheck,
+		// isMobileCheck: isMobileCheck,
 		callbacks: {
 			renderContent: renderContent,
 			onItemClickCallback: onItemClickCallback,

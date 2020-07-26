@@ -38,9 +38,14 @@ export const isMobile = function (context) {
 		return isMobileFunction();
 	}
 
-	return window.matchMedia(
-		"only screen and (max-width: 979px) and (min-width : 1px)"
-	).matches;
+	return (
+		window.matchMedia(
+			"only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)"
+		).matches ||
+		window.matchMedia(
+			"only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)"
+		).matches
+	);
 };
 
 export const fixTo = (num, to = 6) => {
