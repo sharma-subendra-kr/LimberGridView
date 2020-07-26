@@ -485,8 +485,8 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 		return false;
 	}
 
-	let minY = Number.MAX_SAFE_INTEGER;
-	let maxY = 0;
+	let minY = y + height;
+	let maxY = y;
 
 	let atLeastOneOverlapping = false;
 	let isOverlapping;
@@ -540,14 +540,6 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 	}
 
 	if (atLeastOneOverlapping) {
-		if (minY === Number.MAX_SAFE_INTEGER) {
-			minY = y;
-		}
-
-		if (maxY === 0) {
-			maxY = y + height;
-		}
-
 		if (minY - maxY > 0) {
 			return { y: maxY, shiftHeight: minY - maxY };
 		} else {
