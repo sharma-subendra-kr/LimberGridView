@@ -159,8 +159,6 @@ export const arrangeMove = async (
 	let arrangedCount = 0;
 	let workSpaceResizeCount = 0;
 
-	let DEBUG_COUNT = 0;
-
 	while (arrangedCount !== iToALen) {
 		// sort items in workspace by lt.x  i.e horizontally
 		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
@@ -245,8 +243,7 @@ export const arrangeMove = async (
 
 		passCount++;
 
-		DEBUG_COUNT++;
-		if (DEBUG_COUNT > 50) {
+		if (passCount > 1000) {
 			throw "Arrange time out";
 		}
 	}
@@ -507,7 +504,7 @@ export const arrangeResize = async (
 
 		passCount++;
 
-		if (passCount > 50) {
+		if (passCount > 1000) {
 			throw "Arrange time out";
 		}
 	}
@@ -644,7 +641,6 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 
 		passCount++;
 
-		passCount++;
 		if (passCount > 10000) {
 			throw "Arrange time out";
 		}
