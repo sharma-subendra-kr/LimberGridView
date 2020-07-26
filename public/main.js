@@ -253,6 +253,7 @@ var main = function () {
 	}
 
 	function renderContent(index, width, height, type) {
+		console.log("renderContent", index, width, height, type);
 		// console.log(width);
 		// console.log(height);
 		// console.log(processType);

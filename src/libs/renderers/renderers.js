@@ -150,12 +150,23 @@ export const renderItem = function (context, index) {
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
 	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
 
-	const renderData = callbacks.renderContent(
-		index,
-		pd[index].width,
-		pd[index].height
-	);
+	let renderData;
+	if (!isMobile(context)) {
+		renderData = callbacks.renderContent(
+			index,
+			pd[index].width,
+			pd[index].height
+		);
+	} else {
+		renderData = callbacks.renderContent(
+			index,
+			privateConstants.WIDTH,
+			privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO
+		);
+	}
 
 	renderItemContent(context, renderData, e.$limberGridViewItems[index]);
 
@@ -174,8 +185,8 @@ export const addItem = async function (context, item) {
 	unInitializeEvents.call(context);
 
 	try {
-		let allow = false;
 		if (item.x && item.y && item.width && item.height) {
+			let allow = false;
 			allow = addItemAllowCheck(
 				context,
 				item.x,
@@ -189,8 +200,13 @@ export const addItem = async function (context, item) {
 				const mpd = getModifiedPositionData(context);
 				mpd.push(item);
 				setPositionData(context, mpd);
+			} else {
+				return false;
 			}
 		} else if (item.width && item.height && !item.x && !item.y) {
+			if (item.width > privateConstants.WIDTH) {
+				return false;
+			}
 			const pd = getPositionData(context);
 			setModifiedPositionData(context, pd);
 			const mpd = getModifiedPositionData(context);
@@ -277,6 +293,8 @@ export const removeItem = function (context, index) {
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
 	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
 
 	unInitializeEvents.call(context);
 
@@ -285,19 +303,33 @@ export const removeItem = function (context, index) {
 	if (callbacks.removePlugin) {
 		callbacks.removePlugin(e.$limberGridViewItems[index]);
 	}
-
 	e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
+
 	set$limberGridViewItems(context, [
 		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
 	]);
 
 	const len = pd.length;
-	for (let i = 0; i < len; i++) {
+	for (let i = index; i < len; i++) {
 		e.$limberGridViewItems[i].setAttribute("data-index", i);
 	}
 
 	if (callbacks.removeComplete) {
 		callbacks.removeComplete(index, e.$limberGridViewItems[index]);
+	}
+
+	for (let i = index; i < len; i++) {
+		let renderData;
+		if (!isMobile(context)) {
+			renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+		} else {
+			renderData = callbacks.renderContent(
+				i,
+				privateConstants.WIDTH,
+				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO
+			);
+		}
+		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
 	}
 
 	initializeEvents.call(context);
