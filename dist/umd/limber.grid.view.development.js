@@ -134,12 +134,16 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
+    if(false) { var cssReload; }
+  
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
+    if(false) { var cssReload; }
+  
 
 /***/ }),
 /* 4 */
@@ -2059,7 +2063,7 @@ const isMobile = function (context) {
     return isMobileFunction();
   }
 
-  return window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px)").matches;
+  return window.matchMedia("only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)").matches || window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)").matches;
 };
 const fixTo = (num, to = 6) => {
   return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
@@ -2534,8 +2538,8 @@ const cutSpaceAllowCheck = function (context, x, y, width, height) {
     return false;
   }
 
-  let minY = Number.MAX_SAFE_INTEGER;
-  let maxY = 0;
+  let minY = y + height;
+  let maxY = y;
   let atLeastOneOverlapping = false;
   let isOverlapping;
   const len = pd.length;
@@ -2569,14 +2573,6 @@ const cutSpaceAllowCheck = function (context, x, y, width, height) {
   }
 
   if (atLeastOneOverlapping) {
-    if (minY === Number.MAX_SAFE_INTEGER) {
-      minY = y;
-    }
-
-    if (maxY === 0) {
-      maxY = y + height;
-    }
-
     if (minY - maxY > 0) {
       return {
         y: maxY,
@@ -5028,7 +5024,16 @@ const renderItem = function (context, index) {
   const e = variables_elements(context);
   const callbacks = getCallbacks(context);
   const pd = getPositionData(context);
-  const renderData = callbacks.renderContent(index, pd[index].width, pd[index].height);
+  const privateConstants = constants_privateConstants(context);
+  const publicConstants = constants_publicConstants(context);
+  let renderData;
+
+  if (!isMobile(context)) {
+    renderData = callbacks.renderContent(index, pd[index].width, pd[index].height);
+  } else {
+    renderData = callbacks.renderContent(index, privateConstants.WIDTH, privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO);
+  }
+
   renderItemContent(context, renderData, e.$limberGridViewItems[index]);
 
   if (callbacks.renderComplete) {
@@ -5044,9 +5049,8 @@ const addItem = async function (context, item) {
   unInitializeEvents.call(context);
 
   try {
-    let allow = false;
-
     if (item.x && item.y && item.width && item.height) {
+      let allow = false;
       allow = addItemAllowCheck(context, item.x, item.y, item.width, item.height);
 
       if (allow) {
@@ -5055,8 +5059,14 @@ const addItem = async function (context, item) {
         const mpd = getModifiedPositionData(context);
         mpd.push(item);
         setPositionData(context, mpd);
+      } else {
+        return false;
       }
     } else if (item.width && item.height && !item.x && !item.y) {
+      if (item.width > privateConstants.WIDTH) {
+        return false;
+      }
+
       const pd = getPositionData(context);
       setModifiedPositionData(context, pd);
       const mpd = getModifiedPositionData(context);
@@ -5118,6 +5128,8 @@ const removeItem = function (context, index) {
   const e = variables_elements(context);
   const callbacks = getCallbacks(context);
   const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const publicConstants = constants_publicConstants(context);
   unInitializeEvents.call(context);
   pd.splice(index, 1);
 
@@ -5129,12 +5141,24 @@ const removeItem = function (context, index) {
   set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
   const len = pd.length;
 
-  for (let i = 0; i < len; i++) {
+  for (let i = index; i < len; i++) {
     e.$limberGridViewItems[i].setAttribute("data-index", i);
   }
 
   if (callbacks.removeComplete) {
     callbacks.removeComplete(index, e.$limberGridViewItems[index]);
+  }
+
+  for (let i = index; i < len; i++) {
+    let renderData;
+
+    if (!isMobile(context)) {
+      renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+    } else {
+      renderData = callbacks.renderContent(i, privateConstants.WIDTH, privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO);
+    }
+
+    renderItemContent(context, renderData, e.$limberGridViewItems[i]);
   }
 
   initializeEvents.call(context);
