@@ -2930,7 +2930,6 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
   let arranged = {};
   let arrangedCount = 0;
   let workSpaceResizeCount = 0;
-  let DEBUG_COUNT = 0;
 
   while (arrangedCount !== iToALen) {
     // sort items in workspace by lt.x  i.e horizontally
@@ -2994,9 +2993,8 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
     }
 
     passCount++;
-    DEBUG_COUNT++;
 
-    if (DEBUG_COUNT > 50) {
+    if (passCount > 1000) {
       throw "Arrange time out";
     }
   }
@@ -3241,7 +3239,7 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
 
     passCount++;
 
-    if (passCount > 50) {
+    if (passCount > 1000) {
       throw "Arrange time out";
     }
   }
@@ -3361,7 +3359,6 @@ const arrangeFromHeight = async (context, itemsToArrange, height) => {
       combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
     }
 
-    passCount++;
     passCount++;
 
     if (passCount > 10000) {
