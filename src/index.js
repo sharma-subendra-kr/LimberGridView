@@ -305,6 +305,10 @@ LimberGridView.prototype.constructor = LimberGridView;
  * @property {numer} animateTime Time to wait before re-activating animate to the moved item. Re-activating means the moved item should animate if other items are moved resized later. This flag might have some more features later on. Default value is 250ms.
  */
 
+/**
+ * @class
+ * @name LimberGridView
+ */
 function LimberGridView(options) {
 	this.initializeStore();
 	setOptions(this, options);
@@ -478,7 +482,9 @@ LimberGridView.prototype.initializeStore = function () {
 };
 
 /**
- * renderItem: Call this function to forcefully re-render the contents of the item. Internally calls renderContent. Must be called inside resizeComplete
+ * @method
+ * @name LimberGridView#renderItem
+ * @description Call this function to forcefully re-render the contents of the item. Internally calls renderContent. Must be called inside resizeComplete
  * @param  {number} index Index of item to force re-render.
  */
 LimberGridView.prototype.renderItem = function (index) {
@@ -486,7 +492,9 @@ LimberGridView.prototype.renderItem = function (index) {
 };
 
 /**
- * getGridData: Call this function to get positionData scaled according to gridData.
+ * @method
+ * @name LimberGridView#getGridData
+ * @description Call this function to get positionData scaled according to gridData.
  * @return {object} Object containing gridData and positionData.
  */
 LimberGridView.prototype.getGridData = function () {
@@ -516,7 +524,9 @@ LimberGridView.prototype.getGridData = function () {
 };
 
 /**
- * setDeskInteractMode: Call this function to change DESK_INTERACTION_MODE during runtime.
+ * @method
+ * @name LimberGridView#setDeskInteractMode
+ * @description Call this function to change DESK_INTERACTION_MODE during runtime.
  * @param {string} flag String "ADD" or "CUTSPACE"
  */
 LimberGridView.prototype.setDeskInteractMode = function (flag) {
@@ -526,7 +536,9 @@ LimberGridView.prototype.setDeskInteractMode = function (flag) {
 };
 
 /**
- * setLatchMovedItem: Call this function to change LATCH_MOVED_ITEM during runtime.
+ * @method
+ * @name LimberGridView#setLatchMovedItem
+ * @description Call this function to change LATCH_MOVED_ITEM during runtime.
  * @param {boolean} flag Boolean true or false. To latch or not to latch.
  */
 LimberGridView.prototype.setLatchMovedItem = function (flag) {
@@ -536,7 +548,9 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 };
 
 /**
- * addItem: Call this function to add an item.
+ * @method
+ * @name LimberGridView#addItem
+ * @description Call this function to add an item.
  * @param {object} item Object with optional properties width and height.
  */
 LimberGridView.prototype.addItem = function (item) {
@@ -552,7 +566,9 @@ LimberGridView.prototype.addItem = function (item) {
 };
 
 /**
- * removeItem: Call this function to remove an item with the index.
+ * @method
+ * @name LimberGridView#removeItem
+ * @description Call this function to remove an item with the index.
  * @param  {number} index Index of the item to be removed.
  */
 LimberGridView.prototype.removeItem = function (index) {
@@ -562,7 +578,9 @@ LimberGridView.prototype.removeItem = function (index) {
 };
 
 /**
- * setIsMobileCheck: Set isMobileCheck callback function during runtime
+ * @method
+ * @name LimberGridView#setIsMobileCheck
+ * @description Set isMobileCheck callback function during runtime
  * @param {isMobileCheck} f isMobileCheck callback to check if the screen is a mobile device screen.
  */
 LimberGridView.prototype.setIsMobileCheck = function (f) {
