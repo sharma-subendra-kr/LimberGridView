@@ -166,14 +166,14 @@ LimberGridView.prototype.constructor = LimberGridView;
 
 /**
  * @typedef {object} options Parameters to constructor function
- * @property {{{string|object}}} el id of the container or element object
+ * @property {(string|object)} el id of the container or element object
  * @property {boolean} editable If enabled user can resize, move, cut space, interactivelu add on the desk. Default is true.
  * @property {boolean} enableInteractiveAddAndCut If enabled user can add and cut space on the desk. Default is true.
  * @property {boolean} enableTouchInteraction If enabled user can use touch interaction on items on desk and on the desk. Default is true.
  * @property {boolean} autoArrange If enabled first render is autoarranged. Autoarrange also happens when a faulty data is received during window resize.
  * @property {boolean} reRenderOnResize If enabled rerender on window resize. Passing false is dangerous. Default is true.
  * @property {isMobileCheck} callback A callback that returns a boolean which tells that the screen is or is not a mobile screen
- * @property {{{string|object}}} pseudoElementContainer The id of the element or the element where the pseudo elements are rendered that appear during moving.
+ * @property {(string|object)} pseudoElementContainer The id of the element or the element where the pseudo elements are rendered that appear during moving.
  * @property {itemMouseDownMoveCheck} callback A callback function to tell whether the mouse down event has occured at a desired location on the item for move event.
  * @property {itemMouseDownResizeCheck} callback A callback function to tell whether the mouse down event has occured at a desired location on the item for resize event.
  * @property {object} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
@@ -237,16 +237,16 @@ LimberGridView.prototype.constructor = LimberGridView;
 
 /**
  * @callback renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
- * @param {{{undefined|number}}} index Index is the index of the item rendered or undefined if the item was rendered by the constructor or on resize.
+ * @param {(undefined|number)} index Index is the index of the item rendered or undefined if the item was rendered by the constructor or on resize.
  */
 
 /**
  * @callback renderContent Callback function called to get the contents to attach to the item as children. This also called for all the items whose indices are affected due to removal of any item. In such a case it is called after removeComplete.
  * @param {number} index Index of the item.
- * @param {[type]} width Width of the item.
- * @param {[type]} height Height of the item.
- * @param {{{undefined|string}}} type Type is undefined for all occurances except when item is freshly added.
- * @returns {{{string|Element|object}}} String representing DOM elements. Instance of an Element. Any object.
+ * @param {number} width Width of the item.
+ * @param {number} height Height of the item.
+ * @param {(undefined|string)} type Type is undefined for all occurances except when item is freshly added.
+ * @returns {(string|Element|object)} String representing DOM elements. Instance of an Element. Any object.
  */
 
 /**
