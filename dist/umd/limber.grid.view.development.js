@@ -2,7 +2,7 @@
  *
  * LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
  *
- * Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+ * Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
  *
  * This file is part of LimberGridView.
  *
@@ -134,16 +134,12 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
-    if(false) { var cssReload; }
-  
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // extracted by mini-css-extract-plugin
-    if(false) { var cssReload; }
-  
 
 /***/ }),
 /* 4 */
@@ -164,7 +160,7 @@ var src_0 = __webpack_require__(3);
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -314,7 +310,7 @@ const getMinHeightAndWidth = function (context) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -359,7 +355,7 @@ const getPublicConstantByName = function (context, name) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -563,7 +559,7 @@ const get$limberGridViewDebugMergedFreeRects = function (context) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -632,7 +628,7 @@ const adjustScroll = function (context, limberGridViewOnVisibleAreaY, limberGrid
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -723,7 +719,7 @@ const getCallbacks = function (context) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -827,7 +823,7 @@ const calculateTouchPosOnItem = function (context, event) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -863,7 +859,7 @@ const getOptions = function (context) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1038,7 +1034,7 @@ const unloadOnMoveState = context => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1808,7 +1804,7 @@ const areRectsIdentical = (rectA, rectB) => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2028,7 +2024,7 @@ var external_commonjs_ClosestBST_commonjs2_ClosestBST_amd_ClosestBST_root_Closes
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2110,7 +2106,7 @@ const getItemDimenWithMargin = (MARGIN, item) => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2593,7 +2589,7 @@ const cutSpaceAllowCheck = function (context, x, y, width, height) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2631,7 +2627,7 @@ const shuffle = arr => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2765,7 +2761,7 @@ Stack.prototype.wipe = function () {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2824,7 +2820,7 @@ const printAdjRect = (context, obj) => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -3989,7 +3985,7 @@ const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4176,7 +4172,7 @@ const moveItemDemo = async function (index, toX, toY) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4204,7 +4200,7 @@ const getBindedFunctions = context => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4241,7 +4237,7 @@ const setDeskInteractionVarsByName = function (context, name, value) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4653,7 +4649,7 @@ const revertShowMoveOrResizeDemo = function (context) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4718,7 +4714,7 @@ const unloadInitState = context => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4835,7 +4831,7 @@ const unInitializeItemTouchEvents = function () {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4900,7 +4896,7 @@ const getPdBottomMax = context => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5195,7 +5191,7 @@ const renderItemContent = (context, renderData, itemEl) => {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5554,7 +5550,7 @@ const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5587,7 +5583,7 @@ const LATCH_MOVED_ITEM = {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5788,7 +5784,7 @@ const initRender = function () {
     e.$body.appendChild(pseudoContainer);
   }
 
-  e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020, Subendra Kumar Sharma. License: GNU General Public License version 3, or (at your option) any later version.</div></div></div>`;
+  e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
   set$limberGridViewContainer(this, e.$el.getElementsByClassName("limber-grid-view-container")[0]);
   set$limberGridView(this, e.$el.getElementsByClassName("limber-grid-view")[0]);
   const pseudoContainerItem = document.createElement("div");
@@ -5825,7 +5821,7 @@ const initRender = function () {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5874,7 +5870,7 @@ const onItemClick = function (event) {
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5915,7 +5911,7 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 
 /*
 
-	var options = {
+	const options = {
 		el : "#",																				// id of the parent element with #
 		editable : true, 																		// true/false (optional default true)
 		enableInteractiveAddAndCut : true,														// true/false (optional default true)
@@ -5928,8 +5924,8 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 		itemMouseDownResizeCheck: function 														// x clicked/touched, y clicked/touched, item, index
 
 		gridData : {
-			WIDTH : 1920,																	// width of limberGridView
-			HEIGHT : 1080, 																	// height of limberGridView
+			WIDTH : 1920,																		// width of limberGridView
+			HEIGHT : 1080, 																		// height of limberGridView
 			MARGIN : 8, 																		// margin for items
 			MIN_HEIGHT_AND_WIDTH: 150 															// min height and width of items
 		},
@@ -5937,16 +5933,16 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 
-					OR (if autoArrange set to true)
+			OR (if autoArrange set to true)
 
-				{width : <value>, height : <value>},
-				{width : <value>, height : <value>},
-				...,
-				...,
-				...
+			{width : <value>, height : <value>},
+			{width : <value>, height : <value>},
+			...,
+			...,
+			...
 		],
 		callbacks : {
-			renderComplete : function(){}, 														// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
+			renderComplete : function(){}, 															// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
 			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
 			addComplete : function(index){}
 			removeComplete: function(index){}
@@ -5955,7 +5951,7 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 
-			onItemClickCallback : function(event){},											// click callback for item
+			onItemClickCallback : function(event){},												// click callback for item
 		},
 		publicConstants: {
 			mobileAspectRatio : <value>, 															// aspect ratio of for mobile devices
@@ -5983,6 +5979,152 @@ LimberGridView.prototype.constructor = LimberGridView; // ----------------------
 // ----------------------------------------------------------------------------------------- //
 // ---------------------------------- INPUT DATA FORMAT END -------------------------------- //
 // ----------------------------------------------------------------------------------------- //
+
+/**
+ * @typedef {object} options Parameters to constructor function
+ * @property {(string|object)} el id of the container or element object
+ * @property {boolean} editable If enabled user can resize, move, cut space, interactivelu add on the desk. Default is true.
+ * @property {boolean} enableInteractiveAddAndCut If enabled user can add and cut space on the desk. Default is true.
+ * @property {boolean} enableTouchInteraction If enabled user can use touch interaction on items on desk and on the desk. Default is true.
+ * @property {boolean} autoArrange If enabled first render is autoarranged. Autoarrange also happens when a faulty data is received during window resize.
+ * @property {boolean} reRenderOnResize If enabled rerender on window resize. Passing false is dangerous. Default is true.
+ * @property {isMobileCheck} callback A callback that returns a boolean which tells that the screen is or is not a mobile screen
+ * @property {(string|object)} pseudoElementContainer The id of the element or the element where the pseudo elements are rendered that appear during moving.
+ * @property {itemMouseDownMoveCheck} callback A callback function to tell whether the mouse down event has occured at a desired location on the item for move event.
+ * @property {itemMouseDownResizeCheck} callback A callback function to tell whether the mouse down event has occured at a desired location on the item for resize event.
+ * @property {object} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
+ * @property {object[]} positionData input position data of items to render.
+ * @property {object} callbacks An object containing various callbacks.
+ * @property {object} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
+ */
+
+/**
+ * @callback isMobileCheck
+ * @returns {boolean} Returns true if the screen matches media queries for a mobile screen.
+ */
+
+/**
+ * @callback itemMouseDownMoveCheck
+ * @param {Number} x point along the x axis axis where the mouse down happened on the item
+ * @param {Number} y point along the y axis axis where the mouse down happened on the item
+ * @param {object} positionData object for the item.
+ * @param {number} index Index of the item in positionData array.
+ * @param {object} target target element where the mouse down happened.
+ * @returns {boolean} Returns true if the mouse down happened at a desired location on the item for move event.
+ */
+
+/**
+ * @callback itemMouseDownResizeCheck
+ * @param {Number} x point along the x axis axis where the mouse down happened on the item
+ * @param {Number} y point along the y axis axis where the mouse down happened on the item
+ * @param {object} positionData object for the item.
+ * @param {number} index Index of the item in positionData array.
+ * @param {object} target target element where the mouse down happened.
+ * @returns {boolean} Returns true if the mouse down happened at a desired location on the item for resize event.
+ */
+
+/**
+ * @typedef {object} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
+ * @property {number} WIDTH Width of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1920.
+ * @property {number} HEIGHT Height of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1080.
+ * @property {number} MARGIN Margin or the items maintained by Arrange Engine. It is scaled internally as per the device size for visual consistency. Default value is 8.
+ * @property {number} MIN_HEIGHT_AND_WIDTH Min height and width of the items. It is scaled internally as per the device size for visual consistency. A lower number affects the performance of the arrange algorithm. Default value is 150.
+ */
+
+/**
+ * @typedef {object[]} positionData Array of Position Data of the items on grid. These are scaled during the runtime. Use getGridData function to get data to store on the database which is scaled accorging to gridData.
+ * @property {number} x positon of item along the x axis.
+ * @property {number} y positon of item along the y axis.
+ * @property {number} width Width of the item.
+ * @property {number} height Height of the item.
+ */
+
+/**
+ * @typedef {object} callbacks Object containing all the callbacks
+ * @property {renderComplete} callback Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
+ * @property {renderContent} callback Callback function called to get the contents to attach to the item as children.
+ * @property {addComplete} callback Callback function called when addition of an item is complete.
+ * @property {removeComplete} callback Callback function called when removing of item is complete.
+ * @property {moveComplete} callback Callback function called when moving of item is complete.
+ * @property {resizeComplete} callback Callback function called when resizing of item is complete.
+ * @property {renderPlugin} callback Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
+ * @property {removePlugin} callback Callback function called before the item is removed from the DOM. Also before removeComplete.
+ */
+
+/**
+ * @callback renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
+ * @param {(undefined|number)} index Index is the index of the item rendered or undefined if the item was rendered by the constructor or on resize.
+ */
+
+/**
+ * @callback renderContent Callback function called to get the contents to attach to the item as children. This also called for all the items whose indices are affected due to removal of any item. In such a case it is called after removeComplete.
+ * @param {number} index Index of the item.
+ * @param {number} width Width of the item.
+ * @param {number} height Height of the item.
+ * @param {(undefined|string)} type Type is undefined for all occurances except when item is freshly added.
+ * @returns {(string|Element|object)} String representing DOM elements. Instance of an Element. Any object.
+ */
+
+/**
+ * @callback addComplete Callback function called when addition of an item is complete.
+ * @param {number} index Index of the item added.
+ */
+
+/**
+ * @callback removeComplete Callback function called when removing of item is complete.
+ * @param {number} index Index of the item removed.
+ */
+
+/**
+ * @callback moveComplete Callback function called when moving of item is complete.
+ * @param {number} index Index of the item moved.
+ * @param {number} toX Position along the x axis where the item is moved.
+ * @param {number} toY Position along the y axis where the item is moved.
+ * @param {number[]} arrangedIndices Indices of the arranged items.
+ */
+
+/**
+ * @callback resizeComplete Callback function called when resizing of item is complete.
+ * @param {number} index Index of the resized item.
+ * @param {number} width Width of the item resized.
+ * @param {number} height Height of the item resized.
+ * @param {number[]} arrangedIndices Indices of the arranged items.
+ */
+
+/**
+ * @callback renderPlugin Callback function called after renderContent and before renderComplete and addComplete. Also after removeComplete for items whose indices are affected due to removeal of any item. On this callback you can render React JSX.
+ * @param {object} renderData Data received from renderContent callback.
+ * @param {Element} element Element object of the item that is being rendered.
+ */
+
+/**
+ * @callback removePlugin Callback function called just before the item is removed from the DOM. Also before removeComplete. This is called so that necessary clean up can be performed by frameworks like react.
+ * @param {Element} element Element which is going to be removed.
+ */
+
+/**
+ * @typedef {object} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
+ * @property {number} mobileAspectRatio A nummber denoting the aspect ratio of each item for mobile view e.g. 5:4. Default value is 5/4.
+ * @property {number} moveGuideRadius Radius of the Move guide radius a pseudo element at the top left corner of the item. You can remove move guide for a customized look and feel. Default value is 10.
+ * @property {number} resizeSquareGuideLength Length of the square that is rendered at the bottom right corner of the item as a pseudo element. Default value is 10.
+ * @property {number} resizeSquareGuideBorderWidth Width of the border of the square that is rendered at the bottom right corner of the item as a pseudo element. Default value is 3.
+ * @property {number} autoScrollDistance A number by which the grid or desk is scrolled automatically on height increments for touch mode. Default value is 50.
+ * @property {number} autoScrollPoint A height above the bottom at which scroll happens automatically for touch mode. Default value is 50.
+ * @property {number} moveOrResizeHeightIncrements A number by which the height of the grid view is increased while resizing, adding or cuttting space when you reach the bottom for touch mode. Default value is 50.
+ * @property {number} mouseDownTime Time to wait before initiating move, add or resize routines for mouse interaction. Default value is 500ms.
+ * @property {number} touchHoldTime Time to wait before initiating move, add or resize routines for touch mode. Default value is 300ms.
+ * @property {number} demoWaitTime TIme to wait before a demo of resize or move is initiated. Waring a very low demo wait time will cause unwanted behaviour as the algorithm needs some time to calculate next positions. Default is 500ms.
+ * @property {number} windowResizeTimeTime Time to wait before initiating resize routines. Default value is 1000ms.
+ * @property {string} deskInteraction Flag which tells whether the user wants to add an item or cut space by mouse or touch interaction. Default value is ADD.
+ * @property {boolean} latchMovedItem To latch or not to latch on to other items when overlapped while dragging to move an item. Default value is true.
+ * @property {boolean} animateMovedItem Wether to animate or not to animate the moved item. Default value is false.
+ * @property {numer} animateTime Time to wait before re-activating animate to the moved item. Re-activating means the moved item should animate if other items are moved resized later. This flag might have some more features later on. Default value is 250ms.
+ */
+
+/**
+ * @class
+ * @name LimberGridView
+ */
 
 function LimberGridView(options) {
   this.initializeStore();
@@ -6145,10 +6287,24 @@ LimberGridView.prototype.initializeStore = function () {
     }
   };
 };
+/**
+ * @method
+ * @name LimberGridView#renderItem
+ * @description Call this function to forcefully re-render the contents of the item. Internally calls renderContent. Must be called inside resizeComplete
+ * @param  {number} index Index of item to force re-render.
+ */
+
 
 LimberGridView.prototype.renderItem = function (index) {
   renderItem(this, index);
 };
+/**
+ * @method
+ * @name LimberGridView#getGridData
+ * @description Call this function to get positionData scaled according to gridData.
+ * @return {object} Object containing gridData and positionData.
+ */
+
 
 LimberGridView.prototype.getGridData = function () {
   const privateConstants = getPrivateConstants(this);
@@ -6175,18 +6331,39 @@ LimberGridView.prototype.getGridData = function () {
     positionData: arr
   };
 };
+/**
+ * @method
+ * @name LimberGridView#setDeskInteractMode
+ * @description Call this function to change DESK_INTERACTION_MODE during runtime.
+ * @param {string} flag String "ADD" or "CUTSPACE"
+ */
+
 
 LimberGridView.prototype.setDeskInteractMode = function (flag) {
   if (DESK_INTERACTION_MODE[flag]) {
     setPublicConstantByName(this, "DESK_INTERACTION_MODE", flag);
   }
 };
+/**
+ * @method
+ * @name LimberGridView#setLatchMovedItem
+ * @description Call this function to change LATCH_MOVED_ITEM during runtime.
+ * @param {boolean} flag Boolean true or false. To latch or not to latch.
+ */
+
 
 LimberGridView.prototype.setLatchMovedItem = function (flag) {
   if (LATCH_MOVED_ITEM[flag]) {
     setPublicConstantByName(this, "LATCH_MOVED_ITEM", flag);
   }
 };
+/**
+ * @method
+ * @name LimberGridView#addItem
+ * @description Call this function to add an item.
+ * @param {object} item Object with optional properties width and height.
+ */
+
 
 LimberGridView.prototype.addItem = function (item) {
   if (!item) {
@@ -6199,12 +6376,26 @@ LimberGridView.prototype.addItem = function (item) {
 
   addItem(this, item);
 };
+/**
+ * @method
+ * @name LimberGridView#removeItem
+ * @description Call this function to remove an item with the index.
+ * @param  {number} index Index of the item to be removed.
+ */
+
 
 LimberGridView.prototype.removeItem = function (index) {
   if (Number.isInteger(index)) {
     removeItem(this, index);
   }
 };
+/**
+ * @method
+ * @name LimberGridView#setIsMobileCheck
+ * @description Set isMobileCheck callback function during runtime
+ * @param {isMobileCheck} f isMobileCheck callback to check if the screen is a mobile device screen.
+ */
+
 
 LimberGridView.prototype.setIsMobileCheck = function (f) {
   this.options.isMobileCheck = f;
