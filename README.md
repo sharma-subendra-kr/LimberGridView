@@ -1,4 +1,4 @@
-# Limber GridView
+# LimberGridView
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
 **[View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)**
