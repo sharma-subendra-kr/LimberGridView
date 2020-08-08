@@ -322,6 +322,27 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 	return _item;
 };
 
+export const isMergable = function (rect) {
+	return (node, interval, d) => {
+		if (
+			doRectsOverlap(rect, node.d.rect) ||
+			doRectsOnlyTouch(rect, node.d.rect)
+		) {
+			return true;
+		}
+		return false;
+	};
+};
+
+export const isRectsCompatible = function (rect) {
+	return (node, interval, d) => {
+		if (isRectInside(node.d.rect, rect)) {
+			return true;
+		}
+		return false;
+	};
+};
+
 export const cBSTRectComparator = function (item) {
 	return (node, v, d) => {
 		if (node.d.rect.width >= item.width && node.d.rect.height >= item.height) {

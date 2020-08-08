@@ -253,7 +253,7 @@ var main = function () {
 	}
 
 	function renderContent(index, width, height, type) {
-		console.log("renderContent", index, width, height, type);
+		// console.log("renderContent", index, width, height, type);
 		// console.log(width);
 		// console.log(height);
 		// console.log(processType);
@@ -872,7 +872,7 @@ var main = function () {
 	// console.log(
 	// 	window.getComputedStyle(body[0], null).getPropertyValue("width")
 	// );
-	console.log("LimberGridView", LimberGridView);
+	// console.log("LimberGridView", LimberGridView);
 	window.limberGridView = new LimberGridView.default(obj);
 	// window.limberGridView.MOVE_GUIDE_RADIUS = 20;
 	// window.limberGridView.RESIZE_SQUARE_GUIDE_LENGTH = 15;
