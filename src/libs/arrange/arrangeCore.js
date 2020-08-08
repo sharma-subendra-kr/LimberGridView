@@ -283,11 +283,9 @@ export const mergeFreeRects = async (freeRects, lastId, garbageRects) => {
 	let stack, it;
 
 	if (Array.isArray(freeRects)) {
-		console.log("freeRects", freeRects.length);
 		stack = new Stack({ data: freeRects });
 		it = new IntervalTreesIterative();
 	} else {
-		console.log("garbageRects", garbageRects.length);
 		stack = new Stack({ data: garbageRects });
 		it = freeRects;
 	}
@@ -335,7 +333,7 @@ export const mergeFreeRects = async (freeRects, lastId, garbageRects) => {
 			it.insert({ ...top.interval, d: top.d });
 		}
 	}
-	console.log("mergedRects.length", it.getSortedData().length);
+	// console.log("mergedRects.length", it.getSortedData().length);
 	return { mergedRects: it.getSortedData(), mergedRectsIt: it, idCount };
 };
 
@@ -610,9 +608,7 @@ export const arrange = async (
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i].d.rect;
 			if (oRect.width >= tempAItem.width && oRect.height >= tempAItem.height) {
-				resStack.push({
-					d: { id: idCount++, rect: oRect, a: {}, o: {}, ref: null },
-				});
+				resStack.push(overlappedRects[i]);
 			}
 		}
 
@@ -665,6 +661,8 @@ export const arrange = async (
 				},
 			};
 		}
+
+		mergedRectsIt.remove(pm.interval, pm.d);
 
 		const { idCount: lastId1 } = mergeFreeRects(
 			mergedRectsIt,
