@@ -161,7 +161,7 @@ export const arrangeMove = async (
 
 	while (arrangedCount !== iToALen) {
 		// sort items in workspace by lt.x  i.e horizontally
-		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+		// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 		const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
 			context,
@@ -400,7 +400,7 @@ export const arrangeResize = async (
 		let freeRectsItY;
 		if (passCount === 0) {
 			// sort items in workspace by lt.x  i.e horizontally
-			itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+			// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 			const { it: _freeRectsItY, idCount: lastId1 } = sweepLine(
 				context,
@@ -431,7 +431,7 @@ export const arrangeResize = async (
 			continue;
 		} else if (passCount >= 2) {
 			// sort items in workspace by lt.x  i.e horizontally
-			itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+			// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 			const { it: _freeRectsItY, idCount: lastId1 } = sweepLine(
 				context,
@@ -576,7 +576,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 
 	while (arrangedCount !== iToALen) {
 		// sort items in workspace by lt.x  i.e horizontally
-		itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
+		// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
 
 		const { it: freeRectsItY, idCount: lastId1 } = sweepLine(
 			context,
