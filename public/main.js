@@ -514,7 +514,6 @@ var main = function () {
 			// 	height: 438.1580291411043,
 			// 	width: 718.6058282208588 - 5,
 			// },
-
 			// set 3
 			// {
 			// 	x: 5,
@@ -891,7 +890,7 @@ var main = function () {
 
 	window.toggleMerged = function () {
 		const els = document.getElementsByClassName(
-			"limberGridViewDebugMergedFreeRect"
+			"limber-grid-view-debug-merged-free-rect"
 		);
 
 		let state = "";
@@ -912,7 +911,7 @@ var main = function () {
 
 	window.toggleMergedById = function (id) {
 		const el = document.getElementById(
-			"limberGridViewDebugMergedFreeRect-" + id
+			"limber-grid-view-debug-merged-free-rect-" + id
 		);
 
 		if (el) {
@@ -925,12 +924,14 @@ var main = function () {
 	};
 
 	window.getMergedElementById = function (id) {
-		return document.getElementById("limberGridViewDebugMergedFreeRect-" + id);
+		return document.getElementById(
+			"limber-grid-view-debug-merged-free-rect-" + id
+		);
 	};
 
 	window.toggleUnmerged = function () {
 		const els = document.getElementsByClassName(
-			"limberGridViewDebugUnmergedRect"
+			"limber-grid-view-debug-unmerged-rect"
 		);
 
 		let state = "";
@@ -950,7 +951,9 @@ var main = function () {
 	window.toggleUnmerged.display = "";
 
 	window.toggleUnmergedById = function (id) {
-		const el = document.getElementById("limberGridViewDebugUnmergedRect-" + id);
+		const el = document.getElementById(
+			"limber-grid-view-debug-unmerged-rect-" + id
+		);
 
 		if (el) {
 			if (el.style.display === "") {
@@ -962,32 +965,34 @@ var main = function () {
 	};
 
 	window.getUnmergedElementById = function (id) {
-		return document.getElementById("limberGridViewDebugUnmergedRect-" + id);
+		return document.getElementById(
+			"limber-grid-view-debug-unmerged-rect-" + id
+		);
 	};
 
 	window.getStackTopRect = function (id) {
-		return document.getElementById("limberGridViewDebugStackTopRect");
+		return document.getElementById("limber-grid-view-debug-stack-top-rect");
 	};
 
 	window.getStackTopAdjRect = function (id) {
-		return document.getElementById("limberGridViewDebugStackTopAdjRect");
+		return document.getElementById("limber-grid-view-debug-stack-top-adj-rect");
 	};
 
 	window.getMergedRect = function (id) {
-		return document.getElementById("limberGridViewDebugMergedRect");
+		return document.getElementById("limber-grid-view-debug-merged-rect");
 	};
 
 	window.getAdjRect = function (id) {
-		return document.getElementById("limberGridViewDebugAdjRect");
+		return document.getElementById("limber-grid-view-debug-adj-rect");
 	};
 
 	window.scrollUp = function () {
-		const el = document.getElementsByClassName("limberGridView")[0];
+		const el = document.getElementsByClassName("limber-grid-view")[0];
 		el.scrollTop -= 100;
 	};
 
 	window.scrollDown = function () {
-		const el = document.getElementsByClassName("limberGridView")[0];
+		const el = document.getElementsByClassName("limber-grid-view")[0];
 		el.scrollTop += 100;
 	};
 };

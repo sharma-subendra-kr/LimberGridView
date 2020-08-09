@@ -37,7 +37,7 @@ const Stack = function (options) {
 	if (options && options.data) {
 		const data = options.data;
 		const len = data.length;
-		for (let i = 0; i < len; i++) {
+		for (let i = len - 1; i >= 0; i--) {
 			this.push(data[i]);
 		}
 	}

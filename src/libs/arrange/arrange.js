@@ -158,9 +158,9 @@ export const arrangeMove = async (
 	);
 
 	const shiftHeight =
-		(privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
-			privateConstants.MARGIN * 2) /
-		2;
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
+		privateConstants.MARGIN * 2 -
+		10;
 
 	let passCount = 0;
 	let arranged = {};
@@ -189,12 +189,13 @@ export const arrangeMove = async (
 		// 	context,
 		// 	freeRectsArr.map((o) => o.d)
 		// );
+		debugger;
 
 		const {
 			mergedRects,
 			mergedRectsIt,
 			idCount: lastId2,
-		} = await mergeFreeRects(freeRectsArr, idCount.idCount);
+		} = await mergeFreeRects(context, freeRectsArr, idCount.idCount);
 		idCount.idCount = lastId2;
 
 		// DEBUG:
@@ -202,7 +203,7 @@ export const arrangeMove = async (
 		// 	context,
 		// 	mergedRects.map((o) => o.d)
 		// );
-
+		debugger;
 		// const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
@@ -258,7 +259,7 @@ export const arrangeMove = async (
 
 		passCount++;
 
-		if (passCount > 1000) {
+		if (passCount > 100) {
 			throw "Arrange time out";
 		}
 	}
@@ -473,7 +474,7 @@ export const arrangeResize = async (
 			mergedRects,
 			mergedRectsIt,
 			idCount: lastId2,
-		} = await mergeFreeRects(freeRectsArr, idCount.idCount);
+		} = await mergeFreeRects(context, freeRectsArr, idCount.idCount);
 		idCount.idCount = lastId2;
 
 		// DEBUG:
@@ -614,7 +615,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 			mergedRects,
 			mergedRectsIt,
 			idCount: lastId2,
-		} = await mergeFreeRects(freeRectsArr, idCount.idCount);
+		} = await mergeFreeRects(context, freeRectsArr, idCount.idCount);
 		idCount.idCount = lastId2;
 
 		// DEBUG:
