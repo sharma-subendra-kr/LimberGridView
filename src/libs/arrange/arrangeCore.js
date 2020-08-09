@@ -40,6 +40,7 @@ import {
 	getPerfectMatch,
 	// shiftItemsDown,
 	// getResizeWSItemsDetail,
+	rectSort,
 	isMergable,
 	isRectsCompatible,
 } from "./arrangeUtils";
@@ -285,19 +286,22 @@ export const mergeFreeRects = async (
 	garbageRects
 ) => {
 	debugger;
+	// console.log("**mergeFreeRects - DEBUG**");
+	// const p1 = performance.now();
+
 	let idCount = lastId;
 	let stack, it;
 
 	if (Array.isArray(freeRects)) {
+		shuffle(freeRects);
 		stack = new Stack({
-			// data: freeRects.sort((a, b) => a.d.rect.x - b.d.rect.x),
-			data: freeRects,
+			data: freeRects.sort(rectSort),
 		});
 		it = new IntervalTreesIterative();
 	} else {
+		shuffle(garbageRects);
 		stack = new Stack({
-			// data: garbageRects.sort((a, b) => a.d.rect.x - b.d.rect.x),
-			data: garbageRects.sort((a, b) => a.d.rect.x - b.d.rect.x),
+			data: garbageRects.sort(rectSort),
 		});
 		it = freeRects;
 	}
@@ -355,27 +359,24 @@ export const mergeFreeRects = async (
 						},
 					};
 
-					// printMergedRect(context, mergedObject.d);
-
-					if (mergedObject.d.rect.height > top.d.rect.height) {
-						mergedObject.interval = mergedObjectInterval;
-						stack.push(mergedObject);
-					} else {
-						// mergedObject.low = mergedObjectInterval.low;
-						// mergedObject.high = mergedObjectInterval.high;
-						// it.insert(mergedObject);
-						isRectIdenticalOrInside(it, mergedObject);
-					}
+					mergedObject.low = mergedObjectInterval.low;
+					mergedObject.high = mergedObjectInterval.high;
+					it.insert(mergedObject);
+					// isRectIdenticalOrInside(it, mergedObject);
 				}
 			}
 			if (topFullMerged === false) {
-				// it.insert({ ...top.interval, d: top.d });
-				isRectIdenticalOrInside(it, { d: top.d });
+				it.insert({ ...top.interval, d: top.d });
+				// isRectIdenticalOrInside(it, { d: top.d });
 			}
 		} else {
 			it.insert({ ...top.interval, d: top.d });
 		}
 	}
+
+	// const p2 = performance.now();
+	// console.log("mergeFreeRects: ", p2 - p1);
+	// console.log("mergedStackPushes", mergedStackPushes);
 	return { mergedRects: it.getSortedData(), mergedRectsIt: it, idCount };
 };
 

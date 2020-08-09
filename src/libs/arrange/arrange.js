@@ -157,10 +157,14 @@ export const arrangeMove = async (
 		combinedWorkSpaceRect
 	);
 
+	// const shiftHeight =
+	// 	privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
+	// 	privateConstants.MARGIN * 2 -
+	// 	10;
 	const shiftHeight =
-		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
-		privateConstants.MARGIN * 2 -
-		10;
+		(privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
+			privateConstants.MARGIN * 2) /
+		2;
 
 	let passCount = 0;
 	let arranged = {};

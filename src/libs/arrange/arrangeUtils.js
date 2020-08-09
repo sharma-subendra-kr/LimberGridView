@@ -322,6 +322,14 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 	return _item;
 };
 
+export const rectSort = (a, b) => {
+	if (a.d.rect.x === b.d.rect.x) {
+		return a.d.rect.y - b.d.rect.y;
+	} else {
+		return a.d.rect.x - b.d.rect.x;
+	}
+};
+
 export const isMergable = function (rect) {
 	return (node, interval, d) => {
 		if (
