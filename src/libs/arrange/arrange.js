@@ -180,9 +180,9 @@ export const arrangeMove = async (
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
 			itemsInCombinedWorkSpace,
-			idCount.idCount
+			idCount
 		);
-		idCount.idCount = lastId1;
+		// idCount.idCount = lastId1;
 
 		// assignAdjacentRects(freeRectsItY);
 		const freeRectsArr = freeRectsItY.getSortedData();
@@ -193,21 +193,22 @@ export const arrangeMove = async (
 		// 	context,
 		// 	freeRectsArr.map((o) => o.d)
 		// );
-		debugger;
+		// debugger;
 
 		const {
 			mergedRects,
 			mergedRectsIt,
-			idCount: lastId2,
-		} = await mergeFreeRects(context, freeRectsArr, idCount.idCount);
-		idCount.idCount = lastId2;
+			// idCount: lastId2,
+		} = await mergeFreeRects(context, freeRectsArr, idCount);
+		// idCount.idCount = lastId2;
 
 		// DEBUG:
 		// printMergedFreeRects(
 		// 	context,
 		// 	mergedRects.map((o) => o.d)
 		// );
-		debugger;
+		// debugger;
+		// throw "";
 		// const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
@@ -225,9 +226,9 @@ export const arrangeMove = async (
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			combinedWorkSpaceRectCo,
-			idCount.idCount
+			idCount
 		);
-		idCount.idCount = lastId3;
+		// idCount.idCount = lastId3;
 
 		itemsInBottomWorkSpace = [
 			...itemsInBottomWorkSpace,
@@ -427,10 +428,10 @@ export const arrangeResize = async (
 				combinedWorkSpaceRect,
 				combinedWorkSpaceRectCo,
 				itemsInCombinedWorkSpace,
-				idCount.idCount
+				idCount
 			);
 			freeRectsItY = _freeRectsItY;
-			idCount.idCount = lastId1;
+			// idCount.idCount = lastId1;
 		} else if (passCount === 1) {
 			const {
 				itemsInWorkSpace: _itemsInCombinedWorkSpace,
@@ -458,10 +459,10 @@ export const arrangeResize = async (
 				_combinedWorkSpaceRect,
 				_combinedWorkSpaceRectCo,
 				itemsInCombinedWorkSpace,
-				idCount.idCount
+				idCount
 			);
 			freeRectsItY = _freeRectsItY;
-			idCount.idCount = lastId1;
+			// idCount.idCount = lastId1;
 		}
 
 		// assignAdjacentRects(freeRectsItY);
@@ -477,9 +478,9 @@ export const arrangeResize = async (
 		const {
 			mergedRects,
 			mergedRectsIt,
-			idCount: lastId2,
-		} = await mergeFreeRects(context, freeRectsArr, idCount.idCount);
-		idCount.idCount = lastId2;
+			// idCount: lastId2,
+		} = await mergeFreeRects(context, freeRectsArr, idCount);
+		// idCount.idCount = lastId2;
 
 		// DEBUG:
 		// printMergedFreeRects(
@@ -503,9 +504,9 @@ export const arrangeResize = async (
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo,
-			idCount.idCount
+			idCount
 		);
-		idCount.idCount = lastId3;
+		// idCount.idCount = lastId3;
 
 		arranged = { ...arranged, ..._arranged };
 		const _arrangedArr = Object.values(_arranged);
@@ -604,9 +605,9 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
 			itemsInCombinedWorkSpace,
-			idCount.idCount
+			idCount
 		);
-		idCount.idCount = lastId1;
+		// idCount.idCount = lastId1;
 
 		// assignAdjacentRects(freeRectsItY);
 		const freeRectsArr = freeRectsItY.getSortedData();
@@ -618,9 +619,9 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		const {
 			mergedRects,
 			mergedRectsIt,
-			idCount: lastId2,
-		} = await mergeFreeRects(context, freeRectsArr, idCount.idCount);
-		idCount.idCount = lastId2;
+			// idCount: lastId2,
+		} = await mergeFreeRects(context, freeRectsArr, idCount);
+		// idCount.idCount = lastId2;
 
 		// DEBUG:
 		// printMergedFreeRects(context, mergedRects.map((o) => o.d));
@@ -638,9 +639,9 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 			getRectObjectFromCo(topWorkSpaceCo),
 			undefined,
 			combinedWorkSpaceRectCo,
-			idCount.idCount
+			idCount
 		);
-		idCount.idCount = lastId3;
+		// idCount.idCount = lastId3;
 
 		arranged = { ...arranged, ..._arranged };
 		const _arrangedArr = Object.values(_arranged);

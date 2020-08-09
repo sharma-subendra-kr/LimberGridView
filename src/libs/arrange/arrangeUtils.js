@@ -322,11 +322,19 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 	return _item;
 };
 
-export const rectSort = (a, b) => {
+export const rectSortX = (a, b) => {
 	if (a.d.rect.x === b.d.rect.x) {
 		return a.d.rect.y - b.d.rect.y;
 	} else {
 		return a.d.rect.x - b.d.rect.x;
+	}
+};
+
+export const rectSortY = (a, b) => {
+	if (a.d.rect.y === b.d.rect.y) {
+		return a.d.rect.x - b.d.rect.x;
+	} else {
+		return a.d.rect.y - b.d.rect.y;
 	}
 };
 
@@ -342,9 +350,9 @@ export const isMergable = function (rect) {
 	};
 };
 
-export const isRectsCompatible = function (rect) {
+export const shouldFilterRect = function (rect, data) {
 	return (node, interval, d) => {
-		if (isRectInside(node.d.rect, rect)) {
+		if (isRectInside(node.d.rect, rect) && node.d !== data) {
 			return true;
 		}
 		return false;
