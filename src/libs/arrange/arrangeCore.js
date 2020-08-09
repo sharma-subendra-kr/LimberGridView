@@ -418,7 +418,11 @@ export const mergeFreeRects = async (
 	shuffle(arr);
 	const len = arr.length;
 	for (let i = 0; i < len; i++) {
-		resIt.insert({ ...arr[i].interval, d: arr[i].d });
+		resIt.insert({
+			low: arr[i].d.rect.x,
+			high: arr[i].d.rect.x + arr[i].d.rect.width,
+			d: arr[i].d,
+		});
 	}
 
 	// const p2 = performance.now();
@@ -692,6 +696,7 @@ export const arrange = async (
 	let aItem;
 	// let wCBSTRes;
 	const resStack = new Stack();
+	const grabageStack = new Stack();
 
 	while (!itemsToArrangeStack.isEmpty()) {
 		resStack.empty();
@@ -700,12 +705,12 @@ export const arrange = async (
 
 		aItem = mpd[top.d];
 
-		const tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+		let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
 
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i].d.rect;
-			debugger;
+			// debugger;
 			// console.log("**********");
 			// console.log(
 			// 	"oRect id: ",
@@ -751,36 +756,46 @@ export const arrange = async (
 			itemsInBottomWorkSpace[top.d] = top.d;
 		}
 		debugger;
-		const _garbageRects = subtractRect(
-			pm.d.rect,
-			getItemDimenWithMargin(privateConstants.MARGIN, aItem)
-		);
 
-		const gLen = _garbageRects.length;
-		const garbageRects = new Array(gLen);
-		for (let i = 0; i < gLen; i++) {
-			garbageRects[i] = {
-				interval: {
-					low: _garbageRects[i].y,
-					high: _garbageRects[i].y + _garbageRects[i].height,
-				},
-				d: {
-					id: idCount.idCount++,
-					rect: _garbageRects[i],
-					a: {},
-					o: {},
-					ref: null,
-				},
-			};
+		grabageStack.empty();
+		const result = mergedRectsIt.findAll(pm.interval);
+		const resLen = result.length;
+		tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+		for (let i = 0; i < resLen; i++) {
+			const res = result[i];
+			const _garbageRects = subtractRect(
+				res.d.rect,
+				// getItemDimenWithMargin(privateConstants.MARGIN, aItem)
+				tempAItem
+			);
+
+			const gLen = _garbageRects?.length || 0;
+			// const garbageRects = new Array(gLen);
+			for (let i = 0; i < gLen; i++) {
+				grabageStack.push({
+					interval: {
+						low: _garbageRects[i].x,
+						high: _garbageRects[i].x + _garbageRects[i].width,
+					},
+					d: {
+						id: idCount.idCount++,
+						rect: _garbageRects[i],
+						a: {},
+						o: {},
+						ref: null,
+					},
+				});
+			}
+			if (gLen) {
+				mergedRectsIt.remove(res.interval, res.d);
+			}
 		}
-
-		mergedRectsIt.remove(pm.interval, pm.d);
 
 		const { idCount: lastId1 } = await mergeFreeRects(
 			context,
 			mergedRectsIt,
 			idCount,
-			garbageRects
+			grabageStack.getData()
 		);
 		// idCount = lastId1;
 		overlappedRects = mergedRectsIt.getSortedData();
