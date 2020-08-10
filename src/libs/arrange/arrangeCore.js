@@ -258,23 +258,6 @@ export const sweepLineForFreeSpace = (
 	return { it };
 };
 
-export const assignAdjacentRects = (rectsItY) => {
-	const rectItYArr = rectsItY.getSortedData();
-
-	const len = rectItYArr.length;
-	let resY, lenY;
-
-	for (let i = 0; i < len; i++) {
-		resY = rectsItY.findAll(rectItYArr[i].interval);
-		lenY = resY.length;
-		for (let j = 0; j < lenY; j++) {
-			if (areRectsAdjacent(rectItYArr[i].d.rect, resY[j].d.rect)) {
-				rectItYArr[i].d.a[resY[j].d.id] = resY[j];
-			}
-		}
-	}
-};
-
 export const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
@@ -435,85 +418,6 @@ export const isRectIdenticalOrInside = (it, obj, on) => {
 	}
 
 	return isIdenticalOrInside;
-};
-
-export const filterAdjacents = (mergedObject, visited) => {
-	const mergedRect = mergedObject.d.rect;
-	const adjs = mergedObject.d.a;
-	let adj;
-	const adjsKeys = Object.keys(adjs);
-	const adjsKeysLen = adjsKeys.length;
-	for (let j = 0; j < adjsKeysLen; j++) {
-		adj = adjs[adjsKeys[j]];
-
-		if (!areRectsAdjacent(mergedRect, adj.d.rect)) {
-			delete adjs[adjsKeys[j]];
-		}
-	}
-};
-
-export const findOverlapped = (mergedRects) => {
-	const it = new IntervalTreesIterative();
-
-	const len = mergedRects.length;
-	for (let i = 0; i < len; i++) {
-		mergedRects[i].low = mergedRects[i].d.rect.y;
-		mergedRects[i].high =
-			mergedRects[i].d.rect.y + mergedRects[i].d.rect.height;
-		it.insert(mergedRects[i]);
-	}
-
-	const completeOverlapped = {};
-	const itArr = it.getSortedData();
-
-	let res, rlen;
-
-	for (let i = 0; i < len; i++) {
-		res = it.findAll(itArr[i].interval);
-		rlen = res.length;
-		for (let j = 0; j < rlen; j++) {
-			if (
-				itArr[i].d.rect &&
-				res[j].d.rect &&
-				isRectInside(itArr[i].d.rect, res[j].d.rect) &&
-				itArr[i].d.id !== res[j].d.id
-			) {
-				completeOverlapped[res[j].d.id] = res[j];
-				res[j].d._rect = res[j].d.rect;
-				res[j].d.rect = null;
-
-				const olpds = Object.values(res[j].d.o);
-				const oLen = olpds.length;
-				for (let k = 0; k < oLen; k++) {
-					// Hey everyone I'm done.
-					const olpd = olpds[k];
-					delete olpd.d.o[res[j].d.id];
-				}
-				res[j].d.o = {};
-			} else if (doRectsOverlap(itArr[i].d.rect, res[j].d.rect)) {
-				itArr[i].d.o[res[j].d.id] = res[j];
-				res[j].d.o[itArr[i].d.id] = itArr[i];
-			}
-		}
-	}
-
-	const resArr = new Array(len);
-	let count = 0;
-	for (let i = 0; i < len; i++) {
-		if (itArr[i].d.rect) {
-			resArr[count++] = itArr[i];
-		}
-	}
-
-	const filteredResArr = new Array(count);
-	for (let i = 0; i < count; i++) {
-		filteredResArr[i] = resArr[i];
-	}
-
-	return {
-		overlappedRects: filteredResArr,
-		completeOverlapped: Object.values(completeOverlapped),
-	};
 };
 
 /**
