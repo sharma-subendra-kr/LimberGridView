@@ -23,16 +23,12 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// import { IntervalTreesIterative } from "IntervalTreeJS";
-// import { ClosestBST } from "ClosestBST";
 import { getModifiedPositionData } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	shrinkTopBottomWS,
 	sweepLineForFreeSpace,
-	assignAdjacentRects,
 	mergeFreeRects,
-	findOverlapped,
 	arrange,
 } from "./arrangeCore";
 import {
@@ -40,29 +36,10 @@ import {
 	getTopBottomWS,
 	getItemsInWorkSpace,
 	getItemsBelowBottomWorkSpace,
-	// getItemDimenWithMargin,
-	// getItemsToArrangeScore,
-	// cBSTRectComparator,
-	// cBSTLComp,
-	// cBSTRComp,
-	// getPerfectMatch,
 	shiftItemsDown,
 	getResizeWSItemsDetail,
 } from "./arrangeUtils";
-import {
-	getRectObjectFromCo,
-	// subtractRect,
-	// doRectsOverlap,
-	// areRectsAdjacent,
-	// getCoordinates,
-	// mergeRects,
-	// isRectInside,
-	// areRectsOnSameYAxisExPath,
-	// areRectsIdentical,
-} from "../rect/rectUtils";
-import { shuffle } from "../array/arrayUtils";
-// import { filter } from "../utils/utils";
-// import Stack from "../stack/stack";
+import { getRectObjectFromCo } from "../rect/rectUtils";
 import {
 	sleep,
 	printUnmergedFreeRects,
@@ -173,63 +150,34 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		// sort items in workspace by lt.x  i.e horizontally
-		// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
-
-		const { it: freeRectsItY, idCount: lastId1 } = sweepLineForFreeSpace(
+		const { it: freeRectsItY } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
 			itemsInCombinedWorkSpace,
 			idCount
 		);
-		// idCount.idCount = lastId1;
 
-		// assignAdjacentRects(freeRectsItY);
 		const freeRectsArr = freeRectsItY.getSortedData();
-		// shuffle(freeRectsArr);
 
-		// DEBUG:
-		// printUnmergedFreeRects(
-		// 	context,
-		// 	freeRectsArr.map((o) => o.d)
-		// );
-		// debugger;
-
-		const {
-			mergedRects,
-			mergedRectsIt,
-			// idCount: lastId2,
-		} = await mergeFreeRects(context, freeRectsArr, idCount);
-		// idCount.idCount = lastId2;
-
-		// DEBUG:
-		// printMergedFreeRects(
-		// 	context,
-		// 	mergedRects.map((o) => o.d)
-		// );
-		// debugger;
-
-		// const { overlappedRects } = findOverlapped(mergedRects);
-
-		// DEBUG:
-		// printMergedFreeRects(context, overlappedRects.map((o) => o.d));
+		const { mergedRectsIt } = await mergeFreeRects(
+			context,
+			freeRectsArr,
+			idCount
+		);
 
 		const {
 			arranged: _arranged,
 			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
-			idCount: lastId3,
 		} = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			// overlappedRects,
 			mergedRectsIt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			combinedWorkSpaceRectCo,
 			idCount
 		);
-		// idCount.idCount = lastId3;
 
 		itemsInBottomWorkSpace = [
 			...itemsInBottomWorkSpace,
@@ -265,7 +213,7 @@ export const arrangeMove = async (
 
 		passCount++;
 
-		if (passCount > 100) {
+		if (passCount > 1000) {
 			throw "Arrange time out";
 		}
 	}
@@ -421,10 +369,7 @@ export const arrangeResize = async (
 	while (arrangedCount !== iToALen) {
 		let freeRectsItY;
 		if (passCount === 0) {
-			// sort items in workspace by lt.x  i.e horizontally
-			// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
-
-			const { it: _freeRectsItY, idCount: lastId1 } = sweepLineForFreeSpace(
+			const { it: _freeRectsItY } = sweepLineForFreeSpace(
 				context,
 				combinedWorkSpaceRect,
 				combinedWorkSpaceRectCo,
@@ -432,7 +377,6 @@ export const arrangeResize = async (
 				idCount
 			);
 			freeRectsItY = _freeRectsItY;
-			// idCount.idCount = lastId1;
 		} else if (passCount === 1) {
 			const {
 				itemsInWorkSpace: _itemsInCombinedWorkSpace,
@@ -452,10 +396,7 @@ export const arrangeResize = async (
 			passCount++;
 			continue;
 		} else if (passCount >= 2) {
-			// sort items in workspace by lt.x  i.e horizontally
-			// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
-
-			const { it: _freeRectsItY, idCount: lastId1 } = sweepLineForFreeSpace(
+			const { it: _freeRectsItY } = sweepLineForFreeSpace(
 				context,
 				_combinedWorkSpaceRect,
 				_combinedWorkSpaceRectCo,
@@ -463,53 +404,25 @@ export const arrangeResize = async (
 				idCount
 			);
 			freeRectsItY = _freeRectsItY;
-			// idCount.idCount = lastId1;
 		}
 
-		// assignAdjacentRects(freeRectsItY);
 		const freeRectsArr = freeRectsItY.getSortedData();
-		// shuffle(freeRectsArr);
 
-		// DEBUG:
-		// printUnmergedFreeRects(
-		// 	context,
-		// 	freeRectsArr.map((o) => o.d)
-		// );
-		// debugger;
+		const { mergedRectsIt } = await mergeFreeRects(
+			context,
+			freeRectsArr,
+			idCount
+		);
 
-		const {
-			mergedRects,
-			mergedRectsIt,
-			// idCount: lastId2,
-		} = await mergeFreeRects(context, freeRectsArr, idCount);
-		// idCount.idCount = lastId2;
-
-		// DEBUG:
-		// printMergedFreeRects(
-		// 	context,
-		// 	mergedRects.map((o) => o.d)
-		// );
-		// debugger;
-
-		// const { overlappedRects } = findOverlapped(mergedRects);
-
-		// DEBUG:
-		// printMergedFreeRects(
-		// 	context,
-		// 	overlappedRects.map((o) => o.d)
-		// );
-
-		const { arranged: _arranged, idCount: lastId3 } = await arrange(
+		const { arranged: _arranged } = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			// overlappedRects,
 			mergedRectsIt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo,
 			idCount
 		);
-		// idCount.idCount = lastId3;
 
 		arranged = { ...arranged, ..._arranged };
 		const _arrangedArr = Object.values(_arranged);
@@ -599,51 +512,31 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		// sort items in workspace by lt.x  i.e horizontally
-		// itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
-
-		const { it: freeRectsItY, idCount: lastId1 } = sweepLineForFreeSpace(
+		const { it: freeRectsItY } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
 			itemsInCombinedWorkSpace,
 			idCount
 		);
-		// idCount.idCount = lastId1;
 
-		// assignAdjacentRects(freeRectsItY);
 		const freeRectsArr = freeRectsItY.getSortedData();
-		// shuffle(freeRectsArr);
 
-		// DEBUG:
-		// printUnmergedFreeRects(context, freeRectsArr.map((o) => o.d));
+		const { mergedRectsIt } = await mergeFreeRects(
+			context,
+			freeRectsArr,
+			idCount
+		);
 
-		const {
-			mergedRects,
-			mergedRectsIt,
-			// idCount: lastId2,
-		} = await mergeFreeRects(context, freeRectsArr, idCount);
-		// idCount.idCount = lastId2;
-
-		// DEBUG:
-		// printMergedFreeRects(context, mergedRects.map((o) => o.d));
-
-		// const { overlappedRects } = findOverlapped(mergedRects);
-
-		// DEBUG:
-		// printMergedFreeRects(context, overlappedRects.map((o) => o.d));
-
-		const { arranged: _arranged, idCount: lastId3 } = await arrange(
+		const { arranged: _arranged } = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			// overlappedRects,
 			mergedRectsIt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			undefined,
 			combinedWorkSpaceRectCo,
 			idCount
 		);
-		// idCount.idCount = lastId3;
 
 		arranged = { ...arranged, ..._arranged };
 		const _arrangedArr = Object.values(_arranged);
