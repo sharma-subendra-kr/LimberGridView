@@ -24,7 +24,7 @@ Written by Subendra Kumar Sharma.
 */
 
 import { IntervalTreesIterative } from "IntervalTreeJS";
-import { ClosestBST } from "ClosestBST";
+// import { ClosestBST } from "ClosestBST";
 import { getModifiedPositionData } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
@@ -71,6 +71,7 @@ import {
 	printMergedRect,
 	printAdjRect,
 } from "../debug/debug";
+import { printNodeData } from "../debug/debugUtils";
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
@@ -304,6 +305,11 @@ export const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
 			for (let i = 0; i < len; i++) {
 				const res = results[i];
 
+				// printMergedFreeRects(
+				// 	context,
+				// 	it.getSortedData().map((o) => o.d)
+				// );
+				// debugger;
 				// printMergedRect(context);
 				// printStackTopAdjRect(context, res.d);
 				// debugger;
@@ -325,10 +331,6 @@ export const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
 						topFullMerged = true;
 					}
 
-					// const mergedObjectInterval = {
-					// 	low: mergedRect.x,
-					// 	high: mergedRect.x + mergedRect.width,
-					// };
 					const mergedObject = {
 						d: {
 							id: idCount.idCount++,
@@ -379,15 +381,12 @@ export const mergeFreeRects = async (
 	lastId,
 	garbageRects
 ) => {
-	debugger;
-	// console.log("**mergeFreeRects - DEBUG**");
 	// const p1 = performance.now();
 
 	let idCount = lastId;
 	let stack, it;
 
 	if (Array.isArray(freeRects)) {
-		// console.log("freeRects.length", freeRects.length);
 		shuffle(freeRects);
 		stack = new Stack({
 			data: freeRects.sort(rectSortX),
@@ -404,8 +403,20 @@ export const mergeFreeRects = async (
 	mergeFreeRectsCore(context, stack, it, idCount, "x");
 	filterMergedFreeRects(it);
 
+	// printUnmergedFreeRects(
+	// 	context,
+	// 	it.getSortedData().map((o) => o.d)
+	// );
+	// debugger;
+
 	const mergedArr = it.getSortedData();
 	shuffle(mergedArr);
+	const mLen = mergedArr.length;
+	for (let i = 0; i < mLen; i++) {
+		mergedArr[i].interval.low = mergedArr[i].d.rect.y;
+		mergedArr[i].interval.high =
+			mergedArr[i].d.rect.y + mergedArr[i].d.rect.height;
+	}
 	const stackY = new Stack({
 		data: mergedArr.sort(rectSortY),
 	});
@@ -427,9 +438,8 @@ export const mergeFreeRects = async (
 
 	// const p2 = performance.now();
 	// console.log("mergeFreeRects: ", p2 - p1);
-	// console.log("it.getSortedData().length", it.getSortedData().length);
-	// return { mergedRects: it.getSortedData(), mergedRectsIt: it, idCount };
 	// console.log("resIt.getSortedData().length", resIt.getSortedData().length);
+
 	return { mergedRects: resIt.getSortedData(), mergedRectsIt: resIt, idCount };
 };
 
@@ -553,7 +563,7 @@ export const isRectIdenticalOrInside = (it, obj, on) => {
 			d: obj.d,
 		});
 	}
-	// console.log("isIdenticalOrInside", isIdenticalOrInside);
+
 	return isIdenticalOrInside;
 };
 
@@ -658,7 +668,7 @@ export const arrange = async (
 ) => {
 	// this function updates the modified position data
 	// so no need to update the modified position data later
-	debugger;
+
 	const mpd = getModifiedPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -710,17 +720,6 @@ export const arrange = async (
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i].d.rect;
-			// debugger;
-			// console.log("**********");
-			// console.log(
-			// 	"oRect id: ",
-			// 	overlappedRects[i].d.id,
-			// 	" w:",
-			// 	oRect.width,
-			// 	"h: ",
-			// 	oRect.height
-			// );
-			// console.log("tempAItem w: ", tempAItem.width, "h: ", tempAItem.height);
 			if (oRect.width >= tempAItem.width && oRect.height >= tempAItem.height) {
 				resStack.push(overlappedRects[i]);
 			}
@@ -755,7 +754,6 @@ export const arrange = async (
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top.d] = top.d;
 		}
-		debugger;
 
 		grabageStack.empty();
 		const result = mergedRectsIt.findAll(pm.interval);

@@ -75,6 +75,7 @@ import {
 	printMergedRect,
 	printAdjRect,
 } from "../debug/debug";
+import { printNodeData } from "../debug/debugUtils";
 
 export const arrangeMove = async (
 	context,
@@ -208,7 +209,7 @@ export const arrangeMove = async (
 		// 	mergedRects.map((o) => o.d)
 		// );
 		// debugger;
-		// throw "";
+
 		// const { overlappedRects } = findOverlapped(mergedRects);
 
 		// DEBUG:
@@ -418,7 +419,6 @@ export const arrangeResize = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		debugger;
 		let freeRectsItY;
 		if (passCount === 0) {
 			// sort items in workspace by lt.x  i.e horizontally
@@ -475,7 +475,7 @@ export const arrangeResize = async (
 		// 	context,
 		// 	freeRectsArr.map((o) => o.d)
 		// );
-		debugger;
+		// debugger;
 
 		const {
 			mergedRects,
@@ -489,7 +489,7 @@ export const arrangeResize = async (
 		// 	context,
 		// 	mergedRects.map((o) => o.d)
 		// );
-		debugger;
+		// debugger;
 
 		// const { overlappedRects } = findOverlapped(mergedRects);
 
@@ -527,7 +527,6 @@ export const arrangeResize = async (
 			_combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
 		}
 
-		console.log("passCount", passCount);
 		passCount++;
 		if (passCount > 1000) {
 			throw "Arrange time out";

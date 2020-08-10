@@ -19,15 +19,15 @@
   },
   "homepage": "https://github.com/sharma-subendra-kr/LimberGridView#readme",
   "devDependencies": {
-    "@babel/core": "^7.10.3",
-    "@babel/plugin-proposal-optional-chaining": "^7.10.3",
-    "@babel/preset-env": "^7.10.3",
+    "@babel/core": "^7.11.1",
+    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
     "autoprefixer-loader": "^3.2.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^2.1.1",
-    "eslint": "^7.3.1",
+    "eslint": "^7.6.0",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
@@ -40,14 +40,13 @@
     "prettier": "^2.0.5",
     "sass-loader": "^7.3.1",
     "style-loader": "^0.23.1",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.0.9",
+    "webpack-merge": "^5.1.1",
     "webpack-notifier": "^1.8.0"
   },
   "dependencies": {
-    "IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git#release-1.0.1",
-    "ClosestBST": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/ClosestBST.git"
+    "IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git#release-1.0.1"
   }
 }
