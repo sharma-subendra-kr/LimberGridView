@@ -423,7 +423,7 @@ export const isRectIdenticalOrInside = (it, obj, on) => {
 /**
  * [description]
  * @param  {number[]} itemsToArrange          Array of items to arrange
- * @param  {object[]} overlappedRects         Array of overlapping rects
+ * @param  {object} mergedRectsIt         Interval Tree of merged rectangles
  * @param  {object} topWorkSpace            Top work space object in object form
  * @param  {object} bottomWorkSpace         Bottom work space object in object form
  * @param  {object} combinedWorkSpaceRectCo combined work space object in object form
@@ -433,7 +433,6 @@ export const isRectIdenticalOrInside = (it, obj, on) => {
 export const arrange = async (
 	context,
 	itemsToArrange,
-	// overlappedRects,
 	mergedRectsIt,
 	topWorkSpace,
 	bottomWorkSpace,
