@@ -188,14 +188,18 @@ export const sweepLineBottom = (area, items) => {
 	return resultPoint;
 };
 
-export const sweepLineForFreeSpace = (context, area, areaCo, items, lastId) => {
+export const sweepLineForFreeSpace = (
+	context,
+	area,
+	areaCo,
+	items,
+	idCount
+) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
 
 	const privateConstants = getPrivateConstants(context);
-
-	let idCount = lastId;
 
 	const it = new IntervalTreesIterative();
 
@@ -251,7 +255,7 @@ export const sweepLineForFreeSpace = (context, area, areaCo, items, lastId) => {
 		}
 	}
 
-	return { it, idCount };
+	return { it };
 };
 
 export const assignAdjacentRects = (rectsItY) => {
@@ -344,10 +348,9 @@ export const filterMergedFreeRects = (mergedRectsIt) => {
 export const mergeFreeRects = async (
 	context,
 	freeRects,
-	lastId,
+	idCount,
 	garbageRects
 ) => {
-	let idCount = lastId;
 	let stack, it;
 
 	if (Array.isArray(freeRects)) {
@@ -394,7 +397,7 @@ export const mergeFreeRects = async (
 		});
 	}
 
-	return { mergedRects: resIt.getSortedData(), mergedRectsIt: resIt, idCount };
+	return { mergedRects: resIt.getSortedData(), mergedRectsIt: resIt };
 };
 
 export const isRectIdenticalOrInside = (it, obj, on) => {
@@ -520,7 +523,7 @@ export const findOverlapped = (mergedRects) => {
  * @param  {object} topWorkSpace            Top work space object in object form
  * @param  {object} bottomWorkSpace         Bottom work space object in object form
  * @param  {object} combinedWorkSpaceRectCo combined work space object in object form
- * @param  {number} lastId                  next id available
+ * @param  {number} idCount                  next id available
  * @return {object}                         arranged{object}: key is index in position data array, value is the object; itemsInbottomworkSpace{object}: key is index in position data array, value is also the index; idCount: next available id
  */
 export const arrange = async (
@@ -531,7 +534,7 @@ export const arrange = async (
 	topWorkSpace,
 	bottomWorkSpace,
 	combinedWorkSpaceRectCo,
-	lastId
+	idCount
 ) => {
 	// this function updates the modified position data
 	// so no need to update the modified position data later
@@ -539,7 +542,6 @@ export const arrange = async (
 	const mpd = getModifiedPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	let idCount = lastId;
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
 
@@ -638,6 +640,5 @@ export const arrange = async (
 	return {
 		arranged,
 		itemsInBottomWorkSpace,
-		idCount,
 	};
 };
