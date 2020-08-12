@@ -2161,18 +2161,6 @@ const getMinMaxXY = (context, affectedItems, resizedRightX, resizedBottomY, toY,
     maxY: maxY + privateConstants.MARGIN
   };
 };
-const filterToArrange = (context, toArrangeItems, arranged) => {
-  const len = toArrangeItems.length;
-  const result = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    if (!arranged[toArrangeItems[i]]) {
-      result[i] = toArrangeItems[i];
-    }
-  }
-
-  return filter(result);
-};
 const getBottomMax = (context, minX, maxX) => {
   const pd = getPositionData(context);
   const mpd = getModifiedPositionData(context);
@@ -2412,27 +2400,6 @@ const shouldFilterRect = function (rect, data) {
 
     return false;
   };
-};
-const cBSTRectComparator = function (item) {
-  return (node, v, d) => {
-    if (node.d.rect.width >= item.width && node.d.rect.height >= item.height) {
-      return true;
-    }
-
-    return false;
-  };
-};
-const cBSTLComp = function (v) {
-  return node => {
-    if (node.v > v) {
-      return true;
-    }
-
-    return false;
-  };
-};
-const cBSTRComp = function () {
-  return true;
 };
 const getScore = (rect, maxHWSum) => {
   return (rect.width + rect.height) / maxHWSum;
@@ -3085,22 +3052,6 @@ const sweepLineForFreeSpace = (context, area, areaCo, items, idCount) => {
     it
   };
 };
-const assignAdjacentRects = rectsItY => {
-  const rectItYArr = rectsItY.getSortedData();
-  const len = rectItYArr.length;
-  let resY, lenY;
-
-  for (let i = 0; i < len; i++) {
-    resY = rectsItY.findAll(rectItYArr[i].interval);
-    lenY = resY.length;
-
-    for (let j = 0; j < lenY; j++) {
-      if (areRectsAdjacent(rectItYArr[i].d.rect, resY[j].d.rect)) {
-        rectItYArr[i].d.a[resY[j].d.id] = resY[j];
-      }
-    }
-  }
-};
 const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
   let topFullMerged = false;
 
@@ -3248,85 +3199,10 @@ const isRectIdenticalOrInside = (it, obj, on) => {
 
   return isIdenticalOrInside;
 };
-const filterAdjacents = (mergedObject, visited) => {
-  const mergedRect = mergedObject.d.rect;
-  const adjs = mergedObject.d.a;
-  let adj;
-  const adjsKeys = Object.keys(adjs);
-  const adjsKeysLen = adjsKeys.length;
-
-  for (let j = 0; j < adjsKeysLen; j++) {
-    adj = adjs[adjsKeys[j]];
-
-    if (!areRectsAdjacent(mergedRect, adj.d.rect)) {
-      delete adjs[adjsKeys[j]];
-    }
-  }
-};
-const findOverlapped = mergedRects => {
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  const len = mergedRects.length;
-
-  for (let i = 0; i < len; i++) {
-    mergedRects[i].low = mergedRects[i].d.rect.y;
-    mergedRects[i].high = mergedRects[i].d.rect.y + mergedRects[i].d.rect.height;
-    it.insert(mergedRects[i]);
-  }
-
-  const completeOverlapped = {};
-  const itArr = it.getSortedData();
-  let res, rlen;
-
-  for (let i = 0; i < len; i++) {
-    res = it.findAll(itArr[i].interval);
-    rlen = res.length;
-
-    for (let j = 0; j < rlen; j++) {
-      if (itArr[i].d.rect && res[j].d.rect && isRectInside(itArr[i].d.rect, res[j].d.rect) && itArr[i].d.id !== res[j].d.id) {
-        completeOverlapped[res[j].d.id] = res[j];
-        res[j].d._rect = res[j].d.rect;
-        res[j].d.rect = null;
-        const olpds = Object.values(res[j].d.o);
-        const oLen = olpds.length;
-
-        for (let k = 0; k < oLen; k++) {
-          // Hey everyone I'm done.
-          const olpd = olpds[k];
-          delete olpd.d.o[res[j].d.id];
-        }
-
-        res[j].d.o = {};
-      } else if (doRectsOverlap(itArr[i].d.rect, res[j].d.rect)) {
-        itArr[i].d.o[res[j].d.id] = res[j];
-        res[j].d.o[itArr[i].d.id] = itArr[i];
-      }
-    }
-  }
-
-  const resArr = new Array(len);
-  let count = 0;
-
-  for (let i = 0; i < len; i++) {
-    if (itArr[i].d.rect) {
-      resArr[count++] = itArr[i];
-    }
-  }
-
-  const filteredResArr = new Array(count);
-
-  for (let i = 0; i < count; i++) {
-    filteredResArr[i] = resArr[i];
-  }
-
-  return {
-    overlappedRects: filteredResArr,
-    completeOverlapped: Object.values(completeOverlapped)
-  };
-};
 /**
  * [description]
  * @param  {number[]} itemsToArrange          Array of items to arrange
- * @param  {object[]} overlappedRects         Array of overlapping rects
+ * @param  {object} mergedRectsIt         Interval Tree of merged rectangles
  * @param  {object} topWorkSpace            Top work space object in object form
  * @param  {object} bottomWorkSpace         Bottom work space object in object form
  * @param  {object} combinedWorkSpaceRectCo combined work space object in object form
@@ -3334,8 +3210,7 @@ const findOverlapped = mergedRects => {
  * @return {object}                         arranged{object}: key is index in position data array, value is the object; itemsInbottomworkSpace{object}: key is index in position data array, value is also the index; idCount: next available id
  */
 
-const arrange = async (context, itemsToArrange, // overlappedRects,
-mergedRectsIt, topWorkSpace, bottomWorkSpace, combinedWorkSpaceRectCo, idCount) => {
+const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bottomWorkSpace, combinedWorkSpaceRectCo, idCount) => {
   // this function updates the modified position data
   // so no need to update the modified position data later
   const mpd = getModifiedPositionData(context);
