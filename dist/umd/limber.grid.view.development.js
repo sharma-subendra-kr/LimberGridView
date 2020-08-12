@@ -23,14 +23,14 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("IntervalTreeJS"), require("ClosestBST"));
+		module.exports = factory(require("IntervalTreeJS"));
 	else if(typeof define === 'function' && define.amd)
-		define(["IntervalTreeJS", "ClosestBST"], factory);
+		define(["IntervalTreeJS"], factory);
 	else if(typeof exports === 'object')
-		exports["LimberGridView"] = factory(require("IntervalTreeJS"), require("ClosestBST"));
+		exports["LimberGridView"] = factory(require("IntervalTreeJS"));
 	else
-		root["LimberGridView"] = factory(root["IntervalTreeJS"], root["ClosestBST"]);
-})(window, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__) {
+		root["LimberGridView"] = factory(root["IntervalTreeJS"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE__0__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -114,7 +114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -125,9 +125,9 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 /* 2 */
@@ -137,12 +137,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
-
-/***/ }),
-/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -150,10 +144,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./src/index.css
-var src = __webpack_require__(2);
+var src = __webpack_require__(1);
 
 // EXTERNAL MODULE: ./src/index.scss
-var src_0 = __webpack_require__(3);
+var src_0 = __webpack_require__(2);
 
 // CONCATENATED MODULE: ./src/store/constants/privateConstants.js
 /*
@@ -2016,9 +2010,6 @@ const movePointAdjust = (context, toX, toY) => {
 // EXTERNAL MODULE: external {"commonjs":"IntervalTreeJS","commonjs2":"IntervalTreeJS","amd":"IntervalTreeJS","root":"IntervalTreeJS"}
 var external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_ = __webpack_require__(0);
 
-// EXTERNAL MODULE: external {"commonjs":"ClosestBST","commonjs2":"ClosestBST","amd":"ClosestBST","root":"ClosestBST"}
-var external_commonjs_ClosestBST_commonjs2_ClosestBST_amd_ClosestBST_root_ClosestBST_ = __webpack_require__(1);
-
 // CONCATENATED MODULE: ./src/libs/utils/utils.js
 /*
 
@@ -2169,18 +2160,6 @@ const getMinMaxXY = (context, affectedItems, resizedRightX, resizedBottomY, toY,
     minY: minY - privateConstants.MARGIN,
     maxY: maxY + privateConstants.MARGIN
   };
-};
-const filterToArrange = (context, toArrangeItems, arranged) => {
-  const len = toArrangeItems.length;
-  const result = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    if (!arranged[toArrangeItems[i]]) {
-      result[i] = toArrangeItems[i];
-    }
-  }
-
-  return filter(result);
 };
 const getBottomMax = (context, minX, maxX) => {
   const pd = getPositionData(context);
@@ -2390,26 +2369,37 @@ const arrangeUtils_getItemDimenWithMargin = (MARGIN, item) => {
   _item.height += MARGIN * 2;
   return _item;
 };
-const cBSTRectComparator = function (item) {
-  return (node, v, d) => {
-    if (node.d.rect.width >= item.width && node.d.rect.height >= item.height) {
+const rectSortX = (a, b) => {
+  if (a.d.rect.x === b.d.rect.x) {
+    return a.d.rect.y - b.d.rect.y;
+  } else {
+    return a.d.rect.x - b.d.rect.x;
+  }
+};
+const rectSortY = (a, b) => {
+  if (a.d.rect.y === b.d.rect.y) {
+    return a.d.rect.x - b.d.rect.x;
+  } else {
+    return a.d.rect.y - b.d.rect.y;
+  }
+};
+const isMergable = function (rect) {
+  return (node, interval, d) => {
+    if (doRectsOverlap(rect, node.d.rect) || doRectsOnlyTouch(rect, node.d.rect)) {
       return true;
     }
 
     return false;
   };
 };
-const cBSTLComp = function (v) {
-  return node => {
-    if (node.v > v) {
+const shouldFilterRect = function (rect, data) {
+  return (node, interval, d) => {
+    if (isRectInside(node.d.rect, rect) && node.d !== data) {
       return true;
     }
 
     return false;
   };
-};
-const cBSTRComp = function () {
-  return true;
 };
 const getScore = (rect, maxHWSum) => {
   return (rect.width + rect.height) / maxHWSum;
@@ -2649,15 +2639,23 @@ Written by Subendra Kumar Sharma.
 */
 
 /*
-		
+
 	LIFO(Last In First Out) Stack Data Structure
 
-
 */
-const Stack = function () {
+const Stack = function (options) {
   this.length = 100;
   this.stack = new Array(this.length);
   this.ptr = -1;
+
+  if (options && options.data) {
+    const data = options.data;
+    const len = data.length;
+
+    for (let i = len - 1; i >= 0; i--) {
+      this.push(data[i]);
+    }
+  }
 };
 
 Stack.prototype.constructor = Stack;
@@ -2815,7 +2813,35 @@ const printMergedRect = (context, obj) => {
 const printAdjRect = (context, obj) => {
   if (false) {}
 };
-// CONCATENATED MODULE: ./src/libs/arrange/arrange.js
+// CONCATENATED MODULE: ./src/libs/debug/debugUtils.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const printNodeData = node => {
+  return `d.id: ${node.d.id}`;
+};
+// CONCATENATED MODULE: ./src/libs/arrange/arrangeCore.js
 /*
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
@@ -2843,6 +2869,467 @@ Written by Subendra Kumar Sharma.
 
 
 
+
+
+
+
+
+
+const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
+  let topWSItems, bottomWSItems;
+  const res = {
+    integrateTop: false,
+    integrateBottom: false
+  };
+
+  if (topWorkSpace) {
+    topWSItems = getItemsInWorkSpace(context, getRectObjectFromCo(topWorkSpace));
+    const sweepRes = sweepLineTop(topWorkSpace, topWSItems);
+
+    if (sweepRes < topWorkSpace.bl.y) {
+      topWorkSpace.tl.y = sweepRes;
+      topWorkSpace.tr.y = sweepRes;
+      res.integrateTop = true;
+    }
+  }
+
+  if (bottomWorkSpace) {
+    bottomWSItems = getItemsInWorkSpace(context, getRectObjectFromCo(bottomWorkSpace));
+    const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems);
+
+    if (sweepRes > bottomWorkSpace.tl.y) {
+      bottomWorkSpace.bl.y = sweepRes;
+      bottomWorkSpace.br.y = sweepRes;
+      res.integrateBottom = true;
+    }
+  }
+
+  return res;
+};
+const sweepLineTop = (area, items) => {
+  const len = items.length;
+  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+
+  for (let i = 0; i < len; i++) {
+    it.insert({
+      low: items[i].y,
+      high: items[i].y + items[i].height,
+      d: {
+        rect: items[i]
+      }
+    });
+  }
+
+  let resultPoint = area.bl.y;
+  let res, rLen;
+  let breakSig = false;
+
+  for (let i = 0; i < len; i++) {
+    res = it.findAll({
+      low: items[i].y + items[i].height,
+      high: area.bl.y
+    });
+    rLen = res.length;
+    breakSig = false;
+
+    for (let j = 0; j < rLen; j++) {
+      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
+        breakSig = true;
+        break;
+      }
+    }
+
+    if (!breakSig && items[i].y + items[i].height < resultPoint) {
+      resultPoint = items[i].y + items[i].height;
+    }
+  }
+
+  return resultPoint;
+};
+const sweepLineBottom = (area, items) => {
+  const len = items.length;
+  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+
+  for (let i = 0; i < len; i++) {
+    it.insert({
+      low: items[i].y,
+      high: items[i].y + items[i].height,
+      d: {
+        rect: items[i]
+      }
+    });
+  }
+
+  let resultPoint = area.tl.y;
+  let res, rLen;
+  let breakSig = false;
+
+  for (let i = 0; i < len; i++) {
+    res = it.findAll({
+      low: area.tl.y,
+      high: items[i].y
+    });
+    rLen = res.length;
+    breakSig = false;
+
+    for (let j = 0; j < rLen; j++) {
+      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
+        breakSig = true;
+        break;
+      }
+    }
+
+    if (!breakSig && items[i].y > resultPoint) {
+      resultPoint = items[i].y;
+    }
+  }
+
+  return resultPoint;
+};
+const sweepLineForFreeSpace = (context, area, areaCo, items, idCount) => {
+  // area: area to sweep
+  // area: area to sweep Coordinate Form
+  // items: items in area
+  const privateConstants = constants_privateConstants(context);
+  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+  it.insert({
+    low: areaCo.tl.x,
+    high: areaCo.tr.x,
+    d: {
+      id: idCount.idCount++,
+      rect: area,
+      a: {},
+      o: {},
+      ref: null
+    }
+  });
+  let tempItem;
+  let fInterval = {
+    low: 0,
+    high: 0,
+    d: null
+  };
+  let intervals;
+  let iLen = 0;
+  let diff;
+  let dLen = 0;
+  const len = items.length;
+
+  for (let i = 0; i < len; i++) {
+    tempItem = getCoordinates(items[i]);
+    fInterval = {
+      low: tempItem.tl.x,
+      high: tempItem.tr.x
+    };
+    intervals = it.findAll(fInterval);
+    iLen = intervals.length;
+
+    for (let j = 0; j < iLen; j++) {
+      if (doRectsOverlap(intervals[j].d.rect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, items[i]))) {
+        diff = subtractRect(intervals[j].d.rect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, items[i]), true);
+        dLen = diff.length;
+
+        for (let k = 0; k < dLen; k++) {
+          it.insert({
+            low: diff[k].tl.x,
+            high: diff[k].tr.x,
+            d: {
+              id: idCount.idCount++,
+              rect: getRectObjectFromCo(diff[k]),
+              a: {},
+              o: {},
+              ref: null
+            }
+          });
+        }
+
+        it.remove(intervals[j].interval, intervals[j].d);
+      }
+    }
+  }
+
+  return {
+    it
+  };
+};
+const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
+  let topFullMerged = false;
+
+  while (!stack.isEmpty()) {
+    const top = stack.pop();
+    topFullMerged = false;
+    const results = it.findAll(top.interval, null, null, isMergable(top.d.rect));
+    const len = (results === null || results === void 0 ? void 0 : results.length) || 0;
+
+    if (len > 0) {
+      for (let i = 0; i < len; i++) {
+        const res = results[i];
+        const mergedRects = mergeRects(res.d.rect, top.d.rect);
+
+        if (mergedRects.length === 1) {
+          const mergedRect = mergedRects[0];
+
+          if (isRectInside(mergedRect, res.d.rect)) {
+            it.remove(res.interval, res.d);
+          }
+
+          if (isRectInside(mergedRect, top.d.rect)) {
+            topFullMerged = true;
+          }
+
+          const mergedObject = {
+            d: {
+              id: idCount.idCount++,
+              rect: mergedRect,
+              a: {},
+              o: {},
+              ref: null
+            }
+          };
+          isRectIdenticalOrInside(it, mergedObject, on);
+        }
+      }
+
+      if (topFullMerged === false) {
+        isRectIdenticalOrInside(it, {
+          d: top.d
+        }, on);
+      }
+    } else {
+      it.insert({ ...top.interval,
+        d: top.d
+      });
+    }
+  }
+};
+const filterMergedFreeRects = mergedRectsIt => {
+  const arr = mergedRectsIt.getSortedData();
+  const len = arr.length;
+
+  for (let i = 0; i < len; i++) {
+    const obj = arr[i];
+    const results = mergedRectsIt.findAll(obj.interval, null, null, shouldFilterRect(obj.d.rect, obj.d));
+
+    if (results === null || results === void 0 ? void 0 : results.length) {
+      mergedRectsIt.remove(obj.interval, obj.d);
+    }
+  }
+};
+const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
+  let stack, it;
+
+  if (Array.isArray(freeRects)) {
+    shuffle(freeRects);
+    stack = new stack_stack({
+      data: freeRects.sort(rectSortX)
+    });
+    it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+  } else {
+    shuffle(garbageRects);
+    stack = new stack_stack({
+      data: garbageRects.sort(rectSortX)
+    });
+    it = freeRects;
+  }
+
+  mergeFreeRectsCore(context, stack, it, idCount, "x");
+  filterMergedFreeRects(it);
+  const mergedArr = it.getSortedData();
+  shuffle(mergedArr);
+  const mLen = mergedArr.length;
+
+  for (let i = 0; i < mLen; i++) {
+    mergedArr[i].interval.low = mergedArr[i].d.rect.y;
+    mergedArr[i].interval.high = mergedArr[i].d.rect.y + mergedArr[i].d.rect.height;
+  }
+
+  const stackY = new stack_stack({
+    data: mergedArr.sort(rectSortY)
+  });
+  const itY = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+  mergeFreeRectsCore(context, stackY, itY, idCount, "y");
+  filterMergedFreeRects(itY);
+  const resIt = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+  const arr = itY.getSortedData();
+  shuffle(arr);
+  const len = arr.length;
+
+  for (let i = 0; i < len; i++) {
+    resIt.insert({
+      low: arr[i].d.rect.x,
+      high: arr[i].d.rect.x + arr[i].d.rect.width,
+      d: arr[i].d
+    });
+  }
+
+  return {
+    mergedRects: resIt.getSortedData(),
+    mergedRectsIt: resIt
+  };
+};
+const isRectIdenticalOrInside = (it, obj, on) => {
+  let axis = "x";
+  let distance = "width";
+
+  if (on === "y") {
+    axis = "y";
+    distance = "height";
+  }
+
+  const res = it.findAll({
+    low: obj.d.rect[axis],
+    high: obj.d.rect[axis] + obj.d.rect[distance]
+  });
+  let isIdenticalOrInside = false;
+  const len = (res === null || res === void 0 ? void 0 : res.length) || 0;
+
+  for (let i = 0; i < len; i++) {
+    if (areRectsIdentical(getCoordinates(obj.d.rect), getCoordinates(res[i].d.rect)) || isRectInside(res[i].d.rect, obj.d.rect)) {
+      isIdenticalOrInside = true;
+    }
+  }
+
+  if (!isIdenticalOrInside) {
+    it.insert({
+      low: obj.d.rect[axis],
+      high: obj.d.rect[axis] + obj.d.rect[distance],
+      d: obj.d
+    });
+  }
+
+  return isIdenticalOrInside;
+};
+/**
+ * [description]
+ * @param  {number[]} itemsToArrange          Array of items to arrange
+ * @param  {object} mergedRectsIt         Interval Tree of merged rectangles
+ * @param  {object} topWorkSpace            Top work space object in object form
+ * @param  {object} bottomWorkSpace         Bottom work space object in object form
+ * @param  {object} combinedWorkSpaceRectCo combined work space object in object form
+ * @param  {number} idCount                  next id available
+ * @return {object}                         arranged{object}: key is index in position data array, value is the object; itemsInbottomworkSpace{object}: key is index in position data array, value is also the index; idCount: next available id
+ */
+
+const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bottomWorkSpace, combinedWorkSpaceRectCo, idCount) => {
+  // this function updates the modified position data
+  // so no need to update the modified position data later
+  const mpd = getModifiedPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const arranged = {};
+  const itemsInBottomWorkSpace = {};
+  let overlappedRects = mergedRectsIt.getSortedData();
+  const iToALen = itemsToArrange.length;
+  const itemsToArrangeStack = new stack_stack();
+  const itemsToArrangeWithScore = getItemsToArrangeScore(context, itemsToArrange);
+
+  for (let i = 0; i < iToALen; i++) {
+    itemsToArrangeStack.push(itemsToArrangeWithScore[i]);
+  }
+
+  let top;
+  let aItem;
+  const resStack = new stack_stack();
+  const grabageStack = new stack_stack();
+
+  while (!itemsToArrangeStack.isEmpty()) {
+    resStack.empty();
+    top = itemsToArrangeStack.pop();
+    aItem = mpd[top.d];
+    let tempAItem = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+    const oLen = overlappedRects.length;
+
+    for (let i = 0; i < oLen; i++) {
+      const oRect = overlappedRects[i].d.rect;
+
+      if (oRect.width >= tempAItem.width && oRect.height >= tempAItem.height) {
+        resStack.push(overlappedRects[i]);
+      }
+    }
+
+    if (resStack.isEmpty()) {
+      continue;
+    }
+
+    const pm = getPerfectMatch(resStack.getData(), aItem.width + aItem.height);
+    aItem.x = pm.d.rect.x + privateConstants.MARGIN;
+    aItem.y = pm.d.rect.y + privateConstants.MARGIN;
+    arranged[top.d] = aItem;
+
+    if (bottomWorkSpace && isRectInside(bottomWorkSpace, pm.d.rect)) {
+      // put in bottom and combined workspace
+      itemsInBottomWorkSpace[top.d] = top.d;
+    }
+
+    grabageStack.empty();
+    const result = mergedRectsIt.findAll(pm.interval);
+    const resLen = result.length;
+    tempAItem = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+
+    for (let i = 0; i < resLen; i++) {
+      const res = result[i];
+
+      const _garbageRects = subtractRect(res.d.rect, tempAItem);
+
+      const gLen = (_garbageRects === null || _garbageRects === void 0 ? void 0 : _garbageRects.length) || 0;
+
+      for (let i = 0; i < gLen; i++) {
+        grabageStack.push({
+          interval: {
+            low: _garbageRects[i].x,
+            high: _garbageRects[i].x + _garbageRects[i].width
+          },
+          d: {
+            id: idCount.idCount++,
+            rect: _garbageRects[i],
+            a: {},
+            o: {},
+            ref: null
+          }
+        });
+      }
+
+      if (gLen) {
+        mergedRectsIt.remove(res.interval, res.d);
+      }
+    }
+
+    const {
+      mergedRectsIt: _mergedRectsIt
+    } = await mergeFreeRects(context, mergedRectsIt, idCount, grabageStack.getData());
+    mergedRectsIt = _mergedRectsIt;
+    overlappedRects = mergedRectsIt.getSortedData();
+  }
+
+  return {
+    arranged,
+    itemsInBottomWorkSpace
+  };
+};
+// CONCATENATED MODULE: ./src/libs/arrange/arrange.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
 
 
 
@@ -2920,7 +3407,11 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
   let itemsInBottomWorkSpace = getItemsInWorkSpace(context, getRectObjectFromCo(bottomWorkSpaceCo), true);
   const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(context, bottomWorkSpaceCo, true);
   let combinedWorkSpaceRect = getRectObjectFromCo(combinedWorkSpaceRectCo);
-  let itemsInCombinedWorkSpace = getItemsInWorkSpace(context, combinedWorkSpaceRect);
+  let itemsInCombinedWorkSpace = getItemsInWorkSpace(context, combinedWorkSpaceRect); // const shiftHeight =
+  // 	privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
+  // 	privateConstants.MARGIN * 2 -
+  // 	10;
+
   const shiftHeight = (privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH - privateConstants.MARGIN * 2) / 2;
   let passCount = 0;
   let arranged = {};
@@ -2928,36 +3419,17 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
   let workSpaceResizeCount = 0;
 
   while (arrangedCount !== iToALen) {
-    // sort items in workspace by lt.x  i.e horizontally
-    itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
     const {
-      it: freeRectsItY,
-      idCount: lastId1
-    } = sweepLine(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount.idCount);
-    idCount.idCount = lastId1;
+      it: freeRectsItY
+    } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
     const freeRectsArr = freeRectsItY.getSortedData();
-    shuffle(freeRectsArr);
-    assignAdjacentRects(freeRectsItY); // DEBUG:
-    // printUnmergedFreeRects(context, freeRectsArr.map((o) => o.d));
-
     const {
-      mergedRects,
-      idCount: lastId2
-    } = await mergeFreeRects(freeRectsArr, idCount.idCount);
-    idCount.idCount = lastId2; // DEBUG:
-    // printMergedFreeRects(context, mergedRects.map((o) => o.d));
-
-    const {
-      overlappedRects
-    } = findOverlapped(mergedRects); // DEBUG:
-    // printMergedFreeRects(context, overlappedRects.map((o) => o.d));
-
+      mergedRectsIt
+    } = await mergeFreeRects(context, freeRectsArr, idCount);
     const {
       arranged: _arranged,
-      itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
-      idCount: lastId3
-    } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), overlappedRects, getRectObjectFromCo(topWorkSpaceCo), getRectObjectFromCo(bottomWorkSpaceCo), combinedWorkSpaceRectCo, idCount.idCount);
-    idCount.idCount = lastId3;
+      itemsInBottomWorkSpace: _itemsInBottomWorkSpace
+    } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), mergedRectsIt, getRectObjectFromCo(topWorkSpaceCo), getRectObjectFromCo(bottomWorkSpaceCo), combinedWorkSpaceRectCo, idCount);
     itemsInBottomWorkSpace = [...itemsInBottomWorkSpace, ...Object.keys(_itemsInBottomWorkSpace)];
     arranged = { ...arranged,
       ..._arranged
@@ -3155,14 +3627,10 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
     let freeRectsItY;
 
     if (passCount === 0) {
-      // sort items in workspace by lt.x  i.e horizontally
-      itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
       const {
-        it: _freeRectsItY,
-        idCount: lastId1
-      } = sweepLine(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount.idCount);
+        it: _freeRectsItY
+      } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
       freeRectsItY = _freeRectsItY;
-      idCount.idCount = lastId1;
     } else if (passCount === 1) {
       const {
         itemsInWorkSpace: _itemsInCombinedWorkSpace,
@@ -3174,47 +3642,19 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
       passCount++;
       continue;
     } else if (passCount >= 2) {
-      // sort items in workspace by lt.x  i.e horizontally
-      itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
       const {
-        it: _freeRectsItY,
-        idCount: lastId1
-      } = sweepLine(context, _combinedWorkSpaceRect, _combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount.idCount);
+        it: _freeRectsItY
+      } = sweepLineForFreeSpace(context, _combinedWorkSpaceRect, _combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
       freeRectsItY = _freeRectsItY;
-      idCount.idCount = lastId1;
     }
 
     const freeRectsArr = freeRectsItY.getSortedData();
-    shuffle(freeRectsArr);
-    assignAdjacentRects(freeRectsItY); // DEBUG:
-    // printUnmergedFreeRects(
-    // 	context,
-    // 	freeRectsArr.map((o) => o.d)
-    // );
-
     const {
-      mergedRects,
-      idCount: lastId2
-    } = await mergeFreeRects(freeRectsArr, idCount.idCount);
-    idCount.idCount = lastId2; // DEBUG:
-    // printMergedFreeRects(
-    // 	context,
-    // 	mergedRects.map((o) => o.d)
-    // );
-
+      mergedRectsIt
+    } = await mergeFreeRects(context, freeRectsArr, idCount);
     const {
-      overlappedRects
-    } = findOverlapped(mergedRects); // DEBUG:
-    // printMergedFreeRects(
-    // 	context,
-    // 	overlappedRects.map((o) => o.d)
-    // );
-
-    const {
-      arranged: _arranged,
-      idCount: lastId3
-    } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), overlappedRects, getRectObjectFromCo(topWorkSpaceCo), getRectObjectFromCo(bottomWorkSpaceCo), passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo, idCount.idCount);
-    idCount.idCount = lastId3;
+      arranged: _arranged
+    } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), mergedRectsIt, getRectObjectFromCo(topWorkSpaceCo), getRectObjectFromCo(bottomWorkSpaceCo), passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo, idCount);
     arranged = { ...arranged,
       ..._arranged
     };
@@ -3306,35 +3746,16 @@ const arrangeFromHeight = async (context, itemsToArrange, height) => {
   let workSpaceResizeCount = 0;
 
   while (arrangedCount !== iToALen) {
-    // sort items in workspace by lt.x  i.e horizontally
-    itemsInCombinedWorkSpace.sort((a, b) => a.x - b.x);
     const {
-      it: freeRectsItY,
-      idCount: lastId1
-    } = sweepLine(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount.idCount);
-    idCount.idCount = lastId1;
+      it: freeRectsItY
+    } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
     const freeRectsArr = freeRectsItY.getSortedData();
-    shuffle(freeRectsArr);
-    assignAdjacentRects(freeRectsItY); // DEBUG:
-    // printUnmergedFreeRects(context, freeRectsArr.map((o) => o.d));
-
     const {
-      mergedRects,
-      idCount: lastId2
-    } = await mergeFreeRects(freeRectsArr, idCount.idCount);
-    idCount.idCount = lastId2; // DEBUG:
-    // printMergedFreeRects(context, mergedRects.map((o) => o.d));
-
+      mergedRectsIt
+    } = await mergeFreeRects(context, freeRectsArr, idCount);
     const {
-      overlappedRects
-    } = findOverlapped(mergedRects); // DEBUG:
-    // printMergedFreeRects(context, overlappedRects.map((o) => o.d));
-
-    const {
-      arranged: _arranged,
-      idCount: lastId3
-    } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), overlappedRects, getRectObjectFromCo(topWorkSpaceCo), undefined, combinedWorkSpaceRectCo, idCount.idCount);
-    idCount.idCount = lastId3;
+      arranged: _arranged
+    } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), mergedRectsIt, getRectObjectFromCo(topWorkSpaceCo), undefined, combinedWorkSpaceRectCo, idCount);
     arranged = { ...arranged,
       ..._arranged
     };
@@ -3367,618 +3788,6 @@ const arrangeFromHeight = async (context, itemsToArrange, height) => {
   console.log("p2: ", p2);
   console.log("arrange total: ", p2 - p1);
   return arranged;
-};
-const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
-  let topWSItems, bottomWSItems;
-  const res = {
-    integrateTop: false,
-    integrateBottom: false
-  };
-
-  if (topWorkSpace) {
-    topWSItems = getItemsInWorkSpace(context, getRectObjectFromCo(topWorkSpace));
-    const sweepRes = sweepLineTop(topWorkSpace, topWSItems);
-
-    if (sweepRes < topWorkSpace.bl.y) {
-      topWorkSpace.tl.y = sweepRes;
-      topWorkSpace.tr.y = sweepRes;
-      res.integrateTop = true;
-    }
-  }
-
-  if (bottomWorkSpace) {
-    bottomWSItems = getItemsInWorkSpace(context, getRectObjectFromCo(bottomWorkSpace));
-    const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems);
-
-    if (sweepRes > bottomWorkSpace.tl.y) {
-      bottomWorkSpace.bl.y = sweepRes;
-      bottomWorkSpace.br.y = sweepRes;
-      res.integrateBottom = true;
-    }
-  }
-
-  return res;
-};
-const sweepLineTop = (area, items) => {
-  const len = items.length;
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-
-  for (let i = 0; i < len; i++) {
-    it.insert({
-      low: items[i].y,
-      high: items[i].y + items[i].height,
-      d: {
-        rect: items[i]
-      }
-    });
-  }
-
-  let resultPoint = area.bl.y;
-  let res, rLen;
-  let breakSig = false;
-
-  for (let i = 0; i < len; i++) {
-    res = it.findAll({
-      low: items[i].y + items[i].height,
-      high: area.bl.y
-    });
-    rLen = res.length;
-    breakSig = false;
-
-    for (let j = 0; j < rLen; j++) {
-      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
-        breakSig = true;
-        break;
-      }
-    }
-
-    if (!breakSig && items[i].y + items[i].height < resultPoint) {
-      resultPoint = items[i].y + items[i].height;
-    }
-  }
-
-  return resultPoint;
-};
-const sweepLineBottom = (area, items) => {
-  const len = items.length;
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-
-  for (let i = 0; i < len; i++) {
-    it.insert({
-      low: items[i].y,
-      high: items[i].y + items[i].height,
-      d: {
-        rect: items[i]
-      }
-    });
-  }
-
-  let resultPoint = area.tl.y;
-  let res, rLen;
-  let breakSig = false;
-
-  for (let i = 0; i < len; i++) {
-    res = it.findAll({
-      low: area.tl.y,
-      high: items[i].y
-    });
-    rLen = res.length;
-    breakSig = false;
-
-    for (let j = 0; j < rLen; j++) {
-      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
-        breakSig = true;
-        break;
-      }
-    }
-
-    if (!breakSig && items[i].y > resultPoint) {
-      resultPoint = items[i].y;
-    }
-  }
-
-  return resultPoint;
-};
-const sweepLine = (context, area, areaCo, items, lastId) => {
-  // area: area to sweep
-  // area: area to sweep Coordinate Form
-  // items: items in area
-  const privateConstants = constants_privateConstants(context);
-  let idCount = lastId;
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  it.insert({
-    low: areaCo.tl.y,
-    high: areaCo.bl.y,
-    d: {
-      id: idCount++,
-      rect: area,
-      a: {},
-      o: {},
-      ref: null
-    }
-  });
-  let tempItem;
-  let fInterval = {
-    low: 0,
-    high: 0,
-    d: null
-  };
-  let intervals;
-  let iLen = 0;
-  let diff;
-  let dLen = 0;
-  const len = items.length;
-
-  for (let i = 0; i < len; i++) {
-    tempItem = getCoordinates(items[i]);
-    fInterval = {
-      low: tempItem.tl.y,
-      high: tempItem.bl.y
-    };
-    intervals = it.findAll(fInterval);
-    iLen = intervals.length;
-
-    for (let j = 0; j < iLen; j++) {
-      if (doRectsOverlap(intervals[j].d.rect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, items[i]))) {
-        diff = subtractRect(intervals[j].d.rect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, items[i]), true);
-        dLen = diff.length;
-
-        for (let k = 0; k < dLen; k++) {
-          it.insert({
-            low: diff[k].tl.y,
-            high: diff[k].bl.y,
-            d: {
-              id: idCount++,
-              rect: getRectObjectFromCo(diff[k]),
-              a: {},
-              o: {},
-              ref: null
-            }
-          });
-        }
-
-        it.remove(intervals[j].interval, intervals[j].d);
-      }
-    }
-  }
-
-  return {
-    it,
-    idCount
-  };
-};
-const assignAdjacentRects = rectsItY => {
-  const rectItYArr = rectsItY.getSortedData();
-  const len = rectItYArr.length;
-  let resY, lenY;
-
-  for (let i = 0; i < len; i++) {
-    resY = rectsItY.findAll(rectItYArr[i].interval);
-    lenY = resY.length;
-
-    for (let j = 0; j < lenY; j++) {
-      if (areRectsAdjacent(rectItYArr[i].d.rect, resY[j].d.rect)) {
-        rectItYArr[i].d.a[resY[j].d.id] = resY[j];
-      }
-    }
-  }
-};
-const mergeFreeRects = async (freeRectsArr, lastId) => {
-  const stack = new stack_stack();
-  const stackIt = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  const resultStack = new stack_stack();
-  const resultIt = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  let adjacents, adj, top, keys, keyslen, mergedObject, mergedRect, mergedRects, mergeRectsLen;
-  let atLeastOneFullMerge = false;
-  let idCount = lastId;
-  const freeRectsLen = freeRectsArr.length;
-
-  for (let k = 0; k < freeRectsLen; k++) {
-    if (freeRectsArr[k].d.ref !== null) {
-      continue;
-    }
-
-    stack.push(freeRectsArr[k]);
-
-    while (!stack.isEmpty()) {
-      top = stack.pop();
-      keys = Object.keys(top.d.a);
-      keyslen = keys.length;
-      atLeastOneFullMerge = false;
-
-      for (let i = 0; i < keyslen; i++) {
-        var _mergedRects;
-
-        if (!top.d.a[keys[i]]) {
-          continue;
-        }
-
-        adj = top.d.a[keys[i]];
-
-        while ((_adj = adj) === null || _adj === void 0 ? void 0 : (_adj$d = _adj.d) === null || _adj$d === void 0 ? void 0 : _adj$d.ref) {
-          var _adj, _adj$d;
-
-          adj = adj.d.ref;
-        }
-
-        mergedRects = mergeRects(top.d.rect, adj.d.rect);
-        mergeRectsLen = ((_mergedRects = mergedRects) === null || _mergedRects === void 0 ? void 0 : _mergedRects.length) || 0;
-
-        if (mergeRectsLen === 1) {
-          mergedRect = mergedRects[0];
-
-          if (mergedRect) {
-            adjacents = { ...top.d.a,
-              ...adj.d.a
-            };
-            delete adjacents[top.d.id];
-            delete adjacents[adj.d.id];
-            mergedObject = {
-              d: {
-                id: idCount++,
-                rect: mergedRect,
-                a: adjacents,
-                o: {},
-                ref: null
-              }
-            };
-            filterAdjacents(mergedObject);
-
-            if (!isRectIdenticalOrInside(stackIt, mergedObject)) {
-              stack.push(mergedObject);
-            }
-
-            if (isRectInside(mergedRect, adj.d.rect)) {
-              adj.d.ref = mergedObject;
-            }
-
-            if (isRectInside(mergedRect, top.d.rect)) {
-              top.d.ref = mergedObject;
-              atLeastOneFullMerge = true;
-            }
-          }
-        }
-      }
-
-      if (!atLeastOneFullMerge) {
-        isRectIdenticalOrInside(resultIt, top);
-      }
-    }
-  }
-
-  return {
-    mergedRects: resultIt.getSortedData(),
-    idCount
-  };
-};
-const isRectIdenticalOrInside = (it, obj) => {
-  const res = it.findAll({
-    low: obj.d.rect.y,
-    high: obj.d.rect.y + obj.d.rect.height
-  });
-  let isIdenticalOrInside = false;
-  const len = (res === null || res === void 0 ? void 0 : res.length) || 0;
-
-  for (let i = 0; i < len; i++) {
-    if (areRectsIdentical(getCoordinates(obj.d.rect), getCoordinates(res[i].d.rect)) || isRectInside(res[i].d.rect, obj.d.rect)) {
-      isIdenticalOrInside = true;
-    }
-  }
-
-  if (!isIdenticalOrInside) {
-    it.insert({
-      low: obj.d.rect.y,
-      high: obj.d.rect.y + obj.d.rect.height,
-      d: obj.d
-    });
-  }
-
-  return isIdenticalOrInside;
-};
-const filterAdjacents = (mergedObject, visited) => {
-  const mergedRect = mergedObject.d.rect;
-  const adjs = mergedObject.d.a;
-  let adj;
-  const adjsKeys = Object.keys(adjs);
-  const adjsKeysLen = adjsKeys.length;
-
-  for (let j = 0; j < adjsKeysLen; j++) {
-    adj = adjs[adjsKeys[j]];
-
-    if (!areRectsAdjacent(mergedRect, adj.d.rect)) {
-      delete adjs[adjsKeys[j]];
-    }
-  }
-};
-const findOverlapped = mergedRects => {
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  const len = mergedRects.length;
-
-  for (let i = 0; i < len; i++) {
-    mergedRects[i].low = mergedRects[i].d.rect.y;
-    mergedRects[i].high = mergedRects[i].d.rect.y + mergedRects[i].d.rect.height;
-    it.insert(mergedRects[i]);
-  }
-
-  const completeOverlapped = {};
-  const itArr = it.getSortedData();
-  let res, rlen;
-
-  for (let i = 0; i < len; i++) {
-    res = it.findAll(itArr[i].interval);
-    rlen = res.length;
-
-    for (let j = 0; j < rlen; j++) {
-      if (itArr[i].d.rect && res[j].d.rect && isRectInside(itArr[i].d.rect, res[j].d.rect) && itArr[i].d.id !== res[j].d.id) {
-        completeOverlapped[res[j].d.id] = res[j];
-        res[j].d._rect = res[j].d.rect;
-        res[j].d.rect = null;
-        const olpds = Object.values(res[j].d.o);
-        const oLen = olpds.length;
-
-        for (let k = 0; k < oLen; k++) {
-          // Hey everyone I'm done.
-          const olpd = olpds[k];
-          delete olpd.d.o[res[j].d.id];
-        }
-
-        res[j].d.o = {};
-      } else if (doRectsOverlap(itArr[i].d.rect, res[j].d.rect)) {
-        itArr[i].d.o[res[j].d.id] = res[j];
-        res[j].d.o[itArr[i].d.id] = itArr[i];
-      }
-    }
-  }
-
-  const resArr = new Array(len);
-  let count = 0;
-
-  for (let i = 0; i < len; i++) {
-    if (itArr[i].d.rect) {
-      resArr[count++] = itArr[i];
-    }
-  }
-
-  const filteredResArr = new Array(count);
-
-  for (let i = 0; i < count; i++) {
-    filteredResArr[i] = resArr[i];
-  }
-
-  return {
-    overlappedRects: filteredResArr,
-    completeOverlapped: Object.values(completeOverlapped)
-  };
-};
-/**
- * [description]
- * @param  {number[]} itemsToArrange          Array of items to arrange
- * @param  {object[]} overlappedRects         Array of overlapping rects
- * @param  {object} topWorkSpace            Top work space object in object form
- * @param  {object} bottomWorkSpace         Bottom work space object in object form
- * @param  {object} combinedWorkSpaceRectCo combined work space object in object form
- * @param  {number} lastId                  next id available
- * @return {object}                         arranged{object}: key is index in position data array, value is the object; itemsInbottomworkSpace{object}: key is index in position data array, value is also the index; idCount: next available id
- */
-
-const arrange = async (context, itemsToArrange, overlappedRects, topWorkSpace, bottomWorkSpace, combinedWorkSpaceRectCo, lastId) => {
-  // this function updates the modified position data
-  // so no need to update the modified position data later
-  const mpd = getModifiedPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-  let idCount = lastId;
-  const arranged = {};
-  const itemsInBottomWorkSpace = {}; // construct closest bst
-
-  shuffle(overlappedRects);
-  const wCBST = new external_commonjs_ClosestBST_commonjs2_ClosestBST_amd_ClosestBST_root_ClosestBST_["ClosestBST"]();
-  const orLen = overlappedRects.length;
-
-  for (let i = 0; i < orLen; i++) {
-    wCBST.insert({
-      v: overlappedRects[i].d.rect.width,
-      d: overlappedRects[i].d
-    });
-  }
-
-  const iToALen = itemsToArrange.length;
-  const itemsToArrangeStack = new stack_stack();
-  const itemsToArrangeLaterStack = new stack_stack();
-  const itemsToArrangeWithScore = getItemsToArrangeScore(context, itemsToArrange);
-
-  for (let i = 0; i < iToALen; i++) {
-    itemsToArrangeStack.push(itemsToArrangeWithScore[i]);
-  }
-
-  let top;
-  let aItem;
-  let wCBSTRes;
-
-  while (!itemsToArrangeStack.isEmpty()) {
-    top = itemsToArrangeStack.pop();
-    aItem = mpd[top.d];
-    wCBSTRes = wCBST.findUsingComparator(cBSTRectComparator(arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, aItem)), cBSTLComp(aItem.width), cBSTRComp);
-
-    if (!wCBSTRes.length) {
-      itemsToArrangeLaterStack.push(top);
-      continue;
-    }
-
-    const pm = getPerfectMatch(wCBSTRes, aItem.width + aItem.height);
-    aItem.x = pm.d.rect.x + privateConstants.MARGIN;
-    aItem.y = pm.d.rect.y + privateConstants.MARGIN;
-    arranged[top.d] = aItem;
-
-    if (bottomWorkSpace && isRectInside(bottomWorkSpace, pm.d.rect)) {
-      // put in bottom and combined workspace
-      itemsInBottomWorkSpace[top.d] = top.d;
-    } // DEBUG:
-    // printMergedFreeRects(context, wCBST.getSortedData().map((o) => o.d));
-
-
-    const {
-      result,
-      idCount: lastId1
-    } = await arrangeCleanUp(context, aItem, pm, wCBST, idCount);
-    idCount = lastId1;
-    const resLen = result.length;
-
-    for (let i = 0; i < resLen; i++) {
-      result[i].v = result[i].d.rect.width;
-      wCBST.insert(result[i]);
-    } // DEBUG:
-    // printMergedFreeRects(context, wCBST.getSortedData().map((o) => o.d));
-
-  }
-
-  return {
-    arranged,
-    itemsInBottomWorkSpace,
-    idCount
-  };
-};
-const arrangeCleanUp = async (context, aItem, pm, wCBST, lastId) => {
-  var _diff;
-
-  const privateConstants = constants_privateConstants(context);
-  let idCount = lastId;
-  let diff;
-  let diffLen;
-  let diffObj; // overlapped
-
-  let olpd; // indirect operlapped
-
-  let iolpd; // indirect overlapping keys
-
-  let ioKeys;
-  let ioKeysLen;
-  const indirectOverlaps = {};
-  const diffStack = new stack_stack();
-  const itemWithMargins = {
-    x: aItem.x - privateConstants.MARGIN,
-    y: aItem.y - privateConstants.MARGIN,
-    width: aItem.width + privateConstants.MARGIN * 2,
-    height: aItem.height + privateConstants.MARGIN * 2
-  };
-  wCBST.remove(pm.v, pm.d);
-  diff = subtractRect(pm.d.rect, itemWithMargins);
-  diffLen = ((_diff = diff) === null || _diff === void 0 ? void 0 : _diff.length) || 0;
-
-  for (let i = 0; i < diffLen; i++) {
-    diffObj = {
-      v: diff[i].width,
-      d: {
-        id: idCount++,
-        rect: diff[i],
-        a: {},
-        o: {},
-        ref: null
-      }
-    };
-    diffStack.push(diffObj);
-  }
-
-  let subtractFlag = false;
-  const directOverlaps = { ...pm.d.o
-  };
-  const pmOlps = Object.values(pm.d.o);
-  const pmOlapsLen = pmOlps.length;
-
-  for (let j = 0; j < pmOlapsLen; j++) {
-    olpd = pmOlps[j];
-    delete olpd.d.o[pm.d.id]; // if diffLen is 0, this overlapping rect will be put back later after operations
-
-    wCBST.remove(olpd.d.rect.width, olpd.d);
-    subtractFlag = false;
-
-    if (doRectsOverlap(olpd.d.rect, itemWithMargins)) {
-      var _diff2;
-
-      subtractFlag = true;
-      diff = subtractRect(olpd.d.rect, itemWithMargins);
-      diffLen = ((_diff2 = diff) === null || _diff2 === void 0 ? void 0 : _diff2.length) || 0;
-
-      if (diffLen) {
-        for (let k = 0; k < diffLen; k++) {
-          diffObj = {
-            v: diff[k].width,
-            d: {
-              id: idCount++,
-              rect: diff[k],
-              a: {},
-              o: {},
-              ref: null
-            }
-          };
-          diffStack.push(diffObj);
-        }
-      }
-    } else {
-      diffStack.push(olpd);
-      olpd.d.a = {};
-    }
-
-    ioKeys = Object.keys(olpd.d.o);
-    ioKeysLen = ioKeys.length;
-
-    for (let k = 0; k < ioKeysLen; k++) {
-      iolpd = olpd.d.o[ioKeys[k]];
-
-      if (!directOverlaps[ioKeys[k]]) {
-        indirectOverlaps[ioKeys[k]] = iolpd;
-      }
-
-      if (subtractFlag) {
-        delete iolpd.d.o[olpd.d.id];
-      }
-    }
-  } // now merge the rects in diff stack and put the merged rects in wCBST tree
-  // printUnmergedFreeRects(context, diffStack.getData().map((o) => o.d));
-
-
-  const diffStackData = diffStack.getData();
-  const diffStackDataLen = diffStackData.length;
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-
-  for (let i = 0; i < diffStackDataLen; i++) {
-    it.insert({
-      low: diffStackData[i].d.rect.y,
-      high: diffStackData[i].d.rect.y + diffStackData[i].d.rect.height,
-      d: diffStackData[i].d
-    });
-  }
-
-  assignAdjacentRects(it);
-  const {
-    mergedRects,
-    idCount: lastId1
-  } = await mergeFreeRects(diffStack.getData(), idCount);
-  const {
-    overlappedRects: _overlappedRects,
-    completeOverlapped
-  } = findOverlapped([...mergedRects, ...Object.values(indirectOverlaps)]);
-  const completeOverlappedLen = completeOverlapped.length;
-
-  for (let i = 0; i < completeOverlappedLen; i++) {
-    wCBST.remove(completeOverlapped[i].d._rect.width, completeOverlapped[i].d);
-  }
-
-  const _overlappedRectsLen = _overlappedRects.length;
-  const overlappedRects = new Array(_overlappedRectsLen);
-  let count = 0;
-
-  for (let i = 0; i < _overlappedRectsLen; i++) {
-    if (!indirectOverlaps[_overlappedRects[i].d.id]) {
-      overlappedRects[count++] = _overlappedRects[i];
-    }
-  }
-
-  const filteredOverlappedRects = filter(overlappedRects); // printMergedFreeRects(context, filteredOverlappedRects.map((o) => o.d));
-
-  return {
-    result: filteredOverlappedRects,
-    idCount: lastId1
-  };
 };
 // CONCATENATED MODULE: ./src/libs/interaction/itemInteraction.js
 /*

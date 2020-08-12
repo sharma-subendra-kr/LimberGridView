@@ -89,17 +89,6 @@ export const getMinMaxXY = (
 	};
 };
 
-export const filterToArrange = (context, toArrangeItems, arranged) => {
-	const len = toArrangeItems.length;
-	const result = new Array(len);
-	for (let i = 0; i < len; i++) {
-		if (!arranged[toArrangeItems[i]]) {
-			result[i] = toArrangeItems[i];
-		}
-	}
-	return filter(result);
-};
-
 export const getBottomMax = (context, minX, maxX) => {
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
@@ -322,26 +311,41 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 	return _item;
 };
 
-export const cBSTRectComparator = function (item) {
-	return (node, v, d) => {
-		if (node.d.rect.width >= item.width && node.d.rect.height >= item.height) {
+export const rectSortX = (a, b) => {
+	if (a.d.rect.x === b.d.rect.x) {
+		return a.d.rect.y - b.d.rect.y;
+	} else {
+		return a.d.rect.x - b.d.rect.x;
+	}
+};
+
+export const rectSortY = (a, b) => {
+	if (a.d.rect.y === b.d.rect.y) {
+		return a.d.rect.x - b.d.rect.x;
+	} else {
+		return a.d.rect.y - b.d.rect.y;
+	}
+};
+
+export const isMergable = function (rect) {
+	return (node, interval, d) => {
+		if (
+			doRectsOverlap(rect, node.d.rect) ||
+			doRectsOnlyTouch(rect, node.d.rect)
+		) {
 			return true;
 		}
 		return false;
 	};
 };
 
-export const cBSTLComp = function (v) {
-	return (node) => {
-		if (node.v > v) {
+export const shouldFilterRect = function (rect, data) {
+	return (node, interval, d) => {
+		if (isRectInside(node.d.rect, rect) && node.d !== data) {
 			return true;
 		}
 		return false;
 	};
-};
-
-export const cBSTRComp = function () {
-	return true;
 };
 
 export const getScore = (rect, maxHWSum) => {

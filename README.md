@@ -3,7 +3,7 @@
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
 **[View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)**
 
-## LimberGridView 1.0.0-beta.0 is finally here!
+## LimberGridView 1.0.0-beta.1 is finally here!
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
 
@@ -33,7 +33,7 @@ Written by Subendra Kumar Sharma.
 ### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
 
 ## The is a beta release. This version is unstable.
-* **You might encounter unusual behaviour while resizing or moving (like items overlapping). This issue is noted and will be fixed with utmost priority in the upcoming releases. I would try to ship it by end of August 2020.**
+* **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but I am still testing it.**
 
 ###### What's New ######
 * **A Whole new algorithm to arrange items on your desk.**
@@ -41,6 +41,7 @@ Written by Subendra Kumar Sharma.
 * **renderPlugin and removePlugin, these callbacks help you to render React JSX inside any item. (These might help in someother framework as well. I haven't used other frameworks.)**
 
 ###### Features to watch out for in the next releases. ######
+* **Built in Intersection Observer**
 * **Undo and Redo**
 * **Improved Stability**
 

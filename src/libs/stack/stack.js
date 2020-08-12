@@ -24,16 +24,23 @@ Written by Subendra Kumar Sharma.
 */
 
 /*
-		
-	LIFO(Last In First Out) Stack Data Structure
 
+	LIFO(Last In First Out) Stack Data Structure
 
 */
 
-const Stack = function () {
+const Stack = function (options) {
 	this.length = 100;
 	this.stack = new Array(this.length);
 	this.ptr = -1;
+
+	if (options && options.data) {
+		const data = options.data;
+		const len = data.length;
+		for (let i = len - 1; i >= 0; i--) {
+			this.push(data[i]);
+		}
+	}
 };
 
 Stack.prototype.constructor = Stack;
