@@ -89,17 +89,6 @@ export const getMinMaxXY = (
 	};
 };
 
-export const filterToArrange = (context, toArrangeItems, arranged) => {
-	const len = toArrangeItems.length;
-	const result = new Array(len);
-	for (let i = 0; i < len; i++) {
-		if (!arranged[toArrangeItems[i]]) {
-			result[i] = toArrangeItems[i];
-		}
-	}
-	return filter(result);
-};
-
 export const getBottomMax = (context, minX, maxX) => {
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
@@ -357,28 +346,6 @@ export const shouldFilterRect = function (rect, data) {
 		}
 		return false;
 	};
-};
-
-export const cBSTRectComparator = function (item) {
-	return (node, v, d) => {
-		if (node.d.rect.width >= item.width && node.d.rect.height >= item.height) {
-			return true;
-		}
-		return false;
-	};
-};
-
-export const cBSTLComp = function (v) {
-	return (node) => {
-		if (node.v > v) {
-			return true;
-		}
-		return false;
-	};
-};
-
-export const cBSTRComp = function () {
-	return true;
 };
 
 export const getScore = (rect, maxHWSum) => {
