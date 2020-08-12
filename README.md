@@ -28,9 +28,9 @@ Written by Subendra Kumar Sharma.
 
 #### For api Reference and Documentation please read the Wiki Page. ####
 
-### This is free software (Free as in freedom not the price). If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact _jobs.sharma.subendra.kr@gmail.com_.
+### This is free software (Free as in freedom not the price). If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact _reach.subendra.kr@gmx.com_.
 
-### If you want to donate to this project so I that can test on various other touch devices you can contact _jobs.sharma.subendra.kr@gmail.com_.
+### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
 
 ## The is a beta release. This version is unstable.
 * **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but I are still testing it.**
@@ -47,4 +47,4 @@ Written by Subendra Kumar Sharma.
 
 **I am constantly trying to improve the arranging algorithm and this will be done in patches.**
 
-If you find a bug or an error please report by sending an email to _jobs.sharma.subendra.kr@gmail.com_.
+If you find a bug or an error please report by sending an email to _reach.subendra.kr@gmx.com_.
