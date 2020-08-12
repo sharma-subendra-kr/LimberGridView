@@ -33,7 +33,7 @@ Written by Subendra Kumar Sharma.
 ### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
 
 ## The is a beta release. This version is unstable.
-* **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but I are still testing it.**
+* **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but I am still testing it.**
 
 ###### What's New ######
 * **A Whole new algorithm to arrange items on your desk.**
