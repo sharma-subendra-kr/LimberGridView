@@ -997,28 +997,3 @@ var main = function () {
 		el.scrollTop += 100;
 	};
 };
-
-// gridHeight : 624,
-// gridWidth : 985,
-
-// {x : 505, y: 0,  height : 200, width : 200},
-// {x : 0, y: 0, height : 400, width : 500},
-// {x : 505, y: 205,  height : 195, width : 200},
-// {x : 0, y: 405,  height : 200, width : 200},
-// {x : 710, y: 0,  height : 400, width : 280},
-// {x : 410, y: 405,  height : 400 - 200, width : 580 - 10},
-// {x : 0, y: 1215 + 150,  height : 600, width : 300},
-// {x : 205, y: 405,  height : 200, width : 200},
-// {x : 405, y: 810,  height : 400 + 100, width : 580},
-// {x : 0, y: 610,  height : 600, width : 400},
-
-// {height : 400, width : 500},
-// {height : 200, width : 200},
-// {height : 195, width : 200},
-// {height : 400, width : 280},
-// {height : 200, width : 200},
-// {height : 200, width : 200},
-// {height : 400 - 200, width : 580 - 10},
-// {height : 600, width : 400},
-// {height : 400 + 100, width : 580},
-// {height : 600, width : 300},
