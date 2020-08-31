@@ -48,15 +48,15 @@ export const getResizeAffectedItems = (context, item, index) => {
 	const _item = { ...item };
 	_item.x -= privateConstants.MARGIN;
 	_item.y -= privateConstants.MARGIN;
-	_item.width += privateConstants.MARGIN;
-	_item.height += privateConstants.MARGIN;
+	_item.width += privateConstants.MARGIN * 2;
+	_item.height += privateConstants.MARGIN * 2;
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN;
-		temp.height = pd[i].height + privateConstants.MARGIN;
+		temp.width = pd[i].width + privateConstants.MARGIN * 2;
+		temp.height = pd[i].height + privateConstants.MARGIN * 2;
 		if (
 			(doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
 			i !== index
@@ -88,15 +88,15 @@ export const getMoveAffectedItems = (context, item, index) => {
 	const _item = { ...item };
 	_item.x -= privateConstants.MARGIN;
 	_item.y -= privateConstants.MARGIN;
-	_item.width += privateConstants.MARGIN;
-	_item.height += privateConstants.MARGIN;
+	_item.width += privateConstants.MARGIN * 2;
+	_item.height += privateConstants.MARGIN * 2;
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN;
-		temp.height = pd[i].height + privateConstants.MARGIN;
+		temp.width = pd[i].width + privateConstants.MARGIN * 2;
+		temp.height = pd[i].height + privateConstants.MARGIN * 2;
 		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
 			if (i !== index) {
 				affectedArr[count++] = i;
