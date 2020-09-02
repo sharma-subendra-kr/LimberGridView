@@ -29,7 +29,6 @@ import {
 	getModifiedPositionData,
 } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
-import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	doRectsOverlap,
 	isRectInside,
@@ -428,14 +427,13 @@ export const shiftItemsUp = function (context, y, shiftHeight) {
 
 export const addItemAllowCheck = function (context, x, y, width, height) {
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
 	const pd = getPositionData(context);
 
 	var tempPlane = {
 		x: x - privateConstants.MARGIN,
 		y: y - privateConstants.MARGIN,
-		width: width + publicConstants.MARGIN * 2,
-		height: height + publicConstants.MARGIN * 2,
+		width: width + privateConstants.MARGIN * 2,
+		height: height + privateConstants.MARGIN * 2,
 	};
 
 	if (x < 0 || y < 0) {

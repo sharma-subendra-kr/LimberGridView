@@ -40,7 +40,6 @@ import {
 	getRectObjectFromCo,
 	subtractRect,
 	doRectsOverlap,
-	areRectsAdjacent,
 	getCoordinates,
 	mergeRects,
 	isRectInside,
@@ -49,19 +48,19 @@ import {
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
 import Stack from "../stack/stack";
-import {
-	sleep,
-	printUnmergedFreeRects,
-	printMergedFreeRects,
-	printResultStackRects,
-	printStackRects,
-	printMergedTempRects,
-	printStackTopRect,
-	printStackTopAdjRect,
-	printMergedRect,
-	printAdjRect,
-} from "../debug/debug";
-import { printNodeData } from "../debug/debugUtils";
+// import {
+// 	sleep,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
+// } from "../debug/debug";
+// import { printNodeData } from "../debug/debugUtils";
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;

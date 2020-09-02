@@ -40,19 +40,19 @@ import {
 	getResizeWSItemsDetail,
 } from "./arrangeUtils";
 import { getRectObjectFromCo } from "../rect/rectUtils";
-import {
-	sleep,
-	printUnmergedFreeRects,
-	printMergedFreeRects,
-	printResultStackRects,
-	printStackRects,
-	printMergedTempRects,
-	printStackTopRect,
-	printStackTopAdjRect,
-	printMergedRect,
-	printAdjRect,
-} from "../debug/debug";
-import { printNodeData } from "../debug/debugUtils";
+// import {
+// 	sleep,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
+// } from "../debug/debug";
+// import { printNodeData } from "../debug/debugUtils";
 
 export const arrangeMove = async (
 	context,
