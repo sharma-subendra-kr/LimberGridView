@@ -1833,8 +1833,8 @@ const getResizeAffectedItems = (context, item, index) => {
   };
   _item.x -= privateConstants.MARGIN;
   _item.y -= privateConstants.MARGIN;
-  _item.width += privateConstants.MARGIN;
-  _item.height += privateConstants.MARGIN;
+  _item.width += privateConstants.MARGIN * 2;
+  _item.height += privateConstants.MARGIN * 2;
   const temp = {
     x: 0,
     y: 0,
@@ -1845,8 +1845,8 @@ const getResizeAffectedItems = (context, item, index) => {
   for (let i = 0; i < len; i++) {
     temp.x = pd[i].x - privateConstants.MARGIN;
     temp.y = pd[i].y - privateConstants.MARGIN;
-    temp.width = pd[i].width + privateConstants.MARGIN;
-    temp.height = pd[i].height + privateConstants.MARGIN;
+    temp.width = pd[i].width + privateConstants.MARGIN * 2;
+    temp.height = pd[i].height + privateConstants.MARGIN * 2;
 
     if ((doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) && i !== index) {
       affectedArr[count++] = i;
@@ -1875,8 +1875,8 @@ const getMoveAffectedItems = (context, item, index) => {
   };
   _item.x -= privateConstants.MARGIN;
   _item.y -= privateConstants.MARGIN;
-  _item.width += privateConstants.MARGIN;
-  _item.height += privateConstants.MARGIN;
+  _item.width += privateConstants.MARGIN * 2;
+  _item.height += privateConstants.MARGIN * 2;
   const temp = {
     x: 0,
     y: 0,
@@ -1887,8 +1887,8 @@ const getMoveAffectedItems = (context, item, index) => {
   for (let i = 0; i < len; i++) {
     temp.x = pd[i].x - privateConstants.MARGIN;
     temp.y = pd[i].y - privateConstants.MARGIN;
-    temp.width = pd[i].width + privateConstants.MARGIN;
-    temp.height = pd[i].height + privateConstants.MARGIN;
+    temp.width = pd[i].width + privateConstants.MARGIN * 2;
+    temp.height = pd[i].height + privateConstants.MARGIN * 2;
 
     if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
       if (i !== index) {
@@ -4490,9 +4490,7 @@ const loadInitState = context => {
     e.$limberGridViewItems[i].classList.add("limber-grid-view-item-resizing-state");
   }
 
-  for (let i = 0; i < len; i++) {
-    e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resizing-state");
-  }
+  e.$limberGridViewPseudoItem.classList.add("limber-grid-view-pseudo-item-resizing-state");
 
   if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
     e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-active");
@@ -4510,9 +4508,9 @@ const unloadInitState = context => {
 
   for (var i = 0; i < len; i++) {
     e.$limberGridViewItems[i].classList.remove("limber-grid-view-item-resizing-state");
-    e.$limberGridViewPseudoItem.classList.remove("limber-grid-view-pseudo-item-resizing-state");
   }
 
+  e.$limberGridViewPseudoItem.classList.remove("limber-grid-view-pseudo-item-resizing-state");
   e.$limberGridViewAddCutGuide.classList.remove("limber-grid-view-add-cut-guide-active", "limber-grid-view-add-cut-guide-cut-mode", "limber-grid-view-add-cut-guide-add-allow", "limber-grid-view-add-cut-guide-add-disallow");
   e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
   e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
@@ -4940,15 +4938,16 @@ const removeItem = function (context, index) {
   }
 
   e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
+
+  if (callbacks.removeComplete) {
+    callbacks.removeComplete(index, e.$limberGridViewItems[index]);
+  }
+
   set$limberGridViewItems(context, [...e.$limberGridView.getElementsByClassName("limber-grid-view-item")]);
   const len = pd.length;
 
   for (let i = index; i < len; i++) {
     e.$limberGridViewItems[i].setAttribute("data-index", i);
-  }
-
-  if (callbacks.removeComplete) {
-    callbacks.removeComplete(index, e.$limberGridViewItems[index]);
   }
 
   for (let i = index; i < len; i++) {
