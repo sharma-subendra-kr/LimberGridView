@@ -41,6 +41,8 @@ import {
 	getCallbacks,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
+import { setStatus, getStatus } from "../../store/variables/status";
+import { isPointInsideRect } from "../rect/rectUtils";
 
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
@@ -142,7 +144,7 @@ export const moveItem = async function (index, toX, toY) {
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
-		const adjustedPt = movePointAdjust(this, toX, toY);
+		const adjustedPt = movePointAdjust(this, toX, toY, index);
 		toX = adjustedPt.toX;
 		toY = adjustedPt.toY;
 	}
@@ -207,14 +209,48 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
-		// change toX & toY to top left of the overlapping item
-		const adjustedPt = movePointAdjust(this, toX, toY);
-		toX = adjustedPt.toX;
-		toY = adjustedPt.toY;
+		let moveDemo = getStatus(this, "moveDemo");
+		let adjustedPt;
+		if (
+			!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex) &&
+			isPointInsideRect(pd[moveDemo.adjustedPt.overlappedItemIndex], {
+				x: toX,
+				y: toY,
+			})
+		) {
+			setStatus(this, "moveDemo", {
+				...moveDemo,
+				latchAdjacent: !moveDemo.latchAdjacent,
+			});
+			moveDemo = getStatus(this, "moveDemo");
+
+			if (moveDemo.latchAdjacent) {
+				toX = moveDemo.adjustedPt.toXAdj;
+				toY = moveDemo.adjustedPt.toYAdj;
+			} else {
+				toX = moveDemo.adjustedPt.toX;
+				toY = moveDemo.adjustedPt.toY;
+			}
+		} else {
+			// change toX & toY to top left of the overlapping item
+			adjustedPt = movePointAdjust(this, toX, toY, index);
+			toX = adjustedPt[adjustedPt.toAdj ? "toAdj" : "to"].toX;
+			toY = adjustedPt[adjustedPt.toAdj ? "toAdj" : "to"].toY;
+
+			setStatus(this, "moveDemo", {
+				adjustedPt: adjustedPt,
+				latchAdjacent: false,
+			});
+			moveDemo = getStatus(this, "moveDemo");
+		}
 
 		if (!isNaN(adjustedPt.overlappedItemIndex)) {
 			e.$limberGridViewMoveGuide.style.transform =
 				"translate(" + toX + "px, " + toY + "px)";
+			e.$limberGridViewMoveGuide.style.width =
+				pd[adjustedPt.overlappedItemIndex].width + "px";
+			e.$limberGridViewMoveGuide.style.height =
+				pd[adjustedPt.overlappedItemIndex].height + "px";
 			e.$limberGridViewMoveGuide.classList.add(
 				"limber-grid-view-move-guide-active"
 			);

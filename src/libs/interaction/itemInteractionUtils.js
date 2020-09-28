@@ -35,6 +35,7 @@ import {
 	getModifiedPositionData,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
+import { getDistanceBetnPts } from "../geometry/geometry";
 
 export const getResizeAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
@@ -185,27 +186,100 @@ export const resetDemoUIChanges = (context) => {
 	}
 };
 
-export const movePointAdjust = (context, toX, toY) => {
+export const movePointAdjust = (context, toX, toY, index) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
-	const pt = { x: toX, y: toY };
+	let pt = { x: toX, y: toY };
 	let inside;
+	let tl, tr, tld, trd;
+	let ldistance = Number.MAX_SAFE_INTEGER;
+	let rdistance = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj;
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
 		temp.width = pd[i].width + privateConstants.MARGIN * 2;
 		temp.height = pd[i].height + privateConstants.MARGIN * 2;
+
 		if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
 			inside = i;
 			break;
 		}
+
+		tl = { x: temp.x, y: temp.y };
+		tr = { x: temp.x + temp.width, y: temp.y };
+
+		tld = getDistanceBetnPts(tl, pt);
+		trd = getDistanceBetnPts(tr, pt);
+
+		if (tld < ldistance && pt.x < temp.x && tld <= privateConstants.WIDTH / 4) {
+			toXAdj = tl.x - pd[index].width - privateConstants.MARGIN;
+			toYAdj = tl.y + privateConstants.MARGIN;
+
+			ldistance = tld;
+		}
+
+		if (trd < rdistance && pt.x > temp.x && trd <= privateConstants.WIDTH / 4) {
+			toXAdj = tr.x + privateConstants.MARGIN;
+			toYAdj = tr.y + privateConstants.MARGIN;
+
+			rdistance = trd;
+		}
 	}
+
 	if (inside !== undefined) {
 		toX = pd[inside].x;
 		toY = pd[inside].y;
+
+		pt = { x: toX, y: toY };
+		ldistance = Number.MAX_SAFE_INTEGER;
+		rdistance = Number.MAX_SAFE_INTEGER;
+
+		for (let i = 0; i < len; i++) {
+			if (i === index) {
+				continue;
+			}
+
+			temp.x = pd[i].x - privateConstants.MARGIN;
+			temp.y = pd[i].y - privateConstants.MARGIN;
+			temp.width = pd[i].width + privateConstants.MARGIN * 2;
+			temp.height = pd[i].height + privateConstants.MARGIN * 2;
+
+			tl = { x: temp.x, y: temp.y };
+			tr = { x: temp.x + temp.width, y: temp.y };
+
+			tld = getDistanceBetnPts(tl, pt);
+			trd = getDistanceBetnPts(tr, pt);
+
+			if (
+				tld < ldistance &&
+				pt.x < temp.x &&
+				tld <= privateConstants.WIDTH / 4
+			) {
+				toXAdj = tl.x - pd[index].width - privateConstants.MARGIN;
+				toYAdj = tl.y + privateConstants.MARGIN;
+
+				ldistance = tld;
+			}
+
+			if (
+				trd < rdistance &&
+				pt.x > temp.x &&
+				trd <= privateConstants.WIDTH / 4
+			) {
+				toXAdj = tr.x + privateConstants.MARGIN;
+				toYAdj = tr.y + privateConstants.MARGIN;
+
+				rdistance = trd;
+			}
+		}
 	}
-	return { toX, toY, overlappedItemIndex: inside };
+	return {
+		to: { toX, toY },
+		toAdj: { toX: toXAdj, toY: toYAdj },
+		overlappedItemIndex: inside,
+	};
 };

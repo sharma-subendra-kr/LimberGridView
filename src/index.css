@@ -219,10 +219,9 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-move-guide {
-	width: 15px;
-	height: 15px;
-	border-top: solid 3px black;
-	border-left: solid 3px black;
+	width: 0px;
+	height: 0px;
+	border: dashed 1px black;
 	background-color: transparent;
 
 	position: absolute;
@@ -230,6 +229,20 @@ Written by Subendra Kumar Sharma.
 	vertical-align: top;
 	box-sizing: border-box;
 
+	cursor: grabbing;
+}
+
+.limber-grid-view-move-guide::before {
+	content: "";
+	width: 15px;
+	height: 15px;
+	border-top: solid 3px black;
+	border-left: solid 3px black;
+	background-color: transparent;
+
+	position: absolute;
+	top: -1;
+	left: -1;
 	cursor: grabbing;
 }
 

@@ -431,6 +431,7 @@ LimberGridView.prototype.initializeStore = function () {
 					cutSpaceAllowCheckTimeOutVariable: undefined,
 				},
 			},
+			status: {},
 		},
 		constants: {
 			privateConstants: {

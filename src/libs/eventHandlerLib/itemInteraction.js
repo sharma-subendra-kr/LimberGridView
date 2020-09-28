@@ -50,6 +50,7 @@ import {
 } from "../interaction/itemInteraction";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
+import { setStatus } from "../../store/variables/status";
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
@@ -533,6 +534,8 @@ export const onItemContextMenu = function (event) {
 	document.removeEventListener("touchcancel", bf.onItemTouchCancel);
 
 	iiv.userActionData = {};
+
+	setStatus(this, "moveDemo", undefined);
 
 	event.preventDefault();
 	event.stopPropagation();
