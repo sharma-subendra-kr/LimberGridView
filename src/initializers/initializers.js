@@ -42,6 +42,7 @@ import getElements, {
 	set$limberGridViewHeightAdjustGuide,
 	set$limberGridViewAddCutGuide,
 	set$limberGridViewTouchHoldGuide,
+	set$limberGridViewCrossHairGuide,
 } from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
@@ -412,6 +413,8 @@ export const initRender = function () {
 	const limberGridViewAddCutGuide = document.createElement("div"); // desk interaction rect
 	const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
 	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
+	const limberGridViewCrossHairGuide = document.createElement("div");
+	limberGridViewCrossHairGuide.innerHTML = `<hr></hr><hr></hr>`;
 
 	pseudoContainerItem.setAttribute(
 		"class",
@@ -434,6 +437,11 @@ export const initRender = function () {
 		"class",
 		"limber-grid-view-touch-hold-guide"
 	);
+	limberGridViewCrossHairGuide.setAttribute(
+		"class",
+		"limber-grid-view-cross-hair-guide"
+	);
+	limberGridViewCrossHairGuide.style.transform = "translate(-1000px, -1000px)";
 
 	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
@@ -441,6 +449,7 @@ export const initRender = function () {
 	e.$limberGridView.appendChild(limberGridViewHeightAdjustGuide);
 	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
 	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
+	e.$limberGridView.appendChild(limberGridViewCrossHairGuide);
 
 	set$pseudoContainerItem(this, pseudoContainerItem);
 	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
@@ -448,4 +457,5 @@ export const initRender = function () {
 	set$limberGridViewHeightAdjustGuide(this, limberGridViewHeightAdjustGuide);
 	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
 	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
+	set$limberGridViewCrossHairGuide(this, limberGridViewCrossHairGuide);
 };

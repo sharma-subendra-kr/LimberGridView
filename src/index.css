@@ -348,6 +348,37 @@ Written by Subendra Kumar Sharma.
 	animation: limber-grid-view-touch-hold-guide-ripple 500ms ease-out;
 }
 
+.limber-grid-view-cross-hair-guide {
+	background-color: transparent;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	width: 500px;
+	height: 500px;
+	user-select: none;
+	pointer-events: none;
+	display: none;
+}
+
+.limber-grid-view-cross-hair-guide hr:nth-child(1) {
+	margin: 0;
+	padding: 0;
+	border: dashed 1px black;
+	position: relative;
+	top: 50%;
+}
+
+.limber-grid-view-cross-hair-guide hr:nth-child(2) {
+	margin: 0;
+	padding: 0;
+	border: dashed 1px black;
+	transform: rotate(90deg);
+	transform-origin: left;
+	left: 50%;
+	top: -3px;
+	position: relative;
+}
+
 .limber-grid-view-license {
 	position: absolute;
 	bottom: 0px;
