@@ -198,6 +198,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
+	let isToAdjPresent = false;
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
@@ -206,7 +207,13 @@ export const movePointAdjust = (context, toX, toY, index) => {
 
 		if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
 			inside = i;
-			break;
+			toX = pd[inside].x;
+			toY = pd[inside].y;
+			// break;
+		}
+
+		if (i === index) {
+			continue;
 		}
 
 		tl = { x: temp.x, y: temp.y };
@@ -215,71 +222,37 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		tld = getDistanceBetnPts(tl, pt);
 		trd = getDistanceBetnPts(tr, pt);
 
-		if (tld < ldistance && pt.x < temp.x && tld <= privateConstants.WIDTH / 4) {
-			toXAdj = tl.x - pd[index].width - privateConstants.MARGIN;
-			toYAdj = tl.y + privateConstants.MARGIN;
-
-			ldistance = tld;
-		}
-
-		if (trd < rdistance && pt.x > temp.x && trd <= privateConstants.WIDTH / 4) {
-			toXAdj = tr.x + privateConstants.MARGIN;
-			toYAdj = tr.y + privateConstants.MARGIN;
-
-			rdistance = trd;
-		}
-	}
-
-	if (inside !== undefined) {
-		toX = pd[inside].x;
-		toY = pd[inside].y;
-
-		pt = { x: toX, y: toY };
-		ldistance = Number.MAX_SAFE_INTEGER;
-		rdistance = Number.MAX_SAFE_INTEGER;
-
-		for (let i = 0; i < len; i++) {
-			if (i === index) {
-				continue;
-			}
-
-			temp.x = pd[i].x - privateConstants.MARGIN;
-			temp.y = pd[i].y - privateConstants.MARGIN;
-			temp.width = pd[i].width + privateConstants.MARGIN * 2;
-			temp.height = pd[i].height + privateConstants.MARGIN * 2;
-
-			tl = { x: temp.x, y: temp.y };
-			tr = { x: temp.x + temp.width, y: temp.y };
-
-			tld = getDistanceBetnPts(tl, pt);
-			trd = getDistanceBetnPts(tr, pt);
-
+		if (tld < ldistance && pt.x < tl.x && tld <= privateConstants.WIDTH / 4) {
 			if (
-				tld < ldistance &&
-				pt.x < temp.x &&
-				tld <= privateConstants.WIDTH / 4
+				tl.x - privateConstants.MARGIN - pd[index].width >=
+				privateConstants.MARGIN
 			) {
-				toXAdj = tl.x - pd[index].width - privateConstants.MARGIN;
+				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
 				toYAdj = tl.y + privateConstants.MARGIN;
 
 				ldistance = tld;
+				isToAdjPresent = true;
 			}
+		}
 
+		if (trd < rdistance && pt.x > tr.x && trd <= privateConstants.WIDTH / 4) {
 			if (
-				trd < rdistance &&
-				pt.x > temp.x &&
-				trd <= privateConstants.WIDTH / 4
+				tr.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH
 			) {
-				toXAdj = tr.x + privateConstants.MARGIN;
+				toXAdj = tr.x + privateConstants.MARGIN + pd[index].width;
 				toYAdj = tr.y + privateConstants.MARGIN;
 
 				rdistance = trd;
+				isToAdjPresent = true;
 			}
 		}
 	}
+
 	return {
 		to: { toX, toY },
 		toAdj: { toX: toXAdj, toY: toYAdj },
 		overlappedItemIndex: inside,
+		isToAdjPresent,
 	};
 };

@@ -47,6 +47,6 @@
     "webpack-notifier": "^1.8.0"
   },
   "dependencies": {
-    "IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git#release-1.0.1"
+    "IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git#release-1.0.2-beta.1"
   }
 }

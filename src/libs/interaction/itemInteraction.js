@@ -218,39 +218,52 @@ export const moveItemDemo = async function (index, toX, toY) {
 				y: toY,
 			})
 		) {
+			let latchingAdjacent = false;
+
+			if (!moveDemo.latchingAdjacent && moveDemo.adjustedPt.isToAdjPresent) {
+				toX = moveDemo.adjustedPt.toAdj.toX;
+				toY = moveDemo.adjustedPt.toAdj.toY;
+				latchingAdjacent = true;
+			} else {
+				toX = moveDemo.adjustedPt.to.toX;
+				toY = moveDemo.adjustedPt.to.toY;
+			}
+
 			setStatus(this, "moveDemo", {
 				...moveDemo,
-				latchAdjacent: !moveDemo.latchAdjacent,
+				latchingAdjacent,
 			});
-			moveDemo = getStatus(this, "moveDemo");
-
-			if (moveDemo.latchAdjacent) {
-				toX = moveDemo.adjustedPt.toXAdj;
-				toY = moveDemo.adjustedPt.toYAdj;
-			} else {
-				toX = moveDemo.adjustedPt.toX;
-				toY = moveDemo.adjustedPt.toY;
-			}
 		} else {
 			// change toX & toY to top left of the overlapping item
 			adjustedPt = movePointAdjust(this, toX, toY, index);
-			toX = adjustedPt[adjustedPt.toAdj ? "toAdj" : "to"].toX;
-			toY = adjustedPt[adjustedPt.toAdj ? "toAdj" : "to"].toY;
+			let latchingAdjacent = false;
+			if (
+				!isNaN(adjustedPt.overlappedItemIndex) ||
+				!adjustedPt.isToAdjPresent
+			) {
+				toX = adjustedPt.to.toX;
+				toY = adjustedPt.to.toY;
+			} else {
+				toX = adjustedPt.toAdj.toX;
+				toY = adjustedPt.toAdj.toY;
+				latchingAdjacent = true;
+			}
 
 			setStatus(this, "moveDemo", {
 				adjustedPt: adjustedPt,
-				latchAdjacent: false,
+				latchingAdjacent,
 			});
-			moveDemo = getStatus(this, "moveDemo");
 		}
 
-		if (!isNaN(adjustedPt.overlappedItemIndex)) {
+		moveDemo = getStatus(this, "moveDemo");
+
+		if (!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex)) {
 			e.$limberGridViewMoveGuide.style.transform =
 				"translate(" + toX + "px, " + toY + "px)";
 			e.$limberGridViewMoveGuide.style.width =
-				pd[adjustedPt.overlappedItemIndex].width + "px";
+				pd[moveDemo.adjustedPt.overlappedItemIndex].width + "px";
 			e.$limberGridViewMoveGuide.style.height =
-				pd[adjustedPt.overlappedItemIndex].height + "px";
+				pd[moveDemo.adjustedPt.overlappedItemIndex].height + "px";
 			e.$limberGridViewMoveGuide.classList.add(
 				"limber-grid-view-move-guide-active"
 			);
