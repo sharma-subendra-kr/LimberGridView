@@ -59,7 +59,8 @@ export const getResizeAffectedItems = (context, item, index) => {
 		temp.width = pd[i].width + privateConstants.MARGIN * 2;
 		temp.height = pd[i].height + privateConstants.MARGIN * 2;
 		if (
-			(doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
+			// (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
+			doRectsOverlap(temp, _item) &&
 			i !== index
 		) {
 			affectedArr[count++] = i;
@@ -98,7 +99,8 @@ export const getMoveAffectedItems = (context, item, index) => {
 		temp.y = pd[i].y - privateConstants.MARGIN;
 		temp.width = pd[i].width + privateConstants.MARGIN * 2;
 		temp.height = pd[i].height + privateConstants.MARGIN * 2;
-		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+		// if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+		if (doRectsOverlap(temp, _item)) {
 			if (i !== index) {
 				affectedArr[count++] = i;
 				mpd[i].x = undefined;
