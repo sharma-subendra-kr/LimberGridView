@@ -275,3 +275,80 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		toAdjDirection,
 	};
 };
+
+export const resizeSizeAdjust = (context, width, height, index) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const len = pd.length;
+	const temp = { x: 0, y: 0, height: 0, width: 0 };
+	const tlpt = { x: pd[index].x, y: pd[index].y };
+	const trpt = { x: pd[index].x + width, y: pd[index].y };
+	const brpt = { x: pd[index].x + width, y: pd[index].y + height };
+	const blpt = { x: pd[index].x, y: pd[index].y + height };
+
+	let bl, br, blptTobr, brptTobl;
+	let ldistance = Number.MAX_SAFE_INTEGER;
+	let rdistance = Number.MAX_SAFE_INTEGER;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+	let latchPoint;
+
+	for (let i = 0; i < len; i++) {
+		temp.x = pd[i].x;
+		temp.y = pd[i].y;
+		temp.width = pd[i].width;
+		temp.height = pd[i].height;
+
+		if (i === index) {
+			continue;
+		}
+
+		bl = { x: temp.x, y: temp.y + temp.height };
+		br = { x: temp.x + temp.width, y: temp.y + temp.height };
+
+		brptTobl = getDistanceBetnPts(bl, brpt);
+		blptTobr = getDistanceBetnPts(br, blpt);
+
+		if (
+			brptTobl < rdistance &&
+			brptTobl < ldistance &&
+			brpt.x < bl.x &&
+			Math.abs(brpt.y - bl.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
+		) {
+			height = bl.y - trpt.y;
+
+			rdistance = brptTobl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			toAdjDirection = "right";
+			latchPoint = bl;
+		}
+
+		if (
+			blptTobr < ldistance &&
+			blptTobr < rdistance &&
+			blpt.x > br.x &&
+			Math.abs(blpt.y - br.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
+		) {
+			height = br.y - tlpt.y;
+
+			ldistance = blptTobr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			toAdjDirection = "left";
+			latchPoint = br;
+		}
+	}
+
+	return {
+		height,
+		isToAdjPresent,
+		toAdjIndex,
+		toAdjDirection,
+		latchPoint,
+	};
+};

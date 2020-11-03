@@ -30,6 +30,7 @@ import {
 	moveItemInitialChecks,
 	resetDemoUIChanges,
 	movePointAdjust,
+	resizeSizeAdjust,
 } from "./itemInteractionUtils";
 import { arrangeMove, arrangeResize } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -48,8 +49,15 @@ export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
+	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
+
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		const adjustedSize = getStatus(this, "resizeDemo");
+		height = adjustedSize.height;
+	}
+
 	resizeItemInitialChecks(this, index, width, height);
 
 	resetDemoUIChanges(this);
@@ -97,8 +105,31 @@ export const resizeItem = async function (index, width, height) {
 export const resizeItemDemo = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
+	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
+
+	let adjustedSize;
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		adjustedSize = resizeSizeAdjust(this, width, height, index);
+		setStatus(this, "resizeDemo", adjustedSize);
+		height = adjustedSize.height;
+	}
+
+	if (adjustedSize.isToAdjPresent) {
+		// show cross hair
+		e.$limberGridViewCrossHairGuide.style.transform = `translate(${
+			adjustedSize.latchPoint.x - publicConstants.CROSS_HAIR_WIDTH / 2
+		}px, ${
+			adjustedSize.latchPoint.y - publicConstants.CROSS_HAIR_HEIGHT / 2
+		}px)`;
+	} else {
+		// hide cross hair
+		e.$limberGridViewCrossHairGuide.style.transform = `translate(-${
+			publicConstants.CROSS_HAIR_WIDTH * 2
+		}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+	}
+
 	resizeItemInitialChecks(this, index, width, height);
 
 	resetDemoUIChanges(this);
@@ -218,6 +249,8 @@ export const moveItemDemo = async function (index, toX, toY) {
 	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
+
+	//
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedPt = movePointAdjust(this, toX, toY, index);
 		let moveDemo = getStatus(this, "moveDemo");
@@ -300,6 +333,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 			}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 		}
 	}
+	//
 
 	moveItemInitialChecks(this, index, toX, toY);
 

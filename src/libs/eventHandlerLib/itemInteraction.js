@@ -536,6 +536,7 @@ export const onItemContextMenu = function (event) {
 	iiv.userActionData = {};
 
 	setStatus(this, "moveDemo", undefined);
+	setStatus(this, "resizeDemo", undefined);
 
 	event.preventDefault();
 	event.stopPropagation();
