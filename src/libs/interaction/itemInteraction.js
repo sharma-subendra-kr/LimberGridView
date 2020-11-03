@@ -144,9 +144,19 @@ export const moveItem = async function (index, toX, toY) {
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
-		const adjustedPt = movePointAdjust(this, toX, toY, index);
-		toX = adjustedPt.toX;
-		toY = adjustedPt.toY;
+
+		const moveDemo = getStatus(this, "moveDemo");
+		if (moveDemo?.latchingAdjacent) {
+			toX = moveDemo.adjustedPt.toAdj.toX;
+			toY = moveDemo.adjustedPt.toAdj.toY;
+		} else if (moveDemo) {
+			toX = moveDemo.adjustedPt.to.toX;
+			toY = moveDemo.adjustedPt.to.toY;
+		} else {
+			const adjustedPt = movePointAdjust(this, toX, toY, index);
+			toX = adjustedPt.to.toX;
+			toY = adjustedPt.to.toY;
+		}
 	}
 
 	moveItemInitialChecks(this, index, toX, toY);
@@ -209,8 +219,9 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
+		const adjustedPt = movePointAdjust(this, toX, toY, index);
 		let moveDemo = getStatus(this, "moveDemo");
-		let adjustedPt;
+		// let adjustedPt;
 		if (
 			!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex) &&
 			isPointInsideRect(pd[moveDemo.adjustedPt.overlappedItemIndex], {
@@ -218,6 +229,10 @@ export const moveItemDemo = async function (index, toX, toY) {
 				y: toY,
 			})
 		) {
+			moveDemo = {
+				...moveDemo,
+				adjustedPt,
+			};
 			let latchingAdjacent = false;
 
 			if (!moveDemo.latchingAdjacent && moveDemo.adjustedPt.isToAdjPresent) {
@@ -235,7 +250,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 			});
 		} else {
 			// change toX & toY to top left of the overlapping item
-			adjustedPt = movePointAdjust(this, toX, toY, index);
+			// adjustedPt = movePointAdjust(this, toX, toY, index);
 			let latchingAdjacent = false;
 			if (
 				!isNaN(adjustedPt.overlappedItemIndex) ||
@@ -259,7 +274,11 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 		if (!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex)) {
 			e.$limberGridViewMoveGuide.style.transform =
-				"translate(" + toX + "px, " + toY + "px)";
+				"translate(" +
+				pd[moveDemo.adjustedPt.overlappedItemIndex].x +
+				"px, " +
+				pd[moveDemo.adjustedPt.overlappedItemIndex].y +
+				"px)";
 			e.$limberGridViewMoveGuide.style.width =
 				pd[moveDemo.adjustedPt.overlappedItemIndex].width + "px";
 			e.$limberGridViewMoveGuide.style.height =
@@ -267,6 +286,18 @@ export const moveItemDemo = async function (index, toX, toY) {
 			e.$limberGridViewMoveGuide.classList.add(
 				"limber-grid-view-move-guide-active"
 			);
+		}
+
+		if (moveDemo.latchingAdjacent) {
+			// show cross hair
+			e.$limberGridViewCrossHairGuide.style.transform = `translate(${
+				toX - publicConstants.CROSS_HAIR_WIDTH / 2
+			}px, ${toY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
+		} else {
+			// hide cross hair
+			e.$limberGridViewCrossHairGuide.style.transform = `translate(-${
+				publicConstants.CROSS_HAIR_WIDTH * 2
+			}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 		}
 	}
 

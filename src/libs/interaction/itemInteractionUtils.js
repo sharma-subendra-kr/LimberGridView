@@ -192,13 +192,16 @@ export const movePointAdjust = (context, toX, toY, index) => {
 
 	const len = pd.length;
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
-	let pt = { x: toX, y: toY };
+	const pt = { x: toX, y: toY };
 	let inside;
 	let tl, tr, tld, trd;
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
 	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
@@ -222,7 +225,12 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		tld = getDistanceBetnPts(tl, pt);
 		trd = getDistanceBetnPts(tr, pt);
 
-		if (tld < ldistance && pt.x < tl.x && tld <= privateConstants.WIDTH / 4) {
+		if (
+			tld < ldistance &&
+			tld < rdistance &&
+			pt.x < tl.x &&
+			tld <= privateConstants.WIDTH / 4
+		) {
 			if (
 				tl.x - privateConstants.MARGIN - pd[index].width >=
 				privateConstants.MARGIN
@@ -232,19 +240,28 @@ export const movePointAdjust = (context, toX, toY, index) => {
 
 				ldistance = tld;
 				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "left";
 			}
 		}
 
-		if (trd < rdistance && pt.x > tr.x && trd <= privateConstants.WIDTH / 4) {
+		if (
+			trd < rdistance &&
+			trd < ldistance &&
+			pt.x > tr.x &&
+			trd <= privateConstants.WIDTH / 4
+		) {
 			if (
 				tr.x + privateConstants.MARGIN + pd[index].width <
 				privateConstants.WIDTH
 			) {
-				toXAdj = tr.x + privateConstants.MARGIN + pd[index].width;
+				toXAdj = tr.x + privateConstants.MARGIN;
 				toYAdj = tr.y + privateConstants.MARGIN;
 
 				rdistance = trd;
 				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
 			}
 		}
 	}
@@ -254,5 +271,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		toAdj: { toX: toXAdj, toY: toYAdj },
 		overlappedItemIndex: inside,
 		isToAdjPresent,
+		toAdjIndex,
+		toAdjDirection,
 	};
 };

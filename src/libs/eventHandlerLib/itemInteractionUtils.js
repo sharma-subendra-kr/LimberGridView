@@ -228,6 +228,7 @@ export const loadMoveState = (context, userActionData, event) => {
 
 export const unloadMoveState = (context, userActionData) => {
 	const e = getElements(context);
+	const publicConstants = getPublicConstants(context);
 
 	e.$limberGridViewHeightAdjustGuide.classList.remove(
 		"limber-grid-view-height-adjust-guide-active"
@@ -247,6 +248,10 @@ export const unloadMoveState = (context, userActionData) => {
 	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
 
 	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
+
+	e.$limberGridViewCrossHairGuide.style.transform = `translate(-${
+		publicConstants.CROSS_HAIR_WIDTH * 2
+	}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 };
 
 export const loadOnMoveState = (context, userActionData, event, type) => {

@@ -370,7 +370,6 @@ Written by Subendra Kumar Sharma.
 	height: 500px;
 	user-select: none;
 	pointer-events: none;
-	display: none;
 }
 
 .limber-grid-view-cross-hair-guide hr:nth-child(1) {

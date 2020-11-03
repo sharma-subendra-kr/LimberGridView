@@ -369,6 +369,7 @@ export const initConstantsAndFlags = function (options) {
 export const initRender = function () {
 	const e = getElements(this);
 	const options = getOptions(this);
+	const publicConstants = getPublicConstants(this);
 
 	set$body(this, document.getElementsByTagName("body")[0]);
 
@@ -441,7 +442,9 @@ export const initRender = function () {
 		"class",
 		"limber-grid-view-cross-hair-guide"
 	);
-	limberGridViewCrossHairGuide.style.transform = "translate(-1000px, -1000px)";
+	limberGridViewCrossHairGuide.style.transform = `translate(-${
+		publicConstants.CROSS_HAIR_WIDTH * 2
+	}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 
 	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
