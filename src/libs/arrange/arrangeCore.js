@@ -111,6 +111,7 @@ export const sweepLineTop = (area, items, it) => {
 			low: items[i].y,
 			high: items[i].y + items[i].height,
 			d: {
+				id: -1,
 				rect: items[i],
 			},
 		});
@@ -157,6 +158,7 @@ export const sweepLineBottom = (area, items, it) => {
 			low: items[i].y,
 			high: items[i].y + items[i].height,
 			d: {
+				id: -1,
 				rect: items[i],
 			},
 		});
@@ -211,7 +213,7 @@ export const sweepLineForFreeSpace = (
 	it.insert({
 		low: areaCo.tl.x,
 		high: areaCo.tr.x,
-		d: { id: idCount.idCount++, rect: area, a: {}, o: {}, ref: null },
+		d: { id: idCount.idCount++, rect: area },
 	});
 
 	let tempItem;
@@ -248,9 +250,6 @@ export const sweepLineForFreeSpace = (
 						d: {
 							id: idCount.idCount++,
 							rect: getRectObjectFromCo(diff[k]),
-							a: {},
-							o: {},
-							ref: null,
 						},
 					});
 				}
@@ -297,9 +296,6 @@ export const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
 						d: {
 							id: idCount.idCount++,
 							rect: mergedRect,
-							a: {},
-							o: {},
-							ref: null,
 						},
 					};
 
@@ -522,9 +518,6 @@ export const arrange = async (
 					d: {
 						id: idCount.idCount++,
 						rect: _garbageRects[i],
-						a: {},
-						o: {},
-						ref: null,
 					},
 				});
 			}

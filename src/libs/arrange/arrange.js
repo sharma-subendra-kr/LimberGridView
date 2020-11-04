@@ -149,7 +149,9 @@ export const arrangeMove = async (
 	let arrangedCount = 0;
 	let workSpaceResizeCount = 0;
 
+	const whilep1 = performance.now();
 	while (arrangedCount !== iToALen) {
+		const swpp1 = performance.now();
 		const { it: freeRectsItY } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
@@ -157,15 +159,21 @@ export const arrangeMove = async (
 			itemsInCombinedWorkSpace,
 			idCount
 		);
+		const swpp2 = performance.now();
+		console.log("swp p: ", swpp2 - swpp1);
 
 		const freeRectsArr = freeRectsItY.getSortedData();
 
+		const mergep1 = performance.now();
 		const { mergedRectsIt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
 		);
+		const mergep2 = performance.now();
+		console.log("merge p: ", mergep2 - mergep1);
 
+		const arrangep1 = performance.now();
 		const {
 			arranged: _arranged,
 			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
@@ -178,6 +186,8 @@ export const arrangeMove = async (
 			combinedWorkSpaceRectCo,
 			idCount
 		);
+		const arrangep2 = performance.now();
+		console.log("arrange p: ", arrangep2 - arrangep1);
 
 		itemsInBottomWorkSpace = [
 			...itemsInBottomWorkSpace,
@@ -216,6 +226,8 @@ export const arrangeMove = async (
 			throw "Arrange time out";
 		}
 	}
+	const whilep2 = performance.now();
+	console.log("while p: ", whilep2 - whilep1);
 
 	if (workSpaceResizeCount > 0) {
 		// push items in below bottom workspace below
