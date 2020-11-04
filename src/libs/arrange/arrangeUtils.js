@@ -173,12 +173,9 @@ export const getItemsInWorkSpace = (
 		}
 	}
 
-	const res = new Array(count);
-	for (let i = 0; i < count; i++) {
-		res[i] = itemsInWorkSpace[i];
-	}
+	itemsInWorkSpace.length = count;
 
-	return res;
+	return itemsInWorkSpace;
 };
 
 export const getItemsBelowBottomWorkSpace = (
@@ -210,12 +207,9 @@ export const getItemsBelowBottomWorkSpace = (
 		}
 	}
 
-	const res = new Array(count);
-	for (let i = 0; i < count; i++) {
-		res[i] = items[i];
-	}
+	items.length = count;
 
-	return res;
+	return items;
 };
 
 export const getResizeWSItemsDetail = (
@@ -241,15 +235,7 @@ export const getResizeWSItemsDetail = (
 	const bottomWs = getRectObjectFromCo(bottomWsCo);
 	const cWs = getRectObjectFromCo(cWsCo);
 
-	let count = 0;
-	const iToALen = itemsToArrange.length;
-	const _itemsToArrange = new Array(iToALen);
-	for (let i = 0; i < iToALen; i++) {
-		if (!arranged[itemsToArrange[i]]) {
-			_itemsToArrange[count++] = itemsToArrange[i];
-		}
-	}
-	const filteredItemsToArrange = filter(_itemsToArrange);
+	const filteredItemsToArrange = itemsToArrange.filter((o) => !arranged[o]);
 
 	const len = mpd.length;
 	const updatedItemsToArrange = new Array(len);
@@ -293,12 +279,15 @@ export const getResizeWSItemsDetail = (
 		}
 	}
 
+	itemsInWorkSpace.length = iCount;
+	updatedItemsToArrange.length = uCount;
+
 	return {
-		updatedItemsToArrange: filter([
+		updatedItemsToArrange: [
 			...filteredItemsToArrange,
 			...updatedItemsToArrange,
-		]),
-		itemsInWorkSpace: filter(itemsInWorkSpace),
+		],
+		itemsInWorkSpace: itemsInWorkSpace,
 	};
 };
 
