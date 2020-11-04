@@ -244,6 +244,7 @@ export const sweepLineForFreeSpace = (
 		iLen = intervals.length;
 		for (let j = 0; j < iLen; j++) {
 			diff = subtractRect(intervals[j].d.rect, tempItemWithMargin, true);
+			it.remove(intervals[j].interval, intervals[j].d);
 
 			dLen = diff.length;
 			for (let k = 0; k < dLen; k++) {
@@ -256,8 +257,6 @@ export const sweepLineForFreeSpace = (
 					},
 				});
 			}
-
-			it.remove(intervals[j].interval, intervals[j].d);
 			//
 		}
 	}

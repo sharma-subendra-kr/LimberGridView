@@ -203,6 +203,7 @@ export const arrangeMove = async (
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down
 			workSpaceResizeCount++;
+			// console.log("workSpaceResizeCount", workSpaceResizeCount);
 
 			workSpaceRectCo.br.y += shiftHeight;
 			workSpaceRectCo.bl.y += shiftHeight;
