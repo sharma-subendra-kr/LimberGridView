@@ -23,7 +23,10 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { getModifiedPositionData } from "../../store/variables/essentials";
+import {
+	getModifiedPositionData,
+	getPositionData,
+} from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getItemsInWorkSpace,
@@ -436,6 +439,7 @@ export const arrange = async (
 	// so no need to update the modified position data later
 
 	const mpd = getModifiedPositionData(context);
+	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const arranged = {};
@@ -457,7 +461,7 @@ export const arrange = async (
 	}
 
 	let top;
-	let aItem;
+	let aItem, oItem;
 
 	const resStack = getStack(context, "resStack");
 	const garbageStack = getStack(context, "garbageStack");
@@ -468,6 +472,7 @@ export const arrange = async (
 		top = itemsToArrangeStack.pop();
 
 		aItem = mpd[top.d];
+		oItem = pd[top.d];
 
 		let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
 
@@ -483,7 +488,11 @@ export const arrange = async (
 			continue;
 		}
 
-		const pm = getPerfectMatch(resStack.getData(), aItem.width + aItem.height);
+		const pm = getPerfectMatch(
+			resStack.getData(),
+			aItem.width + aItem.height,
+			oItem
+		);
 
 		aItem.x = pm.d.rect.x + privateConstants.MARGIN;
 		aItem.y = pm.d.rect.y + privateConstants.MARGIN;

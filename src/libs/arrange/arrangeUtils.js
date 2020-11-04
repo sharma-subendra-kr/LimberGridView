@@ -39,6 +39,7 @@ import {
 	areRectsIdentical,
 	getCoordinates,
 } from "../rect/rectUtils";
+import { getDistanceBetnPts } from "../geometry/geometry";
 
 export const getMinMaxXY = (
 	context,
@@ -400,16 +401,24 @@ export const getItemsToArrangeScore = (context, affectedItems) => {
 	return scoreArr;
 };
 
-export const getPerfectMatch = (arr, hwSum) => {
+export const getPerfectMatch = (arr, hwSum, item) => {
 	const len = arr.length;
 
+	let min = Number.MAX_SAFE_INTEGER;
+	let d;
+	const p1 = { x: item.x, y: item.y };
+	const p2 = { x: 0, y: 0 };
+	let pm;
 	for (let i = 0; i < len; i++) {
-		arr[i].d.score = getScore(arr[i].d.rect, hwSum);
+		p2.x = arr[i].d.rect.x;
+		p2.y = arr[i].d.rect.y;
+		d = getDistanceBetnPts(p1, p2);
+		if (d < min) {
+			pm = arr[i];
+			min = d;
+		}
 	}
-
-	arr.sort((a, b) => a.d.score - b.d.score);
-
-	return arr[0];
+	return pm;
 };
 
 export const shiftItemsDown = (context, items, height) => {
