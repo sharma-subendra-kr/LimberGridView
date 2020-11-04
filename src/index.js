@@ -436,7 +436,10 @@ LimberGridView.prototype.initializeStore = function () {
 			},
 			status: {},
 			trees: {
-				it: new IntervalTreesIterative(),
+				it: new IntervalTreesIterative({
+					initialStackSize: 100,
+					initialQueueSize: 100,
+				}),
 			},
 			stacks: {
 				stack: new Stack(),

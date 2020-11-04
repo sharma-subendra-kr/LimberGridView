@@ -160,7 +160,7 @@ export const arrangeMove = async (
 			idCount
 		);
 		const swpp2 = performance.now();
-		console.log("swp p: ", swpp2 - swpp1);
+		// console.log("swp p: ", swpp2 - swpp1);
 
 		const freeRectsArr = freeRectsItY.getSortedData();
 
@@ -171,7 +171,7 @@ export const arrangeMove = async (
 			idCount
 		);
 		const mergep2 = performance.now();
-		console.log("merge p: ", mergep2 - mergep1);
+		// console.log("merge p: ", mergep2 - mergep1);
 
 		const arrangep1 = performance.now();
 		const {
@@ -187,7 +187,7 @@ export const arrangeMove = async (
 			idCount
 		);
 		const arrangep2 = performance.now();
-		console.log("arrange p: ", arrangep2 - arrangep1);
+		// console.log("arrange p: ", arrangep2 - arrangep1);
 
 		itemsInBottomWorkSpace = [
 			...itemsInBottomWorkSpace,
@@ -227,7 +227,7 @@ export const arrangeMove = async (
 		}
 	}
 	const whilep2 = performance.now();
-	console.log("while p: ", whilep2 - whilep1);
+	// console.log("while p: ", whilep2 - whilep1);
 
 	if (workSpaceResizeCount > 0) {
 		// push items in below bottom workspace below

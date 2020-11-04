@@ -34,6 +34,7 @@ import {
 	rectSortY,
 	isMergable,
 	shouldFilterRect,
+	doOverlapHelper,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -217,7 +218,8 @@ export const sweepLineForFreeSpace = (
 	});
 
 	let tempItem;
-	let fInterval = { low: 0, high: 0, d: null };
+	let tempItemWithMargin;
+	const fInterval = { low: 0, high: 0 };
 	let intervals;
 	let iLen = 0;
 	let diff;
@@ -226,36 +228,37 @@ export const sweepLineForFreeSpace = (
 	const len = items.length;
 	for (let i = 0; i < len; i++) {
 		tempItem = getCoordinates(items[i]);
-		fInterval = { low: tempItem.tl.x, high: tempItem.tr.x };
-		intervals = it.findAll(fInterval);
+		tempItemWithMargin = getItemDimenWithMargin(
+			privateConstants.MARGIN,
+			items[i]
+		);
+		fInterval.low = tempItem.tl.x;
+		fInterval.high = tempItem.tr.x;
+		intervals = it.findAll(
+			fInterval,
+			null,
+			null,
+			doOverlapHelper(tempItemWithMargin)
+		);
+
 		iLen = intervals.length;
 		for (let j = 0; j < iLen; j++) {
-			if (
-				doRectsOverlap(
-					intervals[j].d.rect,
-					getItemDimenWithMargin(privateConstants.MARGIN, items[i])
-				)
-			) {
-				diff = subtractRect(
-					intervals[j].d.rect,
-					getItemDimenWithMargin(privateConstants.MARGIN, items[i]),
-					true
-				);
+			diff = subtractRect(intervals[j].d.rect, tempItemWithMargin, true);
 
-				dLen = diff.length;
-				for (let k = 0; k < dLen; k++) {
-					it.insert({
-						low: diff[k].tl.x,
-						high: diff[k].tr.x,
-						d: {
-							id: idCount.idCount++,
-							rect: getRectObjectFromCo(diff[k]),
-						},
-					});
-				}
-
-				it.remove(intervals[j].interval, intervals[j].d);
+			dLen = diff.length;
+			for (let k = 0; k < dLen; k++) {
+				it.insert({
+					low: diff[k].tl.x,
+					high: diff[k].tr.x,
+					d: {
+						id: idCount.idCount++,
+						rect: getRectObjectFromCo(diff[k]),
+					},
+				});
 			}
+
+			it.remove(intervals[j].interval, intervals[j].d);
+			//
 		}
 	}
 

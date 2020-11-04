@@ -326,6 +326,15 @@ export const rectSortY = (a, b) => {
 	}
 };
 
+export const doOverlapHelper = function (rect) {
+	return (node, interval, d) => {
+		if (doRectsOverlap(rect, node.d.rect)) {
+			return true;
+		}
+		return false;
+	};
+};
+
 export const isMergable = function (rect) {
 	return (node, interval, d) => {
 		if (
