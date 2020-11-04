@@ -36,6 +36,8 @@ import {
 	doRectsOnlyTouch,
 	isPointInsideRect,
 	doesPointTouchRect,
+	areRectsIdentical,
+	getCoordinates,
 } from "../rect/rectUtils";
 import { filter } from "../utils/utils";
 
@@ -329,6 +331,18 @@ export const rectSortY = (a, b) => {
 export const doOverlapHelper = function (rect) {
 	return (node, interval, d) => {
 		if (doRectsOverlap(rect, node.d.rect)) {
+			return true;
+		}
+		return false;
+	};
+};
+
+export const identicalOrInsideHelper = function (rect) {
+	return (node, interval, d) => {
+		if (
+			areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) ||
+			isRectInside(node.d.rect, rect)
+		) {
 			return true;
 		}
 		return false;

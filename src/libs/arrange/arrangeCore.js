@@ -35,6 +35,7 @@ import {
 	isMergable,
 	shouldFilterRect,
 	doOverlapHelper,
+	identicalOrInsideHelper,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -264,6 +265,35 @@ export const sweepLineForFreeSpace = (
 	return { it };
 };
 
+export const isRectIdenticalOrInside = (it, obj, on) => {
+	let axis = "x";
+	let distance = "width";
+	if (on === "y") {
+		axis = "y";
+		distance = "height";
+	}
+	const res = it.findAll(
+		{
+			low: obj.d.rect[axis],
+			high: obj.d.rect[axis] + obj.d.rect[distance],
+		},
+		null,
+		null,
+		identicalOrInsideHelper(obj.d.rect)
+	);
+	const len = res?.length || 0;
+
+	if (!len) {
+		it.insert({
+			low: obj.d.rect[axis],
+			high: obj.d.rect[axis] + obj.d.rect[distance],
+			d: obj.d,
+		});
+	}
+
+	return !!len;
+};
+
 export const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
@@ -381,43 +411,6 @@ export const mergeFreeRects = async (
 	}
 
 	return { mergedRectsIt: it };
-};
-
-export const isRectIdenticalOrInside = (it, obj, on) => {
-	let axis = "x";
-	let distance = "width";
-	if (on === "y") {
-		axis = "y";
-		distance = "height";
-	}
-	const res = it.findAll({
-		low: obj.d.rect[axis],
-		high: obj.d.rect[axis] + obj.d.rect[distance],
-	});
-
-	let isIdenticalOrInside = false;
-	const len = res?.length || 0;
-	for (let i = 0; i < len; i++) {
-		if (
-			areRectsIdentical(
-				getCoordinates(obj.d.rect),
-				getCoordinates(res[i].d.rect)
-			) ||
-			isRectInside(res[i].d.rect, obj.d.rect)
-		) {
-			isIdenticalOrInside = true;
-		}
-	}
-
-	if (!isIdenticalOrInside) {
-		it.insert({
-			low: obj.d.rect[axis],
-			high: obj.d.rect[axis] + obj.d.rect[distance],
-			d: obj.d,
-		});
-	}
-
-	return isIdenticalOrInside;
 };
 
 /**
