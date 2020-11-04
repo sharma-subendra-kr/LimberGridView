@@ -16,10 +16,64 @@ body {
 	background-color: #404040;
 	color: #f2f2f2;
 
-	padding: 10px;
+	/*padding: 10px;*/
 
 	font-size: 25px;
 	font-family: "Helvetica";
+}
+
+.animation-body {
+	width: 300px;
+	height: 50px;
+	background-color: #c0c0c0;
+	overflow: hidden;
+	position: relative;
+}
+
+@keyframes animated-box-keyframes {
+	0% {
+		transform: translateX(-30px);
+	}
+	10% {
+		transform: translateX(30px);
+	}
+	20% {
+		transform: translateX(60px);
+	}
+	30% {
+		transform: translateX(90px);
+	}
+	40% {
+		transform: translateX(120px);
+	}
+	50% {
+		transform: translateX(150px);
+	}
+	60% {
+		transform: translateX(180px);
+	}
+	70% {
+		transform: translateX(210px);
+	}
+	80% {
+		transform: translateX(240px);
+	}
+	90% {
+		transform: translateX(270px);
+	}
+	100% {
+		transform: translateX(300px);
+	}
+}
+
+.animated-box {
+	width: 50px;
+	height: 50px;
+	background-color: red;
+	position: absolute;
+	top: 0;
+	left: 0;
+	/*animation: animated-box-keyframes 5000ms linear infinite;*/
 }
 
 .limber-grid-controls {

@@ -1,5 +1,44 @@
 window.onload = function () {
 	main();
+
+	var animatedBox = document.getElementsByClassName("animated-box")[0];
+	var start;
+	var pos = -50;
+	var pxpms = 0.01;
+	function step(timestamp) {
+		if (start === undefined) {
+			start = timestamp;
+		}
+		var elapsed = timestamp - start;
+
+		animatedBox.style.transform =
+			"translateX(" + (pos + pxpms * elapsed) + "px)";
+		pos = pos + pxpms * elapsed;
+		// console.log("0.5 * elapsed", 0.5 * elapsed);
+		// console.log("pos", pos);
+		if (pos >= 300) {
+			pos = -50;
+			start = timestamp;
+		}
+
+		window.requestAnimationFrame(step);
+	}
+
+	window.requestAnimationFrame(step);
+
+	/*
+	setTimeout(function () {
+		var p0 = performance.now();
+		var n = 100000000;
+		var arr = new Array(n);
+		for (let i = 0; i < n; i++) {
+			arr[i] = i;
+		}
+		var p1 = performance.now();
+
+		console.log("done!", p1 - p0);
+	}, 5000);
+	*/
 };
 
 var main = function () {
