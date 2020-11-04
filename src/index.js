@@ -496,7 +496,12 @@ LimberGridView.prototype.initializeStore = function () {
 				// cross hair
 				CROSS_HAIR_WIDTH: 500,
 				CROSS_HAIR_HEIGHT: 500,
+
+				// Algorithm
+				USE_FAST_ALGORITHM: true,
+				USE_VERTICAL_ARR_ON_RESIZE: false,
 			},
+			messages: {},
 		},
 	};
 };
