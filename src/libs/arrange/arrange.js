@@ -193,7 +193,6 @@ export const arrangeMove = async (
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down
 			workSpaceResizeCount++;
-			console.log("workSpaceResizeCount", workSpaceResizeCount);
 
 			workSpaceRectCo.br.y += shiftHeight;
 			workSpaceRectCo.bl.y += shiftHeight;
@@ -242,6 +241,7 @@ export const arrangeMove = async (
 	const p2 = performance.now();
 	console.log("p1: ", p1);
 	console.log("p2: ", p2);
+	console.log("workSpaceResizeCount", workSpaceResizeCount);
 	console.log("arrange total: ", p2 - p1);
 
 	return arranged;
@@ -433,7 +433,6 @@ export const arrangeResize = async (
 		if (arrangedCount !== iToALen && passCount >= 2) {
 			// resize combined workSpace
 			workSpaceResizeCount++;
-			console.log("workSpaceResizeCount", workSpaceResizeCount);
 
 			_combinedWorkSpaceRectCo.br.y += incrementHeight;
 			_combinedWorkSpaceRectCo.bl.y += incrementHeight;
@@ -449,6 +448,7 @@ export const arrangeResize = async (
 	const p2 = performance.now();
 	console.log("p1: ", p1);
 	console.log("p2: ", p2);
+	console.log("workSpaceResizeCount", workSpaceResizeCount);
 	console.log("arrange total: ", p2 - p1);
 
 	return arranged;
@@ -547,7 +547,6 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down
 			workSpaceResizeCount++;
-			console.log("workSpaceResizeCount", workSpaceResizeCount);
 
 			workSpaceRectCo.br.y += shiftHeight;
 			workSpaceRectCo.bl.y += shiftHeight;
@@ -567,6 +566,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	const p2 = performance.now();
 	console.log("p1: ", p1);
 	console.log("p2: ", p2);
+	console.log("workSpaceResizeCount", workSpaceResizeCount);
 	console.log("arrange total: ", p2 - p1);
 
 	return arranged;

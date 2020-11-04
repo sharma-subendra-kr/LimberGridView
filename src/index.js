@@ -23,6 +23,9 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import { IntervalTreesIterative } from "IntervalTreeJS";
+import { ArrayStack as Stack } from "Stack";
+
 import "./index.css";
 import "./index.scss";
 
@@ -432,6 +435,15 @@ LimberGridView.prototype.initializeStore = function () {
 				},
 			},
 			status: {},
+			trees: {
+				it: new IntervalTreesIterative(),
+			},
+			stacks: {
+				stack: new Stack(),
+				garbageStack: new Stack(),
+				resStack: new Stack(),
+				itemsToArrangeStack: new Stack(),
+			},
 		},
 		constants: {
 			privateConstants: {
