@@ -39,7 +39,6 @@ import {
 	areRectsIdentical,
 	getCoordinates,
 } from "../rect/rectUtils";
-import { filter } from "../utils/utils";
 
 export const getMinMaxXY = (
 	context,
