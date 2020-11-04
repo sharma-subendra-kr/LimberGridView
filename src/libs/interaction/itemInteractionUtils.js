@@ -69,13 +69,10 @@ export const getResizeAffectedItems = (context, item, index) => {
 		}
 	}
 
-	const result = new Array(count + 1);
-	for (let i = 0; i < count; i++) {
-		result[i] = affectedArr[i];
-	}
-	result[count] = index;
+	affectedArr[count++] = index;
+	affectedArr.length = count;
 
-	return result;
+	return affectedArr;
 };
 
 export const getMoveAffectedItems = (context, item, index) => {
@@ -109,13 +106,10 @@ export const getMoveAffectedItems = (context, item, index) => {
 		}
 	}
 
-	const result = new Array(count + 1);
-	for (let i = 0; i < count; i++) {
-		result[i] = affectedArr[i];
-	}
-	result[count] = index;
+	affectedArr[count++] = index;
+	affectedArr.length = count;
 
-	return result;
+	return affectedArr;
 };
 
 export const resizeItemInitialChecks = (context, index, width, height) => {
