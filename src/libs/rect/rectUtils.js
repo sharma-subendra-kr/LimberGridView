@@ -598,7 +598,6 @@ export const mergeOverlapping = (rectA, rectB, rectBCo) => {
 	let count = 0;
 	const len = arr.length;
 
-	// for (const d of diff) {
 	for (let i = 0; i < len; i++) {
 		m = merge(diff[i], rectBCo);
 		if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
@@ -606,12 +605,9 @@ export const mergeOverlapping = (rectA, rectB, rectBCo) => {
 		}
 	}
 
-	const res = new Array(count);
-	for (let i = 0; i < count; i++) {
-		res[i] = arr[i];
-	}
+	arr.length = count;
 
-	return res.length ? res : null;
+	return count ? arr : null;
 };
 
 export const mergeRects = (rectA, rectB, oCoForm) => {
