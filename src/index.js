@@ -501,7 +501,11 @@ LimberGridView.prototype.initializeStore = function () {
 				USE_FAST_ALGORITHM: true,
 				USE_VERTICAL_ARR_ON_RESIZE: false,
 			},
-			messages: {},
+			messages: {
+				latchedMoveDemo1:
+					"Move curser over this box to latch on to an adjacent item if it exists.",
+				latchedMoveDemo2: "Move curser over this box to latch on to this item.",
+			},
 		},
 	};
 };

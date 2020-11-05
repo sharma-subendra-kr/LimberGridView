@@ -43,6 +43,7 @@ import {
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";
+import getMessage from "../../store/constants/messages";
 import { isPointInsideRect } from "../rect/rectUtils";
 
 export const resizeItem = async function (index, width, height) {
@@ -319,6 +320,21 @@ export const moveItemDemo = async function (index, toX, toY) {
 			e.$limberGridViewMoveGuide.classList.add(
 				"limber-grid-view-move-guide-active"
 			);
+
+			if (moveDemo.latchingAdjacent) {
+				// show text
+
+				e.$limberGridViewMoveGuide.innerHTML = getMessage(
+					this,
+					"latchedMoveDemo2"
+				);
+			} else {
+				// show text
+				e.$limberGridViewMoveGuide.innerHTML = getMessage(
+					this,
+					"latchedMoveDemo1"
+				);
+			}
 		}
 
 		if (moveDemo.latchingAdjacent) {

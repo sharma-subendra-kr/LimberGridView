@@ -29,7 +29,6 @@ Written by Subendra Kumar Sharma.
 	position: relative;
 	overflow: hidden;
 	box-sizing: border-box;
-	white-space: nowrap;
 	display: block;
 }
 
@@ -39,7 +38,6 @@ Written by Subendra Kumar Sharma.
 	position: relative;
 	overflow: scroll;
 	box-sizing: border-box;
-	white-space: nowrap;
 	display: block;
 	background-color: #f1f3f6;
 
@@ -247,7 +245,12 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-move-guide-active {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-size: 14px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 .limber-grid-view-height-adjust-guide {
