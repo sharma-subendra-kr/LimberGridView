@@ -503,7 +503,7 @@ LimberGridView.prototype.initializeStore = function () {
 			},
 			messages: {
 				latchedMoveDemo1:
-					"Move curser over this box to latch on to an adjacent item if it exists.",
+					"Move curser close to an adjacent item over this box to latch next to that item.",
 				latchedMoveDemo2: "Move curser over this box to latch on to this item.",
 			},
 		},
