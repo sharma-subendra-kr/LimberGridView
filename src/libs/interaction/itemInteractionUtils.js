@@ -138,6 +138,10 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 		throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
 	}
 
+	if (height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT) {
+		throw "Height cannot be greater than height of container.";
+	}
+
 	return true;
 };
 
