@@ -436,7 +436,7 @@ export const getPerfectMatch = (arr, hwSum, item) => {
 			min = d;
 		}
 	}
-	return pm;
+	return pm || arr[0];
 };
 
 export const shiftItemsDown = (context, items, height) => {
