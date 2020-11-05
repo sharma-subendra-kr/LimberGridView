@@ -2550,7 +2550,7 @@ const getPerfectMatch = (arr, hwSum, item) => {
     }
   }
 
-  return pm;
+  return pm || arr[0];
 };
 const shiftItemsDown = (context, items, height) => {
   const mpd = getModifiedPositionData(context);
@@ -5595,6 +5595,9 @@ const init = async function (context, isResize, autoArrange) {
   const pd = getPositionData(context);
 
   if (autoArrange === true || !checkPositionData(pd)) {
+    // * 	autoArrange will be true only during the first render
+    // * 	this if block is always supposed to execute during the first render
+    // 		if autoArrange is true or invalid positionData is supplied
     console.warn("Auto-arranging");
     setModifiedPositionData(context, pd);
     const mpd = getModifiedPositionData(context);
@@ -5605,10 +5608,12 @@ const init = async function (context, isResize, autoArrange) {
       arr[i] = i;
       mpd[i].x = undefined;
       mpd[i].y = undefined;
-      pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
-      pd[i].y /= privateConstants.WIDTH_SCALE_FACTOR;
-      pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;
-      pd[i].height /= privateConstants.WIDTH_SCALE_FACTOR;
+      mpd[i].width = mpd[i].width / privateConstants.WIDTH_SCALE_FACTOR || privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+      mpd[i].height = mpd[i].height / privateConstants.WIDTH_SCALE_FACTOR || privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+      pd[i].x = undefined;
+      pd[i].y = undefined;
+      pd[i].width = pd[i].width / privateConstants.WIDTH_SCALE_FACTOR || privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+      pd[i].height = pd[i].height / privateConstants.WIDTH_SCALE_FACTOR || privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
     }
 
     setWidth(context, privateConstants.GRID_WIDTH);
