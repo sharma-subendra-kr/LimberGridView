@@ -44,12 +44,9 @@ import {
 import {
 	getRectObjectFromCo,
 	subtractRect,
-	doRectsOverlap,
 	getCoordinates,
 	mergeRects,
 	isRectInside,
-	areRectsOnSameYAxisExPath,
-	areRectsIdentical,
 } from "../rect/rectUtils";
 import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
