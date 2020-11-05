@@ -2526,6 +2526,11 @@ const getItemsToArrangeScore = (context, affectedItems) => {
   return scoreArr;
 };
 const getPerfectMatch = (arr, hwSum, item) => {
+  if (item === undefined) {
+    // add item
+    return arr[0];
+  }
+
   const len = arr.length;
   let min = Number.MAX_SAFE_INTEGER;
   let d;
