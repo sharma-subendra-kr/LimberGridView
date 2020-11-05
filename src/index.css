@@ -239,8 +239,8 @@ Written by Subendra Kumar Sharma.
 	background-color: transparent;
 
 	position: absolute;
-	top: -1;
-	left: -1;
+	top: -2px;
+	left: -2px;
 	cursor: grabbing;
 }
 
@@ -249,8 +249,7 @@ Written by Subendra Kumar Sharma.
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	font-size: 14px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
 }
 
 .limber-grid-view-height-adjust-guide {
