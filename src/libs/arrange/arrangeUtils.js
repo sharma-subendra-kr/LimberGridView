@@ -420,8 +420,11 @@ export const getItemsToArrangeScore = (context, affectedItems) => {
 };
 
 export const getPerfectMatch = (arr, hwSum, item) => {
+	if (item === undefined) {
+		// add item
+		return arr[0];
+	}
 	const len = arr.length;
-
 	let min = Number.MAX_SAFE_INTEGER;
 	let d;
 	const p1 = { x: item.x, y: item.y };
