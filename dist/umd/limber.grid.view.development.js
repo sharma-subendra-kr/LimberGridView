@@ -3871,6 +3871,8 @@ const resizeItem = async function (index, width, height) {
   }
 };
 const resizeItemDemo = async function (index, width, height) {
+  var _adjustedSize;
+
   const pd = getPositionData(this);
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
@@ -3883,7 +3885,7 @@ const resizeItemDemo = async function (index, width, height) {
     height = adjustedSize.height;
   }
 
-  if (adjustedSize.isToAdjPresent) {
+  if ((_adjustedSize = adjustedSize) === null || _adjustedSize === void 0 ? void 0 : _adjustedSize.isToAdjPresent) {
     // show cross hair
     e.$limberGridViewCrossHairGuide.style.transform = `translate(${adjustedSize.latchPoint.x - publicConstants.CROSS_HAIR_WIDTH / 2}px, ${adjustedSize.latchPoint.y - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
   } else {

@@ -122,7 +122,7 @@ export const resizeItemDemo = async function (index, width, height) {
 		height = adjustedSize.height;
 	}
 
-	if (adjustedSize.isToAdjPresent) {
+	if (adjustedSize?.isToAdjPresent) {
 		// show cross hair
 		e.$limberGridViewCrossHairGuide.style.transform = `translate(${
 			adjustedSize.latchPoint.x - publicConstants.CROSS_HAIR_WIDTH / 2
