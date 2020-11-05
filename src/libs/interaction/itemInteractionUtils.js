@@ -229,7 +229,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			tld < ldistance &&
 			tld < rdistance &&
 			pt.x < tl.x &&
-			tld <= (privateConstants.MIN_HEIGHT_AND_WIDTH * 2) / 3
+			tld <= privateConstants.MIN_HEIGHT_AND_WIDTH
 		) {
 			if (
 				tl.x - privateConstants.MARGIN - pd[index].width >=
@@ -249,7 +249,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			trd < rdistance &&
 			trd < ldistance &&
 			pt.x > tr.x &&
-			trd <= (privateConstants.MIN_HEIGHT_AND_WIDTH * 2) / 3
+			trd <= privateConstants.MIN_HEIGHT_AND_WIDTH
 		) {
 			if (
 				tr.x + privateConstants.MARGIN + pd[index].width <
