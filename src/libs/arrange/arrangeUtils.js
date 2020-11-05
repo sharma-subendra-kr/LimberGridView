@@ -38,6 +38,7 @@ import {
 	doesPointTouchRect,
 	areRectsIdentical,
 	getCoordinates,
+	areRectsOnSameYAxisExPath,
 } from "../rect/rectUtils";
 import { getDistanceBetnPts } from "../geometry/geometry";
 
@@ -317,12 +318,25 @@ export const rectSortY = (a, b) => {
 	}
 };
 
+export const sweepTopBottomHelper = function (rect) {
+	return (node, interval, d) => {
+		if (
+			areRectsOnSameYAxisExPath(
+				getCoordinates(rect),
+				getCoordinates(node.d.rect)
+			) &&
+			!areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect))
+		) {
+			return true;
+		}
+	};
+};
+
 export const doOverlapHelper = function (rect) {
 	return (node, interval, d) => {
 		if (doRectsOverlap(rect, node.d.rect)) {
 			return true;
 		}
-		return false;
 	};
 };
 
@@ -334,7 +348,6 @@ export const identicalOrInsideHelper = function (rect) {
 		) {
 			return true;
 		}
-		return false;
 	};
 };
 
@@ -346,7 +359,6 @@ export const isMergable = function (rect) {
 		) {
 			return true;
 		}
-		return false;
 	};
 };
 
@@ -355,7 +367,6 @@ export const shouldFilterRect = function (rect, data) {
 		if (isRectInside(node.d.rect, rect) && node.d !== data) {
 			return true;
 		}
-		return false;
 	};
 };
 

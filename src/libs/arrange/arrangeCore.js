@@ -39,6 +39,7 @@ import {
 	shouldFilterRect,
 	doOverlapHelper,
 	identicalOrInsideHelper,
+	sweepTopBottomHelper,
 } from "./arrangeUtils";
 import {
 	getRectObjectFromCo,
@@ -123,29 +124,17 @@ export const sweepLineTop = (area, items, it) => {
 	}
 
 	let resultPoint = area.bl.y;
-	let res, rLen;
-	let breakSig = false;
+	let res;
 
 	for (let i = 0; i < len; i++) {
-		res = it.findAll({ low: items[i].y + items[i].height, high: area.bl.y });
-		rLen = res.length;
-		breakSig = false;
-		for (let j = 0; j < rLen; j++) {
-			if (
-				areRectsOnSameYAxisExPath(
-					getCoordinates(items[i]),
-					getCoordinates(res[j].d.rect)
-				) &&
-				!areRectsIdentical(
-					getCoordinates(items[i]),
-					getCoordinates(res[j].d.rect)
-				)
-			) {
-				breakSig = true;
-				break;
-			}
-		}
-		if (!breakSig && items[i].y + items[i].height < resultPoint) {
+		res = it.findAll(
+			{ low: items[i].y + items[i].height, high: area.bl.y },
+			null,
+			null,
+			sweepTopBottomHelper(items[i])
+		);
+
+		if (!res.length && items[i].y + items[i].height < resultPoint) {
 			resultPoint = items[i].y + items[i].height;
 		}
 	}
@@ -170,28 +159,16 @@ export const sweepLineBottom = (area, items, it) => {
 	}
 
 	let resultPoint = area.tl.y;
-	let res, rLen;
-	let breakSig = false;
+	let res;
 	for (let i = 0; i < len; i++) {
-		res = it.findAll({ low: area.tl.y, high: items[i].y });
-		rLen = res.length;
-		breakSig = false;
-		for (let j = 0; j < rLen; j++) {
-			if (
-				areRectsOnSameYAxisExPath(
-					getCoordinates(items[i]),
-					getCoordinates(res[j].d.rect)
-				) &&
-				!areRectsIdentical(
-					getCoordinates(items[i]),
-					getCoordinates(res[j].d.rect)
-				)
-			) {
-				breakSig = true;
-				break;
-			}
-		}
-		if (!breakSig && items[i].y > resultPoint) {
+		res = it.findAll(
+			{ low: area.tl.y, high: items[i].y },
+			null,
+			null,
+			sweepTopBottomHelper(items[i])
+		);
+
+		if (!res.length && items[i].y > resultPoint) {
 			resultPoint = items[i].y;
 		}
 	}
