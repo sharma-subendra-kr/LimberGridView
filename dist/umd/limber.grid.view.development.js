@@ -23,14 +23,14 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("IntervalTreeJS"));
+		module.exports = factory(require("Stack"), require("IntervalTreeJS"));
 	else if(typeof define === 'function' && define.amd)
-		define(["IntervalTreeJS"], factory);
+		define(["Stack", "IntervalTreeJS"], factory);
 	else if(typeof exports === 'object')
-		exports["LimberGridView"] = factory(require("IntervalTreeJS"));
+		exports["LimberGridView"] = factory(require("Stack"), require("IntervalTreeJS"));
 	else
-		root["LimberGridView"] = factory(root["IntervalTreeJS"]);
-})(window, function(__WEBPACK_EXTERNAL_MODULE__0__) {
+		root["LimberGridView"] = factory(root["Stack"], root["IntervalTreeJS"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -114,7 +114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -125,9 +125,9 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-// extracted by mini-css-extract-plugin
+module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
 /***/ }),
 /* 2 */
@@ -137,17 +137,29 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
+// EXTERNAL MODULE: external {"commonjs":"IntervalTreeJS","commonjs2":"IntervalTreeJS","amd":"IntervalTreeJS","root":"IntervalTreeJS"}
+var external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_ = __webpack_require__(1);
+
+// EXTERNAL MODULE: external {"commonjs":"Stack","commonjs2":"Stack","amd":"Stack","root":"Stack"}
+var external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_ = __webpack_require__(0);
+
 // EXTERNAL MODULE: ./src/index.css
-var src = __webpack_require__(1);
+var src = __webpack_require__(2);
 
 // EXTERNAL MODULE: ./src/index.scss
-var src_0 = __webpack_require__(2);
+var src_0 = __webpack_require__(3);
 
 // CONCATENATED MODULE: ./src/store/constants/privateConstants.js
 /*
@@ -470,6 +482,14 @@ const set$limberGridViewTouchHoldGuide = function (context, elm) {
 
 const get$limberGridViewTouchHoldGuide = function (context) {
   return context.store.variables.elements.$limberGridViewTouchHoldGuide;
+};
+
+const set$limberGridViewCrossHairGuide = function (context, elm) {
+  context.store.variables.elements.$limberGridViewCrossHairGuide = elm;
+};
+
+const get$limberGridViewCrossHairGuide = function (context) {
+  return context.store.variables.elements.$limberGridViewCrossHairGuide;
 }; // Grid Elements ENDED
 // DEBUG Elements
 
@@ -995,6 +1015,7 @@ const loadMoveState = (context, userActionData, event) => {
 };
 const unloadMoveState = (context, userActionData) => {
   const e = variables_elements(context);
+  const publicConstants = constants_publicConstants(context);
   e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
   e.$limberGridViewItems[userActionData.itemIndex].classList.remove("limber-grid-view-item-demo");
   e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-active");
@@ -1002,6 +1023,7 @@ const unloadMoveState = (context, userActionData) => {
   e.$pseudoContainerItem.style.height = "0px";
   e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
   e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
+  e.$limberGridViewCrossHairGuide.style.transform = `translate(-${publicConstants.CROSS_HAIR_WIDTH * 2}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 };
 const loadOnMoveState = (context, userActionData, event, type) => {
   const e = variables_elements(context);
@@ -1156,18 +1178,17 @@ const subtractRect = (rectA, rectB, oCoForm) => {
   const rectACo = getCoordinates(rectA);
   const rectBCo = getCoordinates(rectB);
   /*
-  	____|_______________|___
-  	|	|				|	|
+     ____|_______________|___
+     |   |               |   |
   ____|___|_______________|___|____
-  	|	|				|	|
-  	|	|				|	|
-  	|	|				|	|
-  	|	|				|	|
+     |   |               |   |
+     |   |               |   |
+     |   |               |   |
+     |   |               |   |
   ____|___|_______________|___|___
-  	|	|				|	|
-  	|___|_______________|___|
-  		|				|
-  	
+     |   |               |   |
+     |___|_______________|___|
+         |               |
   */
 
   const subRects = {
@@ -1385,14 +1406,13 @@ const horizontalSubtract = (rectA, rectB) => {
   /*
   	Case I
   	____________________
-  	| ____ 				|
-  	||____|				|
+  	| ____              |
+  	||____|             |
   	|___________________|
-  
-  	Case II
+  		Case II
   	____________________
-  	| 	 		  _____	|
-  	|			  |____||
+  	|              ____ |
+  	|             |____||
   	|___________________|
   */
 
@@ -1424,15 +1444,15 @@ const verticalSubtract = (rectA, rectB) => {
   if (!rectA && !rectB) return null;
   if (!doRectsOverlap(getRectObjectFromCo(rectA), getRectObjectFromCo(rectB))) return null;
   /*
-  	Case I 				Case II
-  	_______ 			________
-  	| ____ | 			|		|
-  	| |   || 			|		|
-  	| |___|| 			|		|
-  	|  	   | 			|  ____ |
-  	|      | 			|  |   ||	
-  	|      | 			|  |___||	
-  	|______| 			|_______|
+     Case I        Case II
+     _______       ________
+     | ____ |      |       |
+     | |   ||      |       |
+     | |___||      |       |
+     |      |      |  ____ |
+     |      |      |  |   ||	
+     |      |      |  |___||	
+     |______|      |_______|
   */
 
   let result = null;
@@ -1526,6 +1546,208 @@ const areRectsAdjacent = (rectA, rectB) => {
     return false;
   }
 };
+const merge = (rectACo, rectBCo) => {
+  let res; // check tl
+
+  if (rectACo.tl.x >= rectBCo.bl.x && rectACo.tl.x < rectBCo.br.x && rectACo.tl.y >= rectBCo.bl.y) {
+    let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
+    res = {
+      tl: {
+        x: rectACo.tl.x,
+        y: rectBCo.tl.y
+      },
+      tr: {
+        x: x,
+        y: rectBCo.tl.y
+      },
+      br: {
+        x: x,
+        y: rectACo.bl.y
+      },
+      bl: {
+        x: rectACo.bl.x,
+        y: rectACo.bl.y
+      }
+    };
+  }
+
+  if (rectACo.tl.y >= rectBCo.tr.y && rectACo.tl.y < rectBCo.br.y && rectACo.tl.x >= rectBCo.tr.x) {
+    let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
+    res = {
+      tl: {
+        x: rectBCo.tl.x,
+        y: rectACo.tl.y
+      },
+      tr: {
+        x: rectACo.tr.x,
+        y: rectACo.tr.y
+      },
+      br: {
+        x: rectACo.br.x,
+        y: y
+      },
+      bl: {
+        x: rectBCo.bl.x,
+        y: y
+      }
+    };
+  } // check tr
+
+
+  if (rectACo.tr.x <= rectBCo.br.x && rectACo.tr.x > rectBCo.bl.x && rectACo.tr.y >= rectBCo.bl.y) {
+    let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
+    res = {
+      tl: {
+        x: x,
+        y: rectBCo.tl.y
+      },
+      tr: {
+        x: rectACo.tr.x,
+        y: rectBCo.tr.y
+      },
+      br: {
+        x: rectACo.br.x,
+        y: rectACo.br.y
+      },
+      bl: {
+        x: x,
+        y: rectACo.bl.y
+      }
+    };
+  }
+
+  if (rectACo.tr.y >= rectBCo.tl.y && rectACo.tr.y < rectBCo.bl.y && rectACo.tr.x <= rectBCo.tl.x) {
+    let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
+    res = {
+      tl: {
+        x: rectACo.tl.x,
+        y: rectACo.tl.y
+      },
+      tr: {
+        x: rectBCo.tr.x,
+        y: rectACo.tl.y
+      },
+      br: {
+        x: rectBCo.br.x,
+        y: y
+      },
+      bl: {
+        x: rectACo.bl.x,
+        y: y
+      }
+    };
+  } // check br
+
+
+  if (rectACo.br.x <= rectBCo.tr.x && rectACo.br.x > rectBCo.tl.x && rectACo.br.y <= rectBCo.tl.y) {
+    let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
+    res = {
+      tl: {
+        x: x,
+        y: rectACo.tl.y
+      },
+      tr: {
+        x: rectACo.tr.x,
+        y: rectACo.tr.y
+      },
+      br: {
+        x: rectACo.tr.x,
+        y: rectBCo.br.y
+      },
+      bl: {
+        x: x,
+        y: rectBCo.bl.y
+      }
+    };
+  }
+
+  if (rectACo.br.y <= rectBCo.bl.y && rectACo.br.y > rectBCo.tl.y && rectACo.br.x <= rectBCo.tl.x) {
+    let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
+    res = {
+      tl: {
+        x: rectACo.tl.x,
+        y: y
+      },
+      tr: {
+        x: rectBCo.tr.x,
+        y: y
+      },
+      br: {
+        x: rectBCo.br.x,
+        y: rectACo.br.y
+      },
+      bl: {
+        x: rectACo.bl.x,
+        y: rectACo.bl.y
+      }
+    };
+  } // check bl
+
+
+  if (rectACo.bl.x >= rectBCo.tl.x && rectACo.bl.x < rectBCo.tr.x && rectACo.bl.y <= rectBCo.tl.y) {
+    let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
+    res = {
+      tl: {
+        x: rectACo.tl.x,
+        y: rectACo.tl.y
+      },
+      tr: {
+        x: x,
+        y: rectACo.tr.y
+      },
+      br: {
+        x: x,
+        y: rectBCo.br.y
+      },
+      bl: {
+        x: rectACo.bl.x,
+        y: rectBCo.bl.y
+      }
+    };
+  }
+
+  if (rectACo.bl.y <= rectBCo.br.y && rectACo.bl.y > rectBCo.tr.y && rectACo.bl.x >= rectBCo.tr.x) {
+    let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
+    res = {
+      tl: {
+        x: rectBCo.tl.x,
+        y: y
+      },
+      tr: {
+        x: rectACo.tr.x,
+        y: y
+      },
+      br: {
+        x: rectACo.br.x,
+        y: rectACo.br.y
+      },
+      bl: {
+        x: rectBCo.bl.x,
+        y: rectACo.bl.y
+      }
+    };
+  }
+
+  return res;
+};
+const mergeOverlapping = (rectA, rectB, rectBCo) => {
+  const diff = subtractRect(rectA, rectB, true);
+  const arr = new Array((diff === null || diff === void 0 ? void 0 : diff.length) || 0);
+  let m;
+  let count = 0;
+  const len = arr.length;
+
+  for (let i = 0; i < len; i++) {
+    m = merge(diff[i], rectBCo);
+
+    if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
+      arr[count++] = m;
+    }
+  }
+
+  arr.length = count;
+  return count ? arr : null;
+};
 const mergeRects = (rectA, rectB, oCoForm) => {
   // if (doRectsOverlap(rectA, rectB)) {
   // 	return false;
@@ -1533,222 +1755,12 @@ const mergeRects = (rectA, rectB, oCoForm) => {
   const rectACo = getCoordinates(rectA);
   const rectBCo = getCoordinates(rectB);
   let result;
-
-  const merge = (rectACo, rectBCo) => {
-    let res; // check tl
-
-    if (rectACo.tl.x >= rectBCo.bl.x && rectACo.tl.x < rectBCo.br.x && rectACo.tl.y >= rectBCo.bl.y) {
-      let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-      res = {
-        tl: {
-          x: rectACo.tl.x,
-          y: rectBCo.tl.y
-        },
-        tr: {
-          x: x,
-          y: rectBCo.tl.y
-        },
-        br: {
-          x: x,
-          y: rectACo.bl.y
-        },
-        bl: {
-          x: rectACo.bl.x,
-          y: rectACo.bl.y
-        }
-      };
-    }
-
-    if (rectACo.tl.y >= rectBCo.tr.y && rectACo.tl.y < rectBCo.br.y && rectACo.tl.x >= rectBCo.tr.x) {
-      let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
-      res = {
-        tl: {
-          x: rectBCo.tl.x,
-          y: rectACo.tl.y
-        },
-        tr: {
-          x: rectACo.tr.x,
-          y: rectACo.tr.y
-        },
-        br: {
-          x: rectACo.br.x,
-          y: y
-        },
-        bl: {
-          x: rectBCo.bl.x,
-          y: y
-        }
-      };
-    } // check tr
-
-
-    if (rectACo.tr.x <= rectBCo.br.x && rectACo.tr.x > rectBCo.bl.x && rectACo.tr.y >= rectBCo.bl.y) {
-      let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-      res = {
-        tl: {
-          x: x,
-          y: rectBCo.tl.y
-        },
-        tr: {
-          x: rectACo.tr.x,
-          y: rectBCo.tr.y
-        },
-        br: {
-          x: rectACo.br.x,
-          y: rectACo.br.y
-        },
-        bl: {
-          x: x,
-          y: rectACo.bl.y
-        }
-      };
-    }
-
-    if (rectACo.tr.y >= rectBCo.tl.y && rectACo.tr.y < rectBCo.bl.y && rectACo.tr.x <= rectBCo.tl.x) {
-      let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
-      res = {
-        tl: {
-          x: rectACo.tl.x,
-          y: rectACo.tl.y
-        },
-        tr: {
-          x: rectBCo.tr.x,
-          y: rectACo.tl.y
-        },
-        br: {
-          x: rectBCo.br.x,
-          y: y
-        },
-        bl: {
-          x: rectACo.bl.x,
-          y: y
-        }
-      };
-    } // check br
-
-
-    if (rectACo.br.x <= rectBCo.tr.x && rectACo.br.x > rectBCo.tl.x && rectACo.br.y <= rectBCo.tl.y) {
-      let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-      res = {
-        tl: {
-          x: x,
-          y: rectACo.tl.y
-        },
-        tr: {
-          x: rectACo.tr.x,
-          y: rectACo.tr.y
-        },
-        br: {
-          x: rectACo.tr.x,
-          y: rectBCo.br.y
-        },
-        bl: {
-          x: x,
-          y: rectBCo.bl.y
-        }
-      };
-    }
-
-    if (rectACo.br.y <= rectBCo.bl.y && rectACo.br.y > rectBCo.tl.y && rectACo.br.x <= rectBCo.tl.x) {
-      let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-      res = {
-        tl: {
-          x: rectACo.tl.x,
-          y: y
-        },
-        tr: {
-          x: rectBCo.tr.x,
-          y: y
-        },
-        br: {
-          x: rectBCo.br.x,
-          y: rectACo.br.y
-        },
-        bl: {
-          x: rectACo.bl.x,
-          y: rectACo.bl.y
-        }
-      };
-    } // check bl
-
-
-    if (rectACo.bl.x >= rectBCo.tl.x && rectACo.bl.x < rectBCo.tr.x && rectACo.bl.y <= rectBCo.tl.y) {
-      let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-      res = {
-        tl: {
-          x: rectACo.tl.x,
-          y: rectACo.tl.y
-        },
-        tr: {
-          x: x,
-          y: rectACo.tr.y
-        },
-        br: {
-          x: x,
-          y: rectBCo.br.y
-        },
-        bl: {
-          x: rectACo.bl.x,
-          y: rectBCo.bl.y
-        }
-      };
-    }
-
-    if (rectACo.bl.y <= rectBCo.br.y && rectACo.bl.y > rectBCo.tr.y && rectACo.bl.x >= rectBCo.tr.x) {
-      let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-      res = {
-        tl: {
-          x: rectBCo.tl.x,
-          y: y
-        },
-        tr: {
-          x: rectACo.tr.x,
-          y: y
-        },
-        br: {
-          x: rectACo.br.x,
-          y: rectACo.br.y
-        },
-        bl: {
-          x: rectBCo.bl.x,
-          y: rectACo.bl.y
-        }
-      };
-    }
-
-    return res;
-  };
-
-  const mergeOverlapping = () => {
-    const diff = subtractRect(rectA, rectB, true);
-    const arr = new Array((diff === null || diff === void 0 ? void 0 : diff.length) || 0);
-    let m;
-    let count = 0;
-    const len = arr.length; // for (const d of diff) {
-
-    for (let i = 0; i < len; i++) {
-      m = merge(diff[i], rectBCo);
-
-      if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
-        arr[count++] = m;
-      }
-    }
-
-    const res = new Array(count);
-
-    for (let i = 0; i < count; i++) {
-      res[i] = arr[i];
-    }
-
-    return res.length ? res : null;
-  };
-
   result = merge(rectACo, rectBCo);
   if (!result) result = merge(rectBCo, rectACo);
   if (result) result = [result];
 
   if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
-    result = mergeOverlapping();
+    result = mergeOverlapping(rectA, rectB, rectBCo);
   }
 
   if (result) {
@@ -1793,6 +1805,34 @@ const areRectsIdentical = (rectA, rectB) => {
 
   return false;
 };
+// CONCATENATED MODULE: ./src/libs/geometry/geometry.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const getDistanceBetnPts = (pt1, pt2) => {
+  return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
+};
 // CONCATENATED MODULE: ./src/libs/interaction/itemInteractionUtils.js
 /*
 
@@ -1818,6 +1858,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+
 
 
 
@@ -1848,21 +1889,17 @@ const getResizeAffectedItems = (context, item, index) => {
     temp.width = pd[i].width + privateConstants.MARGIN * 2;
     temp.height = pd[i].height + privateConstants.MARGIN * 2;
 
-    if ((doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) && i !== index) {
+    if ( // (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
+    doRectsOverlap(temp, _item) && i !== index) {
       affectedArr[count++] = i;
       mpd[i].x = undefined;
       mpd[i].y = undefined;
     }
   }
 
-  const result = new Array(count + 1);
-
-  for (let i = 0; i < count; i++) {
-    result[i] = affectedArr[i];
-  }
-
-  result[count] = index;
-  return result;
+  affectedArr[count++] = index;
+  affectedArr.length = count;
+  return affectedArr;
 };
 const getMoveAffectedItems = (context, item, index) => {
   const pd = getPositionData(context);
@@ -1888,9 +1925,9 @@ const getMoveAffectedItems = (context, item, index) => {
     temp.x = pd[i].x - privateConstants.MARGIN;
     temp.y = pd[i].y - privateConstants.MARGIN;
     temp.width = pd[i].width + privateConstants.MARGIN * 2;
-    temp.height = pd[i].height + privateConstants.MARGIN * 2;
+    temp.height = pd[i].height + privateConstants.MARGIN * 2; // if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
 
-    if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+    if (doRectsOverlap(temp, _item)) {
       if (i !== index) {
         affectedArr[count++] = i;
         mpd[i].x = undefined;
@@ -1899,14 +1936,9 @@ const getMoveAffectedItems = (context, item, index) => {
     }
   }
 
-  const result = new Array(count + 1);
-
-  for (let i = 0; i < count; i++) {
-    result[i] = affectedArr[i];
-  }
-
-  result[count] = index;
-  return result;
+  affectedArr[count++] = index;
+  affectedArr.length = count;
+  return affectedArr;
 };
 const resizeItemInitialChecks = (context, index, width, height) => {
   const pd = getPositionData(context);
@@ -1929,6 +1961,10 @@ const resizeItemInitialChecks = (context, index, width, height) => {
   if (width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH || height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
     // very small. TO DO: let the developers decide the smallest item size but can't be less than 150
     throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
+  }
+
+  if (height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT) {
+    throw "Height cannot be greater than height of container.";
   }
 
   return true;
@@ -1968,7 +2004,7 @@ const resetDemoUIChanges = context => {
     e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
   }
 };
-const movePointAdjust = (context, toX, toY) => {
+const movePointAdjust = (context, toX, toY, index) => {
   const pd = getPositionData(context);
   const privateConstants = constants_privateConstants(context);
   const len = pd.length;
@@ -1983,6 +2019,13 @@ const movePointAdjust = (context, toX, toY) => {
     y: toY
   };
   let inside;
+  let tl, tr, tld, trd;
+  let ldistance = Number.MAX_SAFE_INTEGER;
+  let rdistance = Number.MAX_SAFE_INTEGER;
+  let toXAdj, toYAdj;
+  let isToAdjPresent = false;
+  let toAdjIndex;
+  let toAdjDirection;
 
   for (let i = 0; i < len; i++) {
     temp.x = pd[i].x - privateConstants.MARGIN;
@@ -1992,104 +2035,143 @@ const movePointAdjust = (context, toX, toY) => {
 
     if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
       inside = i;
-      break;
+      toX = pd[inside].x;
+      toY = pd[inside].y; // break;
+    }
+
+    if (i === index) {
+      continue;
+    }
+
+    tl = {
+      x: temp.x,
+      y: temp.y
+    };
+    tr = {
+      x: temp.x + temp.width,
+      y: temp.y
+    };
+    tld = getDistanceBetnPts(tl, pt);
+    trd = getDistanceBetnPts(tr, pt);
+
+    if (tld < ldistance && tld < rdistance && pt.x < tl.x && tld <= privateConstants.MIN_HEIGHT_AND_WIDTH * 2 / 3) {
+      if (tl.x - privateConstants.MARGIN - pd[index].width >= privateConstants.MARGIN) {
+        toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+        toYAdj = tl.y + privateConstants.MARGIN;
+        ldistance = tld;
+        isToAdjPresent = true;
+        toAdjIndex = i;
+        toAdjDirection = "left";
+      }
+    }
+
+    if (trd < rdistance && trd < ldistance && pt.x > tr.x && trd <= privateConstants.MIN_HEIGHT_AND_WIDTH * 2 / 3) {
+      if (tr.x + privateConstants.MARGIN + pd[index].width < privateConstants.WIDTH) {
+        toXAdj = tr.x + privateConstants.MARGIN;
+        toYAdj = tr.y + privateConstants.MARGIN;
+        rdistance = trd;
+        isToAdjPresent = true;
+        toAdjIndex = i;
+        toAdjDirection = "right";
+      }
     }
   }
 
-  if (inside !== undefined) {
-    toX = pd[inside].x;
-    toY = pd[inside].y;
-  }
-
   return {
-    toX,
-    toY,
-    overlappedItemIndex: inside
+    to: {
+      toX,
+      toY
+    },
+    toAdj: {
+      toX: toXAdj,
+      toY: toYAdj
+    },
+    overlappedItemIndex: inside,
+    isToAdjPresent,
+    toAdjIndex,
+    toAdjDirection
   };
 };
-// EXTERNAL MODULE: external {"commonjs":"IntervalTreeJS","commonjs2":"IntervalTreeJS","amd":"IntervalTreeJS","root":"IntervalTreeJS"}
-var external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_ = __webpack_require__(0);
-
-// CONCATENATED MODULE: ./src/libs/utils/utils.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-const emptyObject = function (obj) {
-  const keys = Object.keys(obj);
-  const length = keys.length;
-
-  for (let i = 0; i < length; i++) {
-    delete obj[keys[i]];
-  }
-};
-const isMobile = function (context) {
-  const isMobileFunction = context.options.isMobileCheck;
-
-  if (isMobileFunction) {
-    return isMobileFunction();
-  }
-
-  return window.matchMedia("only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)").matches || window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)").matches;
-};
-const fixTo = (num, to = 6) => {
-  return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
-};
-const filter = arr => {
-  const len = arr.length;
-  const temp = new Array(len);
-  let count = 0;
+const resizeSizeAdjust = (context, width, height, index) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const len = pd.length;
+  const temp = {
+    x: 0,
+    y: 0,
+    height: 0,
+    width: 0
+  };
+  const tlpt = {
+    x: pd[index].x,
+    y: pd[index].y
+  };
+  const trpt = {
+    x: pd[index].x + width,
+    y: pd[index].y
+  };
+  const brpt = {
+    x: pd[index].x + width,
+    y: pd[index].y + height
+  };
+  const blpt = {
+    x: pd[index].x,
+    y: pd[index].y + height
+  };
+  let bl, br, blptTobr, brptTobl;
+  let ldistance = Number.MAX_SAFE_INTEGER;
+  let rdistance = Number.MAX_SAFE_INTEGER;
+  let isToAdjPresent = false;
+  let toAdjIndex;
+  let toAdjDirection;
+  let latchPoint;
 
   for (let i = 0; i < len; i++) {
-    if (arr[i] !== null && arr[i] !== undefined) {
-      temp[count++] = arr[i];
+    temp.x = pd[i].x;
+    temp.y = pd[i].y;
+    temp.width = pd[i].width;
+    temp.height = pd[i].height;
+
+    if (i === index) {
+      continue;
+    }
+
+    bl = {
+      x: temp.x,
+      y: temp.y + temp.height
+    };
+    br = {
+      x: temp.x + temp.width,
+      y: temp.y + temp.height
+    };
+    brptTobl = getDistanceBetnPts(bl, brpt);
+    blptTobr = getDistanceBetnPts(br, blpt);
+
+    if (brptTobl < rdistance && brptTobl < ldistance && brpt.x < bl.x && Math.abs(brpt.y - bl.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
+      height = bl.y - trpt.y;
+      rdistance = brptTobl;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      toAdjDirection = "right";
+      latchPoint = bl;
+    }
+
+    if (blptTobr < ldistance && blptTobr < rdistance && blpt.x > br.x && Math.abs(blpt.y - br.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
+      height = br.y - tlpt.y;
+      ldistance = blptTobr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      toAdjDirection = "left";
+      latchPoint = br;
     }
   }
 
-  const res = new Array(count);
-
-  for (let i = 0; i < count; i++) {
-    res[i] = temp[i];
-  }
-
-  return res;
-};
-const getRandomString = (len = 22) => {
-  const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
-  const arr = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    arr[i] = alpNum[Math.floor(Math.random() * 36)];
-  }
-
-  return arr.join("");
-};
-const getItemDimenWithMargin = (MARGIN, item) => {
   return {
-    x: item.x - MARGIN,
-    y: item.y - MARGIN,
-    width: item.width + MARGIN * 2,
-    height: item.height + MARGIN * 2
+    height,
+    isToAdjPresent,
+    toAdjIndex,
+    toAdjDirection,
+    latchPoint
   };
 };
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeUtils.js
@@ -2117,7 +2199,6 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
-
 
 
 
@@ -2153,7 +2234,13 @@ const getMinMaxXY = (context, affectedItems, resizedRightX, resizedBottomY, toY,
   if (resizedBottomY > maxY) maxY = resizedBottomY;
   if (resizedRightX > maxX) maxX = resizedRightX;
   if (toY < minY) minY = toY;
-  if (movedBottomY > maxY) maxY = movedBottomY;
+  if (movedBottomY > maxY) maxY = movedBottomY; // Not going to the release-1.0.0-beta.2 because it creates some bugs:
+  // final point to the moved item is not the same as what specified by dragging
+  // if (maxY - minY > privateConstants.WIDTH) {
+  // 	minY = mpd[affectedItems[len - 1]].y;
+  // 	maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
+  // }
+
   return {
     minX: minX - privateConstants.MARGIN,
     maxX: maxX + privateConstants.MARGIN,
@@ -2170,8 +2257,8 @@ const getBottomMax = (context, minX, maxX) => {
   const len = pd.length;
 
   for (let i = 0; i < len; i++) {
-    item = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
-    mItem = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
+    item = getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
+    mItem = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 
     if (pd[i].y + pd[i].height > max && item.x < maxX && item.x + item.width > minX) {
       max = pd[i].y + pd[i].height;
@@ -2244,7 +2331,7 @@ const getItemsInWorkSpace = (context, workSpaceRect, getIndices = false) => {
   let count = 0;
 
   for (let i = 0; i < len; i++) {
-    if (doRectsOverlap(workSpaceRect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]))) {
+    if (doRectsOverlap(workSpaceRect, getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]))) {
       if (!getIndices) {
         itemsInWorkSpace[count++] = mpd[i];
       } else {
@@ -2253,13 +2340,8 @@ const getItemsInWorkSpace = (context, workSpaceRect, getIndices = false) => {
     }
   }
 
-  const res = new Array(count);
-
-  for (let i = 0; i < count; i++) {
-    res[i] = itemsInWorkSpace[i];
-  }
-
-  return res;
+  itemsInWorkSpace.length = count;
+  return itemsInWorkSpace;
 };
 const getItemsBelowBottomWorkSpace = (context, workSpaceRect, getIndices = false) => {
   const mpd = getModifiedPositionData(context);
@@ -2274,7 +2356,7 @@ const getItemsBelowBottomWorkSpace = (context, workSpaceRect, getIndices = false
   let count = 0;
 
   for (let i = 0; i < len; i++) {
-    if (workSpaceRect.bl.y <= arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]).y) {
+    if (workSpaceRect.bl.y <= getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]).y) {
       if (!getIndices) {
         items[count++] = mpd[i];
       } else {
@@ -2283,13 +2365,8 @@ const getItemsBelowBottomWorkSpace = (context, workSpaceRect, getIndices = false
     }
   }
 
-  const res = new Array(count);
-
-  for (let i = 0; i < count; i++) {
-    res[i] = items[i];
-  }
-
-  return res;
+  items.length = count;
+  return items;
 };
 const getResizeWSItemsDetail = (context, wsCo, topWsCo, bottomWsCo, cWsCo, arranged, itemsToArrange, getIndices = false) => {
   const mpd = getModifiedPositionData(context);
@@ -2307,18 +2384,7 @@ const getResizeWSItemsDetail = (context, wsCo, topWsCo, bottomWsCo, cWsCo, arran
   const wsPlusTopWs = getRectObjectFromCo(wsPlusTopWsCo);
   const bottomWs = getRectObjectFromCo(bottomWsCo);
   const cWs = getRectObjectFromCo(cWsCo);
-  let count = 0;
-  const iToALen = itemsToArrange.length;
-
-  const _itemsToArrange = new Array(iToALen);
-
-  for (let i = 0; i < iToALen; i++) {
-    if (!arranged[itemsToArrange[i]]) {
-      _itemsToArrange[count++] = itemsToArrange[i];
-    }
-  }
-
-  const filteredItemsToArrange = filter(_itemsToArrange);
+  const filteredItemsToArrange = itemsToArrange.filter(o => !arranged[o]);
   const len = mpd.length;
   const updatedItemsToArrange = new Array(len);
   let uCount = 0;
@@ -2326,7 +2392,7 @@ const getResizeWSItemsDetail = (context, wsCo, topWsCo, bottomWsCo, cWsCo, arran
   let iCount = 0;
 
   for (let i = 0; i < len; i++) {
-    const _item = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
+    const _item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 
     if (doRectsOverlap(cWs, _item)) {
       if (arranged[i]) {
@@ -2355,12 +2421,14 @@ const getResizeWSItemsDetail = (context, wsCo, topWsCo, bottomWsCo, cWsCo, arran
     }
   }
 
+  itemsInWorkSpace.length = iCount;
+  updatedItemsToArrange.length = uCount;
   return {
-    updatedItemsToArrange: filter([...filteredItemsToArrange, ...updatedItemsToArrange]),
-    itemsInWorkSpace: filter(itemsInWorkSpace)
+    updatedItemsToArrange: [...filteredItemsToArrange, ...updatedItemsToArrange],
+    itemsInWorkSpace: itemsInWorkSpace
   };
 };
-const arrangeUtils_getItemDimenWithMargin = (MARGIN, item) => {
+const getItemDimenWithMargin = (MARGIN, item) => {
   const _item = { ...item
   };
   _item.x -= MARGIN;
@@ -2383,13 +2451,32 @@ const rectSortY = (a, b) => {
     return a.d.rect.y - b.d.rect.y;
   }
 };
+const sweepTopBottomHelper = function (rect) {
+  return (node, interval, d) => {
+    if (areRectsOnSameYAxisExPath(getCoordinates(rect), getCoordinates(node.d.rect)) && !areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect))) {
+      return true;
+    }
+  };
+};
+const doOverlapHelper = function (rect) {
+  return (node, interval, d) => {
+    if (doRectsOverlap(rect, node.d.rect)) {
+      return true;
+    }
+  };
+};
+const identicalOrInsideHelper = function (rect) {
+  return (node, interval, d) => {
+    if (areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) || isRectInside(node.d.rect, rect)) {
+      return true;
+    }
+  };
+};
 const isMergable = function (rect) {
   return (node, interval, d) => {
     if (doRectsOverlap(rect, node.d.rect) || doRectsOnlyTouch(rect, node.d.rect)) {
       return true;
     }
-
-    return false;
   };
 };
 const shouldFilterRect = function (rect, data) {
@@ -2397,8 +2484,6 @@ const shouldFilterRect = function (rect, data) {
     if (isRectInside(node.d.rect, rect) && node.d !== data) {
       return true;
     }
-
-    return false;
   };
 };
 const getScore = (rect, maxHWSum) => {
@@ -2440,15 +2525,32 @@ const getItemsToArrangeScore = (context, affectedItems) => {
   scoreArr.sort((a, b) => a.score - b.score);
   return scoreArr;
 };
-const getPerfectMatch = (arr, hwSum) => {
+const getPerfectMatch = (arr, hwSum, item) => {
   const len = arr.length;
+  let min = Number.MAX_SAFE_INTEGER;
+  let d;
+  const p1 = {
+    x: item.x,
+    y: item.y
+  };
+  const p2 = {
+    x: 0,
+    y: 0
+  };
+  let pm;
 
   for (let i = 0; i < len; i++) {
-    arr[i].d.score = getScore(arr[i].d.rect, hwSum);
+    p2.x = arr[i].d.rect.x;
+    p2.y = arr[i].d.rect.y;
+    d = getDistanceBetnPts(p1, p2);
+
+    if (d < min) {
+      pm = arr[i];
+      min = d;
+    }
   }
 
-  arr.sort((a, b) => a.d.score - b.d.score);
-  return arr[0];
+  return pm;
 };
 const shiftItemsDown = (context, items, height) => {
   const mpd = getModifiedPositionData(context);
@@ -2472,13 +2574,12 @@ const shiftItemsUp = function (context, y, shiftHeight) {
 };
 const addItemAllowCheck = function (context, x, y, width, height) {
   const privateConstants = constants_privateConstants(context);
-  const publicConstants = constants_publicConstants(context);
   const pd = getPositionData(context);
   var tempPlane = {
     x: x - privateConstants.MARGIN,
     y: y - privateConstants.MARGIN,
-    width: width + publicConstants.MARGIN * 2,
-    height: height + publicConstants.MARGIN * 2
+    width: width + privateConstants.MARGIN * 2,
+    height: height + privateConstants.MARGIN * 2
   };
 
   if (x < 0 || y < 0) {
@@ -2501,7 +2602,7 @@ const addItemAllowCheck = function (context, x, y, width, height) {
   const len = pd.length;
 
   for (let i = 0; i < len; i++) {
-    isInside = doRectsOverlap(arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i]), tempPlane) || doRectsOnlyTouch(arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i]), tempPlane);
+    isInside = doRectsOverlap(getItemDimenWithMargin(privateConstants.MARGIN, pd[i]), tempPlane) || doRectsOnlyTouch(getItemDimenWithMargin(privateConstants.MARGIN, pd[i]), tempPlane);
 
     if (isInside) {
       return false;
@@ -2531,11 +2632,11 @@ const cutSpaceAllowCheck = function (context, x, y, width, height) {
   const len = pd.length;
 
   for (let i = 0; i < len; i++) {
-    if (isRectInside(tempPlane, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i]))) {
+    if (isRectInside(tempPlane, getItemDimenWithMargin(privateConstants.MARGIN, pd[i]))) {
       return false;
     }
 
-    isOverlapping = doRectsOverlap(tempPlane, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i])) || doRectsOnlyTouch(tempPlane, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i]));
+    isOverlapping = doRectsOverlap(tempPlane, getItemDimenWithMargin(privateConstants.MARGIN, pd[i])) || doRectsOnlyTouch(tempPlane, getItemDimenWithMargin(privateConstants.MARGIN, pd[i]));
 
     if (isOverlapping) {
       atLeastOneOverlapping = true;
@@ -2612,7 +2713,7 @@ const shuffle = arr => {
 
   return arr;
 };
-// CONCATENATED MODULE: ./src/libs/stack/stack.js
+// CONCATENATED MODULE: ./src/store/variables/trees.js
 /*
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
@@ -2637,124 +2738,17 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
-
-/*
-
-	LIFO(Last In First Out) Stack Data Structure
-
-*/
-const Stack = function (options) {
-  this.length = 100;
-  this.stack = new Array(this.length);
-  this.ptr = -1;
-
-  if (options && options.data) {
-    const data = options.data;
-    const len = data.length;
-
-    for (let i = len - 1; i >= 0; i--) {
-      this.push(data[i]);
-    }
-  }
+const setTree = function (context, key, value) {
+  context.store.variables.trees[key] = value;
 };
 
-Stack.prototype.constructor = Stack;
-
-Stack.prototype.push = function (data) {
-  if (data === null || data === undefined) {
-    return false;
-  }
-
-  if (this.ptr < this.length - 1) {
-    this.stack[++this.ptr] = data;
-  } else {
-    this.resize();
-    this.stack[++this.ptr] = data;
-  }
-
-  return true;
+const getTree = function (context, key) {
+  return context.store.variables.trees[key];
 };
 
-Stack.prototype.pop = function () {
-  if (this.ptr >= 0) {
-    const top = this.stack[this.ptr];
-    this.ptr--;
-    return top;
-  }
-};
 
-Stack.prototype.wipePop = function () {
-  if (this.ptr >= 0) {
-    const top = this.stack[this.ptr];
-    this.stack[this.ptr] = undefined;
-    this.ptr--;
-    return top;
-  }
-};
-
-Stack.prototype.resize = function () {
-  const oldlen = this.length;
-  const oldStack = this.stack;
-  this.length += 100;
-  this.stack = new Array(this.length);
-
-  for (let i = 0; i < oldlen; i++) {
-    this.stack[i] = oldStack[i];
-  }
-};
-
-Stack.prototype.getTop = function () {
-  if (this.ptr >= 0) {
-    return this.stack[this.ptr];
-  }
-
-  return null;
-};
-
-Stack.prototype.isEmpty = function () {
-  if (this.ptr < 0) {
-    return true;
-  }
-
-  return false;
-};
-
-Stack.prototype.getData = function () {
-  const arr = new Array(this.ptr + 1);
-
-  for (let i = 0; i <= this.ptr; i++) {
-    arr[i] = this.stack[i];
-  }
-
-  return arr;
-};
-
-Stack.prototype.getAllData = function () {
-  const arr = new Array(this.length);
-
-  for (let i = 0; i < this.length; i++) {
-    arr[i] = this.stack[i];
-  }
-
-  return arr;
-};
-
-Stack.prototype.getSize = function () {
-  return this.ptr + 1;
-};
-
-Stack.prototype.empty = function () {
-  this.ptr = -1;
-};
-
-Stack.prototype.wipe = function () {
-  this.length = 100;
-  this.stack = new Array(this.length);
-  this.ptr = -1;
-};
-
-/* harmony default export */ var stack_stack = (Stack);
-// CONCATENATED MODULE: ./src/libs/debug/debug.js
+/* harmony default export */ var trees = (getTree);
+// CONCATENATED MODULE: ./src/store/variables/stacks.js
 /*
 
 LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
@@ -2779,68 +2773,16 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+const setStack = function (context, key, value) {
+  context.store.variables.stacks[key] = value;
+};
+
+const getStack = function (context, key) {
+  return context.store.variables.stacks[key];
+};
 
 
-const sleep = ms => {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, ms);
-  });
-};
-const printUnmergedFreeRects = (context, arr) => {
-  if (false) { var _arr$i; }
-};
-const printMergedFreeRects = (context, arr) => {
-  if (false) {}
-};
-const printResultStackRects = (context, arr) => {
-  if (false) {}
-};
-const printStackRects = (context, arr) => {
-  if (false) {}
-};
-const printMergedTempRects = (context, obj) => {
-  if (false) {}
-};
-const printStackTopRect = (context, obj) => {
-  if (false) {}
-};
-const printStackTopAdjRect = (context, obj) => {
-  if (false) {}
-};
-const printMergedRect = (context, obj) => {
-  if (false) {}
-};
-const printAdjRect = (context, obj) => {
-  if (false) {}
-};
-// CONCATENATED MODULE: ./src/libs/debug/debugUtils.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-const printNodeData = node => {
-  return `d.id: ${node.d.id}`;
-};
+/* harmony default export */ var stacks = (getStack);
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeCore.js
 /*
 
@@ -2872,8 +2814,19 @@ Written by Subendra Kumar Sharma.
 
 
 
-
-
+ // import {
+// 	sleep,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
+// } from "../debug/debug";
+// import { printNodeData } from "../debug/debugUtils";
 
 const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
   let topWSItems, bottomWSItems;
@@ -2881,10 +2834,11 @@ const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
     integrateTop: false,
     integrateBottom: false
   };
+  const it = trees(context, "it");
 
   if (topWorkSpace) {
     topWSItems = getItemsInWorkSpace(context, getRectObjectFromCo(topWorkSpace));
-    const sweepRes = sweepLineTop(topWorkSpace, topWSItems);
+    const sweepRes = sweepLineTop(topWorkSpace, topWSItems, it);
 
     if (sweepRes < topWorkSpace.bl.y) {
       topWorkSpace.tl.y = sweepRes;
@@ -2895,7 +2849,7 @@ const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 
   if (bottomWorkSpace) {
     bottomWSItems = getItemsInWorkSpace(context, getRectObjectFromCo(bottomWorkSpace));
-    const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems);
+    const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems, it);
 
     if (sweepRes > bottomWorkSpace.tl.y) {
       bottomWorkSpace.bl.y = sweepRes;
@@ -2906,80 +2860,62 @@ const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 
   return res;
 };
-const sweepLineTop = (area, items) => {
+const sweepLineTop = (area, items, it) => {
+  it.emptyTree();
   const len = items.length;
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
 
   for (let i = 0; i < len; i++) {
     it.insert({
       low: items[i].y,
       high: items[i].y + items[i].height,
       d: {
+        id: -1,
         rect: items[i]
       }
     });
   }
 
   let resultPoint = area.bl.y;
-  let res, rLen;
-  let breakSig = false;
+  let res;
 
   for (let i = 0; i < len; i++) {
     res = it.findAll({
       low: items[i].y + items[i].height,
       high: area.bl.y
-    });
-    rLen = res.length;
-    breakSig = false;
+    }, null, null, sweepTopBottomHelper(items[i]));
 
-    for (let j = 0; j < rLen; j++) {
-      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
-        breakSig = true;
-        break;
-      }
-    }
-
-    if (!breakSig && items[i].y + items[i].height < resultPoint) {
+    if (!res.length && items[i].y + items[i].height < resultPoint) {
       resultPoint = items[i].y + items[i].height;
     }
   }
 
   return resultPoint;
 };
-const sweepLineBottom = (area, items) => {
+const sweepLineBottom = (area, items, it) => {
+  it.emptyTree();
   const len = items.length;
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
 
   for (let i = 0; i < len; i++) {
     it.insert({
       low: items[i].y,
       high: items[i].y + items[i].height,
       d: {
+        id: -1,
         rect: items[i]
       }
     });
   }
 
   let resultPoint = area.tl.y;
-  let res, rLen;
-  let breakSig = false;
+  let res;
 
   for (let i = 0; i < len; i++) {
     res = it.findAll({
       low: area.tl.y,
       high: items[i].y
-    });
-    rLen = res.length;
-    breakSig = false;
+    }, null, null, sweepTopBottomHelper(items[i]));
 
-    for (let j = 0; j < rLen; j++) {
-      if (areRectsOnSameYAxisExPath(getCoordinates(items[i]), getCoordinates(res[j].d.rect)) && !areRectsIdentical(getCoordinates(items[i]), getCoordinates(res[j].d.rect))) {
-        breakSig = true;
-        break;
-      }
-    }
-
-    if (!breakSig && items[i].y > resultPoint) {
+    if (!res.length && items[i].y > resultPoint) {
       resultPoint = items[i].y;
     }
   }
@@ -2991,23 +2927,21 @@ const sweepLineForFreeSpace = (context, area, areaCo, items, idCount) => {
   // area: area to sweep Coordinate Form
   // items: items in area
   const privateConstants = constants_privateConstants(context);
-  const it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+  const it = trees(context, "it");
+  it.emptyTree();
   it.insert({
     low: areaCo.tl.x,
     high: areaCo.tr.x,
     d: {
       id: idCount.idCount++,
-      rect: area,
-      a: {},
-      o: {},
-      ref: null
+      rect: area
     }
   });
   let tempItem;
-  let fInterval = {
+  let tempItemWithMargin;
+  const fInterval = {
     low: 0,
-    high: 0,
-    d: null
+    high: 0
   };
   let intervals;
   let iLen = 0;
@@ -3017,40 +2951,59 @@ const sweepLineForFreeSpace = (context, area, areaCo, items, idCount) => {
 
   for (let i = 0; i < len; i++) {
     tempItem = getCoordinates(items[i]);
-    fInterval = {
-      low: tempItem.tl.x,
-      high: tempItem.tr.x
-    };
-    intervals = it.findAll(fInterval);
+    tempItemWithMargin = getItemDimenWithMargin(privateConstants.MARGIN, items[i]);
+    fInterval.low = tempItem.tl.x;
+    fInterval.high = tempItem.tr.x;
+    intervals = it.findAll(fInterval, null, null, doOverlapHelper(tempItemWithMargin));
     iLen = intervals.length;
 
     for (let j = 0; j < iLen; j++) {
-      if (doRectsOverlap(intervals[j].d.rect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, items[i]))) {
-        diff = subtractRect(intervals[j].d.rect, arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, items[i]), true);
-        dLen = diff.length;
+      diff = subtractRect(intervals[j].d.rect, tempItemWithMargin, true);
+      it.remove(intervals[j].interval, intervals[j].d);
+      dLen = diff.length;
 
-        for (let k = 0; k < dLen; k++) {
-          it.insert({
-            low: diff[k].tl.x,
-            high: diff[k].tr.x,
-            d: {
-              id: idCount.idCount++,
-              rect: getRectObjectFromCo(diff[k]),
-              a: {},
-              o: {},
-              ref: null
-            }
-          });
-        }
+      for (let k = 0; k < dLen; k++) {
+        it.insert({
+          low: diff[k].tl.x,
+          high: diff[k].tr.x,
+          d: {
+            id: idCount.idCount++,
+            rect: getRectObjectFromCo(diff[k])
+          }
+        });
+      } //
 
-        it.remove(intervals[j].interval, intervals[j].d);
-      }
     }
   }
 
   return {
     it
   };
+};
+const isRectIdenticalOrInside = (it, obj, on) => {
+  let axis = "x";
+  let distance = "width";
+
+  if (on === "y") {
+    axis = "y";
+    distance = "height";
+  }
+
+  const res = it.findAll({
+    low: obj.d.rect[axis],
+    high: obj.d.rect[axis] + obj.d.rect[distance]
+  }, null, null, identicalOrInsideHelper(obj.d.rect));
+  const len = (res === null || res === void 0 ? void 0 : res.length) || 0;
+
+  if (!len) {
+    it.insert({
+      low: obj.d.rect[axis],
+      high: obj.d.rect[axis] + obj.d.rect[distance],
+      d: obj.d
+    });
+  }
+
+  return !!len;
 };
 const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
   let topFullMerged = false;
@@ -3080,10 +3033,7 @@ const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
           const mergedObject = {
             d: {
               id: idCount.idCount++,
-              rect: mergedRect,
-              a: {},
-              o: {},
-              ref: null
+              rect: mergedRect
             }
           };
           isRectIdenticalOrInside(it, mergedObject, on);
@@ -3116,19 +3066,17 @@ const filterMergedFreeRects = mergedRectsIt => {
   }
 };
 const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
-  let stack, it;
+  let it;
+  const stack = stacks(context, "stack");
 
   if (Array.isArray(freeRects)) {
     shuffle(freeRects);
-    stack = new stack_stack({
-      data: freeRects.sort(rectSortX)
-    });
-    it = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
+    stack.setData(freeRects.sort(rectSortX));
+    it = trees(context, "it");
+    it.emptyTree();
   } else {
     shuffle(garbageRects);
-    stack = new stack_stack({
-      data: garbageRects.sort(rectSortX)
-    });
+    stack.setData(garbageRects.sort(rectSortX));
     it = freeRects;
   }
 
@@ -3143,19 +3091,17 @@ const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
     mergedArr[i].interval.high = mergedArr[i].d.rect.y + mergedArr[i].d.rect.height;
   }
 
-  const stackY = new stack_stack({
-    data: mergedArr.sort(rectSortY)
-  });
-  const itY = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  mergeFreeRectsCore(context, stackY, itY, idCount, "y");
-  filterMergedFreeRects(itY);
-  const resIt = new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]();
-  const arr = itY.getSortedData();
+  stack.setData(mergedArr.sort(rectSortY));
+  it.emptyTree();
+  mergeFreeRectsCore(context, stack, it, idCount, "y");
+  filterMergedFreeRects(it);
+  const arr = it.getSortedData();
+  it.emptyTree();
   shuffle(arr);
   const len = arr.length;
 
   for (let i = 0; i < len; i++) {
-    resIt.insert({
+    it.insert({
       low: arr[i].d.rect.x,
       high: arr[i].d.rect.x + arr[i].d.rect.width,
       d: arr[i].d
@@ -3163,41 +3109,8 @@ const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
   }
 
   return {
-    mergedRects: resIt.getSortedData(),
-    mergedRectsIt: resIt
+    mergedRectsIt: it
   };
-};
-const isRectIdenticalOrInside = (it, obj, on) => {
-  let axis = "x";
-  let distance = "width";
-
-  if (on === "y") {
-    axis = "y";
-    distance = "height";
-  }
-
-  const res = it.findAll({
-    low: obj.d.rect[axis],
-    high: obj.d.rect[axis] + obj.d.rect[distance]
-  });
-  let isIdenticalOrInside = false;
-  const len = (res === null || res === void 0 ? void 0 : res.length) || 0;
-
-  for (let i = 0; i < len; i++) {
-    if (areRectsIdentical(getCoordinates(obj.d.rect), getCoordinates(res[i].d.rect)) || isRectInside(res[i].d.rect, obj.d.rect)) {
-      isIdenticalOrInside = true;
-    }
-  }
-
-  if (!isIdenticalOrInside) {
-    it.insert({
-      low: obj.d.rect[axis],
-      high: obj.d.rect[axis] + obj.d.rect[distance],
-      d: obj.d
-    });
-  }
-
-  return isIdenticalOrInside;
 };
 /**
  * [description]
@@ -3214,12 +3127,14 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
   // this function updates the modified position data
   // so no need to update the modified position data later
   const mpd = getModifiedPositionData(context);
+  const pd = getPositionData(context);
   const privateConstants = constants_privateConstants(context);
   const arranged = {};
   const itemsInBottomWorkSpace = {};
   let overlappedRects = mergedRectsIt.getSortedData();
   const iToALen = itemsToArrange.length;
-  const itemsToArrangeStack = new stack_stack();
+  const itemsToArrangeStack = stacks(context, "itemsToArrangeStack");
+  itemsToArrangeStack.empty();
   const itemsToArrangeWithScore = getItemsToArrangeScore(context, itemsToArrange);
 
   for (let i = 0; i < iToALen; i++) {
@@ -3227,15 +3142,16 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
   }
 
   let top;
-  let aItem;
-  const resStack = new stack_stack();
-  const grabageStack = new stack_stack();
+  let aItem, oItem;
+  const resStack = stacks(context, "resStack");
+  const garbageStack = stacks(context, "garbageStack");
 
   while (!itemsToArrangeStack.isEmpty()) {
     resStack.empty();
     top = itemsToArrangeStack.pop();
     aItem = mpd[top.d];
-    let tempAItem = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+    oItem = pd[top.d];
+    let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
     const oLen = overlappedRects.length;
 
     for (let i = 0; i < oLen; i++) {
@@ -3250,7 +3166,7 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
       continue;
     }
 
-    const pm = getPerfectMatch(resStack.getData(), aItem.width + aItem.height);
+    const pm = getPerfectMatch(resStack.getData(), aItem.width + aItem.height, oItem);
     aItem.x = pm.d.rect.x + privateConstants.MARGIN;
     aItem.y = pm.d.rect.y + privateConstants.MARGIN;
     arranged[top.d] = aItem;
@@ -3260,10 +3176,10 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
       itemsInBottomWorkSpace[top.d] = top.d;
     }
 
-    grabageStack.empty();
+    garbageStack.empty();
     const result = mergedRectsIt.findAll(pm.interval);
     const resLen = result.length;
-    tempAItem = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+    tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
 
     for (let i = 0; i < resLen; i++) {
       const res = result[i];
@@ -3273,17 +3189,14 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
       const gLen = (_garbageRects === null || _garbageRects === void 0 ? void 0 : _garbageRects.length) || 0;
 
       for (let i = 0; i < gLen; i++) {
-        grabageStack.push({
+        garbageStack.push({
           interval: {
             low: _garbageRects[i].x,
             high: _garbageRects[i].x + _garbageRects[i].width
           },
           d: {
             id: idCount.idCount++,
-            rect: _garbageRects[i],
-            a: {},
-            o: {},
-            ref: null
+            rect: _garbageRects[i]
           }
         });
       }
@@ -3295,7 +3208,7 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
 
     const {
       mergedRectsIt: _mergedRectsIt
-    } = await mergeFreeRects(context, mergedRectsIt, idCount, grabageStack.getData());
+    } = await mergeFreeRects(context, mergedRectsIt, idCount, garbageStack.getData());
     mergedRectsIt = _mergedRectsIt;
     overlappedRects = mergedRectsIt.getSortedData();
   }
@@ -3334,10 +3247,21 @@ Written by Subendra Kumar Sharma.
 
 
 
+ // import {
+// 	sleep,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
+// } from "../debug/debug";
+// import { printNodeData } from "../debug/debugUtils";
 
-
-
-const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = false) => {
+const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
   const privateConstants = constants_privateConstants(context);
   const mpd = getModifiedPositionData(context);
   const p1 = performance.now();
@@ -3443,7 +3367,6 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
     if (arrangedCount !== iToALen) {
       // resize workSpace and push bottom workspace down
       workSpaceResizeCount++;
-      console.log("workSpaceResizeCount", workSpaceResizeCount);
       workSpaceRectCo.br.y += shiftHeight;
       workSpaceRectCo.bl.y += shiftHeight;
 
@@ -3487,10 +3410,11 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY, isDemo = f
   const p2 = performance.now();
   console.log("p1: ", p1);
   console.log("p2: ", p2);
+  console.log("workSpaceResizeCount", workSpaceResizeCount);
   console.log("arrange total: ", p2 - p1);
   return arranged;
 };
-const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRightX, isDemo = false) => {
+const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRightX) => {
   const privateConstants = constants_privateConstants(context);
   const p1 = performance.now();
   const idCount = {
@@ -3667,7 +3591,6 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
     if (arrangedCount !== iToALen && passCount >= 2) {
       // resize combined workSpace
       workSpaceResizeCount++;
-      console.log("workSpaceResizeCount", workSpaceResizeCount);
       _combinedWorkSpaceRectCo.br.y += incrementHeight;
       _combinedWorkSpaceRectCo.bl.y += incrementHeight;
       _combinedWorkSpaceRect = getRectObjectFromCo(_combinedWorkSpaceRectCo);
@@ -3683,6 +3606,7 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
   const p2 = performance.now();
   console.log("p1: ", p1);
   console.log("p2: ", p2);
+  console.log("workSpaceResizeCount", workSpaceResizeCount);
   console.log("arrange total: ", p2 - p1);
   return arranged;
 };
@@ -3768,7 +3692,6 @@ const arrangeFromHeight = async (context, itemsToArrange, height) => {
     if (arrangedCount !== iToALen) {
       // resize workSpace and push bottom workspace down
       workSpaceResizeCount++;
-      console.log("workSpaceResizeCount", workSpaceResizeCount);
       workSpaceRectCo.br.y += shiftHeight;
       workSpaceRectCo.bl.y += shiftHeight;
       combinedWorkSpaceRectCo.br.y += shiftHeight;
@@ -3786,9 +3709,80 @@ const arrangeFromHeight = async (context, itemsToArrange, height) => {
   const p2 = performance.now();
   console.log("p1: ", p1);
   console.log("p2: ", p2);
+  console.log("workSpaceResizeCount", workSpaceResizeCount);
   console.log("arrange total: ", p2 - p1);
   return arranged;
 };
+// CONCATENATED MODULE: ./src/store/variables/status.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const setStatus = function (context, key, value) {
+  context.store.variables.status[key] = value;
+};
+
+const getStatus = function (context, key) {
+  return context.store.variables.status[key];
+};
+
+
+/* harmony default export */ var variables_status = (getStatus);
+// CONCATENATED MODULE: ./src/store/constants/messages.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const setMessage = function (context, key, value) {
+  context.store.constants.messages[key] = value;
+};
+
+const getMessage = function (context, key) {
+  return context.store.constants.messages[key];
+};
+
+
+/* harmony default export */ var messages = (getMessage);
 // CONCATENATED MODULE: ./src/libs/interaction/itemInteraction.js
 /*
 
@@ -3819,11 +3813,21 @@ Written by Subendra Kumar Sharma.
 
 
 
+
+
+
 const resizeItem = async function (index, width, height) {
   const pd = getPositionData(this);
   const e = variables_elements(this);
   const callbacks = getCallbacks(this);
+  const publicConstants = constants_publicConstants(this);
   index = parseInt(index);
+
+  if (publicConstants.LATCH_MOVED_ITEM) {
+    const adjustedSize = getStatus(this, "resizeDemo");
+    height = adjustedSize.height;
+  }
+
   resizeItemInitialChecks(this, index, width, height);
   resetDemoUIChanges(this);
   setModifiedPositionData(this, pd);
@@ -3837,7 +3841,14 @@ const resizeItem = async function (index, width, height) {
     height: height
   };
   const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
-  const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width);
+  let arranged;
+
+  if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
+    arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width);
+  } else {
+    arranged = await arrangeMove(this, affectedItems);
+  }
+
   setPositionData(this, mpd);
   e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
   e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
@@ -3857,7 +3868,24 @@ const resizeItem = async function (index, width, height) {
 const resizeItemDemo = async function (index, width, height) {
   const pd = getPositionData(this);
   const e = variables_elements(this);
+  const publicConstants = constants_publicConstants(this);
   index = parseInt(index);
+  let adjustedSize;
+
+  if (publicConstants.LATCH_MOVED_ITEM) {
+    adjustedSize = resizeSizeAdjust(this, width, height, index);
+    setStatus(this, "resizeDemo", adjustedSize);
+    height = adjustedSize.height;
+  }
+
+  if (adjustedSize.isToAdjPresent) {
+    // show cross hair
+    e.$limberGridViewCrossHairGuide.style.transform = `translate(${adjustedSize.latchPoint.x - publicConstants.CROSS_HAIR_WIDTH / 2}px, ${adjustedSize.latchPoint.y - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
+  } else {
+    // hide cross hair
+    e.$limberGridViewCrossHairGuide.style.transform = `translate(-${publicConstants.CROSS_HAIR_WIDTH * 2}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+  }
+
   resizeItemInitialChecks(this, index, width, height);
   resetDemoUIChanges(this);
   setModifiedPositionData(this, pd);
@@ -3871,7 +3899,14 @@ const resizeItemDemo = async function (index, width, height) {
     height: height
   };
   const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
-  const arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width, true);
+  let arranged;
+
+  if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
+    arranged = await arrangeResize(this, affectedItems, modifiedItem.y + modifiedItem.height, modifiedItem.x + modifiedItem.width);
+  } else {
+    arranged = await arrangeMove(this, affectedItems);
+  }
+
   const arrangedArr = Object.keys(arranged);
   const len = arrangedArr.length;
 
@@ -3890,9 +3925,19 @@ const moveItem = async function (index, toX, toY) {
 
   if (publicConstants.LATCH_MOVED_ITEM) {
     // change toX & toY to top left of the overlapping item
-    const adjustedPt = movePointAdjust(this, toX, toY);
-    toX = adjustedPt.toX;
-    toY = adjustedPt.toY;
+    const moveDemo = getStatus(this, "moveDemo");
+
+    if (moveDemo === null || moveDemo === void 0 ? void 0 : moveDemo.latchingAdjacent) {
+      toX = moveDemo.adjustedPt.toAdj.toX;
+      toY = moveDemo.adjustedPt.toAdj.toY;
+    } else if (moveDemo) {
+      toX = moveDemo.adjustedPt.to.toX;
+      toY = moveDemo.adjustedPt.to.toY;
+    } else {
+      const adjustedPt = movePointAdjust(this, toX, toY, index);
+      toX = adjustedPt.to.toX;
+      toY = adjustedPt.to.toY;
+    }
   }
 
   moveItemInitialChecks(this, index, toX, toY);
@@ -3938,19 +3983,81 @@ const moveItemDemo = async function (index, toX, toY) {
   const pd = getPositionData(this);
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
-  index = parseInt(index);
+  index = parseInt(index); //
 
   if (publicConstants.LATCH_MOVED_ITEM) {
-    // change toX & toY to top left of the overlapping item
-    const adjustedPt = movePointAdjust(this, toX, toY);
-    toX = adjustedPt.toX;
-    toY = adjustedPt.toY;
+    var _moveDemo, _moveDemo$adjustedPt, _moveDemo2, _moveDemo2$adjustedPt;
 
-    if (!isNaN(adjustedPt.overlappedItemIndex)) {
-      e.$limberGridViewMoveGuide.style.transform = "translate(" + toX + "px, " + toY + "px)";
-      e.$limberGridViewMoveGuide.classList.add("limber-grid-view-move-guide-active");
+    const adjustedPt = movePointAdjust(this, toX, toY, index);
+    let moveDemo = getStatus(this, "moveDemo"); // let adjustedPt;
+
+    if (!isNaN((_moveDemo = moveDemo) === null || _moveDemo === void 0 ? void 0 : (_moveDemo$adjustedPt = _moveDemo.adjustedPt) === null || _moveDemo$adjustedPt === void 0 ? void 0 : _moveDemo$adjustedPt.overlappedItemIndex) && isPointInsideRect(pd[moveDemo.adjustedPt.overlappedItemIndex], {
+      x: toX,
+      y: toY
+    })) {
+      moveDemo = { ...moveDemo,
+        adjustedPt
+      };
+      let latchingAdjacent = false;
+
+      if (!moveDemo.latchingAdjacent && moveDemo.adjustedPt.isToAdjPresent) {
+        toX = moveDemo.adjustedPt.toAdj.toX;
+        toY = moveDemo.adjustedPt.toAdj.toY;
+        latchingAdjacent = true;
+      } else {
+        toX = moveDemo.adjustedPt.to.toX;
+        toY = moveDemo.adjustedPt.to.toY;
+      }
+
+      setStatus(this, "moveDemo", { ...moveDemo,
+        latchingAdjacent
+      });
+    } else {
+      // change toX & toY to top left of the overlapping item
+      // adjustedPt = movePointAdjust(this, toX, toY, index);
+      let latchingAdjacent = false;
+
+      if (!isNaN(adjustedPt.overlappedItemIndex) || !adjustedPt.isToAdjPresent) {
+        toX = adjustedPt.to.toX;
+        toY = adjustedPt.to.toY;
+      } else {
+        toX = adjustedPt.toAdj.toX;
+        toY = adjustedPt.toAdj.toY;
+        latchingAdjacent = true;
+      }
+
+      setStatus(this, "moveDemo", {
+        adjustedPt: adjustedPt,
+        latchingAdjacent
+      });
     }
-  }
+
+    moveDemo = getStatus(this, "moveDemo");
+
+    if (!isNaN((_moveDemo2 = moveDemo) === null || _moveDemo2 === void 0 ? void 0 : (_moveDemo2$adjustedPt = _moveDemo2.adjustedPt) === null || _moveDemo2$adjustedPt === void 0 ? void 0 : _moveDemo2$adjustedPt.overlappedItemIndex)) {
+      e.$limberGridViewMoveGuide.style.transform = "translate(" + pd[moveDemo.adjustedPt.overlappedItemIndex].x + "px, " + pd[moveDemo.adjustedPt.overlappedItemIndex].y + "px)";
+      e.$limberGridViewMoveGuide.style.width = pd[moveDemo.adjustedPt.overlappedItemIndex].width + "px";
+      e.$limberGridViewMoveGuide.style.height = pd[moveDemo.adjustedPt.overlappedItemIndex].height + "px";
+      e.$limberGridViewMoveGuide.classList.add("limber-grid-view-move-guide-active");
+
+      if (moveDemo.latchingAdjacent) {
+        // show text
+        e.$limberGridViewMoveGuide.innerHTML = messages(this, "latchedMoveDemo2");
+      } else {
+        // show text
+        e.$limberGridViewMoveGuide.innerHTML = messages(this, "latchedMoveDemo1");
+      }
+    }
+
+    if (moveDemo.latchingAdjacent) {
+      // show cross hair
+      e.$limberGridViewCrossHairGuide.style.transform = `translate(${toX - publicConstants.CROSS_HAIR_WIDTH / 2}px, ${toY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
+    } else {
+      // hide cross hair
+      e.$limberGridViewCrossHairGuide.style.transform = `translate(-${publicConstants.CROSS_HAIR_WIDTH * 2}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+    }
+  } //
+
 
   moveItemInitialChecks(this, index, toX, toY);
   resetDemoUIChanges(this);
@@ -4066,6 +4173,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+
 
 
 
@@ -4407,6 +4515,8 @@ const onItemContextMenu = function (event) {
   document.removeEventListener("contextmenu", bf.onItemTouchContextMenu);
   document.removeEventListener("touchcancel", bf.onItemTouchCancel);
   iiv.userActionData = {};
+  setStatus(this, "moveDemo", undefined);
+  setStatus(this, "resizeDemo", undefined);
   event.preventDefault();
   event.stopPropagation();
 };
@@ -4515,6 +4625,69 @@ const unloadInitState = context => {
   e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
   e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
   e.$limberGridViewTouchHoldGuide.classList.remove("limber-grid-view-touch-hold-guide-active");
+};
+// CONCATENATED MODULE: ./src/libs/utils/utils.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const emptyObject = function (obj) {
+  const keys = Object.keys(obj);
+  const length = keys.length;
+
+  for (let i = 0; i < length; i++) {
+    delete obj[keys[i]];
+  }
+};
+const isMobile = function (context) {
+  const isMobileFunction = context.options.isMobileCheck;
+
+  if (isMobileFunction) {
+    return isMobileFunction();
+  }
+
+  return window.matchMedia("only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)").matches || window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)").matches;
+};
+const fixTo = (num, to = 6) => {
+  return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
+};
+const getRandomString = (len = 22) => {
+  const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
+  const arr = new Array(len);
+
+  for (let i = 0; i < len; i++) {
+    arr[i] = alpNum[Math.floor(Math.random() * 36)];
+  }
+
+  return arr.join("");
+};
+const utils_getItemDimenWithMargin = (MARGIN, item) => {
+  return {
+    x: item.x - MARGIN,
+    y: item.y - MARGIN,
+    width: item.width + MARGIN * 2,
+    height: item.height + MARGIN * 2
+  };
 };
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/initializers.js
 /*
@@ -4689,7 +4862,7 @@ const getPdBottomMax = context => {
   const len = pd.length;
 
   for (let i = 0; i < len; i++) {
-    item = arrangeUtils_getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
+    item = getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
 
     if (item.y + item.height > max) {
       max = item.y + item.height;
@@ -5382,10 +5555,6 @@ const DESK_INTERACTION_MODE = {
   ADD: true,
   CUTSPACE: true
 };
-const LATCH_MOVED_ITEM = {
-  true: true,
-  false: true
-};
 // CONCATENATED MODULE: ./src/initializers/initializers.js
 /*
 
@@ -5478,7 +5647,7 @@ const init = async function (context, isResize, autoArrange) {
   setDefinedMinHeightAndWidth(context, privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * privateConstants.WIDTH_SCALE_FACTOR);
 };
 const initConstantsAndFlags = function (options) {
-  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15;
+  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18;
 
   // Private Constants BEGIN
   if ((options === null || options === void 0 ? void 0 : (_options$gridData = options.gridData) === null || _options$gridData === void 0 ? void 0 : _options$gridData.WIDTH) && !isNaN(options.gridData.WIDTH)) {
@@ -5557,6 +5726,28 @@ const initConstantsAndFlags = function (options) {
 
   if ((options === null || options === void 0 ? void 0 : (_options$publicConsta15 = options.publicConstants) === null || _options$publicConsta15 === void 0 ? void 0 : _options$publicConsta15.animateTime) && !isNaN(options.publicConstants.animateTime)) {
     setPublicConstantByName(this, "ANIMATE_TIME", options.publicConstants.animateTime);
+  }
+
+  if ((options === null || options === void 0 ? void 0 : (_options$publicConsta16 = options.publicConstants) === null || _options$publicConsta16 === void 0 ? void 0 : _options$publicConsta16.crossHairWidth) && !isNaN(options.publicConstants.crossHairWidth)) {
+    setPublicConstantByName(this, "CROSS_HAIR_WIDTH", options.publicConstants.crossHairWidth);
+  }
+
+  if ((options === null || options === void 0 ? void 0 : (_options$publicConsta17 = options.publicConstants) === null || _options$publicConsta17 === void 0 ? void 0 : _options$publicConsta17.crossHairHeight) && !isNaN(options.publicConstants.crossHairHeight)) {
+    setPublicConstantByName(this, "CROSS_HAIR_HEIGHT", options.publicConstants.crossHairHeight);
+  } // if (
+  // 	options?.publicConstants?.useFastAlgorithm &&
+  // 	!isNaN(options.publicConstants.useFastAlgorithm)
+  // ) {
+  // 	setPublicConstantByName(
+  // 		this,
+  // 		"USE_FAST_ALGORITHM",
+  // 		options.publicConstants.useFastAlgorithm
+  // 	);
+  // }
+
+
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta18 = options.publicConstants) === null || _options$publicConsta18 === void 0 ? void 0 : _options$publicConsta18.useVerticalArrOnResize) === "boolean") {
+    setPublicConstantByName(this, "USE_VERTICAL_ARR_ON_RESIZE", options.publicConstants.useVerticalArrOnResize);
   } // Public Constants ENDED
   // Miscellaneous BEGIN
   // Miscellaneous ENDED
@@ -5565,6 +5756,7 @@ const initConstantsAndFlags = function (options) {
 const initRender = function () {
   const e = variables_elements(this);
   const options = getOptions(this);
+  const publicConstants = constants_publicConstants(this);
   set$body(this, document.getElementsByTagName("body")[0]);
   let pseudoContainerId;
 
@@ -5605,24 +5797,30 @@ const initRender = function () {
   const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
 
   limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
+  const limberGridViewCrossHairGuide = document.createElement("div");
+  limberGridViewCrossHairGuide.innerHTML = `<hr></hr><hr></hr>`;
   pseudoContainerItem.setAttribute("class", "limber-grid-view-pseudo-container-item");
   limberGridViewPseudoItem.setAttribute("class", "limber-grid-view-pseudo-item");
   limberGridViewMoveGuide.setAttribute("class", "limber-grid-view-move-guide");
   limberGridViewHeightAdjustGuide.setAttribute("class", "limber-grid-view-height-adjust-guide");
   limberGridViewAddCutGuide.setAttribute("class", "limber-grid-view-add-cut-guide");
   limberGridViewTouchHoldGuide.setAttribute("class", "limber-grid-view-touch-hold-guide");
+  limberGridViewCrossHairGuide.setAttribute("class", "limber-grid-view-cross-hair-guide");
+  limberGridViewCrossHairGuide.style.transform = `translate(-${publicConstants.CROSS_HAIR_WIDTH * 2}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
   e.$pseudoContainer.appendChild(pseudoContainerItem);
   e.$limberGridView.appendChild(limberGridViewPseudoItem);
   e.$limberGridView.appendChild(limberGridViewMoveGuide);
   e.$limberGridView.appendChild(limberGridViewHeightAdjustGuide);
   e.$limberGridView.appendChild(limberGridViewAddCutGuide);
   e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
+  e.$limberGridView.appendChild(limberGridViewCrossHairGuide);
   set$pseudoContainerItem(this, pseudoContainerItem);
   set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
   set$limberGridViewMoveGuide(this, limberGridViewMoveGuide);
   set$limberGridViewHeightAdjustGuide(this, limberGridViewHeightAdjustGuide);
   set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
   set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
+  set$limberGridViewCrossHairGuide(this, limberGridViewCrossHairGuide);
 };
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/miscellaneous.js
 /*
@@ -5698,6 +5896,8 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+
+
 
 
 
@@ -6054,6 +6254,19 @@ LimberGridView.prototype.initializeStore = function () {
           addItemAllowCheckTimeOutVariable: undefined,
           cutSpaceAllowCheckTimeOutVariable: undefined
         }
+      },
+      status: {},
+      trees: {
+        it: new external_commonjs_IntervalTreeJS_commonjs2_IntervalTreeJS_amd_IntervalTreeJS_root_IntervalTreeJS_["IntervalTreesIterative"]({
+          initialStackSize: 100,
+          initialQueueSize: 100
+        })
+      },
+      stacks: {
+        stack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"](),
+        garbageStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"](),
+        resStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"](),
+        itemsToArrangeStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]()
       }
     },
     constants: {
@@ -6090,7 +6303,17 @@ LimberGridView.prototype.initializeStore = function () {
         DESK_INTERACTION_MODE: "ADD",
         LATCH_MOVED_ITEM: true,
         ANIMATE_MOVED_ITEM: false,
-        ANIMATE_TIME: 250
+        ANIMATE_TIME: 250,
+        // cross hair
+        CROSS_HAIR_WIDTH: 500,
+        CROSS_HAIR_HEIGHT: 500,
+        // Algorithm
+        // USE_FAST_ALGORITHM: true,
+        USE_VERTICAL_ARR_ON_RESIZE: false
+      },
+      messages: {
+        latchedMoveDemo1: "Move curser close to an adjacent item over this box to latch next to that item.",
+        latchedMoveDemo2: "Move curser over this box to latch on to this item."
       }
     }
   };
@@ -6161,8 +6384,21 @@ LimberGridView.prototype.setDeskInteractMode = function (flag) {
 
 
 LimberGridView.prototype.setLatchMovedItem = function (flag) {
-  if (LATCH_MOVED_ITEM[flag]) {
+  if (typeof flag === "boolean") {
     setPublicConstantByName(this, "LATCH_MOVED_ITEM", flag);
+  }
+};
+/**
+ * @method
+ * @name LimberGridView#setUseVerticalArrOnResize
+ * @description Call this function to change USE_VERTICAL_ARR_ON_RESIZE during runtime.
+ * @param {boolean} flag Boolean true or false. To use or not to use vertical arrangements on resize.
+ */
+
+
+LimberGridView.prototype.setUseVerticalArrOnResize = function (flag) {
+  if (typeof flag === "boolean") {
+    setPublicConstantByName(this, "USE_VERTICAL_ARR_ON_RESIZE", flag);
   }
 };
 /**
