@@ -2054,7 +2054,7 @@ const movePointAdjust = (context, toX, toY, index) => {
     tld = getDistanceBetnPts(tl, pt);
     trd = getDistanceBetnPts(tr, pt);
 
-    if (tld < ldistance && tld < rdistance && pt.x < tl.x && tld <= privateConstants.MIN_HEIGHT_AND_WIDTH * 2 / 3) {
+    if (tld < ldistance && tld < rdistance && pt.x < tl.x && tld <= privateConstants.WIDTH / 4) {
       if (tl.x - privateConstants.MARGIN - pd[index].width >= privateConstants.MARGIN) {
         toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
         toYAdj = tl.y + privateConstants.MARGIN;
@@ -2065,7 +2065,7 @@ const movePointAdjust = (context, toX, toY, index) => {
       }
     }
 
-    if (trd < rdistance && trd < ldistance && pt.x > tr.x && trd <= privateConstants.MIN_HEIGHT_AND_WIDTH * 2 / 3) {
+    if (trd < rdistance && trd < ldistance && pt.x > tr.x && trd <= privateConstants.WIDTH / 4) {
       if (tr.x + privateConstants.MARGIN + pd[index].width < privateConstants.WIDTH) {
         toXAdj = tr.x + privateConstants.MARGIN;
         toYAdj = tr.y + privateConstants.MARGIN;
