@@ -472,6 +472,7 @@ var main = function () {
 		// 	// WIDTH: 999,
 		// 	// MARGIN: 3.830521472392638,
 		// },
+		publicConstants: { useVerticalArrOnResize: true },
 		positionData: [
 			// set 1
 			// {

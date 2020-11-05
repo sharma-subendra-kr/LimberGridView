@@ -58,8 +58,7 @@ export const arrangeMove = async (
 	context,
 	affectedItems,
 	toY,
-	movedBottomY,
-	isDemo = false
+	movedBottomY
 ) => {
 	const privateConstants = getPrivateConstants(context);
 	const mpd = getModifiedPositionData(context);
@@ -264,8 +263,7 @@ export const arrangeResize = async (
 	context,
 	affectedItems,
 	resizedBottomY,
-	resizedRightX,
-	isDemo = false
+	resizedRightX
 ) => {
 	const privateConstants = getPrivateConstants(context);
 

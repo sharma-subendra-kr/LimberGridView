@@ -381,21 +381,18 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.useFastAlgorithm &&
-		!isNaN(options.publicConstants.useFastAlgorithm)
-	) {
-		setPublicConstantByName(
-			this,
-			"USE_FAST_ALGORITHM",
-			options.publicConstants.useFastAlgorithm
-		);
-	}
+	// if (
+	// 	options?.publicConstants?.useFastAlgorithm &&
+	// 	!isNaN(options.publicConstants.useFastAlgorithm)
+	// ) {
+	// 	setPublicConstantByName(
+	// 		this,
+	// 		"USE_FAST_ALGORITHM",
+	// 		options.publicConstants.useFastAlgorithm
+	// 	);
+	// }
 
-	if (
-		options?.publicConstants?.useVerticalArrOnResize &&
-		!isNaN(options.publicConstants.useVerticalArrOnResize)
-	) {
+	if (typeof options?.publicConstants?.useVerticalArrOnResize === "boolean") {
 		setPublicConstantByName(
 			this,
 			"USE_VERTICAL_ARR_ON_RESIZE",

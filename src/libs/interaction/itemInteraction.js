@@ -76,12 +76,17 @@ export const resizeItem = async function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeResize(
-		this,
-		affectedItems,
-		modifiedItem.y + modifiedItem.height,
-		modifiedItem.x + modifiedItem.width
-	);
+	let arranged;
+	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
+		arranged = await arrangeResize(
+			this,
+			affectedItems,
+			modifiedItem.y + modifiedItem.height,
+			modifiedItem.x + modifiedItem.width
+		);
+	} else {
+		arranged = await arrangeMove(this, affectedItems);
+	}
 
 	setPositionData(this, mpd);
 
@@ -148,13 +153,17 @@ export const resizeItemDemo = async function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeResize(
-		this,
-		affectedItems,
-		modifiedItem.y + modifiedItem.height,
-		modifiedItem.x + modifiedItem.width,
-		true
-	);
+	let arranged;
+	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
+		arranged = await arrangeResize(
+			this,
+			affectedItems,
+			modifiedItem.y + modifiedItem.height,
+			modifiedItem.x + modifiedItem.width
+		);
+	} else {
+		arranged = await arrangeMove(this, affectedItems);
+	}
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;

@@ -70,6 +70,7 @@ import { set$el } from "./store/variables/elements";
 import {
 	DESK_INTERACTION_MODE,
 	LATCH_MOVED_ITEM,
+	TRUE_FALSE,
 } from "./store/flags/flagDetails";
 import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
@@ -498,7 +499,7 @@ LimberGridView.prototype.initializeStore = function () {
 				CROSS_HAIR_HEIGHT: 500,
 
 				// Algorithm
-				USE_FAST_ALGORITHM: true,
+				// USE_FAST_ALGORITHM: true,
 				USE_VERTICAL_ARR_ON_RESIZE: false,
 			},
 			messages: {
@@ -571,8 +572,20 @@ LimberGridView.prototype.setDeskInteractMode = function (flag) {
  * @param {boolean} flag Boolean true or false. To latch or not to latch.
  */
 LimberGridView.prototype.setLatchMovedItem = function (flag) {
-	if (LATCH_MOVED_ITEM[flag]) {
+	if (typeof flag === "boolean") {
 		setPublicConstantByName(this, "LATCH_MOVED_ITEM", flag);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#setUseVerticalArrOnResize
+ * @description Call this function to change USE_VERTICAL_ARR_ON_RESIZE during runtime.
+ * @param {boolean} flag Boolean true or false. To use or not to use vertical arrangements on resize.
+ */
+LimberGridView.prototype.setUseVerticalArrOnResize = function (flag) {
+	if (typeof flag === "boolean") {
+		setPublicConstantByName(this, "USE_VERTICAL_ARR_ON_RESIZE", flag);
 	}
 };
 
