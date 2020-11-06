@@ -108,19 +108,57 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 		}
 
 		const tlA = { x: rectA.x, y: rectA.y };
+		const trA = { x: rectA.x + rectA.width, y: rectA.y };
 		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
+		const blA = { x: rectA.x, y: rectA.y + rectA.height };
+
 		const tlB = { x: rectB.x, y: rectB.y };
+		const trB = { x: rectB.x + rectB.width, y: rectB.y };
 		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
+		const blB = { x: rectB.x, y: rectB.y + rectB.height };
 
-		if (tlA.x > brB.x || tlB.x > brA.x) {
-			return false;
+		const THRESHOLD = 0.000001;
+
+		if (
+			Math.abs(tlA.x - brB.x) < THRESHOLD &&
+			(Math.abs(tlA.y - brB.y) < THRESHOLD || (tlA.y < brB.y && blA.y > trB.y))
+			// Math.abs(tlA.y - trB.y) < THRESHOLD
+		) {
+			return true;
 		}
 
-		if (tlA.y > brB.y || tlB.y > brA.y) {
-			return false;
+		if (
+			Math.abs(tlA.y - brB.y) < THRESHOLD &&
+			(Math.abs(tlA.x - brB.x) < THRESHOLD || (tlA.x < brB.x && trA.x > blB.x))
+			// Math.abs(tlA.x - blB.x) < THRESHOLD
+		) {
+			return true;
 		}
 
-		if (doRectsOverlap(rectA, rectB) === false) return true;
+		if (
+			Math.abs(tlB.x - brA.x) < THRESHOLD &&
+			(Math.abs(tlB.y - brA.y) < THRESHOLD || (tlB.y < brA.y && blB.y > trA.y))
+			// Math.abs(tlB.y - trA.y) < THRESHOLD
+		) {
+			return true;
+		}
+
+		if (
+			Math.abs(tlB.y - brA.y) < THRESHOLD &&
+			(Math.abs(tlB.x - brA.x) < THRESHOLD || (tlB.x < brA.x && trB.x > blA.x))
+			// Math.abs(tlA.x - blB.x) < THRESHOLD
+		) {
+			return true;
+		}
+
+		// if (tlA.x > brB.x || tlB.x > brA.x) {
+		// 	return false;
+		// }
+		// if (tlA.y > brB.y || tlB.y > brA.y) {
+		// 	return false;
+		// }
+
+		// if (doRectsOverlap(rectA, rectB) === false) return true;
 
 		return false;
 	} catch (e) {

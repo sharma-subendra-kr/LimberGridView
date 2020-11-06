@@ -115,12 +115,12 @@ export const printMergedFreeRects = (context, arr) => {
 			);
 			node.setAttribute("tabindex", -1);
 
-			node.setAttribute(
-				"title",
-				`${arr[i].id}: ${Object.keys(arr[i].o).map(
-					(o) => arr[i].o[o]?.d?.id || ""
-				)}`
-			);
+			// node.setAttribute(
+			// 	"title",
+			// 	`${arr[i].id}: ${Object.keys(arr[i].o).map(
+			// 		(o) => arr[i].o[o]?.d?.id || ""
+			// 	)}`
+			// );
 
 			node.innerHTML = arr[i].id;
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;

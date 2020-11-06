@@ -167,12 +167,12 @@ export const getItemsInWorkSpace = (
 	const len = mpd.length;
 	const itemsInWorkSpace = new Array(len);
 	let count = 0;
+	let item;
 	for (let i = 0; i < len; i++) {
+		item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 		if (
-			doRectsOverlap(
-				workSpaceRect,
-				getItemDimenWithMargin(privateConstants.MARGIN, mpd[i])
-			)
+			doRectsOverlap(workSpaceRect, item) &&
+			!doRectsOnlyTouch(workSpaceRect, item)
 		) {
 			if (!getIndices) {
 				itemsInWorkSpace[count++] = mpd[i];
@@ -202,11 +202,14 @@ export const getItemsBelowBottomWorkSpace = (
 	const len = mpd.length;
 	const items = new Array(len);
 	let count = 0;
+	let item;
 
 	for (let i = 0; i < len; i++) {
+		item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
+
 		if (
-			workSpaceRect.bl.y <=
-			getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]).y
+			workSpaceRect.bl.y <= item.y ||
+			Math.abs(workSpaceRect.bl.y - item.y) < 0.000001
 		) {
 			if (!getIndices) {
 				items[count++] = mpd[i];

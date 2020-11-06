@@ -42,7 +42,6 @@ import {
 import { getRectObjectFromCo } from "../rect/rectUtils";
 import { sleep } from "../utils/utils";
 // import {
-// 	sleep,
 // 	printUnmergedFreeRects,
 // 	printMergedFreeRects,
 // 	printResultStackRects,
@@ -335,12 +334,7 @@ export const arrangeResize = async (
 	const {
 		topWorkSpaceCo: _topWorkSpaceCo,
 		bottomWorkSpaceCo: _bottomWorkSpaceCo,
-	} = getTopBottomWS(
-		context,
-		_workSpaceRectCo,
-		minX - privateConstants.MARGIN,
-		maxX + privateConstants.MARGIN
-	);
+	} = getTopBottomWS(context, _workSpaceRectCo, minX, maxX);
 
 	const _shrinkRes = shrinkTopBottomWS(context, _topWorkSpaceCo);
 
