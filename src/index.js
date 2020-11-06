@@ -67,11 +67,7 @@ import {
 	setCallbacks,
 } from "./store/variables/essentials";
 import { set$el } from "./store/variables/elements";
-import {
-	DESK_INTERACTION_MODE,
-	LATCH_MOVED_ITEM,
-	TRUE_FALSE,
-} from "./store/flags/flagDetails";
+import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
 import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 import {
@@ -482,7 +478,7 @@ LimberGridView.prototype.initializeStore = function () {
 				AUTO_SCROLL_POINT: 50,
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
 
-				MOUSE_DOWN_TIME: 500,
+				MOUSE_DOWN_TIME: 300,
 				TOUCH_HOLD_TIME: 300,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
