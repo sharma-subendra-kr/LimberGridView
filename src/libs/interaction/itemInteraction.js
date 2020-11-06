@@ -61,8 +61,6 @@ export const resizeItem = async function (index, width, height) {
 
 	resizeItemInitialChecks(this, index, width, height);
 
-	resetDemoUIChanges(this);
-
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
 	mpd[index].width = width;
@@ -202,8 +200,6 @@ export const moveItem = async function (index, toX, toY) {
 
 	moveItemInitialChecks(this, index, toX, toY);
 
-	resetDemoUIChanges(this);
-
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
 	mpd[index].x = toX;
@@ -226,7 +222,6 @@ export const moveItem = async function (index, toX, toY) {
 
 	setPositionData(this, mpd);
 
-	e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
 	e.$limberGridViewItems[
 		index
 	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
@@ -384,8 +379,6 @@ export const moveItemDemo = async function (index, toX, toY) {
 		toY + pd[index].height,
 		true
 	);
-
-	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;

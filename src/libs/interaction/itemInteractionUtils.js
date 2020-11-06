@@ -182,7 +182,6 @@ export const resetDemoUIChanges = (context) => {
 	for (var i = 0; i < len; i++) {
 		e.$limberGridViewItems[i].style.transform =
 			"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 };
 

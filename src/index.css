@@ -74,7 +74,7 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-item-demo {
-	display: none;
+	visibility: hidden;
 }
 
 .limber-grid-view-item.limber-grid-view-item-editable::before {
