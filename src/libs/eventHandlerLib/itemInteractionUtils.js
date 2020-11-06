@@ -41,13 +41,13 @@ export const getUserActionData = (context, event) => {
 	let touchPosOnLimberGridItem;
 	let X, Y;
 
-	if (event.which === 1) {
+	if (!event.touches) {
 		radius = Math.sqrt(
 			Math.pow(0 - event.offsetX, 2) + Math.pow(0 - event.offsetY, 2)
 		);
 		X = event.offsetX;
 		Y = event.offsetY;
-	} else if (event.which === 0) {
+	} else if (event.touches) {
 		touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
 		radius = Math.sqrt(
 			Math.pow(0 - touchPosOnLimberGridItem.x, 2) +
@@ -217,9 +217,9 @@ export const loadMoveState = (context, userActionData, event) => {
 	e.$pseudoContainerItem.style.width = item.width + "px";
 	e.$pseudoContainerItem.style.height = item.height + "px";
 
-	if (event.which === 1) {
+	if (!event.touches) {
 		e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
-	} else if (event.which === 0) {
+	} else if (event.touches) {
 		e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
 	}
 
@@ -267,9 +267,9 @@ export const loadOnMoveState = (context, userActionData, event, type) => {
 			"limber-grid-view-pseudo-container-item-move-disallow"
 		);
 
-		if (event.which === 1) {
+		if (!event.touches) {
 			e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
-		} else if (event.which === 0) {
+		} else if (event.touches) {
 			e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
 		}
 	} else if (type === "resize") {

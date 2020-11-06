@@ -60,10 +60,6 @@ export const onItemMouseDown = function (event) {
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
 
-	if (event.which !== 1) {
-		return;
-	}
-
 	const _userActionData = getUserActionData(this, event);
 
 	if (!_userActionData) {
@@ -115,11 +111,6 @@ export const onItemTouchStart = function (event) {
 	const bf = getBindedFunctions(this);
 
 	if (event.touches.length !== 1) {
-		onItemTouchContextMenu.call(this, event);
-		return;
-	}
-
-	if (event.which !== 0) {
 		onItemTouchContextMenu.call(this, event);
 		return;
 	}
