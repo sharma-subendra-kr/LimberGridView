@@ -37,12 +37,6 @@ import getElements, {
 } from "../../store/variables/elements";
 import { DEBUG_MODE } from "../../store/variables/essentials";
 
-export const sleep = (ms) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(resolve, ms);
-	});
-};
-
 export const printUnmergedFreeRects = (context, arr) => {
 	if (process.env.NODE_ENV === "development") {
 		const e = getElements(context);

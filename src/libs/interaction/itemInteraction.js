@@ -56,7 +56,7 @@ export const resizeItem = async function (index, width, height) {
 
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedSize = getStatus(this, "resizeDemo");
-		height = adjustedSize.height;
+		height = adjustedSize?.height || height;
 	}
 
 	resizeItemInitialChecks(this, index, width, height);

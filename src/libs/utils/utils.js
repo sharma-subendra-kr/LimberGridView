@@ -70,3 +70,9 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 		height: item.height + MARGIN * 2,
 	};
 };
+
+export const sleep = (ms) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(resolve, ms);
+	});
+};

@@ -40,6 +40,7 @@ import {
 	getResizeWSItemsDetail,
 } from "./arrangeUtils";
 import { getRectObjectFromCo } from "../rect/rectUtils";
+import { sleep } from "../utils/utils";
 // import {
 // 	sleep,
 // 	printUnmergedFreeRects,
@@ -149,6 +150,7 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
+		await sleep(0);
 		const { it: freeRectsItY } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
@@ -159,12 +161,14 @@ export const arrangeMove = async (
 
 		const freeRectsArr = freeRectsItY.getSortedData();
 
+		await sleep(0);
 		const { mergedRectsIt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
 		);
 
+		await sleep(0);
 		const {
 			arranged: _arranged,
 			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
@@ -367,6 +371,7 @@ export const arrangeResize = async (
 	while (arrangedCount !== iToALen) {
 		let freeRectsItY;
 		if (passCount === 0) {
+			await sleep(0);
 			const { it: _freeRectsItY } = sweepLineForFreeSpace(
 				context,
 				combinedWorkSpaceRect,
@@ -394,6 +399,7 @@ export const arrangeResize = async (
 			passCount++;
 			continue;
 		} else if (passCount >= 2) {
+			await sleep(0);
 			const { it: _freeRectsItY } = sweepLineForFreeSpace(
 				context,
 				_combinedWorkSpaceRect,
@@ -406,12 +412,14 @@ export const arrangeResize = async (
 
 		const freeRectsArr = freeRectsItY.getSortedData();
 
+		await sleep(0);
 		const { mergedRectsIt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
 		);
 
+		await sleep(0);
 		const { arranged: _arranged } = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
@@ -510,6 +518,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
+		await sleep(0);
 		const { it: freeRectsItY } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
@@ -520,12 +529,14 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 
 		const freeRectsArr = freeRectsItY.getSortedData();
 
+		await sleep(0);
 		const { mergedRectsIt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
 		);
 
+		await sleep(0);
 		const { arranged: _arranged } = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
