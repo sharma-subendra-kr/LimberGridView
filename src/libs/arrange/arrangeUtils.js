@@ -209,7 +209,7 @@ export const getItemsBelowBottomWorkSpace = (
 
 		if (
 			workSpaceRect.bl.y <= item.y ||
-			Math.abs(workSpaceRect.bl.y - item.y) < 0.000001
+			Math.abs(workSpaceRect.bl.y - item.y) < 0.1
 		) {
 			if (!getIndices) {
 				items[count++] = mpd[i];

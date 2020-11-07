@@ -117,7 +117,7 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
 		const blB = { x: rectB.x, y: rectB.y + rectB.height };
 
-		const THRESHOLD = 0.000001;
+		const THRESHOLD = 0.1;
 
 		if (
 			Math.abs(tlA.x - brB.x) < THRESHOLD &&
@@ -508,12 +508,13 @@ export const areRectsAdjacent = (rectA, rectB) => {
 };
 
 export const merge = (rectACo, rectBCo) => {
+	const THRESHOLD = 0.1;
 	let res;
 	// check tl
 	if (
 		rectACo.tl.x >= rectBCo.bl.x &&
 		rectACo.tl.x < rectBCo.br.x &&
-		rectACo.tl.y >= rectBCo.bl.y
+		Math.abs(rectACo.tl.y - rectBCo.bl.y) < THRESHOLD
 	) {
 		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
 		res = {
@@ -527,7 +528,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.tl.y >= rectBCo.tr.y &&
 		rectACo.tl.y < rectBCo.br.y &&
-		rectACo.tl.x >= rectBCo.tr.x
+		Math.abs(rectACo.tl.x - rectBCo.tr.x) < THRESHOLD
 	) {
 		let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
 		res = {
@@ -542,7 +543,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.tr.x <= rectBCo.br.x &&
 		rectACo.tr.x > rectBCo.bl.x &&
-		rectACo.tr.y >= rectBCo.bl.y
+		Math.abs(rectACo.tr.y - rectBCo.bl.y) < THRESHOLD
 	) {
 		let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
 		res = {
@@ -556,7 +557,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.tr.y >= rectBCo.tl.y &&
 		rectACo.tr.y < rectBCo.bl.y &&
-		rectACo.tr.x <= rectBCo.tl.x
+		Math.abs(rectACo.tr.x - rectBCo.tl.x) < THRESHOLD
 	) {
 		let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
 		res = {
@@ -571,7 +572,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.br.x <= rectBCo.tr.x &&
 		rectACo.br.x > rectBCo.tl.x &&
-		rectACo.br.y <= rectBCo.tl.y
+		Math.abs(rectACo.br.y - rectBCo.tl.y) < THRESHOLD
 	) {
 		let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
 		res = {
@@ -585,7 +586,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.br.y <= rectBCo.bl.y &&
 		rectACo.br.y > rectBCo.tl.y &&
-		rectACo.br.x <= rectBCo.tl.x
+		Math.abs(rectACo.br.x - rectBCo.tl.x) < THRESHOLD
 	) {
 		let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		res = {
@@ -600,7 +601,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.bl.x >= rectBCo.tl.x &&
 		rectACo.bl.x < rectBCo.tr.x &&
-		rectACo.bl.y <= rectBCo.tl.y
+		Math.abs(rectACo.bl.y - rectBCo.tl.y) < THRESHOLD
 	) {
 		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
 		res = {
@@ -614,7 +615,7 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.bl.y <= rectBCo.br.y &&
 		rectACo.bl.y > rectBCo.tr.y &&
-		rectACo.bl.x >= rectBCo.tr.x
+		Math.abs(rectACo.bl.x - rectBCo.tr.x) < THRESHOLD
 	) {
 		let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		res = {
