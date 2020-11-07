@@ -84,8 +84,6 @@ export const getMinMaxXY = (
 
 	if (movedBottomY > maxY) maxY = movedBottomY;
 
-	// Not going to the release-1.0.0-beta.2 because it creates some bugs:
-	// final point to the moved item is not the same as what specified by dragging
 	if (maxY - minY > privateConstants.WIDTH) {
 		minY = mpd[affectedItems[len - 1]].y;
 		maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
