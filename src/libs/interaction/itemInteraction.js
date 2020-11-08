@@ -57,6 +57,7 @@ export const resizeItem = async function (index, width, height) {
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedSize = getStatus(this, "resizeDemo");
 		height = adjustedSize?.height || height;
+		width = adjustedSize?.width || width;
 	}
 
 	resizeItemInitialChecks(this, index, width, height);
@@ -118,6 +119,7 @@ export const resizeItemDemo = async function (index, width, height) {
 		adjustedSize = resizeSizeAdjust(this, width, height, index);
 		setStatus(this, "resizeDemo", adjustedSize);
 		height = adjustedSize.height;
+		width = adjustedSize.width;
 	}
 
 	if (adjustedSize?.isToAdjPresent) {

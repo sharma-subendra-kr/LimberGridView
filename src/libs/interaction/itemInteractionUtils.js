@@ -313,12 +313,17 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 	const brpt = { x: pd[index].x + width, y: pd[index].y + height };
 	const blpt = { x: pd[index].x, y: pd[index].y + height };
 
-	let bl, br, blptTobr, brptTobl;
+	let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
+	let tdistance = Number.MAX_SAFE_INTEGER;
+	let bdistance = Number.MAX_SAFE_INTEGER;
 	let isToAdjPresent = false;
 	let toAdjIndex;
-	let toAdjDirection;
+	let hToAdjDirection;
+	let wToAdjDirection;
+	let hLatchPoint;
+	let wLatchPoint;
 	let latchPoint;
 
 	for (let i = 0; i < len; i++) {
@@ -333,9 +338,12 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 
 		bl = { x: temp.x, y: temp.y + temp.height };
 		br = { x: temp.x + temp.width, y: temp.y + temp.height };
+		tr = { x: temp.x + temp.width, y: temp.y };
 
 		brptTobl = getDistanceBetnPts(bl, brpt);
 		blptTobr = getDistanceBetnPts(br, blpt);
+		trptTobr = getDistanceBetnPts(br, trpt);
+		brptTotr = getDistanceBetnPts(tr, brpt);
 
 		if (
 			brptTobl < rdistance &&
@@ -349,8 +357,8 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 			rdistance = brptTobl;
 			isToAdjPresent = true;
 			toAdjIndex = i;
-			toAdjDirection = "right";
-			latchPoint = bl;
+			hToAdjDirection = "right";
+			hLatchPoint = bl;
 		}
 
 		if (
@@ -365,16 +373,59 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 			ldistance = blptTobr;
 			isToAdjPresent = true;
 			toAdjIndex = i;
-			toAdjDirection = "left";
-			latchPoint = br;
+			hToAdjDirection = "left";
+			hLatchPoint = br;
 		}
+
+		if (
+			trptTobr < tdistance &&
+			trptTobr < bdistance &&
+			trptTobr <= privateConstants.WIDTH / 4 &&
+			Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+		) {
+			width = br.x - tlpt.x;
+
+			tdistance = trptTobr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "top";
+			wLatchPoint = br;
+		}
+
+		if (
+			brptTotr < bdistance &&
+			brptTotr < tdistance &&
+			brptTotr <= privateConstants.WIDTH / 4 &&
+			Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+		) {
+			width = tr.x - blpt.x;
+
+			bdistance = brptTotr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "bottom";
+			wLatchPoint = tr;
+		}
+	}
+
+	if (hLatchPoint && wLatchPoint) {
+		latchPoint = {
+			x: wLatchPoint.x,
+			y: hLatchPoint.y,
+		};
+	} else if (hLatchPoint) {
+		latchPoint = hLatchPoint;
+	} else if (wLatchPoint) {
+		latchPoint = wLatchPoint;
 	}
 
 	return {
 		height,
+		width,
 		isToAdjPresent,
 		toAdjIndex,
-		toAdjDirection,
+		hToAdjDirection,
+		wToAdjDirection,
 		latchPoint,
 	};
 };
