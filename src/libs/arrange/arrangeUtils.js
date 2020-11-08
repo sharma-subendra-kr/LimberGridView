@@ -84,7 +84,7 @@ export const getMinMaxXY = (
 
 	if (movedBottomY > maxY) maxY = movedBottomY;
 
-	if (maxY - minY > privateConstants.WIDTH) {
+	if (maxY - minY > privateConstants.HEIGHT * 1.5) {
 		minY = mpd[affectedItems[len - 1]].y;
 		maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
 	}

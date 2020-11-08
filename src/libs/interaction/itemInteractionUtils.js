@@ -193,9 +193,10 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
 	const pt = { x: toX, y: toY };
 	let inside;
-	let tl, tr, tld, trd;
+	let tl, tr, bl, tld, trd, bld;
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
+	let bdistance = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
 	let isToAdjPresent = false;
 	let toAdjIndex;
@@ -220,13 +221,16 @@ export const movePointAdjust = (context, toX, toY, index) => {
 
 		tl = { x: temp.x, y: temp.y };
 		tr = { x: temp.x + temp.width, y: temp.y };
+		bl = { x: temp.x, y: temp.y + temp.height };
 
 		tld = getDistanceBetnPts(tl, pt);
 		trd = getDistanceBetnPts(tr, pt);
+		bld = getDistanceBetnPts(bl, pt);
 
 		if (
 			tld < ldistance &&
 			tld < rdistance &&
+			tld < bdistance &&
 			pt.x < tl.x &&
 			tld <= privateConstants.WIDTH / 4
 		) {
@@ -247,6 +251,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		if (
 			trd < rdistance &&
 			trd < ldistance &&
+			trd < bdistance &&
 			pt.x > tr.x &&
 			trd <= privateConstants.WIDTH / 4
 		) {
@@ -261,6 +266,28 @@ export const movePointAdjust = (context, toX, toY, index) => {
 				isToAdjPresent = true;
 				toAdjIndex = i;
 				toAdjDirection = "right";
+			}
+		}
+
+		if (
+			bld < bdistance &&
+			bld < ldistance &&
+			bld < rdistance &&
+			pt.y >= bl.y &&
+			pt.x >= bl.x &&
+			bld <= privateConstants.WIDTH / 4
+		) {
+			if (
+				tl.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH
+			) {
+				toXAdj = tl.x + privateConstants.MARGIN;
+				toYAdj = bl.y + privateConstants.MARGIN;
+
+				bdistance = bld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
 			}
 		}
 	}
