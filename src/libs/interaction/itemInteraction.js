@@ -287,8 +287,6 @@ export const moveItemDemo = async function (index, toX, toY) {
 				latchingAdjacent,
 			});
 		} else {
-			// change toX & toY to top left of the overlapping item
-			// adjustedPt = movePointAdjust(this, toX, toY, index);
 			let latchingAdjacent = false;
 			if (
 				!isNaN(adjustedPt.overlappedItemIndex) ||
