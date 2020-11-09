@@ -65,12 +65,7 @@ export const printUnmergedFreeRects = (context, arr) => {
 			);
 			node.setAttribute("tabindex", "-1");
 
-			node.setAttribute(
-				"title",
-				`${arr[i].id}: ${Object.keys(arr[i]?.a || []).map(
-					(o) => arr[i].a[o].d.id
-				)}`
-			);
+			node.setAttribute("title", `${arr[i].id}`);
 			node.innerHTML = arr[i].id;
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
 			node.style.width = arr[i].rect.width + "px";
@@ -115,12 +110,7 @@ export const printMergedFreeRects = (context, arr) => {
 			);
 			node.setAttribute("tabindex", -1);
 
-			// node.setAttribute(
-			// 	"title",
-			// 	`${arr[i].id}: ${Object.keys(arr[i].o).map(
-			// 		(o) => arr[i].o[o]?.d?.id || ""
-			// 	)}`
-			// );
+			node.setAttribute("title", `${arr[i].id}`);
 
 			node.innerHTML = arr[i].id;
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
@@ -166,12 +156,7 @@ export const printResultStackRects = (context, arr) => {
 			);
 			node.setAttribute("tabindex", -1);
 
-			node.setAttribute(
-				"title",
-				`${arr[i].id}: ${Object.keys(arr[i].o).map(
-					(o) => arr[i].o[o]?.d?.id || ""
-				)}`
-			);
+			node.setAttribute("title", `${arr[i].id}`);
 
 			node.innerHTML = arr[i].id;
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
@@ -217,12 +202,7 @@ export const printStackRects = (context, arr) => {
 			);
 			node.setAttribute("tabindex", -1);
 
-			node.setAttribute(
-				"title",
-				`${arr[i].id}: ${Object.keys(arr[i].o).map(
-					(o) => arr[i].o[o]?.d?.id || ""
-				)}`
-			);
+			node.setAttribute("title", `${arr[i].id}`);
 
 			node.innerHTML = arr[i].id;
 			node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
@@ -252,10 +232,7 @@ export const printMergedTempRects = (context, obj) => {
 		);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute(
-			"title",
-			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
-		);
+		node.setAttribute("title", `${obj.id}`);
 
 		node.innerHTML = obj.id;
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
@@ -295,10 +272,7 @@ export const printStackTopRect = (context, obj) => {
 		node.setAttribute("id", `limber-grid-view-debug-stack-top-rect`);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute(
-			"title",
-			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
-		);
+		node.setAttribute("title", `${obj.id}`);
 
 		node.innerHTML = obj.id;
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
@@ -339,10 +313,7 @@ export const printStackTopAdjRect = (context, obj) => {
 		node.setAttribute("id", `limber-grid-view-debug-stack-top-adj-rect`);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute(
-			"title",
-			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
-		);
+		node.setAttribute("title", `${obj.id}`);
 
 		node.innerHTML = obj.id;
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
@@ -383,10 +354,7 @@ export const printMergedRect = (context, obj) => {
 		node.setAttribute("id", `limber-grid-view-debug-merged-rect`);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute(
-			"title",
-			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
-		);
+		node.setAttribute("title", `${obj.id}`);
 
 		node.innerHTML = obj.id;
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
@@ -427,10 +395,7 @@ export const printAdjRect = (context, obj) => {
 		node.setAttribute("id", `limber-grid-view-debug-adj-rect`);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute(
-			"title",
-			`${obj.id}: ${Object.keys(obj.o).map((o) => obj.o[o]?.d?.id || "")}`
-		);
+		node.setAttribute("title", `${obj.id}`);
 
 		node.innerHTML = obj.id;
 		node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
