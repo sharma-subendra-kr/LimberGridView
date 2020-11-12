@@ -51,6 +51,7 @@ import {
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
 import { setStatus } from "../../store/variables/status";
+import getTree from "../../store/variables/trees";
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
@@ -528,6 +529,9 @@ export const onItemContextMenu = function (event) {
 
 	setStatus(this, "moveDemo", undefined);
 	setStatus(this, "resizeDemo", undefined);
+
+	const it = getTree(this, "it");
+	it.emptyTree();
 
 	event.preventDefault();
 	event.stopPropagation();

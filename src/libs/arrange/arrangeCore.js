@@ -105,7 +105,7 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 };
 
 export const sweepLineTop = (area, items, it) => {
-	it.emptyTree();
+	it.reset();
 
 	const len = items.length;
 
@@ -128,7 +128,8 @@ export const sweepLineTop = (area, items, it) => {
 			{ low: items[i].y + items[i].height, high: area.bl.y },
 			null,
 			null,
-			sweepTopBottomHelper(items[i])
+			sweepTopBottomHelper(items[i]),
+			true
 		);
 
 		if (!res.length && items[i].y + items[i].height < resultPoint) {
@@ -140,7 +141,7 @@ export const sweepLineTop = (area, items, it) => {
 };
 
 export const sweepLineBottom = (area, items, it) => {
-	it.emptyTree();
+	it.reset();
 
 	const len = items.length;
 
@@ -162,7 +163,8 @@ export const sweepLineBottom = (area, items, it) => {
 			{ low: area.tl.y, high: items[i].y },
 			null,
 			null,
-			sweepTopBottomHelper(items[i])
+			sweepTopBottomHelper(items[i]),
+			true
 		);
 
 		if (!res.length && items[i].y > resultPoint) {
@@ -187,7 +189,7 @@ export const sweepLineForFreeSpace = (
 	const privateConstants = getPrivateConstants(context);
 
 	const it = getTree(context, "it");
-	it.emptyTree();
+	it.reset();
 
 	it.insert({
 		low: areaCo.tl.x,
@@ -256,7 +258,8 @@ export const isRectIdenticalOrInside = (it, obj, on) => {
 		},
 		null,
 		null,
-		identicalOrInsideHelper(obj.d.rect)
+		identicalOrInsideHelper(obj.d.rect),
+		true
 	);
 	const len = res?.length || 0;
 
@@ -329,7 +332,8 @@ export const filterMergedFreeRects = (mergedRectsIt) => {
 			obj.interval,
 			null,
 			null,
-			shouldFilterRect(obj.d.rect, obj.d)
+			shouldFilterRect(obj.d.rect, obj.d),
+			true
 		);
 
 		if (results?.length) {
@@ -352,7 +356,7 @@ export const mergeFreeRects = async (
 		shuffle(freeRects);
 		stack.setData(freeRects.sort(rectSortX));
 		it = getTree(context, "it");
-		it.emptyTree();
+		it.reset();
 	} else {
 		shuffle(garbageRects);
 		stack.setData(garbageRects.sort(rectSortX));
@@ -371,12 +375,12 @@ export const mergeFreeRects = async (
 			mergedArr[i].d.rect.y + mergedArr[i].d.rect.height;
 	}
 	stack.setData(mergedArr.sort(rectSortY));
-	it.emptyTree();
+	it.reset();
 	mergeFreeRectsCore(context, stack, it, idCount, "y");
 	filterMergedFreeRects(it);
 
 	const arr = it.getSortedData();
-	it.emptyTree();
+	it.reset();
 	shuffle(arr);
 	const len = arr.length;
 	for (let i = 0; i < len; i++) {
