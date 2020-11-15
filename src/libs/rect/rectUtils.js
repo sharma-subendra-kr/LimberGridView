@@ -92,6 +92,42 @@ export const doRectsOverlap = (rectA, rectB) => {
 	}
 };
 
+export const doRectsOnlyTouchHard = (rectA, rectB) => {
+	try {
+		if (
+			isNaN(rectA.x) ||
+			isNaN(rectA.y) ||
+			isNaN(rectA.width) ||
+			isNaN(rectA.height) ||
+			isNaN(rectB.x) ||
+			isNaN(rectB.y) ||
+			isNaN(rectB.width) ||
+			isNaN(rectB.height)
+		) {
+			return null;
+		}
+
+		const tlA = { x: rectA.x, y: rectA.y };
+		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
+		const tlB = { x: rectB.x, y: rectB.y };
+		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
+
+		if (tlA.x > brB.x || tlB.x > brA.x) {
+			return false;
+		}
+
+		if (tlA.y > brB.y || tlB.y > brA.y) {
+			return false;
+		}
+
+		if (doRectsOverlap(rectA, rectB) === false) return true;
+
+		return false;
+	} catch (e) {
+		return null;
+	}
+};
+
 export const doRectsOnlyTouch = (rectA, rectB) => {
 	try {
 		if (
@@ -117,7 +153,7 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
 		const blB = { x: rectB.x, y: rectB.y + rectB.height };
 
-		const THRESHOLD = 0.1;
+		const THRESHOLD = 1;
 
 		if (
 			Math.abs(tlA.x - brB.x) < THRESHOLD &&
@@ -508,13 +544,14 @@ export const areRectsAdjacent = (rectA, rectB) => {
 };
 
 export const merge = (rectACo, rectBCo) => {
-	const THRESHOLD = 0.1;
+	// const THRESHOLD = 0.1;
 	let res;
 	// check tl
 	if (
 		rectACo.tl.x >= rectBCo.bl.x &&
 		rectACo.tl.x < rectBCo.br.x &&
-		Math.abs(rectACo.tl.y - rectBCo.bl.y) < THRESHOLD
+		rectACo.tl.y >= rectBCo.bl.y
+		// Math.abs(rectACo.tl.y - rectBCo.bl.y) < THRESHOLD
 	) {
 		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
 		res = {
@@ -528,7 +565,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.tl.y >= rectBCo.tr.y &&
 		rectACo.tl.y < rectBCo.br.y &&
-		Math.abs(rectACo.tl.x - rectBCo.tr.x) < THRESHOLD
+		rectACo.tl.x >= rectBCo.tr.x
+		// Math.abs(rectACo.tl.x - rectBCo.tr.x) < THRESHOLD
 	) {
 		let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
 		res = {
@@ -543,7 +581,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.tr.x <= rectBCo.br.x &&
 		rectACo.tr.x > rectBCo.bl.x &&
-		Math.abs(rectACo.tr.y - rectBCo.bl.y) < THRESHOLD
+		rectACo.tr.y >= rectBCo.bl.y
+		// Math.abs(rectACo.tr.y - rectBCo.bl.y) < THRESHOLD
 	) {
 		let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
 		res = {
@@ -557,7 +596,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.tr.y >= rectBCo.tl.y &&
 		rectACo.tr.y < rectBCo.bl.y &&
-		Math.abs(rectACo.tr.x - rectBCo.tl.x) < THRESHOLD
+		rectACo.tr.x <= rectBCo.tl.x
+		// Math.abs(rectACo.tr.x - rectBCo.tl.x) < THRESHOLD
 	) {
 		let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
 		res = {
@@ -572,7 +612,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.br.x <= rectBCo.tr.x &&
 		rectACo.br.x > rectBCo.tl.x &&
-		Math.abs(rectACo.br.y - rectBCo.tl.y) < THRESHOLD
+		rectACo.br.y <= rectBCo.tl.y
+		// Math.abs(rectACo.br.y - rectBCo.tl.y) < THRESHOLD
 	) {
 		let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
 		res = {
@@ -586,7 +627,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.br.y <= rectBCo.bl.y &&
 		rectACo.br.y > rectBCo.tl.y &&
-		Math.abs(rectACo.br.x - rectBCo.tl.x) < THRESHOLD
+		rectACo.br.x <= rectBCo.tl.x
+		// Math.abs(rectACo.br.x - rectBCo.tl.x) < THRESHOLD
 	) {
 		let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		res = {
@@ -601,7 +643,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.bl.x >= rectBCo.tl.x &&
 		rectACo.bl.x < rectBCo.tr.x &&
-		Math.abs(rectACo.bl.y - rectBCo.tl.y) < THRESHOLD
+		rectACo.bl.y <= rectBCo.tl.y
+		// Math.abs(rectACo.bl.y - rectBCo.tl.y) < THRESHOLD
 	) {
 		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
 		res = {
@@ -615,7 +658,8 @@ export const merge = (rectACo, rectBCo) => {
 	if (
 		rectACo.bl.y <= rectBCo.br.y &&
 		rectACo.bl.y > rectBCo.tr.y &&
-		Math.abs(rectACo.bl.x - rectBCo.tr.x) < THRESHOLD
+		rectACo.bl.x >= rectBCo.tr.x
+		// Math.abs(rectACo.bl.x - rectBCo.tr.x) < THRESHOLD
 	) {
 		let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
 		res = {
