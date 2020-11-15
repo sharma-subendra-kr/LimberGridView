@@ -907,11 +907,11 @@ const getUserActionData = (context, event) => {
   let touchPosOnLimberGridItem;
   let X, Y;
 
-  if (event.which === 1) {
+  if (!event.touches) {
     radius = Math.sqrt(Math.pow(0 - event.offsetX, 2) + Math.pow(0 - event.offsetY, 2));
     X = event.offsetX;
     Y = event.offsetY;
-  } else if (event.which === 0) {
+  } else if (event.touches) {
     touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
     radius = Math.sqrt(Math.pow(0 - touchPosOnLimberGridItem.x, 2) + Math.pow(0 - touchPosOnLimberGridItem.y, 2));
     X = touchPosOnLimberGridItem.x;
@@ -1005,9 +1005,9 @@ const loadMoveState = (context, userActionData, event) => {
   e.$pseudoContainerItem.style.width = item.width + "px";
   e.$pseudoContainerItem.style.height = item.height + "px";
 
-  if (event.which === 1) {
+  if (!event.touches) {
     e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
-  } else if (event.which === 0) {
+  } else if (event.touches) {
     e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
   }
 
@@ -1032,9 +1032,9 @@ const loadOnMoveState = (context, userActionData, event, type) => {
     e.$limberGridViewMoveGuide.classList.remove("limber-grid-view-move-guide-active");
     e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-move-allow", "limber-grid-view-pseudo-container-item-move-disallow");
 
-    if (event.which === 1) {
+    if (!event.touches) {
       e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
-    } else if (event.which === 0) {
+    } else if (event.touches) {
       e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
     }
   } else if (type === "resize") {
@@ -1142,28 +1142,63 @@ const doRectsOnlyTouch = (rectA, rectB) => {
       x: rectA.x,
       y: rectA.y
     };
+    const trA = {
+      x: rectA.x + rectA.width,
+      y: rectA.y
+    };
     const brA = {
       x: rectA.x + rectA.width,
+      y: rectA.y + rectA.height
+    };
+    const blA = {
+      x: rectA.x,
       y: rectA.y + rectA.height
     };
     const tlB = {
       x: rectB.x,
       y: rectB.y
     };
+    const trB = {
+      x: rectB.x + rectB.width,
+      y: rectB.y
+    };
     const brB = {
       x: rectB.x + rectB.width,
       y: rectB.y + rectB.height
     };
+    const blB = {
+      x: rectB.x,
+      y: rectB.y + rectB.height
+    };
+    const THRESHOLD = 0.1;
 
-    if (tlA.x > brB.x || tlB.x > brA.x) {
-      return false;
-    }
+    if (Math.abs(tlA.x - brB.x) < THRESHOLD && (Math.abs(tlA.y - brB.y) < THRESHOLD || tlA.y < brB.y && blA.y > trB.y) // Math.abs(tlA.y - trB.y) < THRESHOLD
+    ) {
+        return true;
+      }
 
-    if (tlA.y > brB.y || tlB.y > brA.y) {
-      return false;
-    }
+    if (Math.abs(tlA.y - brB.y) < THRESHOLD && (Math.abs(tlA.x - brB.x) < THRESHOLD || tlA.x < brB.x && trA.x > blB.x) // Math.abs(tlA.x - blB.x) < THRESHOLD
+    ) {
+        return true;
+      }
 
-    if (doRectsOverlap(rectA, rectB) === false) return true;
+    if (Math.abs(tlB.x - brA.x) < THRESHOLD && (Math.abs(tlB.y - brA.y) < THRESHOLD || tlB.y < brA.y && blB.y > trA.y) // Math.abs(tlB.y - trA.y) < THRESHOLD
+    ) {
+        return true;
+      }
+
+    if (Math.abs(tlB.y - brA.y) < THRESHOLD && (Math.abs(tlB.x - brA.x) < THRESHOLD || tlB.x < brA.x && trB.x > blA.x) // Math.abs(tlA.x - blB.x) < THRESHOLD
+    ) {
+        return true;
+      } // if (tlA.x > brB.x || tlB.x > brA.x) {
+    // 	return false;
+    // }
+    // if (tlA.y > brB.y || tlB.y > brA.y) {
+    // 	return false;
+    // }
+    // if (doRectsOverlap(rectA, rectB) === false) return true;
+
+
     return false;
   } catch (e) {
     return null;
@@ -1547,9 +1582,10 @@ const areRectsAdjacent = (rectA, rectB) => {
   }
 };
 const merge = (rectACo, rectBCo) => {
+  const THRESHOLD = 0.1;
   let res; // check tl
 
-  if (rectACo.tl.x >= rectBCo.bl.x && rectACo.tl.x < rectBCo.br.x && rectACo.tl.y >= rectBCo.bl.y) {
+  if (rectACo.tl.x >= rectBCo.bl.x && rectACo.tl.x < rectBCo.br.x && Math.abs(rectACo.tl.y - rectBCo.bl.y) < THRESHOLD) {
     let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
     res = {
       tl: {
@@ -1571,7 +1607,7 @@ const merge = (rectACo, rectBCo) => {
     };
   }
 
-  if (rectACo.tl.y >= rectBCo.tr.y && rectACo.tl.y < rectBCo.br.y && rectACo.tl.x >= rectBCo.tr.x) {
+  if (rectACo.tl.y >= rectBCo.tr.y && rectACo.tl.y < rectBCo.br.y && Math.abs(rectACo.tl.x - rectBCo.tr.x) < THRESHOLD) {
     let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
     res = {
       tl: {
@@ -1594,7 +1630,7 @@ const merge = (rectACo, rectBCo) => {
   } // check tr
 
 
-  if (rectACo.tr.x <= rectBCo.br.x && rectACo.tr.x > rectBCo.bl.x && rectACo.tr.y >= rectBCo.bl.y) {
+  if (rectACo.tr.x <= rectBCo.br.x && rectACo.tr.x > rectBCo.bl.x && Math.abs(rectACo.tr.y - rectBCo.bl.y) < THRESHOLD) {
     let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
     res = {
       tl: {
@@ -1616,7 +1652,7 @@ const merge = (rectACo, rectBCo) => {
     };
   }
 
-  if (rectACo.tr.y >= rectBCo.tl.y && rectACo.tr.y < rectBCo.bl.y && rectACo.tr.x <= rectBCo.tl.x) {
+  if (rectACo.tr.y >= rectBCo.tl.y && rectACo.tr.y < rectBCo.bl.y && Math.abs(rectACo.tr.x - rectBCo.tl.x) < THRESHOLD) {
     let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
     res = {
       tl: {
@@ -1639,7 +1675,7 @@ const merge = (rectACo, rectBCo) => {
   } // check br
 
 
-  if (rectACo.br.x <= rectBCo.tr.x && rectACo.br.x > rectBCo.tl.x && rectACo.br.y <= rectBCo.tl.y) {
+  if (rectACo.br.x <= rectBCo.tr.x && rectACo.br.x > rectBCo.tl.x && Math.abs(rectACo.br.y - rectBCo.tl.y) < THRESHOLD) {
     let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
     res = {
       tl: {
@@ -1661,7 +1697,7 @@ const merge = (rectACo, rectBCo) => {
     };
   }
 
-  if (rectACo.br.y <= rectBCo.bl.y && rectACo.br.y > rectBCo.tl.y && rectACo.br.x <= rectBCo.tl.x) {
+  if (rectACo.br.y <= rectBCo.bl.y && rectACo.br.y > rectBCo.tl.y && Math.abs(rectACo.br.x - rectBCo.tl.x) < THRESHOLD) {
     let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
     res = {
       tl: {
@@ -1684,7 +1720,7 @@ const merge = (rectACo, rectBCo) => {
   } // check bl
 
 
-  if (rectACo.bl.x >= rectBCo.tl.x && rectACo.bl.x < rectBCo.tr.x && rectACo.bl.y <= rectBCo.tl.y) {
+  if (rectACo.bl.x >= rectBCo.tl.x && rectACo.bl.x < rectBCo.tr.x && Math.abs(rectACo.bl.y - rectBCo.tl.y) < THRESHOLD) {
     let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
     res = {
       tl: {
@@ -1706,7 +1742,7 @@ const merge = (rectACo, rectBCo) => {
     };
   }
 
-  if (rectACo.bl.y <= rectBCo.br.y && rectACo.bl.y > rectBCo.tr.y && rectACo.bl.x >= rectBCo.tr.x) {
+  if (rectACo.bl.y <= rectBCo.br.y && rectACo.bl.y > rectBCo.tr.y && Math.abs(rectACo.bl.x - rectBCo.tr.x) < THRESHOLD) {
     let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
     res = {
       tl: {
@@ -2001,7 +2037,6 @@ const resetDemoUIChanges = context => {
 
   for (var i = 0; i < len; i++) {
     e.$limberGridViewItems[i].style.transform = "translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-    e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
   }
 };
 const movePointAdjust = (context, toX, toY, index) => {
@@ -2019,9 +2054,10 @@ const movePointAdjust = (context, toX, toY, index) => {
     y: toY
   };
   let inside;
-  let tl, tr, tld, trd;
+  let tl, tr, bl, tld, trd, bld;
   let ldistance = Number.MAX_SAFE_INTEGER;
   let rdistance = Number.MAX_SAFE_INTEGER;
+  let bdistance = Number.MAX_SAFE_INTEGER;
   let toXAdj, toYAdj;
   let isToAdjPresent = false;
   let toAdjIndex;
@@ -2051,10 +2087,15 @@ const movePointAdjust = (context, toX, toY, index) => {
       x: temp.x + temp.width,
       y: temp.y
     };
+    bl = {
+      x: temp.x,
+      y: temp.y + temp.height
+    };
     tld = getDistanceBetnPts(tl, pt);
     trd = getDistanceBetnPts(tr, pt);
+    bld = getDistanceBetnPts(bl, pt);
 
-    if (tld < ldistance && tld < rdistance && pt.x < tl.x && tld <= privateConstants.WIDTH / 4) {
+    if (tld < ldistance && tld < rdistance && tld < bdistance && pt.x < tl.x && tld <= privateConstants.WIDTH / 4) {
       if (tl.x - privateConstants.MARGIN - pd[index].width >= privateConstants.MARGIN) {
         toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
         toYAdj = tl.y + privateConstants.MARGIN;
@@ -2065,7 +2106,7 @@ const movePointAdjust = (context, toX, toY, index) => {
       }
     }
 
-    if (trd < rdistance && trd < ldistance && pt.x > tr.x && trd <= privateConstants.WIDTH / 4) {
+    if (trd < rdistance && trd < ldistance && trd < bdistance && pt.x > tr.x && trd <= privateConstants.WIDTH / 4) {
       if (tr.x + privateConstants.MARGIN + pd[index].width < privateConstants.WIDTH) {
         toXAdj = tr.x + privateConstants.MARGIN;
         toYAdj = tr.y + privateConstants.MARGIN;
@@ -2073,6 +2114,17 @@ const movePointAdjust = (context, toX, toY, index) => {
         isToAdjPresent = true;
         toAdjIndex = i;
         toAdjDirection = "right";
+      }
+    }
+
+    if (bld < bdistance && bld < ldistance && bld < rdistance && pt.y >= bl.y && pt.x >= bl.x && bld <= privateConstants.WIDTH / 4) {
+      if (tl.x + privateConstants.MARGIN + pd[index].width < privateConstants.WIDTH) {
+        toXAdj = tl.x + privateConstants.MARGIN;
+        toYAdj = bl.y + privateConstants.MARGIN;
+        bdistance = bld;
+        isToAdjPresent = true;
+        toAdjIndex = i;
+        toAdjDirection = "bottom";
       }
     }
   }
@@ -2118,12 +2170,17 @@ const resizeSizeAdjust = (context, width, height, index) => {
     x: pd[index].x,
     y: pd[index].y + height
   };
-  let bl, br, blptTobr, brptTobl;
+  let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
   let ldistance = Number.MAX_SAFE_INTEGER;
   let rdistance = Number.MAX_SAFE_INTEGER;
+  let tdistance = Number.MAX_SAFE_INTEGER;
+  let bdistance = Number.MAX_SAFE_INTEGER;
   let isToAdjPresent = false;
   let toAdjIndex;
-  let toAdjDirection;
+  let hToAdjDirection;
+  let wToAdjDirection;
+  let hLatchPoint;
+  let wLatchPoint;
   let latchPoint;
 
   for (let i = 0; i < len; i++) {
@@ -2144,16 +2201,22 @@ const resizeSizeAdjust = (context, width, height, index) => {
       x: temp.x + temp.width,
       y: temp.y + temp.height
     };
+    tr = {
+      x: temp.x + temp.width,
+      y: temp.y
+    };
     brptTobl = getDistanceBetnPts(bl, brpt);
     blptTobr = getDistanceBetnPts(br, blpt);
+    trptTobr = getDistanceBetnPts(br, trpt);
+    brptTotr = getDistanceBetnPts(tr, brpt);
 
     if (brptTobl < rdistance && brptTobl < ldistance && brpt.x < bl.x && Math.abs(brpt.y - bl.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
       height = bl.y - trpt.y;
       rdistance = brptTobl;
       isToAdjPresent = true;
       toAdjIndex = i;
-      toAdjDirection = "right";
-      latchPoint = bl;
+      hToAdjDirection = "right";
+      hLatchPoint = bl;
     }
 
     if (blptTobr < ldistance && blptTobr < rdistance && blpt.x > br.x && Math.abs(blpt.y - br.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
@@ -2161,16 +2224,47 @@ const resizeSizeAdjust = (context, width, height, index) => {
       ldistance = blptTobr;
       isToAdjPresent = true;
       toAdjIndex = i;
-      toAdjDirection = "left";
-      latchPoint = br;
+      hToAdjDirection = "left";
+      hLatchPoint = br;
     }
+
+    if (trptTobr < tdistance && trptTobr < bdistance && trptTobr <= privateConstants.WIDTH / 4 && Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10) {
+      width = br.x - tlpt.x;
+      tdistance = trptTobr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "top";
+      wLatchPoint = br;
+    }
+
+    if (brptTotr < bdistance && brptTotr < tdistance && brptTotr <= privateConstants.WIDTH / 4 && Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10) {
+      width = tr.x - blpt.x;
+      bdistance = brptTotr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "bottom";
+      wLatchPoint = tr;
+    }
+  }
+
+  if (hLatchPoint && wLatchPoint) {
+    latchPoint = {
+      x: wLatchPoint.x,
+      y: hLatchPoint.y
+    };
+  } else if (hLatchPoint) {
+    latchPoint = hLatchPoint;
+  } else if (wLatchPoint) {
+    latchPoint = wLatchPoint;
   }
 
   return {
     height,
+    width,
     isToAdjPresent,
     toAdjIndex,
-    toAdjDirection,
+    hToAdjDirection,
+    wToAdjDirection,
     latchPoint
   };
 };
@@ -2206,6 +2300,7 @@ Written by Subendra Kumar Sharma.
 
 const getMinMaxXY = (context, affectedItems, resizedRightX, resizedBottomY, toY, movedBottomY) => {
   const pd = getPositionData(context);
+  const mpd = getModifiedPositionData(context);
   const privateConstants = constants_privateConstants(context);
   let minY = Number.MAX_SAFE_INTEGER;
   let maxY = 0;
@@ -2234,12 +2329,12 @@ const getMinMaxXY = (context, affectedItems, resizedRightX, resizedBottomY, toY,
   if (resizedBottomY > maxY) maxY = resizedBottomY;
   if (resizedRightX > maxX) maxX = resizedRightX;
   if (toY < minY) minY = toY;
-  if (movedBottomY > maxY) maxY = movedBottomY; // Not going to the release-1.0.0-beta.2 because it creates some bugs:
-  // final point to the moved item is not the same as what specified by dragging
-  // if (maxY - minY > privateConstants.WIDTH) {
-  // 	minY = mpd[affectedItems[len - 1]].y;
-  // 	maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
-  // }
+  if (movedBottomY > maxY) maxY = movedBottomY;
+
+  if (maxY - minY > privateConstants.HEIGHT * 1.5) {
+    minY = mpd[affectedItems[len - 1]].y;
+    maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
+  }
 
   return {
     minX: minX - privateConstants.MARGIN,
@@ -2329,9 +2424,12 @@ const getItemsInWorkSpace = (context, workSpaceRect, getIndices = false) => {
   const len = mpd.length;
   const itemsInWorkSpace = new Array(len);
   let count = 0;
+  let item;
 
   for (let i = 0; i < len; i++) {
-    if (doRectsOverlap(workSpaceRect, getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]))) {
+    item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
+
+    if (doRectsOverlap(workSpaceRect, item) && !doRectsOnlyTouch(workSpaceRect, item)) {
       if (!getIndices) {
         itemsInWorkSpace[count++] = mpd[i];
       } else {
@@ -2354,9 +2452,12 @@ const getItemsBelowBottomWorkSpace = (context, workSpaceRect, getIndices = false
   const len = mpd.length;
   const items = new Array(len);
   let count = 0;
+  let item;
 
   for (let i = 0; i < len; i++) {
-    if (workSpaceRect.bl.y <= getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]).y) {
+    item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
+
+    if (workSpaceRect.bl.y <= item.y || Math.abs(workSpaceRect.bl.y - item.y) < 0.1) {
       if (!getIndices) {
         items[count++] = mpd[i];
       } else {
@@ -2866,7 +2967,7 @@ const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
   return res;
 };
 const sweepLineTop = (area, items, it) => {
-  it.emptyTree();
+  it.reset();
   const len = items.length;
 
   for (let i = 0; i < len; i++) {
@@ -2887,7 +2988,7 @@ const sweepLineTop = (area, items, it) => {
     res = it.findAll({
       low: items[i].y + items[i].height,
       high: area.bl.y
-    }, null, null, sweepTopBottomHelper(items[i]));
+    }, null, null, sweepTopBottomHelper(items[i]), true);
 
     if (!res.length && items[i].y + items[i].height < resultPoint) {
       resultPoint = items[i].y + items[i].height;
@@ -2897,7 +2998,7 @@ const sweepLineTop = (area, items, it) => {
   return resultPoint;
 };
 const sweepLineBottom = (area, items, it) => {
-  it.emptyTree();
+  it.reset();
   const len = items.length;
 
   for (let i = 0; i < len; i++) {
@@ -2918,7 +3019,7 @@ const sweepLineBottom = (area, items, it) => {
     res = it.findAll({
       low: area.tl.y,
       high: items[i].y
-    }, null, null, sweepTopBottomHelper(items[i]));
+    }, null, null, sweepTopBottomHelper(items[i]), true);
 
     if (!res.length && items[i].y > resultPoint) {
       resultPoint = items[i].y;
@@ -2933,7 +3034,7 @@ const sweepLineForFreeSpace = (context, area, areaCo, items, idCount) => {
   // items: items in area
   const privateConstants = constants_privateConstants(context);
   const it = trees(context, "it");
-  it.emptyTree();
+  it.reset();
   it.insert({
     low: areaCo.tl.x,
     high: areaCo.tr.x,
@@ -2997,7 +3098,7 @@ const isRectIdenticalOrInside = (it, obj, on) => {
   const res = it.findAll({
     low: obj.d.rect[axis],
     high: obj.d.rect[axis] + obj.d.rect[distance]
-  }, null, null, identicalOrInsideHelper(obj.d.rect));
+  }, null, null, identicalOrInsideHelper(obj.d.rect), true);
   const len = (res === null || res === void 0 ? void 0 : res.length) || 0;
 
   if (!len) {
@@ -3063,7 +3164,7 @@ const filterMergedFreeRects = mergedRectsIt => {
 
   for (let i = 0; i < len; i++) {
     const obj = arr[i];
-    const results = mergedRectsIt.findAll(obj.interval, null, null, shouldFilterRect(obj.d.rect, obj.d));
+    const results = mergedRectsIt.findAll(obj.interval, null, null, shouldFilterRect(obj.d.rect, obj.d), true);
 
     if (results === null || results === void 0 ? void 0 : results.length) {
       mergedRectsIt.remove(obj.interval, obj.d);
@@ -3078,7 +3179,7 @@ const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
     shuffle(freeRects);
     stack.setData(freeRects.sort(rectSortX));
     it = trees(context, "it");
-    it.emptyTree();
+    it.reset();
   } else {
     shuffle(garbageRects);
     stack.setData(garbageRects.sort(rectSortX));
@@ -3097,11 +3198,11 @@ const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
   }
 
   stack.setData(mergedArr.sort(rectSortY));
-  it.emptyTree();
+  it.reset();
   mergeFreeRectsCore(context, stack, it, idCount, "y");
   filterMergedFreeRects(it);
   const arr = it.getSortedData();
-  it.emptyTree();
+  it.reset();
   shuffle(arr);
   const len = arr.length;
 
@@ -3223,6 +3324,74 @@ const arrange = async (context, itemsToArrange, mergedRectsIt, topWorkSpace, bot
     itemsInBottomWorkSpace
   };
 };
+// CONCATENATED MODULE: ./src/libs/utils/utils.js
+/*
+
+LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+
+Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+const emptyObject = function (obj) {
+  const keys = Object.keys(obj);
+  const length = keys.length;
+
+  for (let i = 0; i < length; i++) {
+    delete obj[keys[i]];
+  }
+};
+const isMobile = function (context) {
+  const isMobileFunction = context.options.isMobileCheck;
+
+  if (isMobileFunction) {
+    return isMobileFunction();
+  }
+
+  return window.matchMedia("only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)").matches || window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)").matches;
+};
+const fixTo = (num, to = 6) => {
+  return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
+};
+const getRandomString = (len = 22) => {
+  const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
+  const arr = new Array(len);
+
+  for (let i = 0; i < len; i++) {
+    arr[i] = alpNum[Math.floor(Math.random() * 36)];
+  }
+
+  return arr.join("");
+};
+const utils_getItemDimenWithMargin = (MARGIN, item) => {
+  return {
+    x: item.x - MARGIN,
+    y: item.y - MARGIN,
+    width: item.width + MARGIN * 2,
+    height: item.height + MARGIN * 2
+  };
+};
+const sleep = ms => {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+  });
+};
 // CONCATENATED MODULE: ./src/libs/arrange/arrange.js
 /*
 
@@ -3252,8 +3421,8 @@ Written by Subendra Kumar Sharma.
 
 
 
+
  // import {
-// 	sleep,
 // 	printUnmergedFreeRects,
 // 	printMergedFreeRects,
 // 	printResultStackRects,
@@ -3348,13 +3517,16 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
   let workSpaceResizeCount = 0;
 
   while (arrangedCount !== iToALen) {
+    await sleep(0);
     const {
       it: freeRectsItY
     } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
     const freeRectsArr = freeRectsItY.getSortedData();
+    await sleep(0);
     const {
       mergedRectsIt
     } = await mergeFreeRects(context, freeRectsArr, idCount);
+    await sleep(0);
     const {
       arranged: _arranged,
       itemsInBottomWorkSpace: _itemsInBottomWorkSpace
@@ -3523,7 +3695,7 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
   const {
     topWorkSpaceCo: _topWorkSpaceCo,
     bottomWorkSpaceCo: _bottomWorkSpaceCo
-  } = getTopBottomWS(context, _workSpaceRectCo, minX - privateConstants.MARGIN, maxX + privateConstants.MARGIN);
+  } = getTopBottomWS(context, _workSpaceRectCo, minX, maxX);
 
   const _shrinkRes = shrinkTopBottomWS(context, _topWorkSpaceCo);
 
@@ -3556,6 +3728,7 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
     let freeRectsItY;
 
     if (passCount === 0) {
+      await sleep(0);
       const {
         it: _freeRectsItY
       } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
@@ -3571,6 +3744,7 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
       passCount++;
       continue;
     } else if (passCount >= 2) {
+      await sleep(0);
       const {
         it: _freeRectsItY
       } = sweepLineForFreeSpace(context, _combinedWorkSpaceRect, _combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
@@ -3578,9 +3752,11 @@ const arrangeResize = async (context, affectedItems, resizedBottomY, resizedRigh
     }
 
     const freeRectsArr = freeRectsItY.getSortedData();
+    await sleep(0);
     const {
       mergedRectsIt
     } = await mergeFreeRects(context, freeRectsArr, idCount);
+    await sleep(0);
     const {
       arranged: _arranged
     } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), mergedRectsIt, getRectObjectFromCo(topWorkSpaceCo), getRectObjectFromCo(bottomWorkSpaceCo), passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo, idCount);
@@ -3675,13 +3851,16 @@ const arrangeFromHeight = async (context, itemsToArrange, height) => {
   let workSpaceResizeCount = 0;
 
   while (arrangedCount !== iToALen) {
+    await sleep(0);
     const {
       it: freeRectsItY
     } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, combinedWorkSpaceRectCo, itemsInCombinedWorkSpace, idCount);
     const freeRectsArr = freeRectsItY.getSortedData();
+    await sleep(0);
     const {
       mergedRectsIt
     } = await mergeFreeRects(context, freeRectsArr, idCount);
+    await sleep(0);
     const {
       arranged: _arranged
     } = await arrange(context, itemsToArrange.filter(id => !arranged[id]), mergedRectsIt, getRectObjectFromCo(topWorkSpaceCo), undefined, combinedWorkSpaceRectCo, idCount);
@@ -3830,11 +4009,11 @@ const resizeItem = async function (index, width, height) {
 
   if (publicConstants.LATCH_MOVED_ITEM) {
     const adjustedSize = getStatus(this, "resizeDemo");
-    height = adjustedSize.height;
+    height = (adjustedSize === null || adjustedSize === void 0 ? void 0 : adjustedSize.height) || height;
+    width = (adjustedSize === null || adjustedSize === void 0 ? void 0 : adjustedSize.width) || width;
   }
 
   resizeItemInitialChecks(this, index, width, height);
-  resetDemoUIChanges(this);
   setModifiedPositionData(this, pd);
   const mpd = getModifiedPositionData(this);
   mpd[index].width = width;
@@ -3883,6 +4062,7 @@ const resizeItemDemo = async function (index, width, height) {
     adjustedSize = resizeSizeAdjust(this, width, height, index);
     setStatus(this, "resizeDemo", adjustedSize);
     height = adjustedSize.height;
+    width = adjustedSize.width;
   }
 
   if ((_adjustedSize = adjustedSize) === null || _adjustedSize === void 0 ? void 0 : _adjustedSize.isToAdjPresent) {
@@ -3948,7 +4128,6 @@ const moveItem = async function (index, toX, toY) {
   }
 
   moveItemInitialChecks(this, index, toX, toY);
-  resetDemoUIChanges(this);
   setModifiedPositionData(this, pd);
   const mpd = getModifiedPositionData(this);
   mpd[index].x = toX;
@@ -3962,7 +4141,6 @@ const moveItem = async function (index, toX, toY) {
   const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
   const arranged = await arrangeMove(this, affectedItems, toY, toY + pd[index].height);
   setPositionData(this, mpd);
-  e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
   e.$limberGridViewItems[index].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
 
   if (!publicConstants.ANIMATE_MOVED_ITEM) {
@@ -4020,8 +4198,6 @@ const moveItemDemo = async function (index, toX, toY) {
         latchingAdjacent
       });
     } else {
-      // change toX & toY to top left of the overlapping item
-      // adjustedPt = movePointAdjust(this, toX, toY, index);
       let latchingAdjacent = false;
 
       if (!isNaN(adjustedPt.overlappedItemIndex) || !adjustedPt.isToAdjPresent) {
@@ -4080,7 +4256,6 @@ const moveItemDemo = async function (index, toX, toY) {
   };
   const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
   const arranged = await arrangeMove(this, affectedItems, toY, toY + pd[index].height, true);
-  e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
   const arrangedArr = Object.keys(arranged);
   const len = arrangedArr.length;
 
@@ -4191,16 +4366,13 @@ Written by Subendra Kumar Sharma.
 
 
 
+
 const onItemMouseDown = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
   const pd = getPositionData(this);
   const iiv = getItemInteractionVars(this);
   const bf = getBindedFunctions(this);
-
-  if (event.which !== 1) {
-    return;
-  }
 
   const _userActionData = getUserActionData(this, event);
 
@@ -4241,11 +4413,6 @@ const onItemTouchStart = function (event) {
   const bf = getBindedFunctions(this);
 
   if (event.touches.length !== 1) {
-    onItemTouchContextMenu.call(this, event);
-    return;
-  }
-
-  if (event.which !== 0) {
     onItemTouchContextMenu.call(this, event);
     return;
   }
@@ -4524,6 +4691,8 @@ const onItemContextMenu = function (event) {
   iiv.userActionData = {};
   setStatus(this, "moveDemo", undefined);
   setStatus(this, "resizeDemo", undefined);
+  const it = trees(this, "it");
+  it.emptyTree();
   event.preventDefault();
   event.stopPropagation();
 };
@@ -4632,69 +4801,6 @@ const unloadInitState = context => {
   e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
   e.$limberGridViewHeightAdjustGuide.classList.remove("limber-grid-view-height-adjust-guide-active");
   e.$limberGridViewTouchHoldGuide.classList.remove("limber-grid-view-touch-hold-guide-active");
-};
-// CONCATENATED MODULE: ./src/libs/utils/utils.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-const emptyObject = function (obj) {
-  const keys = Object.keys(obj);
-  const length = keys.length;
-
-  for (let i = 0; i < length; i++) {
-    delete obj[keys[i]];
-  }
-};
-const isMobile = function (context) {
-  const isMobileFunction = context.options.isMobileCheck;
-
-  if (isMobileFunction) {
-    return isMobileFunction();
-  }
-
-  return window.matchMedia("only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)").matches || window.matchMedia("only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)").matches;
-};
-const fixTo = (num, to = 6) => {
-  return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
-};
-const getRandomString = (len = 22) => {
-  const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
-  const arr = new Array(len);
-
-  for (let i = 0; i < len; i++) {
-    arr[i] = alpNum[Math.floor(Math.random() * 36)];
-  }
-
-  return arr.join("");
-};
-const utils_getItemDimenWithMargin = (MARGIN, item) => {
-  return {
-    x: item.x - MARGIN,
-    y: item.y - MARGIN,
-    width: item.width + MARGIN * 2,
-    height: item.height + MARGIN * 2
-  };
 };
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/initializers.js
 /*
@@ -5222,10 +5328,6 @@ const onDeskMouseDown = function (event) {
     return;
   }
 
-  if (event.which !== 1) {
-    return;
-  }
-
   dkiv.mouseDownCancel = false;
   dkiv.mouseDownTimerComplete = false;
   clearTimeout(dkiv.longPressCheck);
@@ -5245,10 +5347,6 @@ const onDeskTouchStart = function (event) {
   }
 
   if (event.touches.length !== 1) {
-    return;
-  }
-
-  if (event.which !== 0) {
     return;
   }
 
@@ -6308,7 +6406,7 @@ LimberGridView.prototype.initializeStore = function () {
         AUTO_SCROLL_DISTANCE: 50,
         AUTO_SCROLL_POINT: 50,
         MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
-        MOUSE_DOWN_TIME: 500,
+        MOUSE_DOWN_TIME: 300,
         TOUCH_HOLD_TIME: 300,
         DEMO_WAIT_TIME: 500,
         WINDOW_RESIZE_WAIT_TIME: 1000,
