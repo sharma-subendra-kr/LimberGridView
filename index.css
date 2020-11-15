@@ -1,4 +1,4 @@
-.footer{background-color:#172030;color:white;overflow:hidden;font-size:10px;padding:3px 10px}.footer a{color:white}.footer b{text-decoration:underline}
+.footer{background-color:#172030;color:white;overflow:hidden;font-size:10px;padding:3px 10px;position:fixed;top:calc(100% - 20px);left:0}.footer a{color:white}.footer b{text-decoration:underline}.footer:hover{top:initial;bottom:0}
 
 .header{display:-ms-flexbox;display:flex;height:50px;background-color:#24292e;color:#f9ffff;padding:7px}.header .header-banner{width:270px}.header .star-on-github{text-align:center;-ms-flex:1;flex:1;color:white;font-size:30px}.header .star-on-github span{font-size:30px;margin:0 5px}.header .star-on-github svg{color:white}.header .view-example-code{color:white;font-size:12px}.header .view-example-code span{margin:0 5px}
 
