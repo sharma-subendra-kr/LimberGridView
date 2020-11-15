@@ -1514,6 +1514,8 @@ const verticalSubtract = (rectA, rectB) => {
 };
 
 const isValidRectCoForm = function (rect) {
+  const THRESHOLD = 0.1;
+
   try {
     let top, right, bottom, left;
     top = rect.tr.x - rect.tl.x;
@@ -1521,7 +1523,7 @@ const isValidRectCoForm = function (rect) {
     bottom = rect.br.x - rect.bl.x;
     left = rect.bl.y - rect.tl.y;
 
-    if (top <= 0 || right <= 0 || bottom <= 0 || left <= 0) {
+    if (top < THRESHOLD || right < THRESHOLD || bottom < THRESHOLD || left < THRESHOLD) {
       return false;
     }
 
@@ -1803,7 +1805,7 @@ const mergeRects = (rectA, rectB, oCoForm) => {
     if (oCoForm) {
       return result;
     } else {
-      return result.map(o => getRectObjectFromCo(o));
+      return result.map(o => getRectObjectFromCo(o)).filter(o => o);
     }
   }
 
