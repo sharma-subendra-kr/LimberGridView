@@ -34,6 +34,7 @@ import {
 	isRectInside,
 	getRectObjectFromCo,
 	doRectsOnlyTouch,
+	doRectsOnlyTouchHard,
 	isPointInsideRect,
 	doesPointTouchRect,
 	areRectsIdentical,
@@ -364,7 +365,7 @@ export const isMergable = function (rect) {
 	return (node, interval, d) => {
 		if (
 			doRectsOverlap(rect, node.d.rect) ||
-			doRectsOnlyTouch(rect, node.d.rect)
+			doRectsOnlyTouchHard(rect, node.d.rect)
 		) {
 			return true;
 		}

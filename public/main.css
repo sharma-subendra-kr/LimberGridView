@@ -150,7 +150,8 @@ body {
 }
 
 #limber-grid-view-implement .limber-grid-view-container .limber-grid-view {
-	padding: 20px;
+	/*padding: 20px;*/
+	padding: 0px;
 	border: solid 1px #c0c0c0;
 	width: 100%;
 }
