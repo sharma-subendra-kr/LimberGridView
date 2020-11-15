@@ -1207,7 +1207,7 @@ const doRectsOnlyTouch = (rectA, rectB) => {
       x: rectB.x,
       y: rectB.y + rectB.height
     };
-    const THRESHOLD = 0.1;
+    const THRESHOLD = 1;
 
     if (Math.abs(tlA.x - brB.x) < THRESHOLD && (Math.abs(tlA.y - brB.y) < THRESHOLD || tlA.y < brB.y && blA.y > trB.y) // Math.abs(tlA.y - trB.y) < THRESHOLD
     ) {
@@ -1619,7 +1619,7 @@ const areRectsAdjacent = (rectA, rectB) => {
   }
 };
 const merge = (rectACo, rectBCo) => {
-  const THRESHOLD = 0.1;
+  // const THRESHOLD = 0.1;
   let res; // check tl
 
   if (rectACo.tl.x >= rectBCo.bl.x && rectACo.tl.x < rectBCo.br.x && rectACo.tl.y >= rectBCo.bl.y // Math.abs(rectACo.tl.y - rectBCo.bl.y) < THRESHOLD
