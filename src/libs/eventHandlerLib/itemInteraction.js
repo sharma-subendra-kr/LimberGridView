@@ -50,6 +50,8 @@ import {
 } from "../interaction/itemInteraction";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
+import { setStatus } from "../../store/variables/status";
+import getTree from "../../store/variables/trees";
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
@@ -58,10 +60,6 @@ export const onItemMouseDown = function (event) {
 
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
-
-	if (event.which !== 1) {
-		return;
-	}
 
 	const _userActionData = getUserActionData(this, event);
 
@@ -114,11 +112,6 @@ export const onItemTouchStart = function (event) {
 	const bf = getBindedFunctions(this);
 
 	if (event.touches.length !== 1) {
-		onItemTouchContextMenu.call(this, event);
-		return;
-	}
-
-	if (event.which !== 0) {
 		onItemTouchContextMenu.call(this, event);
 		return;
 	}
@@ -533,6 +526,12 @@ export const onItemContextMenu = function (event) {
 	document.removeEventListener("touchcancel", bf.onItemTouchCancel);
 
 	iiv.userActionData = {};
+
+	setStatus(this, "moveDemo", undefined);
+	setStatus(this, "resizeDemo", undefined);
+
+	const it = getTree(this, "it");
+	it.emptyTree();
 
 	event.preventDefault();
 	event.stopPropagation();

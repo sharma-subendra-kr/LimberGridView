@@ -1,5 +1,44 @@
 window.onload = function () {
 	main();
+
+	var animatedBox = document.getElementsByClassName("animated-box")[0];
+	var start;
+	var pos = -50;
+	var pxpms = 0.01;
+	function step(timestamp) {
+		if (start === undefined) {
+			start = timestamp;
+		}
+		var elapsed = timestamp - start;
+
+		animatedBox.style.transform =
+			"translateX(" + (pos + pxpms * elapsed) + "px)";
+		pos = pos + pxpms * elapsed;
+		// console.log("0.5 * elapsed", 0.5 * elapsed);
+		// console.log("pos", pos);
+		if (pos >= 300) {
+			pos = -50;
+			start = timestamp;
+		}
+
+		window.requestAnimationFrame(step);
+	}
+
+	window.requestAnimationFrame(step);
+
+	/*
+	setTimeout(function () {
+		var p0 = performance.now();
+		var n = 100000000;
+		var arr = new Array(n);
+		for (let i = 0; i < n; i++) {
+			arr[i] = i;
+		}
+		var p1 = performance.now();
+
+		console.log("done!", p1 - p0);
+	}, 5000);
+	*/
 };
 
 var main = function () {
@@ -433,6 +472,7 @@ var main = function () {
 		// 	// WIDTH: 999,
 		// 	// MARGIN: 3.830521472392638,
 		// },
+		publicConstants: { useVerticalArrOnResize: true },
 		positionData: [
 			// set 1
 			// {
@@ -834,6 +874,46 @@ var main = function () {
 				width: 376.932515,
 				height: 266.993865,
 			},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
+			// {},
 		],
 
 		// initialGridData : {
@@ -997,28 +1077,3 @@ var main = function () {
 		el.scrollTop += 100;
 	};
 };
-
-// gridHeight : 624,
-// gridWidth : 985,
-
-// {x : 505, y: 0,  height : 200, width : 200},
-// {x : 0, y: 0, height : 400, width : 500},
-// {x : 505, y: 205,  height : 195, width : 200},
-// {x : 0, y: 405,  height : 200, width : 200},
-// {x : 710, y: 0,  height : 400, width : 280},
-// {x : 410, y: 405,  height : 400 - 200, width : 580 - 10},
-// {x : 0, y: 1215 + 150,  height : 600, width : 300},
-// {x : 205, y: 405,  height : 200, width : 200},
-// {x : 405, y: 810,  height : 400 + 100, width : 580},
-// {x : 0, y: 610,  height : 600, width : 400},
-
-// {height : 400, width : 500},
-// {height : 200, width : 200},
-// {height : 195, width : 200},
-// {height : 400, width : 280},
-// {height : 200, width : 200},
-// {height : 200, width : 200},
-// {height : 400 - 200, width : 580 - 10},
-// {height : 600, width : 400},
-// {height : 400 + 100, width : 580},
-// {height : 600, width : 300},

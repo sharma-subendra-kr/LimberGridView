@@ -35,6 +35,7 @@ import {
 	getModifiedPositionData,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
+import { getDistanceBetnPts } from "../geometry/geometry";
 
 export const getResizeAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
@@ -48,17 +49,18 @@ export const getResizeAffectedItems = (context, item, index) => {
 	const _item = { ...item };
 	_item.x -= privateConstants.MARGIN;
 	_item.y -= privateConstants.MARGIN;
-	_item.width += privateConstants.MARGIN;
-	_item.height += privateConstants.MARGIN;
+	_item.width += privateConstants.MARGIN * 2;
+	_item.height += privateConstants.MARGIN * 2;
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN;
-		temp.height = pd[i].height + privateConstants.MARGIN;
+		temp.width = pd[i].width + privateConstants.MARGIN * 2;
+		temp.height = pd[i].height + privateConstants.MARGIN * 2;
 		if (
-			(doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
+			// (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
+			doRectsOverlap(temp, _item) &&
 			i !== index
 		) {
 			affectedArr[count++] = i;
@@ -67,13 +69,10 @@ export const getResizeAffectedItems = (context, item, index) => {
 		}
 	}
 
-	const result = new Array(count + 1);
-	for (let i = 0; i < count; i++) {
-		result[i] = affectedArr[i];
-	}
-	result[count] = index;
+	affectedArr[count++] = index;
+	affectedArr.length = count;
 
-	return result;
+	return affectedArr;
 };
 
 export const getMoveAffectedItems = (context, item, index) => {
@@ -88,16 +87,17 @@ export const getMoveAffectedItems = (context, item, index) => {
 	const _item = { ...item };
 	_item.x -= privateConstants.MARGIN;
 	_item.y -= privateConstants.MARGIN;
-	_item.width += privateConstants.MARGIN;
-	_item.height += privateConstants.MARGIN;
+	_item.width += privateConstants.MARGIN * 2;
+	_item.height += privateConstants.MARGIN * 2;
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
 
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN;
-		temp.height = pd[i].height + privateConstants.MARGIN;
-		if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+		temp.width = pd[i].width + privateConstants.MARGIN * 2;
+		temp.height = pd[i].height + privateConstants.MARGIN * 2;
+		// if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
+		if (doRectsOverlap(temp, _item)) {
 			if (i !== index) {
 				affectedArr[count++] = i;
 				mpd[i].x = undefined;
@@ -106,13 +106,10 @@ export const getMoveAffectedItems = (context, item, index) => {
 		}
 	}
 
-	const result = new Array(count + 1);
-	for (let i = 0; i < count; i++) {
-		result[i] = affectedArr[i];
-	}
-	result[count] = index;
+	affectedArr[count++] = index;
+	affectedArr.length = count;
 
-	return result;
+	return affectedArr;
 };
 
 export const resizeItemInitialChecks = (context, index, width, height) => {
@@ -139,6 +136,10 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 	) {
 		// very small. TO DO: let the developers decide the smallest item size but can't be less than 150
 		throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
+	}
+
+	if (height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT) {
+		throw "Height cannot be greater than height of container.";
 	}
 
 	return true;
@@ -181,11 +182,10 @@ export const resetDemoUIChanges = (context) => {
 	for (var i = 0; i < len; i++) {
 		e.$limberGridViewItems[i].style.transform =
 			"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
-		e.$limberGridViewItems[i].classList.remove("limberGridViewItemDemo");
 	}
 };
 
-export const movePointAdjust = (context, toX, toY) => {
+export const movePointAdjust = (context, toX, toY, index) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -193,19 +193,239 @@ export const movePointAdjust = (context, toX, toY) => {
 	const temp = { x: 0, y: 0, height: 0, width: 0 };
 	const pt = { x: toX, y: toY };
 	let inside;
+	let tl, tr, bl, tld, trd, bld;
+	let ldistance = Number.MAX_SAFE_INTEGER;
+	let rdistance = Number.MAX_SAFE_INTEGER;
+	let bdistance = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+
 	for (let i = 0; i < len; i++) {
 		temp.x = pd[i].x - privateConstants.MARGIN;
 		temp.y = pd[i].y - privateConstants.MARGIN;
 		temp.width = pd[i].width + privateConstants.MARGIN * 2;
 		temp.height = pd[i].height + privateConstants.MARGIN * 2;
+
 		if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
 			inside = i;
-			break;
+			toX = pd[inside].x;
+			toY = pd[inside].y;
+			// break;
+		}
+
+		if (i === index) {
+			continue;
+		}
+
+		tl = { x: temp.x, y: temp.y };
+		tr = { x: temp.x + temp.width, y: temp.y };
+		bl = { x: temp.x, y: temp.y + temp.height };
+
+		tld = getDistanceBetnPts(tl, pt);
+		trd = getDistanceBetnPts(tr, pt);
+		bld = getDistanceBetnPts(bl, pt);
+
+		if (
+			tld < ldistance &&
+			tld < rdistance &&
+			tld < bdistance &&
+			pt.x < tl.x &&
+			tld <= privateConstants.WIDTH / 4
+		) {
+			if (
+				tl.x - privateConstants.MARGIN - pd[index].width >=
+				privateConstants.MARGIN
+			) {
+				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+				toYAdj = tl.y + privateConstants.MARGIN;
+
+				ldistance = tld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "left";
+			}
+		}
+
+		if (
+			trd < rdistance &&
+			trd < ldistance &&
+			trd < bdistance &&
+			pt.x > tr.x &&
+			trd <= privateConstants.WIDTH / 4
+		) {
+			if (
+				tr.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH
+			) {
+				toXAdj = tr.x + privateConstants.MARGIN;
+				toYAdj = tr.y + privateConstants.MARGIN;
+
+				rdistance = trd;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
+			}
+		}
+
+		if (
+			bld < bdistance &&
+			bld < ldistance &&
+			bld < rdistance &&
+			pt.y >= bl.y &&
+			pt.x >= bl.x &&
+			bld <= privateConstants.WIDTH / 4
+		) {
+			if (
+				tl.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH
+			) {
+				toXAdj = tl.x + privateConstants.MARGIN;
+				toYAdj = bl.y + privateConstants.MARGIN;
+
+				bdistance = bld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
+			}
 		}
 	}
-	if (inside !== undefined) {
-		toX = pd[inside].x;
-		toY = pd[inside].y;
+
+	return {
+		to: { toX, toY },
+		toAdj: { toX: toXAdj, toY: toYAdj },
+		overlappedItemIndex: inside,
+		isToAdjPresent,
+		toAdjIndex,
+		toAdjDirection,
+	};
+};
+
+export const resizeSizeAdjust = (context, width, height, index) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const len = pd.length;
+	const temp = { x: 0, y: 0, height: 0, width: 0 };
+	const tlpt = { x: pd[index].x, y: pd[index].y };
+	const trpt = { x: pd[index].x + width, y: pd[index].y };
+	const brpt = { x: pd[index].x + width, y: pd[index].y + height };
+	const blpt = { x: pd[index].x, y: pd[index].y + height };
+
+	let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
+	let ldistance = Number.MAX_SAFE_INTEGER;
+	let rdistance = Number.MAX_SAFE_INTEGER;
+	let tdistance = Number.MAX_SAFE_INTEGER;
+	let bdistance = Number.MAX_SAFE_INTEGER;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let hToAdjDirection;
+	let wToAdjDirection;
+	let hLatchPoint;
+	let wLatchPoint;
+	let latchPoint;
+
+	for (let i = 0; i < len; i++) {
+		temp.x = pd[i].x;
+		temp.y = pd[i].y;
+		temp.width = pd[i].width;
+		temp.height = pd[i].height;
+
+		if (i === index) {
+			continue;
+		}
+
+		bl = { x: temp.x, y: temp.y + temp.height };
+		br = { x: temp.x + temp.width, y: temp.y + temp.height };
+		tr = { x: temp.x + temp.width, y: temp.y };
+
+		brptTobl = getDistanceBetnPts(bl, brpt);
+		blptTobr = getDistanceBetnPts(br, blpt);
+		trptTobr = getDistanceBetnPts(br, trpt);
+		brptTotr = getDistanceBetnPts(tr, brpt);
+
+		if (
+			brptTobl < rdistance &&
+			brptTobl < ldistance &&
+			brpt.x < bl.x &&
+			Math.abs(brpt.y - bl.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
+		) {
+			height = bl.y - trpt.y;
+
+			rdistance = brptTobl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			hToAdjDirection = "right";
+			hLatchPoint = bl;
+		}
+
+		if (
+			blptTobr < ldistance &&
+			blptTobr < rdistance &&
+			blpt.x > br.x &&
+			Math.abs(blpt.y - br.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
+		) {
+			height = br.y - tlpt.y;
+
+			ldistance = blptTobr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			hToAdjDirection = "left";
+			hLatchPoint = br;
+		}
+
+		if (
+			trptTobr < tdistance &&
+			trptTobr < bdistance &&
+			trptTobr <= privateConstants.WIDTH / 4 &&
+			Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+		) {
+			width = br.x - tlpt.x;
+
+			tdistance = trptTobr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "top";
+			wLatchPoint = br;
+		}
+
+		if (
+			brptTotr < bdistance &&
+			brptTotr < tdistance &&
+			brptTotr <= privateConstants.WIDTH / 4 &&
+			Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+		) {
+			width = tr.x - blpt.x;
+
+			bdistance = brptTotr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "bottom";
+			wLatchPoint = tr;
+		}
 	}
-	return { toX, toY, overlappedItemIndex: inside };
+
+	if (hLatchPoint && wLatchPoint) {
+		latchPoint = {
+			x: wLatchPoint.x,
+			y: hLatchPoint.y,
+		};
+	} else if (hLatchPoint) {
+		latchPoint = hLatchPoint;
+	} else if (wLatchPoint) {
+		latchPoint = wLatchPoint;
+	}
+
+	return {
+		height,
+		width,
+		isToAdjPresent,
+		toAdjIndex,
+		hToAdjDirection,
+		wToAdjDirection,
+		latchPoint,
+	};
 };

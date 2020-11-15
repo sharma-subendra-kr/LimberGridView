@@ -42,6 +42,7 @@ import getElements, {
 	set$limberGridViewHeightAdjustGuide,
 	set$limberGridViewAddCutGuide,
 	set$limberGridViewTouchHoldGuide,
+	set$limberGridViewCrossHairGuide,
 } from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
@@ -72,6 +73,9 @@ export const init = async function (context, isResize, autoArrange) {
 	const pd = getPositionData(context);
 
 	if (autoArrange === true || !checkPositionData(pd)) {
+		// * 	autoArrange will be true only during the first render
+		// * 	this if block is always supposed to execute during the first render
+		// 		if autoArrange is true or invalid positionData is supplied
 		console.warn("Auto-arranging");
 
 		setModifiedPositionData(context, pd);
@@ -82,11 +86,21 @@ export const init = async function (context, isResize, autoArrange) {
 			arr[i] = i;
 			mpd[i].x = undefined;
 			mpd[i].y = undefined;
+			mpd[i].width =
+				mpd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
+				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+			mpd[i].height =
+				mpd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
+				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
 
-			pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
-			pd[i].y /= privateConstants.WIDTH_SCALE_FACTOR;
-			pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;
-			pd[i].height /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].x = undefined;
+			pd[i].y = undefined;
+			pd[i].width =
+				pd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
+				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+			pd[i].height =
+				pd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
+				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
 		}
 
 		setWidth(context, privateConstants.GRID_WIDTH);
@@ -358,6 +372,47 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
+	if (
+		options?.publicConstants?.crossHairWidth &&
+		!isNaN(options.publicConstants.crossHairWidth)
+	) {
+		setPublicConstantByName(
+			this,
+			"CROSS_HAIR_WIDTH",
+			options.publicConstants.crossHairWidth
+		);
+	}
+
+	if (
+		options?.publicConstants?.crossHairHeight &&
+		!isNaN(options.publicConstants.crossHairHeight)
+	) {
+		setPublicConstantByName(
+			this,
+			"CROSS_HAIR_HEIGHT",
+			options.publicConstants.crossHairHeight
+		);
+	}
+
+	// if (
+	// 	options?.publicConstants?.useFastAlgorithm &&
+	// 	!isNaN(options.publicConstants.useFastAlgorithm)
+	// ) {
+	// 	setPublicConstantByName(
+	// 		this,
+	// 		"USE_FAST_ALGORITHM",
+	// 		options.publicConstants.useFastAlgorithm
+	// 	);
+	// }
+
+	if (typeof options?.publicConstants?.useVerticalArrOnResize === "boolean") {
+		setPublicConstantByName(
+			this,
+			"USE_VERTICAL_ARR_ON_RESIZE",
+			options.publicConstants.useVerticalArrOnResize
+		);
+	}
+
 	// Public Constants ENDED
 
 	// Miscellaneous BEGIN
@@ -368,6 +423,7 @@ export const initConstantsAndFlags = function (options) {
 export const initRender = function () {
 	const e = getElements(this);
 	const options = getOptions(this);
+	const publicConstants = getPublicConstants(this);
 
 	set$body(this, document.getElementsByTagName("body")[0]);
 
@@ -412,6 +468,8 @@ export const initRender = function () {
 	const limberGridViewAddCutGuide = document.createElement("div"); // desk interaction rect
 	const limberGridViewTouchHoldGuide = document.createElement("div"); // touch hold animation
 	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
+	const limberGridViewCrossHairGuide = document.createElement("div");
+	limberGridViewCrossHairGuide.innerHTML = `<hr></hr><hr></hr>`;
 
 	pseudoContainerItem.setAttribute(
 		"class",
@@ -434,6 +492,13 @@ export const initRender = function () {
 		"class",
 		"limber-grid-view-touch-hold-guide"
 	);
+	limberGridViewCrossHairGuide.setAttribute(
+		"class",
+		"limber-grid-view-cross-hair-guide"
+	);
+	limberGridViewCrossHairGuide.style.transform = `translate(-${
+		publicConstants.CROSS_HAIR_WIDTH * 2
+	}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 
 	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
@@ -441,6 +506,7 @@ export const initRender = function () {
 	e.$limberGridView.appendChild(limberGridViewHeightAdjustGuide);
 	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
 	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
+	e.$limberGridView.appendChild(limberGridViewCrossHairGuide);
 
 	set$pseudoContainerItem(this, pseudoContainerItem);
 	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
@@ -448,4 +514,5 @@ export const initRender = function () {
 	set$limberGridViewHeightAdjustGuide(this, limberGridViewHeightAdjustGuide);
 	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
 	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
+	set$limberGridViewCrossHairGuide(this, limberGridViewCrossHairGuide);
 };

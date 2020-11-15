@@ -125,6 +125,15 @@ const set$limberGridViewTouchHoldGuide = function (context, elm) {
 const get$limberGridViewTouchHoldGuide = function (context) {
 	return context.store.variables.elements.$limberGridViewTouchHoldGuide;
 };
+
+const set$limberGridViewCrossHairGuide = function (context, elm) {
+	context.store.variables.elements.$limberGridViewCrossHairGuide = elm;
+};
+
+const get$limberGridViewCrossHairGuide = function (context) {
+	return context.store.variables.elements.$limberGridViewCrossHairGuide;
+};
+
 // Grid Elements ENDED
 
 // DEBUG Elements
@@ -229,6 +238,8 @@ export {
 	get$limberGridViewAddCutGuide,
 	set$limberGridViewTouchHoldGuide,
 	get$limberGridViewTouchHoldGuide,
+	set$limberGridViewCrossHairGuide,
+	get$limberGridViewCrossHairGuide,
 	// DEBUG Elements
 	set$limberGridViewDebugMergedTempRects,
 	get$limberGridViewDebugMergedTempRects,

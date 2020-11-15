@@ -52,24 +52,6 @@ export const fixTo = (num, to = 6) => {
 	return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
 };
 
-export const filter = (arr) => {
-	const len = arr.length;
-	const temp = new Array(len);
-	let count = 0;
-	for (let i = 0; i < len; i++) {
-		if (arr[i] !== null && arr[i] !== undefined) {
-			temp[count++] = arr[i];
-		}
-	}
-
-	const res = new Array(count);
-	for (let i = 0; i < count; i++) {
-		res[i] = temp[i];
-	}
-
-	return res;
-};
-
 export const getRandomString = (len = 22) => {
 	const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
 
@@ -87,4 +69,10 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 		width: item.width + MARGIN * 2,
 		height: item.height + MARGIN * 2,
 	};
+};
+
+export const sleep = (ms) => {
+	return new Promise((resolve, reject) => {
+		setTimeout(resolve, ms);
+	});
 };

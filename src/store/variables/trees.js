@@ -23,4 +23,13 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const DESK_INTERACTION_MODE = { ADD: true, CUTSPACE: true };
+const setTree = function (context, key, value) {
+	context.store.variables.trees[key] = value;
+};
+
+const getTree = function (context, key) {
+	return context.store.variables.trees[key];
+};
+
+export { setTree, getTree };
+export default getTree;

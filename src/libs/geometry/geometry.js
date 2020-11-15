@@ -23,4 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const DESK_INTERACTION_MODE = { ADD: true, CUTSPACE: true };
+export const getDistanceBetnPts = (pt1, pt2) => {
+	return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
+};

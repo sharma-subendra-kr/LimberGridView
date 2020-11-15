@@ -303,7 +303,12 @@ export const removeItem = function (context, index) {
 	if (callbacks.removePlugin) {
 		callbacks.removePlugin(e.$limberGridViewItems[index]);
 	}
+
 	e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
+
+	if (callbacks.removeComplete) {
+		callbacks.removeComplete(index, e.$limberGridViewItems[index]);
+	}
 
 	set$limberGridViewItems(context, [
 		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
@@ -312,10 +317,6 @@ export const removeItem = function (context, index) {
 	const len = pd.length;
 	for (let i = index; i < len; i++) {
 		e.$limberGridViewItems[i].setAttribute("data-index", i);
-	}
-
-	if (callbacks.removeComplete) {
-		callbacks.removeComplete(index, e.$limberGridViewItems[index]);
 	}
 
 	for (let i = index; i < len; i++) {

@@ -23,4 +23,13 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const DESK_INTERACTION_MODE = { ADD: true, CUTSPACE: true };
+const setStatus = function (context, key, value) {
+	context.store.variables.status[key] = value;
+};
+
+const getStatus = function (context, key) {
+	return context.store.variables.status[key];
+};
+
+export { setStatus, getStatus };
+export default getStatus;

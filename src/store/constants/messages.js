@@ -23,4 +23,13 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const DESK_INTERACTION_MODE = { ADD: true, CUTSPACE: true };
+const setMessage = function (context, key, value) {
+	context.store.constants.messages[key] = value;
+};
+
+const getMessage = function (context, key) {
+	return context.store.constants.messages[key];
+};
+
+export { setMessage, getMessage };
+export default getMessage;

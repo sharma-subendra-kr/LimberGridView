@@ -55,10 +55,6 @@ export const onDeskMouseDown = function (event) {
 		return;
 	}
 
-	if (event.which !== 1) {
-		return;
-	}
-
 	dkiv.mouseDownCancel = false;
 	dkiv.mouseDownTimerComplete = false;
 
@@ -85,10 +81,6 @@ export const onDeskTouchStart = function (event) {
 	}
 
 	if (event.touches.length !== 1) {
-		return;
-	}
-
-	if (event.which !== 0) {
 		return;
 	}
 

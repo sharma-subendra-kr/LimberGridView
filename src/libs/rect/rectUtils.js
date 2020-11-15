@@ -108,19 +108,57 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 		}
 
 		const tlA = { x: rectA.x, y: rectA.y };
+		const trA = { x: rectA.x + rectA.width, y: rectA.y };
 		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
+		const blA = { x: rectA.x, y: rectA.y + rectA.height };
+
 		const tlB = { x: rectB.x, y: rectB.y };
+		const trB = { x: rectB.x + rectB.width, y: rectB.y };
 		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
+		const blB = { x: rectB.x, y: rectB.y + rectB.height };
 
-		if (tlA.x > brB.x || tlB.x > brA.x) {
-			return false;
+		const THRESHOLD = 0.1;
+
+		if (
+			Math.abs(tlA.x - brB.x) < THRESHOLD &&
+			(Math.abs(tlA.y - brB.y) < THRESHOLD || (tlA.y < brB.y && blA.y > trB.y))
+			// Math.abs(tlA.y - trB.y) < THRESHOLD
+		) {
+			return true;
 		}
 
-		if (tlA.y > brB.y || tlB.y > brA.y) {
-			return false;
+		if (
+			Math.abs(tlA.y - brB.y) < THRESHOLD &&
+			(Math.abs(tlA.x - brB.x) < THRESHOLD || (tlA.x < brB.x && trA.x > blB.x))
+			// Math.abs(tlA.x - blB.x) < THRESHOLD
+		) {
+			return true;
 		}
 
-		if (doRectsOverlap(rectA, rectB) === false) return true;
+		if (
+			Math.abs(tlB.x - brA.x) < THRESHOLD &&
+			(Math.abs(tlB.y - brA.y) < THRESHOLD || (tlB.y < brA.y && blB.y > trA.y))
+			// Math.abs(tlB.y - trA.y) < THRESHOLD
+		) {
+			return true;
+		}
+
+		if (
+			Math.abs(tlB.y - brA.y) < THRESHOLD &&
+			(Math.abs(tlB.x - brA.x) < THRESHOLD || (tlB.x < brA.x && trB.x > blA.x))
+			// Math.abs(tlA.x - blB.x) < THRESHOLD
+		) {
+			return true;
+		}
+
+		// if (tlA.x > brB.x || tlB.x > brA.x) {
+		// 	return false;
+		// }
+		// if (tlA.y > brB.y || tlB.y > brA.y) {
+		// 	return false;
+		// }
+
+		// if (doRectsOverlap(rectA, rectB) === false) return true;
 
 		return false;
 	} catch (e) {
@@ -138,18 +176,17 @@ export const subtractRect = (rectA, rectB, oCoForm) => {
 	const rectBCo = getCoordinates(rectB);
 
 	/*
-		____|_______________|___
-		|	|				|	|
-	____|___|_______________|___|____
-		|	|				|	|
-		|	|				|	|
-		|	|				|	|
-		|	|				|	|
-	____|___|_______________|___|___
-		|	|				|	|
-		|___|_______________|___|
-			|				|
-		
+    ____|_______________|___
+    |   |               |   |
+____|___|_______________|___|____
+    |   |               |   |
+    |   |               |   |
+    |   |               |   |
+    |   |               |   |
+____|___|_______________|___|___
+    |   |               |   |
+    |___|_______________|___|
+        |               |
 	*/
 	const subRects = {
 		subRectT: {
@@ -332,14 +369,14 @@ const horizontalSubtract = (rectA, rectB) => {
 	/*
 		Case I
 		____________________
-		| ____ 				|
-		||____|				|
+		| ____              |
+		||____|             |
 		|___________________|
-	
+
 		Case II
 		____________________
-		| 	 		  _____	|
-		|			  |____||
+		|              ____ |
+		|             |____||
 		|___________________|
 	*/
 
@@ -368,15 +405,15 @@ const verticalSubtract = (rectA, rectB) => {
 		return null;
 
 	/*
-		Case I 				Case II
-		_______ 			________
-		| ____ | 			|		|
-		| |   || 			|		|
-		| |___|| 			|		|
-		|  	   | 			|  ____ |
-		|      | 			|  |   ||	
-		|      | 			|  |___||	
-		|______| 			|_______|
+    Case I        Case II
+    _______       ________
+    | ____ |      |       |
+    | |   ||      |       |
+    | |___||      |       |
+    |      |      |  ____ |
+    |      |      |  |   ||	
+    |      |      |  |___||	
+    |______|      |_______|
 	*/
 
 	let result = null;
@@ -470,6 +507,148 @@ export const areRectsAdjacent = (rectA, rectB) => {
 	}
 };
 
+export const merge = (rectACo, rectBCo) => {
+	const THRESHOLD = 0.1;
+	let res;
+	// check tl
+	if (
+		rectACo.tl.x >= rectBCo.bl.x &&
+		rectACo.tl.x < rectBCo.br.x &&
+		Math.abs(rectACo.tl.y - rectBCo.bl.y) < THRESHOLD
+	) {
+		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
+		res = {
+			tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
+			tr: { x: x, y: rectBCo.tl.y },
+			br: { x: x, y: rectACo.bl.y },
+			bl: { x: rectACo.bl.x, y: rectACo.bl.y },
+		};
+	}
+
+	if (
+		rectACo.tl.y >= rectBCo.tr.y &&
+		rectACo.tl.y < rectBCo.br.y &&
+		Math.abs(rectACo.tl.x - rectBCo.tr.x) < THRESHOLD
+	) {
+		let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
+		res = {
+			tl: { x: rectBCo.tl.x, y: rectACo.tl.y },
+			tr: { x: rectACo.tr.x, y: rectACo.tr.y },
+			br: { x: rectACo.br.x, y: y },
+			bl: { x: rectBCo.bl.x, y: y },
+		};
+	}
+
+	// check tr
+	if (
+		rectACo.tr.x <= rectBCo.br.x &&
+		rectACo.tr.x > rectBCo.bl.x &&
+		Math.abs(rectACo.tr.y - rectBCo.bl.y) < THRESHOLD
+	) {
+		let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
+		res = {
+			tl: { x: x, y: rectBCo.tl.y },
+			tr: { x: rectACo.tr.x, y: rectBCo.tr.y },
+			br: { x: rectACo.br.x, y: rectACo.br.y },
+			bl: { x: x, y: rectACo.bl.y },
+		};
+	}
+
+	if (
+		rectACo.tr.y >= rectBCo.tl.y &&
+		rectACo.tr.y < rectBCo.bl.y &&
+		Math.abs(rectACo.tr.x - rectBCo.tl.x) < THRESHOLD
+	) {
+		let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
+		res = {
+			tl: { x: rectACo.tl.x, y: rectACo.tl.y },
+			tr: { x: rectBCo.tr.x, y: rectACo.tl.y },
+			br: { x: rectBCo.br.x, y: y },
+			bl: { x: rectACo.bl.x, y: y },
+		};
+	}
+
+	// check br
+	if (
+		rectACo.br.x <= rectBCo.tr.x &&
+		rectACo.br.x > rectBCo.tl.x &&
+		Math.abs(rectACo.br.y - rectBCo.tl.y) < THRESHOLD
+	) {
+		let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
+		res = {
+			tl: { x: x, y: rectACo.tl.y },
+			tr: { x: rectACo.tr.x, y: rectACo.tr.y },
+			br: { x: rectACo.tr.x, y: rectBCo.br.y },
+			bl: { x: x, y: rectBCo.bl.y },
+		};
+	}
+
+	if (
+		rectACo.br.y <= rectBCo.bl.y &&
+		rectACo.br.y > rectBCo.tl.y &&
+		Math.abs(rectACo.br.x - rectBCo.tl.x) < THRESHOLD
+	) {
+		let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
+		res = {
+			tl: { x: rectACo.tl.x, y: y },
+			tr: { x: rectBCo.tr.x, y: y },
+			br: { x: rectBCo.br.x, y: rectACo.br.y },
+			bl: { x: rectACo.bl.x, y: rectACo.bl.y },
+		};
+	}
+
+	// check bl
+	if (
+		rectACo.bl.x >= rectBCo.tl.x &&
+		rectACo.bl.x < rectBCo.tr.x &&
+		Math.abs(rectACo.bl.y - rectBCo.tl.y) < THRESHOLD
+	) {
+		let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
+		res = {
+			tl: { x: rectACo.tl.x, y: rectACo.tl.y },
+			tr: { x: x, y: rectACo.tr.y },
+			br: { x: x, y: rectBCo.br.y },
+			bl: { x: rectACo.bl.x, y: rectBCo.bl.y },
+		};
+	}
+
+	if (
+		rectACo.bl.y <= rectBCo.br.y &&
+		rectACo.bl.y > rectBCo.tr.y &&
+		Math.abs(rectACo.bl.x - rectBCo.tr.x) < THRESHOLD
+	) {
+		let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
+		res = {
+			tl: { x: rectBCo.tl.x, y: y },
+			tr: { x: rectACo.tr.x, y: y },
+			br: { x: rectACo.br.x, y: rectACo.br.y },
+			bl: { x: rectBCo.bl.x, y: rectACo.bl.y },
+		};
+	}
+
+	return res;
+};
+
+export const mergeOverlapping = (rectA, rectB, rectBCo) => {
+	const diff = subtractRect(rectA, rectB, true);
+
+	const arr = new Array(diff?.length || 0);
+	let m;
+	let count = 0;
+	const len = arr.length;
+
+	for (let i = 0; i < len; i++) {
+		m = merge(diff[i], rectBCo);
+		if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
+			arr[count++] = m;
+		}
+	}
+
+	arr.length = count;
+
+	return count ? arr : null;
+};
+
 export const mergeRects = (rectA, rectB, oCoForm) => {
 	// if (doRectsOverlap(rectA, rectB)) {
 	// 	return false;
@@ -479,156 +658,11 @@ export const mergeRects = (rectA, rectB, oCoForm) => {
 
 	let result;
 
-	const merge = (rectACo, rectBCo) => {
-		let res;
-		// check tl
-		if (
-			rectACo.tl.x >= rectBCo.bl.x &&
-			rectACo.tl.x < rectBCo.br.x &&
-			rectACo.tl.y >= rectBCo.bl.y
-		) {
-			let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-			res = {
-				tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
-				tr: { x: x, y: rectBCo.tl.y },
-				br: { x: x, y: rectACo.bl.y },
-				bl: { x: rectACo.bl.x, y: rectACo.bl.y },
-			};
-		}
-
-		if (
-			rectACo.tl.y >= rectBCo.tr.y &&
-			rectACo.tl.y < rectBCo.br.y &&
-			rectACo.tl.x >= rectBCo.tr.x
-		) {
-			let y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
-			res = {
-				tl: { x: rectBCo.tl.x, y: rectACo.tl.y },
-				tr: { x: rectACo.tr.x, y: rectACo.tr.y },
-				br: { x: rectACo.br.x, y: y },
-				bl: { x: rectBCo.bl.x, y: y },
-			};
-		}
-
-		// check tr
-		if (
-			rectACo.tr.x <= rectBCo.br.x &&
-			rectACo.tr.x > rectBCo.bl.x &&
-			rectACo.tr.y >= rectBCo.bl.y
-		) {
-			let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-			res = {
-				tl: { x: x, y: rectBCo.tl.y },
-				tr: { x: rectACo.tr.x, y: rectBCo.tr.y },
-				br: { x: rectACo.br.x, y: rectACo.br.y },
-				bl: { x: x, y: rectACo.bl.y },
-			};
-		}
-
-		if (
-			rectACo.tr.y >= rectBCo.tl.y &&
-			rectACo.tr.y < rectBCo.bl.y &&
-			rectACo.tr.x <= rectBCo.tl.x
-		) {
-			let y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
-			res = {
-				tl: { x: rectACo.tl.x, y: rectACo.tl.y },
-				tr: { x: rectBCo.tr.x, y: rectACo.tl.y },
-				br: { x: rectBCo.br.x, y: y },
-				bl: { x: rectACo.bl.x, y: y },
-			};
-		}
-
-		// check br
-		if (
-			rectACo.br.x <= rectBCo.tr.x &&
-			rectACo.br.x > rectBCo.tl.x &&
-			rectACo.br.y <= rectBCo.tl.y
-		) {
-			let x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-			res = {
-				tl: { x: x, y: rectACo.tl.y },
-				tr: { x: rectACo.tr.x, y: rectACo.tr.y },
-				br: { x: rectACo.tr.x, y: rectBCo.br.y },
-				bl: { x: x, y: rectBCo.bl.y },
-			};
-		}
-
-		if (
-			rectACo.br.y <= rectBCo.bl.y &&
-			rectACo.br.y > rectBCo.tl.y &&
-			rectACo.br.x <= rectBCo.tl.x
-		) {
-			let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-			res = {
-				tl: { x: rectACo.tl.x, y: y },
-				tr: { x: rectBCo.tr.x, y: y },
-				br: { x: rectBCo.br.x, y: rectACo.br.y },
-				bl: { x: rectACo.bl.x, y: rectACo.bl.y },
-			};
-		}
-
-		// check bl
-		if (
-			rectACo.bl.x >= rectBCo.tl.x &&
-			rectACo.bl.x < rectBCo.tr.x &&
-			rectACo.bl.y <= rectBCo.tl.y
-		) {
-			let x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-			res = {
-				tl: { x: rectACo.tl.x, y: rectACo.tl.y },
-				tr: { x: x, y: rectACo.tr.y },
-				br: { x: x, y: rectBCo.br.y },
-				bl: { x: rectACo.bl.x, y: rectBCo.bl.y },
-			};
-		}
-
-		if (
-			rectACo.bl.y <= rectBCo.br.y &&
-			rectACo.bl.y > rectBCo.tr.y &&
-			rectACo.bl.x >= rectBCo.tr.x
-		) {
-			let y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-			res = {
-				tl: { x: rectBCo.tl.x, y: y },
-				tr: { x: rectACo.tr.x, y: y },
-				br: { x: rectACo.br.x, y: rectACo.br.y },
-				bl: { x: rectBCo.bl.x, y: rectACo.bl.y },
-			};
-		}
-
-		return res;
-	};
-
-	const mergeOverlapping = () => {
-		const diff = subtractRect(rectA, rectB, true);
-
-		const arr = new Array(diff?.length || 0);
-		let m;
-		let count = 0;
-		const len = arr.length;
-
-		// for (const d of diff) {
-		for (let i = 0; i < len; i++) {
-			m = merge(diff[i], rectBCo);
-			if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
-				arr[count++] = m;
-			}
-		}
-
-		const res = new Array(count);
-		for (let i = 0; i < count; i++) {
-			res[i] = arr[i];
-		}
-
-		return res.length ? res : null;
-	};
-
 	result = merge(rectACo, rectBCo);
 	if (!result) result = merge(rectBCo, rectACo);
 	if (result) result = [result];
 	if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
-		result = mergeOverlapping();
+		result = mergeOverlapping(rectA, rectB, rectBCo);
 	}
 
 	if (result) {

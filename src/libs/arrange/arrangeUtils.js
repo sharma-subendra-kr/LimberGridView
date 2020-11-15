@@ -29,7 +29,6 @@ import {
 	getModifiedPositionData,
 } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
-import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	doRectsOverlap,
 	isRectInside,
@@ -37,8 +36,11 @@ import {
 	doRectsOnlyTouch,
 	isPointInsideRect,
 	doesPointTouchRect,
+	areRectsIdentical,
+	getCoordinates,
+	areRectsOnSameYAxisExPath,
 } from "../rect/rectUtils";
-import { filter } from "../utils/utils";
+import { getDistanceBetnPts } from "../geometry/geometry";
 
 export const getMinMaxXY = (
 	context,
@@ -49,6 +51,7 @@ export const getMinMaxXY = (
 	movedBottomY
 ) => {
 	const pd = getPositionData(context);
+	const mpd = getModifiedPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	let minY = Number.MAX_SAFE_INTEGER;
@@ -80,6 +83,11 @@ export const getMinMaxXY = (
 	if (toY < minY) minY = toY;
 
 	if (movedBottomY > maxY) maxY = movedBottomY;
+
+	if (maxY - minY > privateConstants.HEIGHT * 1.5) {
+		minY = mpd[affectedItems[len - 1]].y;
+		maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
+	}
 
 	return {
 		minX: minX - privateConstants.MARGIN,
@@ -157,12 +165,12 @@ export const getItemsInWorkSpace = (
 	const len = mpd.length;
 	const itemsInWorkSpace = new Array(len);
 	let count = 0;
+	let item;
 	for (let i = 0; i < len; i++) {
+		item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 		if (
-			doRectsOverlap(
-				workSpaceRect,
-				getItemDimenWithMargin(privateConstants.MARGIN, mpd[i])
-			)
+			doRectsOverlap(workSpaceRect, item) &&
+			!doRectsOnlyTouch(workSpaceRect, item)
 		) {
 			if (!getIndices) {
 				itemsInWorkSpace[count++] = mpd[i];
@@ -172,12 +180,9 @@ export const getItemsInWorkSpace = (
 		}
 	}
 
-	const res = new Array(count);
-	for (let i = 0; i < count; i++) {
-		res[i] = itemsInWorkSpace[i];
-	}
+	itemsInWorkSpace.length = count;
 
-	return res;
+	return itemsInWorkSpace;
 };
 
 export const getItemsBelowBottomWorkSpace = (
@@ -195,11 +200,14 @@ export const getItemsBelowBottomWorkSpace = (
 	const len = mpd.length;
 	const items = new Array(len);
 	let count = 0;
+	let item;
 
 	for (let i = 0; i < len; i++) {
+		item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
+
 		if (
-			workSpaceRect.bl.y <=
-			getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]).y
+			workSpaceRect.bl.y <= item.y ||
+			Math.abs(workSpaceRect.bl.y - item.y) < 0.1
 		) {
 			if (!getIndices) {
 				items[count++] = mpd[i];
@@ -209,12 +217,9 @@ export const getItemsBelowBottomWorkSpace = (
 		}
 	}
 
-	const res = new Array(count);
-	for (let i = 0; i < count; i++) {
-		res[i] = items[i];
-	}
+	items.length = count;
 
-	return res;
+	return items;
 };
 
 export const getResizeWSItemsDetail = (
@@ -240,15 +245,7 @@ export const getResizeWSItemsDetail = (
 	const bottomWs = getRectObjectFromCo(bottomWsCo);
 	const cWs = getRectObjectFromCo(cWsCo);
 
-	let count = 0;
-	const iToALen = itemsToArrange.length;
-	const _itemsToArrange = new Array(iToALen);
-	for (let i = 0; i < iToALen; i++) {
-		if (!arranged[itemsToArrange[i]]) {
-			_itemsToArrange[count++] = itemsToArrange[i];
-		}
-	}
-	const filteredItemsToArrange = filter(_itemsToArrange);
+	const filteredItemsToArrange = itemsToArrange.filter((o) => !arranged[o]);
 
 	const len = mpd.length;
 	const updatedItemsToArrange = new Array(len);
@@ -292,12 +289,15 @@ export const getResizeWSItemsDetail = (
 		}
 	}
 
+	itemsInWorkSpace.length = iCount;
+	updatedItemsToArrange.length = uCount;
+
 	return {
-		updatedItemsToArrange: filter([
+		updatedItemsToArrange: [
 			...filteredItemsToArrange,
 			...updatedItemsToArrange,
-		]),
-		itemsInWorkSpace: filter(itemsInWorkSpace),
+		],
+		itemsInWorkSpace: itemsInWorkSpace,
 	};
 };
 
@@ -327,6 +327,39 @@ export const rectSortY = (a, b) => {
 	}
 };
 
+export const sweepTopBottomHelper = function (rect) {
+	return (node, interval, d) => {
+		if (
+			areRectsOnSameYAxisExPath(
+				getCoordinates(rect),
+				getCoordinates(node.d.rect)
+			) &&
+			!areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect))
+		) {
+			return true;
+		}
+	};
+};
+
+export const doOverlapHelper = function (rect) {
+	return (node, interval, d) => {
+		if (doRectsOverlap(rect, node.d.rect)) {
+			return true;
+		}
+	};
+};
+
+export const identicalOrInsideHelper = function (rect) {
+	return (node, interval, d) => {
+		if (
+			areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) ||
+			isRectInside(node.d.rect, rect)
+		) {
+			return true;
+		}
+	};
+};
+
 export const isMergable = function (rect) {
 	return (node, interval, d) => {
 		if (
@@ -335,7 +368,6 @@ export const isMergable = function (rect) {
 		) {
 			return true;
 		}
-		return false;
 	};
 };
 
@@ -344,7 +376,6 @@ export const shouldFilterRect = function (rect, data) {
 		if (isRectInside(node.d.rect, rect) && node.d !== data) {
 			return true;
 		}
-		return false;
 	};
 };
 
@@ -390,16 +421,27 @@ export const getItemsToArrangeScore = (context, affectedItems) => {
 	return scoreArr;
 };
 
-export const getPerfectMatch = (arr, hwSum) => {
-	const len = arr.length;
-
-	for (let i = 0; i < len; i++) {
-		arr[i].d.score = getScore(arr[i].d.rect, hwSum);
+export const getPerfectMatch = (arr, hwSum, item) => {
+	if (item === undefined) {
+		// add item
+		return arr[0];
 	}
-
-	arr.sort((a, b) => a.d.score - b.d.score);
-
-	return arr[0];
+	const len = arr.length;
+	let min = Number.MAX_SAFE_INTEGER;
+	let d;
+	const p1 = { x: item.x, y: item.y };
+	const p2 = { x: 0, y: 0 };
+	let pm;
+	for (let i = 0; i < len; i++) {
+		p2.x = arr[i].d.rect.x;
+		p2.y = arr[i].d.rect.y;
+		d = getDistanceBetnPts(p1, p2);
+		if (d < min) {
+			pm = arr[i];
+			min = d;
+		}
+	}
+	return pm || arr[0];
 };
 
 export const shiftItemsDown = (context, items, height) => {
@@ -428,14 +470,13 @@ export const shiftItemsUp = function (context, y, shiftHeight) {
 
 export const addItemAllowCheck = function (context, x, y, width, height) {
 	const privateConstants = getPrivateConstants(context);
-	const publicConstants = getPublicConstants(context);
 	const pd = getPositionData(context);
 
 	var tempPlane = {
 		x: x - privateConstants.MARGIN,
 		y: y - privateConstants.MARGIN,
-		width: width + publicConstants.MARGIN * 2,
-		height: height + publicConstants.MARGIN * 2,
+		width: width + privateConstants.MARGIN * 2,
+		height: height + privateConstants.MARGIN * 2,
 	};
 
 	if (x < 0 || y < 0) {

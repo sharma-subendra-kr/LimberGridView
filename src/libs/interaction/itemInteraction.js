@@ -30,6 +30,7 @@ import {
 	moveItemInitialChecks,
 	resetDemoUIChanges,
 	movePointAdjust,
+	resizeSizeAdjust,
 } from "./itemInteractionUtils";
 import { arrangeMove, arrangeResize } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -41,16 +42,25 @@ import {
 	getCallbacks,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
+import { setStatus, getStatus } from "../../store/variables/status";
+import getMessage from "../../store/constants/messages";
+import { isPointInsideRect } from "../rect/rectUtils";
 
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
+	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
-	resizeItemInitialChecks(this, index, width, height);
 
-	resetDemoUIChanges(this);
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		const adjustedSize = getStatus(this, "resizeDemo");
+		height = adjustedSize?.height || height;
+		width = adjustedSize?.width || width;
+	}
+
+	resizeItemInitialChecks(this, index, width, height);
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
@@ -65,12 +75,17 @@ export const resizeItem = async function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeResize(
-		this,
-		affectedItems,
-		modifiedItem.y + modifiedItem.height,
-		modifiedItem.x + modifiedItem.width
-	);
+	let arranged;
+	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
+		arranged = await arrangeResize(
+			this,
+			affectedItems,
+			modifiedItem.y + modifiedItem.height,
+			modifiedItem.x + modifiedItem.width
+		);
+	} else {
+		arranged = await arrangeMove(this, affectedItems);
+	}
 
 	setPositionData(this, mpd);
 
@@ -95,8 +110,32 @@ export const resizeItem = async function (index, width, height) {
 export const resizeItemDemo = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
+	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
+
+	let adjustedSize;
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		adjustedSize = resizeSizeAdjust(this, width, height, index);
+		setStatus(this, "resizeDemo", adjustedSize);
+		height = adjustedSize.height;
+		width = adjustedSize.width;
+	}
+
+	if (adjustedSize?.isToAdjPresent) {
+		// show cross hair
+		e.$limberGridViewCrossHairGuide.style.transform = `translate(${
+			adjustedSize.latchPoint.x - publicConstants.CROSS_HAIR_WIDTH / 2
+		}px, ${
+			adjustedSize.latchPoint.y - publicConstants.CROSS_HAIR_HEIGHT / 2
+		}px)`;
+	} else {
+		// hide cross hair
+		e.$limberGridViewCrossHairGuide.style.transform = `translate(-${
+			publicConstants.CROSS_HAIR_WIDTH * 2
+		}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+	}
+
 	resizeItemInitialChecks(this, index, width, height);
 
 	resetDemoUIChanges(this);
@@ -114,13 +153,17 @@ export const resizeItemDemo = async function (index, width, height) {
 	};
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeResize(
-		this,
-		affectedItems,
-		modifiedItem.y + modifiedItem.height,
-		modifiedItem.x + modifiedItem.width,
-		true
-	);
+	let arranged;
+	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
+		arranged = await arrangeResize(
+			this,
+			affectedItems,
+			modifiedItem.y + modifiedItem.height,
+			modifiedItem.x + modifiedItem.width
+		);
+	} else {
+		arranged = await arrangeMove(this, affectedItems);
+	}
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;
@@ -142,14 +185,22 @@ export const moveItem = async function (index, toX, toY) {
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		// change toX & toY to top left of the overlapping item
-		const adjustedPt = movePointAdjust(this, toX, toY);
-		toX = adjustedPt.toX;
-		toY = adjustedPt.toY;
+
+		const moveDemo = getStatus(this, "moveDemo");
+		if (moveDemo?.latchingAdjacent) {
+			toX = moveDemo.adjustedPt.toAdj.toX;
+			toY = moveDemo.adjustedPt.toAdj.toY;
+		} else if (moveDemo) {
+			toX = moveDemo.adjustedPt.to.toX;
+			toY = moveDemo.adjustedPt.to.toY;
+		} else {
+			const adjustedPt = movePointAdjust(this, toX, toY, index);
+			toX = adjustedPt.to.toX;
+			toY = adjustedPt.to.toY;
+		}
 	}
 
 	moveItemInitialChecks(this, index, toX, toY);
-
-	resetDemoUIChanges(this);
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
@@ -173,7 +224,6 @@ export const moveItem = async function (index, toX, toY) {
 
 	setPositionData(this, mpd);
 
-	e.$limberGridViewItems[index].classList.remove("limberGridViewItemDemo");
 	e.$limberGridViewItems[
 		index
 	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
@@ -206,20 +256,104 @@ export const moveItemDemo = async function (index, toX, toY) {
 	const publicConstants = getPublicConstants(this);
 
 	index = parseInt(index);
-	if (publicConstants.LATCH_MOVED_ITEM) {
-		// change toX & toY to top left of the overlapping item
-		const adjustedPt = movePointAdjust(this, toX, toY);
-		toX = adjustedPt.toX;
-		toY = adjustedPt.toY;
 
-		if (!isNaN(adjustedPt.overlappedItemIndex)) {
+	//
+	if (publicConstants.LATCH_MOVED_ITEM) {
+		const adjustedPt = movePointAdjust(this, toX, toY, index);
+		let moveDemo = getStatus(this, "moveDemo");
+		// let adjustedPt;
+		if (
+			!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex) &&
+			isPointInsideRect(pd[moveDemo.adjustedPt.overlappedItemIndex], {
+				x: toX,
+				y: toY,
+			})
+		) {
+			moveDemo = {
+				...moveDemo,
+				adjustedPt,
+			};
+			let latchingAdjacent = false;
+
+			if (!moveDemo.latchingAdjacent && moveDemo.adjustedPt.isToAdjPresent) {
+				toX = moveDemo.adjustedPt.toAdj.toX;
+				toY = moveDemo.adjustedPt.toAdj.toY;
+				latchingAdjacent = true;
+			} else {
+				toX = moveDemo.adjustedPt.to.toX;
+				toY = moveDemo.adjustedPt.to.toY;
+			}
+
+			setStatus(this, "moveDemo", {
+				...moveDemo,
+				latchingAdjacent,
+			});
+		} else {
+			let latchingAdjacent = false;
+			if (
+				!isNaN(adjustedPt.overlappedItemIndex) ||
+				!adjustedPt.isToAdjPresent
+			) {
+				toX = adjustedPt.to.toX;
+				toY = adjustedPt.to.toY;
+			} else {
+				toX = adjustedPt.toAdj.toX;
+				toY = adjustedPt.toAdj.toY;
+				latchingAdjacent = true;
+			}
+
+			setStatus(this, "moveDemo", {
+				adjustedPt: adjustedPt,
+				latchingAdjacent,
+			});
+		}
+
+		moveDemo = getStatus(this, "moveDemo");
+
+		if (!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex)) {
 			e.$limberGridViewMoveGuide.style.transform =
-				"translate(" + toX + "px, " + toY + "px)";
+				"translate(" +
+				pd[moveDemo.adjustedPt.overlappedItemIndex].x +
+				"px, " +
+				pd[moveDemo.adjustedPt.overlappedItemIndex].y +
+				"px)";
+			e.$limberGridViewMoveGuide.style.width =
+				pd[moveDemo.adjustedPt.overlappedItemIndex].width + "px";
+			e.$limberGridViewMoveGuide.style.height =
+				pd[moveDemo.adjustedPt.overlappedItemIndex].height + "px";
 			e.$limberGridViewMoveGuide.classList.add(
 				"limber-grid-view-move-guide-active"
 			);
+
+			if (moveDemo.latchingAdjacent) {
+				// show text
+
+				e.$limberGridViewMoveGuide.innerHTML = getMessage(
+					this,
+					"latchedMoveDemo2"
+				);
+			} else {
+				// show text
+				e.$limberGridViewMoveGuide.innerHTML = getMessage(
+					this,
+					"latchedMoveDemo1"
+				);
+			}
+		}
+
+		if (moveDemo.latchingAdjacent) {
+			// show cross hair
+			e.$limberGridViewCrossHairGuide.style.transform = `translate(${
+				toX - publicConstants.CROSS_HAIR_WIDTH / 2
+			}px, ${toY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
+		} else {
+			// hide cross hair
+			e.$limberGridViewCrossHairGuide.style.transform = `translate(-${
+				publicConstants.CROSS_HAIR_WIDTH * 2
+			}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 		}
 	}
+	//
 
 	moveItemInitialChecks(this, index, toX, toY);
 
@@ -245,8 +379,6 @@ export const moveItemDemo = async function (index, toX, toY) {
 		toY + pd[index].height,
 		true
 	);
-
-	e.$limberGridViewItems[index].classList.add("limberGridViewItemDemo");
 
 	const arrangedArr = Object.keys(arranged);
 	const len = arrangedArr.length;

@@ -43,11 +43,11 @@ module.exports = merge(common, {
 			amd: "IntervalTreeJS",
 			root: "IntervalTreeJS",
 		},
-		ClosestBST: {
-			commonjs: "ClosestBST",
-			commonjs2: "ClosestBST",
-			amd: "ClosestBST",
-			root: "ClosestBST",
+		Stack: {
+			commonjs: "Stack",
+			commonjs2: "Stack",
+			amd: "Stack",
+			root: "Stack",
 		},
 	},
 });

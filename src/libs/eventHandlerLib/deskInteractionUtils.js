@@ -42,11 +42,9 @@ export const loadInitState = (context) => {
 		);
 	}
 
-	for (let i = 0; i < len; i++) {
-		e.$limberGridViewPseudoItem.classList.add(
-			"limber-grid-view-pseudo-item-resizing-state"
-		);
-	}
+	e.$limberGridViewPseudoItem.classList.add(
+		"limber-grid-view-pseudo-item-resizing-state"
+	);
 
 	if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 		e.$limberGridViewAddCutGuide.classList.add(
@@ -78,10 +76,11 @@ export const unloadInitState = (context) => {
 		e.$limberGridViewItems[i].classList.remove(
 			"limber-grid-view-item-resizing-state"
 		);
-		e.$limberGridViewPseudoItem.classList.remove(
-			"limber-grid-view-pseudo-item-resizing-state"
-		);
 	}
+
+	e.$limberGridViewPseudoItem.classList.remove(
+		"limber-grid-view-pseudo-item-resizing-state"
+	);
 
 	e.$limberGridViewAddCutGuide.classList.remove(
 		"limber-grid-view-add-cut-guide-active",

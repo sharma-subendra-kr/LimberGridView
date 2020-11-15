@@ -23,6 +23,9 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import { IntervalTreesIterative } from "IntervalTreeJS";
+import { ArrayStack as Stack } from "Stack";
+
 import "./index.css";
 import "./index.scss";
 
@@ -64,10 +67,7 @@ import {
 	setCallbacks,
 } from "./store/variables/essentials";
 import { set$el } from "./store/variables/elements";
-import {
-	DESK_INTERACTION_MODE,
-	LATCH_MOVED_ITEM,
-} from "./store/flags/flagDetails";
+import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
 import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 import {
@@ -431,6 +431,19 @@ LimberGridView.prototype.initializeStore = function () {
 					cutSpaceAllowCheckTimeOutVariable: undefined,
 				},
 			},
+			status: {},
+			trees: {
+				it: new IntervalTreesIterative({
+					initialStackSize: 100,
+					initialQueueSize: 100,
+				}),
+			},
+			stacks: {
+				stack: new Stack(),
+				garbageStack: new Stack(),
+				resStack: new Stack(),
+				itemsToArrangeStack: new Stack(),
+			},
 		},
 		constants: {
 			privateConstants: {
@@ -465,7 +478,7 @@ LimberGridView.prototype.initializeStore = function () {
 				AUTO_SCROLL_POINT: 50,
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
 
-				MOUSE_DOWN_TIME: 500,
+				MOUSE_DOWN_TIME: 300,
 				TOUCH_HOLD_TIME: 300,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
@@ -476,6 +489,19 @@ LimberGridView.prototype.initializeStore = function () {
 
 				ANIMATE_MOVED_ITEM: false,
 				ANIMATE_TIME: 250,
+
+				// cross hair
+				CROSS_HAIR_WIDTH: 500,
+				CROSS_HAIR_HEIGHT: 500,
+
+				// Algorithm
+				// USE_FAST_ALGORITHM: true,
+				USE_VERTICAL_ARR_ON_RESIZE: false,
+			},
+			messages: {
+				latchedMoveDemo1:
+					"Move curser close to an adjacent item over this box to latch next to that item.",
+				latchedMoveDemo2: "Move curser over this box to latch on to this item.",
 			},
 		},
 	};
@@ -542,8 +568,20 @@ LimberGridView.prototype.setDeskInteractMode = function (flag) {
  * @param {boolean} flag Boolean true or false. To latch or not to latch.
  */
 LimberGridView.prototype.setLatchMovedItem = function (flag) {
-	if (LATCH_MOVED_ITEM[flag]) {
+	if (typeof flag === "boolean") {
 		setPublicConstantByName(this, "LATCH_MOVED_ITEM", flag);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#setUseVerticalArrOnResize
+ * @description Call this function to change USE_VERTICAL_ARR_ON_RESIZE during runtime.
+ * @param {boolean} flag Boolean true or false. To use or not to use vertical arrangements on resize.
+ */
+LimberGridView.prototype.setUseVerticalArrOnResize = function (flag) {
+	if (typeof flag === "boolean") {
+		setPublicConstantByName(this, "USE_VERTICAL_ARR_ON_RESIZE", flag);
 	}
 };
 
