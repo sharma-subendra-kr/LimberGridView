@@ -1,7 +1,7 @@
 # LimberGridView
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
-**[View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)**
+# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)
 
 ## LimberGridView 1.0.0-beta.2 is finally here!
 
