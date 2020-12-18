@@ -36,8 +36,6 @@ Written by Subendra Kumar Sharma.
 * **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but I am still testing it.**
 
 ###### What's New ######
-* **A Whole new algorithm to arrange items on your desk.**
-* **Complete Rewrite from 0.0.0**
 * **renderPlugin and removePlugin, these callbacks help you to render React JSX inside any item. (These might help in someother framework as well. I haven't used other frameworks.)**
 
 ###### Features to watch out for in the next releases. ######
