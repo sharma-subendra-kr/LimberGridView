@@ -35,7 +35,7 @@ Written by Subendra Kumar Sharma.
 * **The algorithm to position affected items will be updated in patches, there is a lot of room for improvement. This will not affect any APIs.**
 
 ###### Features ######
-* **renderPlugin and removePlugin, these callbacks help you to render and remove React JSX inside any item. (These might help in some other framework as well. I haven't used other frameworks and I'm not interested to learn all the latest and greatest framework everytime it comes out.)**
+* **renderPlugin and removePlugin, these callbacks help you to render and remove React JSX inside any item. (These might help in some other framework as well. I haven't used other frameworks and I'm not interested to learn all the latest and greatest framework everytime it comes out. Support will be provided only for the most popular frameworks)**
 
 ### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
 
