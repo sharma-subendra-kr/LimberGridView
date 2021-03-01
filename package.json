@@ -10,7 +10,8 @@
     "lint:check": "prettier -c **/*.{js,css,scss,json}; eslint \"**/*.js\"",
     "lint:fix": "prettier --write **/*.{js,css,scss,json} && eslint --fix \"**/*.js\"",
     "prettier:fix": "prettier --write **/*.{js,css,scss,json}",
-    "eslint:fix": "eslint --fix \"**/*.js\""
+    "eslint:fix": "eslint --fix \"**/*.js\"",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
