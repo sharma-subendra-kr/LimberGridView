@@ -2,10 +2,11 @@
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
 # [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)
+# [For api Reference and Documentation please read the Wiki Page.](https://github.com/sharma-subendra-kr/LimberGridView/wiki)
 
 ## LimberGridView 1.0.0-beta.2 is finally here!
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in raw JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
 Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved.
 
@@ -26,23 +27,25 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 Written by Subendra Kumar Sharma.
 
-#### For api Reference and Documentation please read the Wiki Page. ####
-
 ### This is free software (Free as in freedom not the price). If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact _reach.subendra.kr@gmx.com_.
 
-### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
-
 ## The is a beta release. This version is unstable.
-* **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but I am still testing it.**
+* **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but due to some bug which I dont know of, you might encounter it sometimes (very rarely), this is a high priority bug but right now there are other very high priority optimizations pending.**
 
-###### What's New ######
-* **renderPlugin and removePlugin, these callbacks help you to render React JSX inside any item. (These might help in someother framework as well. I haven't used other frameworks.)**
+* **The algorithm to position affected items will be updated in patches, there is a lot of room for improvement. This will not affect any APIs.**
+
+* **Non affected items are arranged most of the times which is not a great user experience, these are floating point errors, this is a high priority bug and will most probably be fixed in the next release. This may seem trivial but trust me its not. So the next release might take some time as I'm taking few months off this project.**
+
+###### Features ######
+* **renderPlugin and removePlugin, these callbacks help you to render and remove React JSX inside any item. (These might help in some other framework as well. I haven't used other frameworks and I'm not interested to learn all the latest and greatest framework everytime it comes out. Support will be provided only for the most popular frameworks and for frameworks that are not popular, support will be provided on request)**
+
+### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
 
 ###### Features to watch out for in the next releases. ######
 * **Built in Intersection Observer**
 * **Undo and Redo**
 * **Improved Stability**
 
-**I am constantly trying to improve the arranging algorithm and this will be done in patches.**
+Although I know most of the bugs which are not in the issues page, if you find a bug or an error, you can report it by sending an email to _reach.subendra.kr@gmx.com_.
 
-If you find a bug or an error please report by sending an email to _reach.subendra.kr@gmx.com_.
+I'm writing the documentation and README page while I'm 5% awake, so please forgive me for the grammar.
