@@ -1,4 +1,12 @@
 {
 	"editor.tabSize": 2,
-	"editor.insertSpaces": false
+	"editor.insertSpaces": false,
+	"editor.formatOnSave": true,
+	"editor.find.seedSearchStringFromSelection": false,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.codeActionsOnSave": [
+		"source.fixAll.format",
+		"source.fixAll.eslint",
+		"source.fixAll.stylelint"
+	]
 }
