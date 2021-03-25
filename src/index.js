@@ -24,6 +24,7 @@ Written by Subendra Kumar Sharma.
 */
 
 import { IntervalTreesIterative } from "IntervalTreeJS";
+import { RTreeIterative } from "rtreejs";
 import { ArrayStack as Stack } from "Stack";
 
 import "./index.css";
@@ -82,8 +83,6 @@ import {
 	initRender,
 } from "./initializers/initializers";
 
-LimberGridView.prototype.constructor = LimberGridView;
-
 // ----------------------------------------------------------------------------------------- //
 
 // ---------------------------------- INPUT DATA FORMAT ------------------------------------ //
@@ -93,24 +92,24 @@ LimberGridView.prototype.constructor = LimberGridView;
 /*
 
 	const options = {
-		el : "#",																				// id of the parent element with #
-		editable : true, 																		// true/false (optional default true)
-		enableInteractiveAddAndCut : true,														// true/false (optional default true)
-		enableTouchInteraction : true,															// true/false (optional default true)
-		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
-		reRenderOnResize : true, 																// true/false (optional default true)
+		el : "#",																																	// id of the parent element with #
+		editable : true, 																													// true/false (optional default true)
+		enableInteractiveAddAndCut : true,																				// true/false (optional default true)
+		enableTouchInteraction : true,																						// true/false (optional default true)
+		autoArrange : true,																												// true/false (compulsory if x and y not present else optional)
+		reRenderOnResize : true, 																									// true/false (optional default true)
 		isMobileCheck: function
 		pseudoElementContainer: string or element
-		itemMouseDownMoveCheck: function 														// x clicked/touched, y clicked/touched, item, index
-		itemMouseDownResizeCheck: function 														// x clicked/touched, y clicked/touched, item, index
+		itemMouseDownMoveCheck: function 																					// x clicked/touched, y clicked/touched, item, index
+		itemMouseDownResizeCheck: function 																				// x clicked/touched, y clicked/touched, item, index
 
 		gridData : {
-			WIDTH : 1920,																		// width of limberGridView
-			HEIGHT : 1080, 																		// height of limberGridView
-			MARGIN : 8, 																		// margin for items
-			MIN_HEIGHT_AND_WIDTH: 150 															// min height and width of items
+			WIDTH : 1920,																														// width of limberGridView
+			HEIGHT : 1080, 																													// height of limberGridView
+			MARGIN : 8, 																														// margin for items
+			MIN_HEIGHT_AND_WIDTH: 150 																							// min height and width of items
 		},
-		positionData: [																			// position Data
+		positionData: [																														// position Data
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 
@@ -123,7 +122,7 @@ LimberGridView.prototype.constructor = LimberGridView;
 			...
 		],
 		callbacks : {
-			renderComplete : function(){}, 															// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
+			renderComplete : function(){}, 																					// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
 			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
 			addComplete : function(index){}
 			removeComplete: function(index){}
@@ -132,10 +131,10 @@ LimberGridView.prototype.constructor = LimberGridView;
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 
-			onItemClickCallback : function(event){},												// click callback for item
+			onItemClickCallback : function(event){},																// click callback for item
 		},
 		publicConstants: {
-			mobileAspectRatio : <value>, 															// aspect ratio of for mobile devices
+			mobileAspectRatio : <value>, 																						// aspect ratio of for mobile devices
 
 			moveGuideRadius: number,
 			resizeSquareGuideLength: number
@@ -437,6 +436,7 @@ LimberGridView.prototype.initializeStore = function () {
 					initialStackSize: 100,
 					initialQueueSize: 100,
 				}),
+				rt: new RTreeIterative(),
 			},
 			stacks: {
 				stack: new Stack(),
