@@ -34,6 +34,7 @@ import {
 	doRectsOverlapRTree,
 	isRectInside,
 	getRectObjectFromCo,
+	getRectObjectFromRTreeRect,
 	doRectsOnlyTouch,
 	isPointInsideRect,
 	doesPointTouchRect,
@@ -361,12 +362,13 @@ export const identicalOrInsideHelper = function (rect) {
 	};
 };
 
-export const shouldFilterRect = function (rect, data) {
-	return (node, interval, d) => {
-		if (isRectInside(node.d.rect, rect) && node.d !== data) {
-			return true;
-		}
-	};
+export const shouldFilterRect = function (rectData, rect) {
+	if (
+		isRectInside(getRectObjectFromRTreeRect(rectData.rect), rect) &&
+		rectData.rect !== rect
+	) {
+		return true;
+	}
 };
 
 export const getScore = (rect, maxHWSum) => {
@@ -423,8 +425,8 @@ export const getPerfectMatch = (arr, hwSum, item) => {
 	const p2 = { x: 0, y: 0 };
 	let pm;
 	for (let i = 0; i < len; i++) {
-		p2.x = arr[i].d.rect.x;
-		p2.y = arr[i].d.rect.y;
+		p2.x = arr[i].rect.x1;
+		p2.y = arr[i].rect.y1;
 		d = getDistanceBetnPts(p1, p2);
 		if (d < min) {
 			pm = arr[i];

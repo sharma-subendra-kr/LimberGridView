@@ -48,7 +48,7 @@ import {
 	mergeRects,
 	isRectInside,
 } from "../rect/rectUtils";
-import { shuffle } from "../array/arrayUtils";
+// import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
 // import {
@@ -285,7 +285,7 @@ export const isRectIdenticalOrInside = (rt, obj, on) => {
 	return !!len;
 };
 
-export const mergeFreeRectsCore = (context, stack, rt, idCount, on) => {
+export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
 		const top = stack.pop();
@@ -334,21 +334,21 @@ export const mergeFreeRectsCore = (context, stack, rt, idCount, on) => {
 	}
 };
 
-export const filterMergedFreeRects = (mergedRectsIt) => {
-	const arr = mergedRectsIt.getSortedData();
+export const filterMergedFreeRects = (mergedRectsRt) => {
+	const arr = mergedRectsRt.getData();
 	const len = arr.length;
 	for (let i = 0; i < len; i++) {
 		const obj = arr[i];
-		const results = mergedRectsIt.findAll(
-			obj.interval,
+		const results = mergedRectsRt.find(
+			obj.rect,
 			null,
 			null,
-			shouldFilterRect(obj.d.rect, obj.d),
-			true
+			shouldFilterRect,
+			false
 		);
 
 		if (results?.length) {
-			mergedRectsIt.remove(obj.interval, obj.d);
+			mergedRectsRt.remove(obj.rect);
 		}
 	}
 };
@@ -368,18 +368,17 @@ export const mergeFreeRects = async (
 		rt = getTree(context, "rt");
 		rt.reset();
 	} else {
-		shuffle(garbageRects);
 		stack.setData(garbageRects.sort(rectSortX));
 		rt = freeRects;
 	}
 
-	mergeFreeRectsCore(context, stack, rt, idCount, "x");
+	mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
 	const mergedArr = rt.getData();
 	stack.setData(mergedArr.sort(rectSortY));
 	it.reset();
-	mergeFreeRectsCore(context, stack, rt, idCount, "y");
+	mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
 	return { mergedRectsRt: rt };
@@ -398,7 +397,7 @@ export const mergeFreeRects = async (
 export const arrange = async (
 	context,
 	itemsToArrange,
-	mergedRectsIt,
+	mergedRectsRt,
 	topWorkSpace,
 	bottomWorkSpace,
 	combinedWorkSpaceRectCo,
@@ -414,7 +413,7 @@ export const arrange = async (
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
 
-	let overlappedRects = mergedRectsIt.getSortedData();
+	let overlappedRects = mergedRectsRt.getData();
 
 	const iToALen = itemsToArrange.length;
 
@@ -447,8 +446,11 @@ export const arrange = async (
 
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
-			const oRect = overlappedRects[i].d.rect;
-			if (oRect.width >= tempAItem.width && oRect.height >= tempAItem.height) {
+			const oRect = overlappedRects[i].rect;
+			if (
+				oRect.x2 - oRect.x1 >= tempAItem.width &&
+				oRect.y2 - oRect.y1 >= tempAItem.height
+			) {
 				resStack.push(overlappedRects[i]);
 			}
 		}
@@ -468,45 +470,48 @@ export const arrange = async (
 
 		arranged[top.d] = aItem;
 
-		if (bottomWorkSpace && isRectInside(bottomWorkSpace, pm.d.rect)) {
+		if (
+			bottomWorkSpace &&
+			isRectInside(bottomWorkSpace, getRectObjectFromRTreeRect(pm.rect))
+		) {
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top.d] = top.d;
 		}
 
 		garbageStack.empty();
-		const result = mergedRectsIt.findAll(pm.interval);
+		const result = mergedRectsRt.find(pm.rect, false, true, undefined, false);
 		const resLen = result.length;
 		tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
 		for (let i = 0; i < resLen; i++) {
 			const res = result[i];
-			const _garbageRects = subtractRect(res.d.rect, tempAItem);
+			const _garbageRects = subtractRect(
+				getRectObjectFromRTreeRect(res.rect),
+				tempAItem
+			);
 
 			const gLen = _garbageRects?.length || 0;
 			for (let i = 0; i < gLen; i++) {
 				garbageStack.push({
-					interval: {
-						low: _garbageRects[i].x,
-						high: _garbageRects[i].x + _garbageRects[i].width,
-					},
-					d: {
+					rect: getRTreeRectFromRectObject(_garbageRects[i]),
+					data: {
 						id: idCount.idCount++,
 						rect: _garbageRects[i],
 					},
 				});
 			}
 			if (gLen) {
-				mergedRectsIt.remove(res.interval, res.d);
+				mergedRectsRt.remove(res.rect);
 			}
 		}
 
-		const { mergedRectsIt: _mergedRectsIt } = await mergeFreeRects(
+		const { mergedRectsRt: _mergedRectsRt } = await mergeFreeRects(
 			context,
-			mergedRectsIt,
+			mergedRectsRt,
 			idCount,
 			garbageStack.getData()
 		);
-		mergedRectsIt = _mergedRectsIt;
-		overlappedRects = mergedRectsIt.getSortedData();
+		mergedRectsRt = _mergedRectsRt;
+		overlappedRects = mergedRectsRt.getData();
 	}
 
 	return {
