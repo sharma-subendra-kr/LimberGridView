@@ -764,3 +764,12 @@ export const areRectsIdentical = (rectA, rectB) => {
 	}
 	return false;
 };
+
+export const getTreeRectFromRectObject = (rect) => {
+	return {
+		x1: rect.x,
+		x2: rect.x + rect.width,
+		y1: rect.y,
+		y2: rect.y + rect.height,
+	};
+};

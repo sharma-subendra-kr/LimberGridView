@@ -39,9 +39,10 @@ import {
 	shouldFilterRect,
 	doOverlapHelper,
 	identicalOrInsideHelper,
-	sweepTopBottomHelper,
+	// sweepTopBottomHelper,
 } from "./arrangeUtils";
 import {
+	getTreeRectFromRectObject,
 	getRectObjectFromCo,
 	subtractRect,
 	getCoordinates,
@@ -69,14 +70,14 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
 	const res = { integrateTop: false, integrateBottom: false };
 
-	const it = getTree(context, "it");
+	const rt = getTree(context, "rt");
 
 	if (topWorkSpace) {
 		topWSItems = getItemsInWorkSpace(
 			context,
 			getRectObjectFromCo(topWorkSpace)
 		);
-		const sweepRes = sweepLineTop(topWorkSpace, topWSItems, it);
+		const sweepRes = sweepLineTop(topWorkSpace, topWSItems, rt);
 
 		if (sweepRes < topWorkSpace.bl.y) {
 			topWorkSpace.tl.y = sweepRes;
@@ -91,7 +92,7 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			context,
 			getRectObjectFromCo(bottomWorkSpace)
 		);
-		const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems, it);
+		const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems, rt);
 
 		if (sweepRes > bottomWorkSpace.tl.y) {
 			bottomWorkSpace.bl.y = sweepRes;
@@ -104,16 +105,15 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	return res;
 };
 
-export const sweepLineTop = (area, items, it) => {
-	it.reset();
+export const sweepLineTop = (area, items, rt) => {
+	rt.reset();
 
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		it.insert({
-			low: items[i].y,
-			high: items[i].y + items[i].height,
-			d: {
+		rt.insert({
+			rect: getTreeRectFromRectObject(items[i]),
+			data: {
 				id: -1,
 				rect: items[i],
 			},
@@ -124,15 +124,18 @@ export const sweepLineTop = (area, items, it) => {
 	let res;
 
 	for (let i = 0; i < len; i++) {
-		res = it.findAll(
-			{ low: items[i].y + items[i].height, high: area.bl.y },
-			null,
-			null,
-			sweepTopBottomHelper(items[i]),
-			true
+		res = rt.find(
+			{
+				x1: items[i].x,
+				x2: items[i].x + items[i].width,
+				y1: items[i].y + items[i].height,
+				y2: area.bl.y,
+			},
+			false,
+			false
 		);
 
-		if (!res.length && items[i].y + items[i].height < resultPoint) {
+		if (!res && items[i].y + items[i].height < resultPoint) {
 			resultPoint = items[i].y + items[i].height;
 		}
 	}
@@ -140,16 +143,15 @@ export const sweepLineTop = (area, items, it) => {
 	return resultPoint;
 };
 
-export const sweepLineBottom = (area, items, it) => {
-	it.reset();
+export const sweepLineBottom = (area, items, rt) => {
+	rt.reset();
 
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		it.insert({
-			low: items[i].y,
-			high: items[i].y + items[i].height,
-			d: {
+		rt.insert({
+			rect: getTreeRectFromRectObject(items[i]),
+			data: {
 				id: -1,
 				rect: items[i],
 			},
@@ -159,15 +161,18 @@ export const sweepLineBottom = (area, items, it) => {
 	let resultPoint = area.tl.y;
 	let res;
 	for (let i = 0; i < len; i++) {
-		res = it.findAll(
-			{ low: area.tl.y, high: items[i].y },
-			null,
-			null,
-			sweepTopBottomHelper(items[i]),
-			true
+		res = rt.find(
+			{
+				x1: items[i].x,
+				x2: items[i].x + items[i].width,
+				y1: area.tl.y,
+				y2: items[i].y,
+			},
+			false,
+			false
 		);
 
-		if (!res.length && items[i].y > resultPoint) {
+		if (!res && items[i].y > resultPoint) {
 			resultPoint = items[i].y;
 		}
 	}
