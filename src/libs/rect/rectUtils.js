@@ -73,56 +73,21 @@ export const doRectsOverlap = (rectA, rectB) => {
 			return false;
 		}
 
-		const tlA = { x: rectA.x, y: rectA.y };
-		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
-		const tlB = { x: rectB.x, y: rectB.y };
-		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
+		const x1A = rectA.x;
+		const y1A = rectA.y;
+		const x2A = rectA.x + rectA.width;
+		const y2A = rectA.y + rectA.height;
 
-		if (tlA.x >= brB.x || tlB.x >= brA.x) {
-			return false;
-		}
+		const x1B = rectB.x;
+		const y1B = rectB.y;
+		const x2B = rectB.x + rectB.width;
+		const y2B = rectB.y + rectB.height;
 
-		if (tlA.y >= brB.y || tlB.y >= brA.y) {
+		if (x1A >= x2B || x1B.x >= x2A.x || y1A >= y2B || y1B >= y2A) {
 			return false;
 		}
 
 		return true;
-	} catch (e) {
-		return false;
-	}
-};
-
-export const doRectsOnlyTouchHard = (rectA, rectB) => {
-	try {
-		if (
-			isNaN(rectA.x) ||
-			isNaN(rectA.y) ||
-			isNaN(rectA.width) ||
-			isNaN(rectA.height) ||
-			isNaN(rectB.x) ||
-			isNaN(rectB.y) ||
-			isNaN(rectB.width) ||
-			isNaN(rectB.height)
-		) {
-			return false;
-		}
-
-		const tlA = { x: rectA.x, y: rectA.y };
-		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
-		const tlB = { x: rectB.x, y: rectB.y };
-		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
-
-		if (tlA.x > brB.x || tlB.x > brA.x) {
-			return false;
-		}
-
-		if (tlA.y > brB.y || tlB.y > brA.y) {
-			return false;
-		}
-
-		if (doRectsOverlap(rectA, rectB) === false) return true;
-
-		return false;
 	} catch (e) {
 		return false;
 	}
@@ -143,58 +108,21 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 			return false;
 		}
 
-		const tlA = { x: rectA.x, y: rectA.y };
-		const trA = { x: rectA.x + rectA.width, y: rectA.y };
-		const brA = { x: rectA.x + rectA.width, y: rectA.y + rectA.height };
-		const blA = { x: rectA.x, y: rectA.y + rectA.height };
+		const x1A = rectA.x;
+		const y1A = rectA.y;
+		const x2A = rectA.x + rectA.width;
+		const y2A = rectA.y + rectA.height;
 
-		const tlB = { x: rectB.x, y: rectB.y };
-		const trB = { x: rectB.x + rectB.width, y: rectB.y };
-		const brB = { x: rectB.x + rectB.width, y: rectB.y + rectB.height };
-		const blB = { x: rectB.x, y: rectB.y + rectB.height };
+		const x1B = rectB.x;
+		const y1B = rectB.y;
+		const x2B = rectB.x + rectB.width;
+		const y2B = rectB.y + rectB.height;
 
-		const THRESHOLD = 1;
-
-		if (
-			Math.abs(tlA.x - brB.x) < THRESHOLD &&
-			(Math.abs(tlA.y - brB.y) < THRESHOLD || (tlA.y < brB.y && blA.y > trB.y))
-			// Math.abs(tlA.y - trB.y) < THRESHOLD
-		) {
-			return true;
+		if (x1A > x2B || x1B.x > x2A.x || y1A > y2B || y1B > y2A) {
+			return false;
 		}
 
-		if (
-			Math.abs(tlA.y - brB.y) < THRESHOLD &&
-			(Math.abs(tlA.x - brB.x) < THRESHOLD || (tlA.x < brB.x && trA.x > blB.x))
-			// Math.abs(tlA.x - blB.x) < THRESHOLD
-		) {
-			return true;
-		}
-
-		if (
-			Math.abs(tlB.x - brA.x) < THRESHOLD &&
-			(Math.abs(tlB.y - brA.y) < THRESHOLD || (tlB.y < brA.y && blB.y > trA.y))
-			// Math.abs(tlB.y - trA.y) < THRESHOLD
-		) {
-			return true;
-		}
-
-		if (
-			Math.abs(tlB.y - brA.y) < THRESHOLD &&
-			(Math.abs(tlB.x - brA.x) < THRESHOLD || (tlB.x < brA.x && trB.x > blA.x))
-			// Math.abs(tlA.x - blB.x) < THRESHOLD
-		) {
-			return true;
-		}
-
-		// if (tlA.x > brB.x || tlB.x > brA.x) {
-		// 	return false;
-		// }
-		// if (tlA.y > brB.y || tlB.y > brA.y) {
-		// 	return false;
-		// }
-
-		// if (doRectsOverlap(rectA, rectB) === false) return true;
+		if (doRectsOverlap(rectA, rectB) === false) return true;
 
 		return false;
 	} catch (e) {
