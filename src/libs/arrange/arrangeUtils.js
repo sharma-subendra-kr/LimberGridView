@@ -314,18 +314,18 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 };
 
 export const rectSortX = (a, b) => {
-	if (a.d.rect.x === b.d.rect.x) {
-		return a.d.rect.y - b.d.rect.y;
+	if (a.rect.x === b.rect.x) {
+		return a.rect.y - b.rect.y;
 	} else {
-		return a.d.rect.x - b.d.rect.x;
+		return a.rect.x - b.rect.x;
 	}
 };
 
 export const rectSortY = (a, b) => {
-	if (a.d.rect.y === b.d.rect.y) {
-		return a.d.rect.x - b.d.rect.x;
+	if (a.rect.y === b.rect.y) {
+		return a.rect.x - b.rect.x;
 	} else {
-		return a.d.rect.y - b.d.rect.y;
+		return a.rect.y - b.rect.y;
 	}
 };
 
