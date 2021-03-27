@@ -530,43 +530,6 @@ export const getRectObjectFromCo = function (rect) {
 	};
 };
 
-export const areRectsAdjacent = (rectA, rectB) => {
-	const rectACo = getCoordinates(rectA);
-	const rectBCo = getCoordinates(rectB);
-
-	// if (!doRectsOnlyTouch(rectA, rectB)) {
-	// 	return false;
-	// }
-
-	if (
-		!(
-			Math.abs(rectACo.tl.x - rectBCo.tr.x) < 1 ||
-			Math.abs(rectBCo.tl.x - rectACo.tr.x) < 1 ||
-			Math.abs(rectACo.tl.y - rectBCo.bl.y) < 1 ||
-			Math.abs(rectBCo.tl.y - rectACo.bl.y) < 1
-		)
-	) {
-		return false;
-	}
-
-	// below filters point of intersection touch
-	if (
-		(rectACo.tl.y >= rectBCo.tl.y && rectACo.tl.y < rectBCo.bl.y) ||
-		(rectBCo.tl.y >= rectACo.tl.y && rectBCo.tl.y < rectACo.bl.y) ||
-		(rectACo.tl.x >= rectBCo.tl.x && rectACo.tl.x < rectBCo.tr.x) ||
-		(rectBCo.tl.x >= rectACo.tl.x && rectBCo.tl.x < rectACo.tr.x) ||
-		//
-		(rectACo.bl.y <= rectBCo.bl.y && rectACo.bl.y > rectBCo.tl.y) ||
-		(rectBCo.bl.y <= rectACo.bl.y && rectBCo.bl.y > rectACo.tl.y) ||
-		(rectACo.tr.x <= rectBCo.tr.x && rectACo.tr.x > rectBCo.tl.x) ||
-		(rectBCo.tr.x <= rectACo.tr.x && rectBCo.tr.x > rectACo.tl.x)
-	) {
-		return true;
-	} else {
-		return false;
-	}
-};
-
 export const merge = (rectACo, rectBCo) => {
 	let res;
 	// check tl
