@@ -37,7 +37,7 @@ import {
 	rectSortY,
 	shouldFilterRect,
 	doOverlapHelper,
-	identicalOrInsideHelper,
+	// identicalOrInsideHelper,
 	// sweepTopBottomHelper,
 } from "./arrangeUtils";
 import {
@@ -254,36 +254,36 @@ export const sweepLineForFreeSpace = (
 	return { rt };
 };
 
-export const isRectIdenticalOrInside = (rt, obj, on) => {
-	let axis = "x";
-	let distance = "width";
-	if (on === "y") {
-		axis = "y";
-		distance = "height";
-	}
-	const res = rt.find(
-		{
-			low: obj.d.rect[axis],
-			high: obj.d.rect[axis] + obj.d.rect[distance],
-		},
-		obj.rect,
-		true,
-		null,
-		identicalOrInsideHelper(obj.d.rect),
-		true
-	);
-	const len = res?.length || 0;
+// export const isRectIdenticalOrInside = (rt, obj, on) => {
+// 	let axis = "x";
+// 	let distance = "width";
+// 	if (on === "y") {
+// 		axis = "y";
+// 		distance = "height";
+// 	}
+// 	const res = rt.find(
+// 		{
+// 			low: obj.d.rect[axis],
+// 			high: obj.d.rect[axis] + obj.d.rect[distance],
+// 		},
+// 		obj.rect,
+// 		true,
+// 		null,
+// 		identicalOrInsideHelper(obj.d.rect),
+// 		true
+// 	);
+// 	const len = res?.length || 0;
 
-	if (!len) {
-		it.insert({
-			low: obj.d.rect[axis],
-			high: obj.d.rect[axis] + obj.d.rect[distance],
-			d: obj.d,
-		});
-	}
+// 	if (!len) {
+// 		it.insert({
+// 			low: obj.d.rect[axis],
+// 			high: obj.d.rect[axis] + obj.d.rect[distance],
+// 			d: obj.d,
+// 		});
+// 	}
 
-	return !!len;
-};
+// 	return !!len;
+// };
 
 export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
 	let topFullMerged = false;
@@ -465,8 +465,8 @@ export const arrange = async (
 			oItem
 		);
 
-		aItem.x = pm.d.rect.x + privateConstants.MARGIN;
-		aItem.y = pm.d.rect.y + privateConstants.MARGIN;
+		aItem.x = pm.rect.x + privateConstants.MARGIN;
+		aItem.y = pm.rect.y + privateConstants.MARGIN;
 
 		arranged[top.d] = aItem;
 

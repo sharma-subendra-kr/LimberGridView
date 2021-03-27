@@ -38,9 +38,9 @@ import {
 	doRectsOnlyTouch,
 	isPointInsideRect,
 	doesPointTouchRect,
-	areRectsIdentical,
-	getCoordinates,
-	areRectsOnSameYAxisExPath,
+	// areRectsIdentical,
+	// getCoordinates,
+	// areRectsOnSameYAxisExPath,
 } from "../rect/rectUtils";
 import { getDistanceBetnPts } from "../geometry/geometry";
 
@@ -329,19 +329,19 @@ export const rectSortY = (a, b) => {
 	}
 };
 
-export const sweepTopBottomHelper = function (rect) {
-	return (node, interval, d) => {
-		if (
-			areRectsOnSameYAxisExPath(
-				getCoordinates(rect),
-				getCoordinates(node.d.rect)
-			) &&
-			!areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect))
-		) {
-			return true;
-		}
-	};
-};
+// export const sweepTopBottomHelper = function (rect) {
+// 	return (node, interval, d) => {
+// 		if (
+// 			areRectsOnSameYAxisExPath(
+// 				getCoordinates(rect),
+// 				getCoordinates(node.d.rect)
+// 			) &&
+// 			!areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect))
+// 		) {
+// 			return true;
+// 		}
+// 	};
+// };
 
 export const doOverlapHelper = function (rect) {
 	return (rectData) => {
@@ -351,16 +351,16 @@ export const doOverlapHelper = function (rect) {
 	};
 };
 
-export const identicalOrInsideHelper = function (rect) {
-	return (node, interval, d) => {
-		if (
-			areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) ||
-			isRectInside(node.d.rect, rect)
-		) {
-			return true;
-		}
-	};
-};
+// export const identicalOrInsideHelper = function (rect) {
+// 	return (node, interval, d) => {
+// 		if (
+// 			areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) ||
+// 			isRectInside(node.d.rect, rect)
+// 		) {
+// 			return true;
+// 		}
+// 	};
+// };
 
 export const shouldFilterRect = function (rectData, rect) {
 	if (
