@@ -791,18 +791,18 @@ export const areRectsIdentical = (rectA, rectB) => {
 
 export const getRTreeRectFromRectObject = (rect) => {
 	return {
-		x: rect.x1,
-		y: rect.y1,
-		width: rect.x2 - rect.x1,
-		height: rect.y2 - rect.y1,
+		x1: rect.x,
+		x2: rect.x + rect.width,
+		y1: rect.y,
+		y2: rect.y + rect.height,
 	};
 };
 
 export const getRectObjectFromRTreeRect = (rect) => {
 	return {
-		x1: rect.x,
-		x2: rect.x + rect.width,
-		y1: rect.y,
-		y2: rect.y + rect.height,
+		x: rect.x1,
+		y: rect.y1,
+		width: rect.x2 - rect.x1,
+		height: rect.y2 - rect.y1,
 	};
 };

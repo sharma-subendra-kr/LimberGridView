@@ -236,6 +236,7 @@ export const sweepLineForFreeSpace = (
 				getRectObjectFromRTreeRect(resRects[j].rect),
 				tempItemWithMargin
 			);
+
 			rt.remove(resRects[j].rect);
 
 			dLen = diff.length;
@@ -377,7 +378,7 @@ export const mergeFreeRects = async (
 
 	const mergedArr = rt.getData();
 	stack.setData(mergedArr.sort(rectSortY));
-	it.reset();
+	rt.reset();
 	mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
@@ -465,8 +466,8 @@ export const arrange = async (
 			oItem
 		);
 
-		aItem.x = pm.rect.x + privateConstants.MARGIN;
-		aItem.y = pm.rect.y + privateConstants.MARGIN;
+		aItem.x = pm.rect.x1 + privateConstants.MARGIN;
+		aItem.y = pm.rect.y1 + privateConstants.MARGIN;
 
 		arranged[top.d] = aItem;
 
