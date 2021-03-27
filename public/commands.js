@@ -103,3 +103,14 @@ window.scrollDown = function () {
 	const el = document.getElementsByClassName("limber-grid-view")[0];
 	el.scrollTop += 100;
 };
+
+window.printTree = function () {
+	const $rtreeDebugContainer = document.getElementById("rtree-debug-container");
+	$rtreeDebugContainer.classList.add("rtree-debug-container-active");
+	$rtreeDebugContainer.innerHTML = window.limberGridView.store.variables.trees.rt.printTree();
+};
+
+window.toggleRTree = function () {
+	const $rtreeDebugContainer = document.getElementById("rtree-debug-container");
+	$rtreeDebugContainer.classList.toggle("rtree-debug-container-active");
+};
