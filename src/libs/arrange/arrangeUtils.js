@@ -329,20 +329,6 @@ export const rectSortY = (a, b) => {
 	}
 };
 
-// export const sweepTopBottomHelper = function (rect) {
-// 	return (node, interval, d) => {
-// 		if (
-// 			areRectsOnSameYAxisExPath(
-// 				getCoordinates(rect),
-// 				getCoordinates(node.d.rect)
-// 			) &&
-// 			!areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect))
-// 		) {
-// 			return true;
-// 		}
-// 	};
-// };
-
 export const doOverlapHelper = function (rect) {
 	return (rectData) => {
 		if (doRectsOverlapRTree(rectData.rect, rect)) {
@@ -350,17 +336,6 @@ export const doOverlapHelper = function (rect) {
 		}
 	};
 };
-
-// export const identicalOrInsideHelper = function (rect) {
-// 	return (node, interval, d) => {
-// 		if (
-// 			areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) ||
-// 			isRectInside(node.d.rect, rect)
-// 		) {
-// 			return true;
-// 		}
-// 	};
-// };
 
 export const shouldFilterRect = function (rectData, rect) {
 	if (

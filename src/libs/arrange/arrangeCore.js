@@ -114,7 +114,7 @@ export const sweepLineTop = (area, items, rt) => {
 			rect: getRTreeRectFromRectObject(items[i]),
 			data: {
 				id: -1,
-				rect: items[i],
+				// rect: items[i],
 			},
 		});
 	}
@@ -152,7 +152,7 @@ export const sweepLineBottom = (area, items, rt) => {
 			rect: getRTreeRectFromRectObject(items[i]),
 			data: {
 				id: -1,
-				rect: items[i],
+				// rect: items[i],
 			},
 		});
 	}
@@ -197,7 +197,10 @@ export const sweepLineForFreeSpace = (
 
 	rt.insert({
 		rect: getRTreeRectFromRectObject(area),
-		data: { id: idCount.idCount++, rect: area },
+		data: {
+			id: idCount.idCount++,
+			// rect: area,
+		},
 	});
 
 	let tempItem;
@@ -245,7 +248,7 @@ export const sweepLineForFreeSpace = (
 					rect: getRTreeRectFromRectObject(diff[k]),
 					data: {
 						id: idCount.idCount++,
-						rect: diff[k],
+						// rect: diff[k],
 					},
 				});
 			}
@@ -254,37 +257,6 @@ export const sweepLineForFreeSpace = (
 
 	return { rt };
 };
-
-// export const isRectIdenticalOrInside = (rt, obj, on) => {
-// 	let axis = "x";
-// 	let distance = "width";
-// 	if (on === "y") {
-// 		axis = "y";
-// 		distance = "height";
-// 	}
-// 	const res = rt.find(
-// 		{
-// 			low: obj.d.rect[axis],
-// 			high: obj.d.rect[axis] + obj.d.rect[distance],
-// 		},
-// 		obj.rect,
-// 		true,
-// 		null,
-// 		identicalOrInsideHelper(obj.d.rect),
-// 		true
-// 	);
-// 	const len = res?.length || 0;
-
-// 	if (!len) {
-// 		it.insert({
-// 			low: obj.d.rect[axis],
-// 			high: obj.d.rect[axis] + obj.d.rect[distance],
-// 			d: obj.d,
-// 		});
-// 	}
-
-// 	return !!len;
-// };
 
 export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
 	let topFullMerged = false;
@@ -318,7 +290,7 @@ export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
 						rect: getRTreeRectFromRectObject(mergedRect),
 						data: {
 							id: idCount.idCount++,
-							rect: mergedRect,
+							// rect: mergedRect,
 						},
 					};
 
