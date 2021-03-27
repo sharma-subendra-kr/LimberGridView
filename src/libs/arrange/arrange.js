@@ -360,16 +360,16 @@ export const arrangeResize = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		let freeRectsItY;
+		let freeRects;
 		if (passCount === 0) {
-			const { it: _freeRectsItY } = sweepLineForFreeSpace(
+			const { rt: _freeRects } = sweepLineForFreeSpace(
 				context,
 				combinedWorkSpaceRect,
 				combinedWorkSpaceRectCo,
 				itemsInCombinedWorkSpace,
 				idCount
 			);
-			freeRectsItY = _freeRectsItY;
+			freeRects = _freeRects;
 		} else if (passCount === 1) {
 			const {
 				itemsInWorkSpace: _itemsInCombinedWorkSpace,
@@ -389,19 +389,19 @@ export const arrangeResize = async (
 			passCount++;
 			continue;
 		} else if (passCount >= 2) {
-			const { it: _freeRectsItY } = sweepLineForFreeSpace(
+			const { rt: _freeRects } = sweepLineForFreeSpace(
 				context,
 				_combinedWorkSpaceRect,
 				_combinedWorkSpaceRectCo,
 				itemsInCombinedWorkSpace,
 				idCount
 			);
-			freeRectsItY = _freeRectsItY;
+			freeRects = _freeRects;
 		}
 
-		const freeRectsArr = freeRectsItY.getSortedData();
+		const freeRectsArr = freeRects.getData();
 
-		const { mergedRectsIt } = await mergeFreeRects(
+		const { mergedRectsRt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
@@ -410,7 +410,7 @@ export const arrangeResize = async (
 		const { arranged: _arranged } = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			mergedRectsIt,
+			mergedRectsRt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			passCount === 0 ? combinedWorkSpaceRectCo : _combinedWorkSpaceRectCo,
@@ -505,7 +505,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		const { it: freeRectsItY } = sweepLineForFreeSpace(
+		const { rt: freeRects } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
@@ -513,9 +513,9 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 			idCount
 		);
 
-		const freeRectsArr = freeRectsItY.getSortedData();
+		const freeRectsArr = freeRects.getData();
 
-		const { mergedRectsIt } = await mergeFreeRects(
+		const { mergedRectsRt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
@@ -524,7 +524,7 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		const { arranged: _arranged } = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			mergedRectsIt,
+			mergedRectsRt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			undefined,
 			combinedWorkSpaceRectCo,
