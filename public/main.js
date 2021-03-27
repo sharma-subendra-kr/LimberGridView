@@ -33,6 +33,14 @@ const main = function () {
 		"toggle-add-or-cut-space-button"
 	);
 	const $addButtonIcon = document.getElementsByClassName("add-button-icon");
+	const $rtreeDebugContainer = document.getElementById("rtree-debug-container");
+	const $rtreeButton = document.getElementById("rtree-button");
+
+	const onRTreeButtonClick = function (event) {
+		$rtreeDebugContainer.classList.toggle("rtree-debug-container-active");
+	};
+
+	$rtreeButton.addEventListener("click", onRTreeButtonClick);
 
 	const onToggleModeClick = function (event) {
 		// console.log(event);

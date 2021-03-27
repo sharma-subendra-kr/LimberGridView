@@ -336,3 +336,19 @@ body {
 	margin: auto;
 	position: absolute;
 }
+
+#rtree-debug-container {
+	z-index: 5000;
+	height: calc(100vh - 80px);
+	width: 100%;
+	top: 80px;
+	position: absolute;
+	background: white;
+	border: solid 1px black;
+	border-radius: 5px;
+	display: none;
+}
+
+.rtree-debug-container-active {
+	display: block !important;
+}
