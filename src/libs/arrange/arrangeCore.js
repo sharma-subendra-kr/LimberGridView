@@ -131,6 +131,8 @@ export const sweepLineTop = (area, items, rt) => {
 				y2: area.bl.y,
 			},
 			false,
+			false,
+			undefined,
 			false
 		);
 
@@ -168,6 +170,8 @@ export const sweepLineBottom = (area, items, rt) => {
 				y2: items[i].y,
 			},
 			false,
+			false,
+			undefined,
 			false
 		);
 
@@ -230,7 +234,8 @@ export const sweepLineForFreeSpace = (
 			fRect,
 			false,
 			true,
-			doOverlapHelper(tempItemWithMarginRTree)
+			doOverlapHelper(tempItemWithMarginRTree),
+			false
 		);
 
 		rLen = resRects.length;
