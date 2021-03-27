@@ -202,6 +202,30 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 	}
 };
 
+export const doRectsOverlapRTree = (rectA, rectB) => {
+	if (
+		rectA.x1 >= rectB.x2 ||
+		rectB.x1 >= rectA.x2 ||
+		rectA.y1 >= rectB.y2 ||
+		rectB.y1 >= rectA.y2
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const doRectsOverlapOrTouchRTree = (rectA, rectB) => {
+	if (
+		rectA.x1 > rectB.x2 ||
+		rectB.x1 > rectA.x2 ||
+		rectA.y1 > rectB.y2 ||
+		rectB.y1 > rectA.y2
+	) {
+		return false;
+	}
+	return true;
+};
+
 export const subtractRect = (rectA, rectB, oCoForm) => {
 	// gives the non overlapping free spaces in rectA
 	if (!doRectsOverlap(rectA, rectB)) {
@@ -765,7 +789,16 @@ export const areRectsIdentical = (rectA, rectB) => {
 	return false;
 };
 
-export const getTreeRectFromRectObject = (rect) => {
+export const getRTreeRectFromRectObject = (rect) => {
+	return {
+		x: rect.x1,
+		y: rect.y1,
+		width: rect.x2 - rect.x1,
+		height: rect.y2 - rect.y1,
+	};
+};
+
+export const getRectObjectFromRTreeRect = (rect) => {
 	return {
 		x1: rect.x,
 		x2: rect.x + rect.width,

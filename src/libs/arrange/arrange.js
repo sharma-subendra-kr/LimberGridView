@@ -149,7 +149,7 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		const { it: freeRectsItY } = sweepLineForFreeSpace(
+		const { rt: freeRects } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
 			combinedWorkSpaceRectCo,
@@ -157,9 +157,9 @@ export const arrangeMove = async (
 			idCount
 		);
 
-		const freeRectsArr = freeRectsItY.getSortedData();
+		const freeRectsArr = freeRects.getData();
 
-		const { mergedRectsIt } = await mergeFreeRects(
+		const { mergedRectsRt } = await mergeFreeRects(
 			context,
 			freeRectsArr,
 			idCount
@@ -171,7 +171,7 @@ export const arrangeMove = async (
 		} = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			mergedRectsIt,
+			mergedRectsRt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			combinedWorkSpaceRectCo,

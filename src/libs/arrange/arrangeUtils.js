@@ -31,10 +31,10 @@ import {
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	doRectsOverlap,
+	doRectsOverlapRTree,
 	isRectInside,
 	getRectObjectFromCo,
 	doRectsOnlyTouch,
-	doRectsOnlyTouchHard,
 	isPointInsideRect,
 	doesPointTouchRect,
 	areRectsIdentical,
@@ -343,8 +343,8 @@ export const sweepTopBottomHelper = function (rect) {
 };
 
 export const doOverlapHelper = function (rect) {
-	return (node, interval, d) => {
-		if (doRectsOverlap(rect, node.d.rect)) {
+	return (rectData) => {
+		if (doRectsOverlapRTree(rectData.rect, rect)) {
 			return true;
 		}
 	};
@@ -355,17 +355,6 @@ export const identicalOrInsideHelper = function (rect) {
 		if (
 			areRectsIdentical(getCoordinates(rect), getCoordinates(node.d.rect)) ||
 			isRectInside(node.d.rect, rect)
-		) {
-			return true;
-		}
-	};
-};
-
-export const isMergable = function (rect) {
-	return (node, interval, d) => {
-		if (
-			doRectsOverlap(rect, node.d.rect) ||
-			doRectsOnlyTouchHard(rect, node.d.rect)
 		) {
 			return true;
 		}

@@ -35,17 +35,16 @@ import {
 	getPerfectMatch,
 	rectSortX,
 	rectSortY,
-	isMergable,
 	shouldFilterRect,
 	doOverlapHelper,
 	identicalOrInsideHelper,
 	// sweepTopBottomHelper,
 } from "./arrangeUtils";
 import {
-	getTreeRectFromRectObject,
+	getRTreeRectFromRectObject,
+	getRectObjectFromRTreeRect,
 	getRectObjectFromCo,
 	subtractRect,
-	getCoordinates,
 	mergeRects,
 	isRectInside,
 } from "../rect/rectUtils";
@@ -112,7 +111,7 @@ export const sweepLineTop = (area, items, rt) => {
 
 	for (let i = 0; i < len; i++) {
 		rt.insert({
-			rect: getTreeRectFromRectObject(items[i]),
+			rect: getRTreeRectFromRectObject(items[i]),
 			data: {
 				id: -1,
 				rect: items[i],
@@ -150,7 +149,7 @@ export const sweepLineBottom = (area, items, rt) => {
 
 	for (let i = 0; i < len; i++) {
 		rt.insert({
-			rect: getTreeRectFromRectObject(items[i]),
+			rect: getRTreeRectFromRectObject(items[i]),
 			data: {
 				id: -1,
 				rect: items[i],
@@ -193,75 +192,82 @@ export const sweepLineForFreeSpace = (
 
 	const privateConstants = getPrivateConstants(context);
 
-	const it = getTree(context, "it");
-	it.reset();
+	const rt = getTree(context, "rt");
+	rt.reset();
 
-	it.insert({
-		low: areaCo.tl.x,
-		high: areaCo.tr.x,
-		d: { id: idCount.idCount++, rect: area },
+	rt.insert({
+		rect: getRTreeRectFromRectObject(area),
+		data: { id: idCount.idCount++, rect: area },
 	});
 
 	let tempItem;
 	let tempItemWithMargin;
-	const fInterval = { low: 0, high: 0 };
-	let intervals;
-	let iLen = 0;
+	let tempItemWithMarginRTree;
+	const fRect = { x1: 0, x2: 0, y1: 0, y2: 0 };
+	let resRects;
+	let rLen = 0;
 	let diff;
 	let dLen = 0;
 
 	const len = items.length;
 	for (let i = 0; i < len; i++) {
-		tempItem = getCoordinates(items[i]);
+		tempItem = items[i];
 		tempItemWithMargin = getItemDimenWithMargin(
 			privateConstants.MARGIN,
 			items[i]
 		);
-		fInterval.low = tempItem.tl.x;
-		fInterval.high = tempItem.tr.x;
-		intervals = it.findAll(
-			fInterval,
-			null,
-			null,
-			doOverlapHelper(tempItemWithMargin)
+		tempItemWithMarginRTree = getRTreeRectFromRectObject(tempItemWithMargin);
+
+		fRect.x1 = tempItem.x;
+		fRect.x2 = tempItem.x + tempItem.width;
+		fRect.y1 = tempItem.y;
+		fRect.y2 = tempItem.y + tempItem.height;
+
+		resRects = rt.find(
+			fRect,
+			false,
+			true,
+			doOverlapHelper(tempItemWithMarginRTree)
 		);
 
-		iLen = intervals.length;
-		for (let j = 0; j < iLen; j++) {
-			diff = subtractRect(intervals[j].d.rect, tempItemWithMargin, true);
-			it.remove(intervals[j].interval, intervals[j].d);
+		rLen = resRects.length;
+		for (let j = 0; j < rLen; j++) {
+			diff = subtractRect(
+				getRectObjectFromRTreeRect(resRects[j].rect),
+				tempItemWithMargin
+			);
+			rt.remove(resRects[j].rect);
 
 			dLen = diff.length;
 			for (let k = 0; k < dLen; k++) {
-				it.insert({
-					low: diff[k].tl.x,
-					high: diff[k].tr.x,
-					d: {
+				rt.insert({
+					rect: getRTreeRectFromRectObject(diff[k]),
+					data: {
 						id: idCount.idCount++,
-						rect: getRectObjectFromCo(diff[k]),
+						rect: diff[k],
 					},
 				});
 			}
-			//
 		}
 	}
 
-	return { it };
+	return { rt };
 };
 
-export const isRectIdenticalOrInside = (it, obj, on) => {
+export const isRectIdenticalOrInside = (rt, obj, on) => {
 	let axis = "x";
 	let distance = "width";
 	if (on === "y") {
 		axis = "y";
 		distance = "height";
 	}
-	const res = it.findAll(
+	const res = rt.find(
 		{
 			low: obj.d.rect[axis],
 			high: obj.d.rect[axis] + obj.d.rect[distance],
 		},
-		null,
+		obj.rect,
+		true,
 		null,
 		identicalOrInsideHelper(obj.d.rect),
 		true
@@ -279,51 +285,51 @@ export const isRectIdenticalOrInside = (it, obj, on) => {
 	return !!len;
 };
 
-export const mergeFreeRectsCore = (context, stack, it, idCount, on) => {
+export const mergeFreeRectsCore = (context, stack, rt, idCount, on) => {
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
 		const top = stack.pop();
 		topFullMerged = false;
 
-		const results = it.findAll(
-			top.interval,
-			null,
-			null,
-			isMergable(top.d.rect)
-		);
+		const results = rt.find(top.rect, false, true, undefined, true);
 
 		const len = results?.length || 0;
 		if (len > 0) {
 			for (let i = 0; i < len; i++) {
 				const res = results[i];
 
-				const mergedRects = mergeRects(res.d.rect, top.d.rect);
+				const mergedRects = mergeRects(
+					getRectObjectFromRTreeRect(res.rect),
+					getRectObjectFromRTreeRect(top.rect)
+				);
 				if (mergedRects.length === 1) {
 					const mergedRect = mergedRects[0];
 
-					if (isRectInside(mergedRect, res.d.rect)) {
-						it.remove(res.interval, res.d);
+					if (isRectInside(mergedRect, getRectObjectFromRTreeRect(res.rect))) {
+						rt.remove(res.rect);
 					}
 
-					if (isRectInside(mergedRect, top.d.rect)) {
+					if (isRectInside(mergedRect, getRectObjectFromRTreeRect(top.rect))) {
 						topFullMerged = true;
 					}
 
 					const mergedObject = {
-						d: {
+						rect: getRTreeRectFromRectObject(mergedRect),
+						data: {
 							id: idCount.idCount++,
 							rect: mergedRect,
 						},
 					};
 
-					isRectIdenticalOrInside(it, mergedObject, on);
+					rt.insert(mergedObject);
 				}
 			}
 			if (topFullMerged === false) {
-				isRectIdenticalOrInside(it, { d: top.d }, on);
+				// put  top in the tree
+				rt.insert({ rect: top.rect, data: { id: idCount.idCount++ } });
 			}
 		} else {
-			it.insert({ ...top.interval, d: top.d });
+			rt.insert({ rect: top.rect, data: { id: idCount.idCount++ } });
 		}
 	}
 };
@@ -353,50 +359,30 @@ export const mergeFreeRects = async (
 	idCount,
 	garbageRects
 ) => {
-	let it;
+	let rt;
 
 	const stack = getStack(context, "stack");
 
 	if (Array.isArray(freeRects)) {
-		shuffle(freeRects);
 		stack.setData(freeRects.sort(rectSortX));
-		it = getTree(context, "it");
-		it.reset();
+		rt = getTree(context, "rt");
+		rt.reset();
 	} else {
 		shuffle(garbageRects);
 		stack.setData(garbageRects.sort(rectSortX));
-		it = freeRects;
+		rt = freeRects;
 	}
 
-	mergeFreeRectsCore(context, stack, it, idCount, "x");
-	filterMergedFreeRects(it);
+	mergeFreeRectsCore(context, stack, rt, idCount, "x");
+	filterMergedFreeRects(rt);
 
-	const mergedArr = it.getSortedData();
-	shuffle(mergedArr);
-	const mLen = mergedArr.length;
-	for (let i = 0; i < mLen; i++) {
-		mergedArr[i].interval.low = mergedArr[i].d.rect.y;
-		mergedArr[i].interval.high =
-			mergedArr[i].d.rect.y + mergedArr[i].d.rect.height;
-	}
+	const mergedArr = rt.getData();
 	stack.setData(mergedArr.sort(rectSortY));
 	it.reset();
-	mergeFreeRectsCore(context, stack, it, idCount, "y");
-	filterMergedFreeRects(it);
+	mergeFreeRectsCore(context, stack, rt, idCount, "y");
+	filterMergedFreeRects(rt);
 
-	const arr = it.getSortedData();
-	it.reset();
-	shuffle(arr);
-	const len = arr.length;
-	for (let i = 0; i < len; i++) {
-		it.insert({
-			low: arr[i].d.rect.x,
-			high: arr[i].d.rect.x + arr[i].d.rect.width,
-			d: arr[i].d,
-		});
-	}
-
-	return { mergedRectsIt: it };
+	return { mergedRectsRt: rt };
 };
 
 /**
