@@ -20,6 +20,7 @@ body {
 
 	font-size: 25px;
 	font-family: "Helvetica";
+	display: flex;
 }
 
 .animation-body {
@@ -74,6 +75,10 @@ body {
 	top: 0;
 	left: 0;
 	/*animation: animated-box-keyframes 5000ms linear infinite;*/
+}
+
+.rtree-button {
+	margin-left: 0;
 }
 
 .limber-grid-controls {
