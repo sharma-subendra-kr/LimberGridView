@@ -76,3 +76,40 @@ export const sleep = (ms) => {
 		setTimeout(resolve, ms);
 	});
 };
+
+export const sanitizeNumberFloor = (num) => {
+	const decimalPart = num % 1;
+	const integerPart = Math.trunc(num);
+	if (decimalPart <= 0.25) {
+		return integerPart;
+	} else if (decimalPart <= 0.5) {
+		return integerPart + 0.25;
+	} else if (decimalPart <= 0.75) {
+		return integerPart + 0.5;
+	} else if (decimalPart <= 0.99) {
+		return integerPart + 0.75;
+	}
+	return integerPart - 0.25;
+};
+
+export const sanitizeNumberCeil = (num) => {
+	const decimalPart = num % 1;
+	const integerPart = Math.trunc(num);
+	if (decimalPart <= 0.25) {
+		return integerPart + 0.25;
+	} else if (decimalPart <= 0.5) {
+		return integerPart + 0.5;
+	} else if (decimalPart <= 0.75) {
+		return integerPart + 0.75;
+	} else if (decimalPart <= 0.99) {
+		return integerPart + 1;
+	}
+	return integerPart + 0.25;
+};
+
+export const sanitizeDimension = (item) => {
+	item.x = sanitizeNumberCeil(item.x);
+	item.y = sanitizeNumberCeil(item.y);
+	item.width = sanitizeNumberFloor(item.width);
+	item.height = sanitizeNumberFloor(item.height);
+};

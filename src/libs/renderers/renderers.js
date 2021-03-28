@@ -34,7 +34,7 @@ import {
 	setModifiedPositionData,
 	getCallbacks,
 } from "../../store/variables/essentials";
-import { isMobile } from "../utils/utils";
+import { isMobile, sanitizeDimension } from "../utils/utils";
 
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -77,6 +77,7 @@ export const render = function (context, scale = true) {
 			pd[i].y *= WIDTH_SCALE_FACTOR;
 			pd[i].width *= WIDTH_SCALE_FACTOR;
 			pd[i].height *= WIDTH_SCALE_FACTOR;
+			sanitizeDimension(pd[i]);
 
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
@@ -96,6 +97,7 @@ export const render = function (context, scale = true) {
 			pd[i].y *= WIDTH_SCALE_FACTOR;
 			pd[i].width *= WIDTH_SCALE_FACTOR;
 			pd[i].height *= WIDTH_SCALE_FACTOR;
+			sanitizeDimension(pd[i]);
 
 			spd[i].width = privateConstants.WIDTH;
 			spd[i].height =
@@ -218,11 +220,13 @@ export const addItem = async function (context, item) {
 				width: item.width,
 				height: item.height,
 			});
+			sanitizeDimension(mpd[mpd.length - 1]);
 			const arranged = await arrangeFromHeight(
 				context,
 				[mpd.length - 1],
 				bottomY
 			);
+			sanitizeDimension(mpd[mpd.length - 1]);
 			setPositionData(context, mpd);
 		} else {
 			return false;
