@@ -60,15 +60,15 @@ export const printUnmergedFreeRects = (context, arr) => {
 		);
 		node.setAttribute(
 			"id",
-			`limber-grid-view-debug-unmerged-rect-${arr[i].id}`
+			`limber-grid-view-debug-unmerged-rect-${arr[i].data.id}`
 		);
 		node.setAttribute("tabindex", "-1");
 
-		node.setAttribute("title", `${arr[i].id}`);
-		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.setAttribute("title", `${arr[i].data.id}`);
+		node.innerHTML = arr[i].data.id;
+		node.style.transform = `translate(${arr[i].rect.x1}px, ${arr[i].rect.y1}px)`;
+		node.style.width = arr[i].rect.x2 - arr[i].rect.x1 + "px";
+		node.style.height = arr[i].rect.y2 - arr[i].rect.y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
