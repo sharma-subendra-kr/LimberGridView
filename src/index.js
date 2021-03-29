@@ -438,7 +438,7 @@ LimberGridView.prototype.initializeStore = function () {
 				}),
 				rt: new RTreeIterative({
 					M: 4,
-					splitNode: "linear",
+					// splitNode: "linear",
 				}),
 			},
 			stacks: {

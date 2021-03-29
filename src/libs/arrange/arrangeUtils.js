@@ -313,19 +313,27 @@ export const getItemDimenWithMargin = (MARGIN, item) => {
 	return _item;
 };
 
-export const rectSortX = (a, b) => {
-	if (a.rect.x === b.rect.x) {
-		return a.rect.y - b.rect.y;
+export const sweepLineSortX = (a, b) => {
+	if (a.x === b.x) {
+		return a.y - b.y;
 	} else {
-		return a.rect.x - b.rect.x;
+		return a.x - b.x;
+	}
+};
+
+export const rectSortX = (a, b) => {
+	if (a.rect.x1 === b.rect.x1) {
+		return a.rect.y1 - b.rect.y1;
+	} else {
+		return a.rect.x1 - b.rect.x1;
 	}
 };
 
 export const rectSortY = (a, b) => {
-	if (a.rect.y === b.rect.y) {
-		return a.rect.x - b.rect.x;
+	if (a.rect.y1 === b.rect.y1) {
+		return a.rect.x1 - b.rect.x1;
 	} else {
-		return a.rect.y - b.rect.y;
+		return a.rect.y1 - b.rect.y1;
 	}
 };
 

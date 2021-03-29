@@ -23,179 +23,179 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// .limber-grid-view-debug-unmerged-rect {
-// 	border: solid 1px blue;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-unmerged-rect {
+	border: solid 1px blue;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-unmerged-rect:hover {
-// 	border-width: 3px;
-// 	font-weight: 900;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-unmerged-rect:hover {
+	border-width: 3px;
+	font-weight: 900;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-merged-free-rect {
-// 	border: solid 1px red;
+.limber-grid-view-debug-merged-free-rect {
+	border: solid 1px red;
 
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: red;
-// 	font-weight: 400;
-// }
+	color: red;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-merged-free-rect:hover {
-// 	border-width: 3px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-merged-free-rect:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-merged-rect {
-// 	border: solid 1px red;
+.limber-grid-view-debug-merged-rect {
+	border: solid 1px red;
 
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: red;
-// 	font-weight: 400;
-// }
+	color: red;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-merged-rect-thick {
-// 	border: solid 3px red;
-// }
+.limber-grid-view-debug-merged-rect-thick {
+	border: solid 3px red;
+}
 
-// .limber-grid-view-debug-merged-rect:hover {
-// 	border-width: 3px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-merged-rect:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-result-stack-rects {
-// 	border: solid 1px green;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-result-stack-rects {
+	border: solid 1px green;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-result-stack-rects:hover {
-// 	border-width: 3px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-result-stack-rects:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-stack-rects {
-// 	border: solid 1px black;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-stack-rects {
+	border: solid 1px black;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-stack-rects:hover {
-// 	border-width: 3px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-stack-rects:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-merged-temp-rects {
-// 	border: solid 1px saddlebrown;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-merged-temp-rects {
+	border: solid 1px saddlebrown;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-merged-temp-rects:hover {
-// 	border-width: 3px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-merged-temp-rects:hover {
+	border-width: 3px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-stack-top-rect {
-// 	border: solid 3px aqua;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-stack-top-rect {
+	border: solid 3px aqua;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-stack-top-rect:hover {
-// 	border-width: 6px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-stack-top-rect:hover {
+	border-width: 6px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-stack-top-adj-rect {
-// 	border: solid 3px fuchsia;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-stack-top-adj-rect {
+	border: solid 3px fuchsia;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-stack-top-adj-rect:hover {
-// 	border-width: 6px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-stack-top-adj-rect:hover {
+	border-width: 6px;
+	font-weight: 400;
+	font-size: 30px;
+}
 
-// .limber-grid-view-debug-adj-rect {
-// 	border: solid 3px lawngreen;
-// 	position: absolute;
-// 	user-select: none;
-// 	background: transparent;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
+.limber-grid-view-debug-adj-rect {
+	border: solid 3px lawngreen;
+	position: absolute;
+	user-select: none;
+	background: transparent;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-// 	color: blue;
-// 	font-weight: 400;
-// }
+	color: blue;
+	font-weight: 400;
+}
 
-// .limber-grid-view-debug-adj-rect:hover {
-// 	border-width: 6px;
-// 	font-weight: 400;
-// 	font-size: 30px;
-// }
+.limber-grid-view-debug-adj-rect:hover {
+	border-width: 6px;
+	font-weight: 400;
+	font-size: 30px;
+}
