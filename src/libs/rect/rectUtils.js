@@ -93,6 +93,41 @@ export const doRectsOverlap = (rectA, rectB) => {
 	}
 };
 
+export const doRectsOverlapOrTouch = (rectA, rectB) => {
+	try {
+		if (
+			isNaN(rectA.x) ||
+			isNaN(rectA.y) ||
+			isNaN(rectA.width) ||
+			isNaN(rectA.height) ||
+			isNaN(rectB.x) ||
+			isNaN(rectB.y) ||
+			isNaN(rectB.width) ||
+			isNaN(rectB.height)
+		) {
+			return false;
+		}
+
+		const x1A = rectA.x;
+		const y1A = rectA.y;
+		const x2A = rectA.x + rectA.width;
+		const y2A = rectA.y + rectA.height;
+
+		const x1B = rectB.x;
+		const y1B = rectB.y;
+		const x2B = rectB.x + rectB.width;
+		const y2B = rectB.y + rectB.height;
+
+		if (x1A > x2B || x1B > x2A || y1A > y2B || y1B > y2A) {
+			return false;
+		}
+
+		return true;
+	} catch (e) {
+		return false;
+	}
+};
+
 export const doRectsOnlyTouch = (rectA, rectB) => {
 	try {
 		if (

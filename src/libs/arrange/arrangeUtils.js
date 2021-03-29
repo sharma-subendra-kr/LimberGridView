@@ -170,10 +170,7 @@ export const getItemsInWorkSpace = (
 	let item;
 	for (let i = 0; i < len; i++) {
 		item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
-		if (
-			doRectsOverlap(workSpaceRect, item) &&
-			!doRectsOnlyTouch(workSpaceRect, item)
-		) {
+		if (doRectsOverlap(workSpaceRect, item)) {
 			if (!getIndices) {
 				itemsInWorkSpace[count++] = mpd[i];
 			} else {
@@ -207,10 +204,7 @@ export const getItemsBelowBottomWorkSpace = (
 	for (let i = 0; i < len; i++) {
 		item = getItemDimenWithMargin(privateConstants.MARGIN, mpd[i]);
 
-		if (
-			workSpaceRect.bl.y <= item.y ||
-			Math.abs(workSpaceRect.bl.y - item.y) < 0.1
-		) {
+		if (workSpaceRect.bl.y <= item.y) {
 			if (!getIndices) {
 				items[count++] = mpd[i];
 			} else {
