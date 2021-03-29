@@ -27,7 +27,10 @@ import {
 	getModifiedPositionData,
 	getPositionData,
 } from "../../store/variables/essentials";
-import getPrivateConstants from "../../store/constants/privateConstants";
+import getPrivateConstants, {
+	getWidth,
+	getDefinedMinHeightAndWidth,
+} from "../../store/constants/privateConstants";
 import {
 	getItemsInWorkSpace,
 	getItemDimenWithMargin,
@@ -76,7 +79,7 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			context,
 			getRectObjectFromCo(topWorkSpace)
 		);
-		const sweepRes = sweepLineTop(topWorkSpace, topWSItems, rt);
+		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
 
 		if (sweepRes < topWorkSpace.bl.y) {
 			topWorkSpace.tl.y = sweepRes;
@@ -91,7 +94,12 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			context,
 			getRectObjectFromCo(bottomWorkSpace)
 		);
-		const sweepRes = sweepLineBottom(bottomWorkSpace, bottomWSItems, rt);
+		const sweepRes = sweepLineBottom(
+			context,
+			bottomWorkSpace,
+			bottomWSItems,
+			rt
+		);
 
 		if (sweepRes > bottomWorkSpace.tl.y) {
 			bottomWorkSpace.bl.y = sweepRes;
@@ -104,7 +112,7 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	return res;
 };
 
-export const sweepLineTop = (area, items, rt) => {
+export const sweepLineTop = (context, area, items, rt) => {
 	rt.reset();
 
 	const len = items.length;
@@ -120,31 +128,37 @@ export const sweepLineTop = (area, items, rt) => {
 	}
 
 	let resultPoint = area.bl.y;
+
+	const WIDTH = getWidth(context);
+	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
+	let w = 0;
+	const suspect = { x1: 0, x2: 0, y1: area.tl.y, y2: area.bl.y };
 	let res;
+	while (w < WIDTH) {
+		suspect.x1 = w;
+		suspect.x2 = w + DEFINED_MIN_HEIGHT_AND_WIDTH;
 
-	for (let i = 0; i < len; i++) {
-		res = rt.find(
-			{
-				x1: items[i].x,
-				x2: items[i].x + items[i].width,
-				y1: items[i].y + items[i].height,
-				y2: area.bl.y,
-			},
-			false,
-			false,
-			undefined,
-			false
-		);
+		res = rt.find(suspect, false, true, undefined, false);
 
-		if (!res && items[i].y + items[i].height < resultPoint) {
-			resultPoint = items[i].y + items[i].height;
+		const len = res.length;
+		let max = 0;
+		for (let i = 0; i < len; i++) {
+			if (res[i].rect.y2 > max) {
+				max = res[i].rect.y2;
+			}
 		}
+
+		if (max < resultPoint) {
+			resultPoint = max;
+		}
+
+		w = suspect.x2;
 	}
 
 	return resultPoint;
 };
 
-export const sweepLineBottom = (area, items, rt) => {
+export const sweepLineBottom = (context, area, items, rt) => {
 	rt.reset();
 
 	const len = items.length;
@@ -160,24 +174,31 @@ export const sweepLineBottom = (area, items, rt) => {
 	}
 
 	let resultPoint = area.tl.y;
-	let res;
-	for (let i = 0; i < len; i++) {
-		res = rt.find(
-			{
-				x1: items[i].x,
-				x2: items[i].x + items[i].width,
-				y1: area.tl.y,
-				y2: items[i].y,
-			},
-			false,
-			false,
-			undefined,
-			false
-		);
 
-		if (!res && items[i].y > resultPoint) {
-			resultPoint = items[i].y;
+	const WIDTH = getWidth(context);
+	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
+	let w = 0;
+	const suspect = { x1: 0, x2: 0, y1: area.tl.y, y2: area.bl.y };
+	let res;
+	while (w < WIDTH) {
+		suspect.x1 = w;
+		suspect.x2 = w + DEFINED_MIN_HEIGHT_AND_WIDTH;
+
+		res = rt.find(suspect, false, true, undefined, false);
+
+		const len = res.length;
+		let min = Number.MAX_SAFE_INTEGER;
+		for (let i = 0; i < len; i++) {
+			if (res[i].rect.y1 < min) {
+				min = res[i].rect.y1;
+			}
 		}
+
+		if (min > resultPoint) {
+			resultPoint = min;
+		}
+
+		w = suspect.x2;
 	}
 
 	return resultPoint;
