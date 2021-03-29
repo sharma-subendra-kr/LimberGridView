@@ -42,7 +42,11 @@ import {
 	// getCoordinates,
 	// areRectsOnSameYAxisExPath,
 } from "../rect/rectUtils";
-import { getDistanceBetnPts } from "../geometry/geometry";
+import {
+	getDistanceBetnPts,
+	getHypotenuseSquared,
+	getMidPoint,
+} from "../geometry/geometry";
 
 export const getMinMaxXY = (
 	context,
@@ -341,56 +345,46 @@ export const doOverlapHelper = function (rect) {
 
 export const shouldFilterRect = function (rectData, rect) {
 	if (
-		isRectInside(getRectObjectFromRTreeRect(rectData.rect), rect) &&
+		isRectInside(
+			getRectObjectFromRTreeRect(rectData.rect),
+			getRectObjectFromRTreeRect(rect)
+		) &&
 		rectData.rect !== rect
 	) {
 		return true;
 	}
 };
 
-export const getScore = (rect, maxHWSum) => {
-	return (rect.width + rect.height) / maxHWSum;
+export const getSizeTest = (suspect, rect, threshold = 70) => {
+	const h1 = getHypotenuseSquared(
+		rect.x,
+		rect.y,
+		rect.x + rect.width,
+		rect.y + rect.height
+	);
+	const h2 = getHypotenuseSquared(
+		suspect.x1,
+		suspect.y1,
+		suspect.x2,
+		suspect.y2
+	);
+	if (h1 < h2 && (h1 / h2) * 100 >= threshold) {
+		return true;
+	}
 };
 
-export const getItemsToArrangeScore = (context, affectedItems) => {
-	const mpd = getModifiedPositionData(context);
-
-	const len = affectedItems.length;
-	let item;
-	let maxHeight = 0;
-	let maxWidth = 0;
-	let maxHWSum = 0;
-
-	let score;
-
-	for (let i = 0; i < len; i++) {
-		item = mpd[affectedItems[i]];
-
-		if (item.width > maxWidth) {
-			maxWidth = item.width;
-		}
-
-		if (item.height > maxHeight) {
-			maxHeight = item.height;
-		}
-	}
-
-	maxHWSum = maxWidth + maxHeight;
-
-	const scoreArr = new Array(len);
-	for (let i = 0; i < len; i++) {
-		item = mpd[affectedItems[i]];
-
-		score = getScore(item, maxHWSum);
-		scoreArr[i] = { score, d: affectedItems[i] };
-	}
-
-	scoreArr.sort((a, b) => a.score - b.score);
-
-	return scoreArr;
+export const getDistanceForTest = (suspect, rect) => {
+	const p1 = getMidPoint(suspect.x1, suspect.y1, suspect.x2, suspect.y2);
+	const p2 = getMidPoint(
+		rect.x,
+		rect.y,
+		rect.x + rect.width,
+		rect.y + rect.height
+	);
+	return getHypotenuseSquared(p1.x, p1.y, p2.x, p2.y);
 };
 
-export const getPerfectMatch = (arr, hwSum, item) => {
+export const getPerfectMatch = (arr, item) => {
 	if (item === undefined) {
 		// add item
 		return arr[0];

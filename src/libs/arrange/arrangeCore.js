@@ -40,6 +40,8 @@ import {
 	rectSortY,
 	shouldFilterRect,
 	doOverlapHelper,
+	getSizeTest,
+	getDistanceForTest,
 	// identicalOrInsideHelper,
 	// sweepTopBottomHelper,
 } from "./arrangeUtils";
@@ -51,6 +53,7 @@ import {
 	mergeRects,
 	isRectInside,
 } from "../rect/rectUtils";
+import { getMidPoint, getHypotenuseSquared } from "../geometry/geometry";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
@@ -347,21 +350,21 @@ export const mergeFreeRectsCore = (context, stack, rt, idCount, direction) => {
 	}
 };
 
-export const filterMergedFreeRects = (mergedRectsRt) => {
-	const arr = mergedRectsRt.getData();
+export const filterMergedFreeRects = (rt) => {
+	const arr = rt.getData();
 	const len = arr.length;
 	for (let i = 0; i < len; i++) {
 		const obj = arr[i];
-		const results = mergedRectsRt.find(
+		const result = rt.find(
 			obj.rect,
-			null,
-			null,
+			undefined,
+			undefined,
 			shouldFilterRect,
 			false
 		);
 
-		if (results?.length) {
-			mergedRectsRt.remove(obj.rect);
+		if (result.length) {
+			rt.remove(obj.rect);
 		}
 	}
 };
@@ -373,7 +376,6 @@ export const mergeFreeRects = async (
 	garbageRects
 ) => {
 	let rt;
-
 	const stack = getStack(context, "stack");
 
 	if (Array.isArray(freeRects)) {
@@ -428,67 +430,75 @@ export const arrange = async (
 
 	let overlappedRects = mergedRectsRt.getData();
 
-	const iToALen = itemsToArrange.length;
-
-	const itemsToArrangeStack = getStack(context, "itemsToArrangeStack");
-	itemsToArrangeStack.empty();
-
-	const itemsToArrangeWithScore = getItemsToArrangeScore(
-		context,
-		itemsToArrange
-	);
-	for (let i = 0; i < iToALen; i++) {
-		itemsToArrangeStack.push(itemsToArrangeWithScore[i]);
-	}
+	let iToALen = itemsToArrange.length;
 
 	let top;
 	let aItem, oItem;
 
-	const resStack = getStack(context, "resStack");
 	const garbageStack = getStack(context, "garbageStack");
 
-	while (!itemsToArrangeStack.isEmpty()) {
-		resStack.empty();
+	while (iToALen > 0) {
+		top = itemsToArrange[--iToALen];
 
-		top = itemsToArrangeStack.pop();
+		aItem = mpd[top]; // modified arrange Temp Item
+		oItem = pd[top]; // original Item
 
-		aItem = mpd[top.d];
-		oItem = pd[top.d];
-
+		let pm;
+		let MIN_CLOSEST = Number.MAX_SAFE_INTEGER;
+		// let MIN_Y = Number.MAX_SAFE_INTEGER;
 		let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
-
+		const tempOItem = getItemDimenWithMargin(privateConstants.MARGIN, oItem);
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i].rect;
+			// if (
+			// 	oRect.x2 - oRect.x1 >= tempAItem.width &&
+			// 	oRect.y2 - oRect.y1 >= tempAItem.height &&
+			// 	oRect.y1 < MIN_Y
+			// ) {
+			// 	MIN_Y = oRect.y1;
+			// 	pm = overlappedRects[i];
+			// }
+			const d1 = getDistanceForTest(oRect, tempOItem);
+			const sizeTest1 = getSizeTest(oRect, tempOItem, 0);
 			if (
 				oRect.x2 - oRect.x1 >= tempAItem.width &&
-				oRect.y2 - oRect.y1 >= tempAItem.height
+				oRect.y2 - oRect.y1 >= tempAItem.height &&
+				sizeTest1 &&
+				d1 < MIN_CLOSEST
 			) {
-				resStack.push(overlappedRects[i]);
+				MIN_CLOSEST = d1;
+				pm = overlappedRects[i];
+			}
+
+			const d = getDistanceForTest(oRect, tempOItem);
+			const sizeTest = getSizeTest(oRect, tempOItem);
+			if (
+				oRect.x2 - oRect.x1 >= tempAItem.width &&
+				oRect.y2 - oRect.y1 >= tempAItem.height &&
+				sizeTest &&
+				d < MIN_CLOSEST
+			) {
+				MIN_CLOSEST = d;
+				pm = overlappedRects[i];
 			}
 		}
 
-		if (resStack.isEmpty()) {
+		if (!pm) {
 			continue;
 		}
-
-		const pm = getPerfectMatch(
-			resStack.getData(),
-			aItem.width + aItem.height,
-			oItem
-		);
 
 		aItem.x = pm.rect.x1 + privateConstants.MARGIN;
 		aItem.y = pm.rect.y1 + privateConstants.MARGIN;
 
-		arranged[top.d] = aItem;
+		arranged[top] = aItem;
 
 		if (
 			bottomWorkSpace &&
 			isRectInside(bottomWorkSpace, getRectObjectFromRTreeRect(pm.rect))
 		) {
 			// put in bottom and combined workspace
-			itemsInBottomWorkSpace[top.d] = top.d;
+			itemsInBottomWorkSpace[top] = top;
 		}
 
 		garbageStack.empty();
