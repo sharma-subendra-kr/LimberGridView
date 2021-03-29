@@ -83,7 +83,7 @@ export const doRectsOverlap = (rectA, rectB) => {
 		const x2B = rectB.x + rectB.width;
 		const y2B = rectB.y + rectB.height;
 
-		if (x1A >= x2B || x1B.x >= x2A.x || y1A >= y2B || y1B >= y2A) {
+		if (x1A >= x2B || x1B >= x2A || y1A >= y2B || y1B >= y2A) {
 			return false;
 		}
 
@@ -118,7 +118,7 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 		const x2B = rectB.x + rectB.width;
 		const y2B = rectB.y + rectB.height;
 
-		if (x1A > x2B || x1B.x > x2A.x || y1A > y2B || y1B > y2A) {
+		if (x1A > x2B || x1B > x2A || y1A > y2B || y1B > y2A) {
 			return false;
 		}
 

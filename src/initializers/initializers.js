@@ -63,7 +63,7 @@ import getPublicConstants, {
 	setPublicConstantByName,
 } from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
-import { getRandomString } from "../libs/utils/utils";
+import { getRandomString, sanitizeNumberFloor } from "../libs/utils/utils";
 import { arrangeFromHeight } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 
@@ -181,12 +181,16 @@ export const init = async function (context, isResize, autoArrange) {
 	);
 	setMargin(
 		context,
-		privateConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR
+		sanitizeNumberFloor(
+			privateConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR
+		)
 	);
 	setDefinedMinHeightAndWidth(
 		context,
-		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
-			privateConstants.WIDTH_SCALE_FACTOR
+		sanitizeNumberFloor(
+			privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
+				privateConstants.WIDTH_SCALE_FACTOR
+		)
 	);
 };
 
