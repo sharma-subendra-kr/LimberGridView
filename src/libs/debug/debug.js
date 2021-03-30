@@ -101,16 +101,16 @@ export const printMergedFreeRects = (context, arr) => {
 		);
 		node.setAttribute(
 			"id",
-			`limber-grid-view-debug-merged-free-rect-${arr[i].id}`
+			`limber-grid-view-debug-merged-free-rect-${arr[i].data.id}`
 		);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute("title", `${arr[i].id}`);
+		node.setAttribute("title", `${arr[i].data.id}`);
 
-		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.innerHTML = arr[i].data.id;
+		node.style.transform = `translate(${arr[i].rect.x1}px, ${arr[i].rect.y1}px)`;
+		node.style.width = arr[i].rect.x2 - arr[i].rect.x1 + "px";
+		node.style.height = arr[i].rect.y2 - arr[i].rect.y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -145,16 +145,16 @@ export const printResultStackRects = (context, arr) => {
 		);
 		node.setAttribute(
 			"id",
-			`limber-grid-view-debug-result-stack-rects-${arr[i].id}`
+			`limber-grid-view-debug-result-stack-rects-${arr[i].data.id}`
 		);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute("title", `${arr[i].id}`);
+		node.setAttribute("title", `${arr[i].data.id}`);
 
-		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.innerHTML = arr[i].data.id;
+		node.style.transform = `translate(${arr[i].rect.x1}px, ${arr[i].rect.y1}px)`;
+		node.style.width = arr[i].rect.x2 - arr[i].rect.x1 + "px";
+		node.style.height = arr[i].rect.y2 - arr[i].rect.y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -187,15 +187,18 @@ export const printStackRects = (context, arr) => {
 			"class",
 			`limber-grid-view-debug-rect limber-grid-view-debug-stack-rects`
 		);
-		node.setAttribute("id", `limber-grid-view-debug-stack-rects-${arr[i].id}`);
+		node.setAttribute(
+			"id",
+			`limber-grid-view-debug-stack-rects-${arr[i].data.id}`
+		);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute("title", `${arr[i].id}`);
+		node.setAttribute("title", `${arr[i].data.id}`);
 
-		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.innerHTML = arr[i].data.id;
+		node.style.transform = `translate(${arr[i].rect.x1}px, ${arr[i].rect.y1}px)`;
+		node.style.width = arr[i].rect.x2 - arr[i].rect.x1 + "px";
+		node.style.height = arr[i].rect.y2 - arr[i].rect.y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -212,15 +215,18 @@ export const printMergedTempRects = (context, obj) => {
 		"class",
 		`limber-grid-view-debug-rect limber-grid-view-debug-merged-temp-rects`
 	);
-	node.setAttribute("id", `limber-grid-view-debug-merged-temp-rects-${obj.id}`);
+	node.setAttribute(
+		"id",
+		`limber-grid-view-debug-merged-temp-rects-${obj.data.id}`
+	);
 	node.setAttribute("tabindex", -1);
 
-	node.setAttribute("title", `${obj.id}`);
+	node.setAttribute("title", `${obj.data.id}`);
 
-	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.innerHTML = obj.data.id;
+	node.style.transform = `translate(${obj.rect.x1}px, ${obj.rect.y1}px)`;
+	node.style.width = obj.rect.x2 - obj.rect.x1 + "px";
+	node.style.height = obj.rect.y2 - obj.rect.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugMergedTempRects(
@@ -253,12 +259,12 @@ export const printStackTopRect = (context, obj) => {
 	node.setAttribute("id", `limber-grid-view-debug-stack-top-rect`);
 	node.setAttribute("tabindex", -1);
 
-	node.setAttribute("title", `${obj.id}`);
+	node.setAttribute("title", `${obj.data.id}`);
 
-	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.innerHTML = obj.data.id;
+	node.style.transform = `translate(${obj.rect.x1}px, ${obj.rect.y1}px)`;
+	node.style.width = obj.rect.x2 - obj.rect.x1 + "px";
+	node.style.height = obj.rect.y2 - obj.rect.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugStackTopRect(
@@ -292,12 +298,12 @@ export const printStackTopAdjRect = (context, obj) => {
 	node.setAttribute("id", `limber-grid-view-debug-stack-top-adj-rect`);
 	node.setAttribute("tabindex", -1);
 
-	node.setAttribute("title", `${obj.id}`);
+	node.setAttribute("title", `${obj.data.id}`);
 
-	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.innerHTML = obj.data.id;
+	node.style.transform = `translate(${obj.rect.x1}px, ${obj.rect.y1}px)`;
+	node.style.width = obj.rect.x2 - obj.rect.x1 + "px";
+	node.style.height = obj.rect.y2 - obj.rect.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugStackTopAdjRect(
@@ -331,12 +337,12 @@ export const printMergedRect = (context, obj) => {
 	node.setAttribute("id", `limber-grid-view-debug-merged-rect`);
 	node.setAttribute("tabindex", -1);
 
-	node.setAttribute("title", `${obj.id}`);
+	node.setAttribute("title", `${obj.data.id}`);
 
-	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.innerHTML = obj.data.id;
+	node.style.transform = `translate(${obj.rect.x1}px, ${obj.rect.y1}px)`;
+	node.style.width = obj.rect.x2 - obj.rect.x1 + "px";
+	node.style.height = obj.rect.y2 - obj.rect.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugMergedRect(
@@ -368,12 +374,12 @@ export const printAdjRect = (context, obj) => {
 	node.setAttribute("id", `limber-grid-view-debug-adj-rect`);
 	node.setAttribute("tabindex", -1);
 
-	node.setAttribute("title", `${obj.id}`);
+	node.setAttribute("title", `${obj.data.id}`);
 
-	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.innerHTML = obj.data.id;
+	node.style.transform = `translate(${obj.rect.x1}px, ${obj.rect.y1}px)`;
+	node.style.width = obj.rect.x2 - obj.rect.x1 + "px";
+	node.style.height = obj.rect.y2 - obj.rect.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugAdjRect(
