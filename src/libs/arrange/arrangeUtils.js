@@ -335,6 +335,22 @@ export const rectSortY = (a, b) => {
 	}
 };
 
+export const rectSortX2 = (a, b) => {
+	if (a.rect.x2 === b.rect.x2) {
+		return a.rect.y1 - b.rect.y1;
+	} else {
+		return a.rect.x2 - b.rect.x2;
+	}
+};
+
+export const rectSortY2 = (a, b) => {
+	if (a.rect.y2 === b.rect.y2) {
+		return a.rect.x1 - b.rect.x1;
+	} else {
+		return a.rect.y2 - b.rect.y2;
+	}
+};
+
 export const doOverlapHelper = function (rect) {
 	return (rectData) => {
 		if (doRectsOverlapRTree(rectData.rect, rect)) {
@@ -350,6 +366,17 @@ export const shouldFilterRect = function (rectData, rect) {
 			getRectObjectFromRTreeRect(rect)
 		) &&
 		rectData.rect !== rect
+	) {
+		return true;
+	}
+};
+
+export const shouldFilterRectII = function (rectData, rect) {
+	if (
+		isRectInside(
+			getRectObjectFromRTreeRect(rect),
+			getRectObjectFromRTreeRect(rectData.rect)
+		)
 	) {
 		return true;
 	}

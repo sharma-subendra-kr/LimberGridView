@@ -23,6 +23,8 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import { getHypotenuseSquared } from "../geometry/geometry";
+
 export const isPointInsideRect = (rect, point) => {
 	const rectCo = getCoordinates(rect);
 	try {
@@ -719,4 +721,13 @@ export const getRectObjectFromRTreeRect = (rect) => {
 		width: rect.x2 - rect.x1,
 		height: rect.y2 - rect.y1,
 	};
+};
+
+export const isRectLarger = (rectA, rectB) => {
+	const ah = getHypotenuseSquared(rectA.x1, rectA.y1, rectA.x2, rectA.y2);
+	const bh = getHypotenuseSquared(rectB.x1, rectB.y1, rectB.x2, rectB.y2);
+
+	if (ah > bh) {
+		return true;
+	}
 };
