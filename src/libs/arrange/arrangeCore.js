@@ -56,6 +56,7 @@ import {
 	mergeRects,
 	isRectInside,
 	isRectLarger,
+	doRectsOverlapOrTouch,
 } from "../rect/rectUtils";
 import { getMidPoint, getHypotenuseSquared } from "../geometry/geometry";
 // import { shuffle } from "../array/arrayUtils";
@@ -444,6 +445,8 @@ export const mergeFreeRects = async (
 		// rt = freeRects;
 	}
 
+	printUnmergedFreeRects(context, freeRects);
+	debugger;
 	let mergeCount;
 	let arr;
 	let len;
@@ -455,14 +458,20 @@ export const mergeFreeRects = async (
 		stack.push(arr[0]);
 		len = arr.length;
 		for (let i = 1; i < len; i++) {
+			printMergedRect(context);
+			printStackTopRect(context);
+			printAdjRect(context);
+
 			const item = arr[i];
 			const top = stack.peak();
+			printStackTopRect(context, top);
+			printAdjRect(context, item);
 
 			const itemR = getRectObjectFromRTreeRect(item.rect);
 			const topR = getRectObjectFromRTreeRect(top.rect);
 
 			const mergedRects = mergeRects(itemR, topR);
-			if (mergeRects.length === 1) {
+			if (doRectsOverlapOrTouch(itemR, topR) && mergedRects.length === 1) {
 				mergeCount++;
 				const mergedRect = mergedRects[0];
 				if (isRectInside(mergedRect, topR)) {
@@ -474,24 +483,26 @@ export const mergeFreeRects = async (
 				}
 
 				stack.push({
-					rect: mergedRect,
+					rect: getRTreeRectFromRectObject(mergedRect),
 					data: {
 						id: idCount.idCount++,
 					},
 				});
+				printMergedRect(context, stack.peak());
 			} else {
 				let ptr = stack.ptr - 1;
 				let ptrItem = stack.stack[ptr];
 				const belowTopItem = ptrItem;
 				let isInside = false;
-				let mergedRect;
+				let mergedRectObj;
+				printStackTopRect(context, ptrItem);
 				while (ptr >= 0 && belowTopItem.rect.x1 === ptrItem.rect.x1) {
 					const ptrR = getRectObjectFromRTreeRect(ptrItem.rect);
 
 					const mergedRects = mergeRects(itemR, ptrR);
-					if (mergeRects.length === 1) {
+					if (doRectsOverlapOrTouch(itemR, ptrR) && mergedRects.length === 1) {
 						mergeCount++;
-						mergedRect = mergedRects[0];
+						const mergedRect = mergedRects[0];
 						if (isRectInside(mergedRect, ptrR)) {
 							ptrItem.rect.x1 = 0;
 							ptrItem.rect.y1 = 0;
@@ -503,8 +514,8 @@ export const mergeFreeRects = async (
 							isInside = true;
 						}
 
-						mergedRect = {
-							rect: mergedRect,
+						mergedRectObj = {
+							rect: getRTreeRectFromRectObject(mergedRect),
 							data: {
 								id: idCount.idCount++,
 							},
@@ -517,12 +528,14 @@ export const mergeFreeRects = async (
 				if (!isInside) {
 					stack.push(item);
 				}
-				if (mergedRect) {
-					stack.push(mergedRect);
+				if (mergedRectObj) {
+					stack.push(mergedRectObj);
+					printMergedRect(context, stack.peak());
 				}
 			}
 		}
-	} while (mergeCount > 0);
+	} while (false);
+	// } while (mergeCount > 0);
 
 	printMergedFreeRects(context, stack.getData());
 
