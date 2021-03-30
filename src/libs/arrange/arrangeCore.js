@@ -433,6 +433,7 @@ export const mergeFreeRectsCore = async (
 	idCount,
 	pt
 ) => {
+	// debugger;
 	const stack = getStack(context, "stack");
 
 	stack.empty();
@@ -442,6 +443,8 @@ export const mergeFreeRectsCore = async (
 		printMergedRect(context);
 		printStackTopRect(context);
 		printAdjRect(context);
+		printMergedFreeRects(context, stack.getData());
+		printUnmergedFreeRects(context, arr);
 
 		const item = arr[i];
 		const top = stack.peak();
@@ -476,8 +479,9 @@ export const mergeFreeRectsCore = async (
 			const belowTopItem = ptrItem;
 			let isInside = false;
 			let mergedRectObj;
-			printStackTopRect(context, ptrItem);
+
 			while (ptr >= 0 && belowTopItem.rect[pt] === ptrItem.rect[pt]) {
+				printStackTopRect(context, ptrItem);
 				const ptrR = getRectObjectFromRTreeRect(ptrItem.rect);
 
 				const mergedRects = mergeRects(itemR, ptrR);
@@ -548,25 +552,35 @@ export const mergeFreeRects = async (
 
 		arr.sort(rectSortX);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "x1");
+		printUnmergedFreeRects(context, stack.getData());
+		debugger;
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
 		arr.sort(rectSortY);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "y1");
+		printUnmergedFreeRects(context, stack.getData());
+		debugger;
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
 		arr.sort(rectSortX2);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "x2");
+		printUnmergedFreeRects(context, stack.getData());
+		debugger;
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
 		arr.sort(rectSortY2);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "y2");
-		// } while (false);
+		printUnmergedFreeRects(context, stack.getData());
+
+		arr = stack.getData();
+		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
+		debugger;
 	} while (mergeCount.mergeCount > 0);
 
-	printMergedFreeRects(context, stack.getData());
+	printMergedFreeRects(context, arr);
 
 	throw "";
 };
