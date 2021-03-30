@@ -426,7 +426,13 @@ export const sweepLineForFreeSpace = (
 // 	return { mergedRectsRt: rt };
 // };
 
-export const mergeFreeRectsCore = async (context, arr, mergeCount, idCount) => {
+export const mergeFreeRectsCore = async (
+	context,
+	arr,
+	mergeCount,
+	idCount,
+	pt
+) => {
 	const stack = getStack(context, "stack");
 
 	stack.empty();
@@ -471,7 +477,7 @@ export const mergeFreeRectsCore = async (context, arr, mergeCount, idCount) => {
 			let isInside = false;
 			let mergedRectObj;
 			printStackTopRect(context, ptrItem);
-			while (ptr >= 0 && belowTopItem.rect.x1 === ptrItem.rect.x1) {
+			while (ptr >= 0 && belowTopItem.rect[pt] === ptrItem.rect[pt]) {
 				const ptrR = getRectObjectFromRTreeRect(ptrItem.rect);
 
 				const mergedRects = mergeRects(itemR, ptrR);
@@ -534,15 +540,31 @@ export const mergeFreeRects = async (
 	// throw "";
 	debugger;
 	const mergeCount = { mergeCount: 0 };
-	let arr;
+	let arr = freeRects;
 	let len;
 	do {
+		debugger;
 		mergeCount.mergeCount = 0;
 
-		arr = freeRects.sort(rectSortX);
-		mergeFreeRectsCore(context, arr, mergeCount, idCount);
-	} while (false);
-	// } while (mergeCount > 0);
+		arr.sort(rectSortX);
+		mergeFreeRectsCore(context, arr, mergeCount, idCount, "x1");
+
+		arr = stack.getData();
+		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
+		arr.sort(rectSortY);
+		mergeFreeRectsCore(context, arr, mergeCount, idCount, "y1");
+
+		arr = stack.getData();
+		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
+		arr.sort(rectSortX2);
+		mergeFreeRectsCore(context, arr, mergeCount, idCount, "x2");
+
+		arr = stack.getData();
+		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
+		arr.sort(rectSortY2);
+		mergeFreeRectsCore(context, arr, mergeCount, idCount, "y2");
+		// } while (false);
+	} while (mergeCount.mergeCount > 0);
 
 	printMergedFreeRects(context, stack.getData());
 
