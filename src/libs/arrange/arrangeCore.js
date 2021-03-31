@@ -363,7 +363,7 @@ export const filterMergedFreeRects = (rt) => {
 			false
 		);
 
-		if (result.length) {
+		if (result) {
 			rt.remove(obj.rect);
 		}
 	}
