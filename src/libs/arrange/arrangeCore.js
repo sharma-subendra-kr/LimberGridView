@@ -440,16 +440,16 @@ export const mergeFreeRectsCore = async (
 	stack.push(arr[0]);
 	const len = arr.length;
 	for (let i = 1; i < len; i++) {
-		printMergedRect(context);
-		printStackTopRect(context);
-		printAdjRect(context);
-		printMergedFreeRects(context, stack.getData());
-		printUnmergedFreeRects(context, arr);
+		// printMergedRect(context);
+		// printStackTopRect(context);
+		// printAdjRect(context);
+		// printMergedFreeRects(context, stack.getData());
+		// printUnmergedFreeRects(context, arr);
 
 		const item = arr[i];
 		const top = stack.peak();
-		printStackTopRect(context, top);
-		printAdjRect(context, item);
+		// printStackTopRect(context, top);
+		// printAdjRect(context, item);
 
 		const itemR = getRectObjectFromRTreeRect(item.rect);
 		const topR = getRectObjectFromRTreeRect(top.rect);
@@ -472,7 +472,7 @@ export const mergeFreeRectsCore = async (
 					id: idCount.idCount++,
 				},
 			});
-			printMergedRect(context, stack.peak());
+			// printMergedRect(context, stack.peak());
 		} else {
 			let ptr = stack.ptr - 1;
 			let ptrItem = stack.stack[ptr];
@@ -481,7 +481,7 @@ export const mergeFreeRectsCore = async (
 			let mergedRectObj;
 
 			while (ptr >= 0 && belowTopItem.rect[pt] === ptrItem.rect[pt]) {
-				printStackTopRect(context, ptrItem);
+				// printStackTopRect(context, ptrItem);
 				const ptrR = getRectObjectFromRTreeRect(ptrItem.rect);
 
 				const mergedRects = mergeRects(itemR, ptrR);
@@ -515,7 +515,7 @@ export const mergeFreeRectsCore = async (
 			}
 			if (mergedRectObj) {
 				stack.push(mergedRectObj);
-				printMergedRect(context, stack.peak());
+				// printMergedRect(context, stack.peak());
 			}
 		}
 	}
@@ -540,49 +540,52 @@ export const mergeFreeRects = async (
 		// rt = freeRects;
 	}
 
-	printUnmergedFreeRects(context, freeRects);
+	// printUnmergedFreeRects(context, freeRects);
 	// throw "";
 	debugger;
 	const mergeCount = { mergeCount: 0 };
 	let arr = freeRects;
-	let len;
+	let count = 0;
 	do {
 		debugger;
+		count++;
 		mergeCount.mergeCount = 0;
 
 		arr.sort(rectSortX);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "x1");
-		printUnmergedFreeRects(context, stack.getData());
-		debugger;
+		// printUnmergedFreeRects(context, stack.getData());
+		// debugger;
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
 		arr.sort(rectSortY);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "y1");
-		printUnmergedFreeRects(context, stack.getData());
-		debugger;
+		// printUnmergedFreeRects(context, stack.getData());
+		// debugger;
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
 		arr.sort(rectSortX2);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "x2");
-		printUnmergedFreeRects(context, stack.getData());
-		debugger;
+		// printUnmergedFreeRects(context, stack.getData());
+		// debugger;
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
 		arr.sort(rectSortY2);
 		mergeFreeRectsCore(context, arr, mergeCount, idCount, "y2");
-		printUnmergedFreeRects(context, stack.getData());
+		// printUnmergedFreeRects(context, stack.getData());
 
 		arr = stack.getData();
 		arr = arr.filter((o) => o.rect.x1 || o.rect.x2 || o.rect.y1 || o.rect.y2);
-		debugger;
+		// debugger;
 	} while (mergeCount.mergeCount > 0);
 
-	printMergedFreeRects(context, arr);
+	// printMergedFreeRects(context, arr);
 
-	throw "";
+	// throw "";
+	// console.log("count", count);
+	return arr;
 };
 
 /**
@@ -598,7 +601,8 @@ export const mergeFreeRects = async (
 export const arrange = async (
 	context,
 	itemsToArrange,
-	mergedRectsRt,
+	// mergedRectsRt,
+	overlappedRects,
 	topWorkSpace,
 	bottomWorkSpace,
 	combinedWorkSpaceRectCo,
@@ -614,7 +618,9 @@ export const arrange = async (
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
 
-	let overlappedRects = mergedRectsRt.getData();
+	// let overlappedRects = mergedRectsRt.getData();
+	const mergedRectsRt = getTree(context, "rt");
+	mergedRectsRt.constructTree(overlappedRects);
 
 	let iToALen = itemsToArrange.length;
 
@@ -713,14 +719,15 @@ export const arrange = async (
 			}
 		}
 
-		const { mergedRectsRt: _mergedRectsRt } = await mergeFreeRects(
+		overlappedRects = await mergeFreeRects(
 			context,
-			mergedRectsRt,
+			// mergedRectsRt,
+			mergedRectsRt.getData(),
 			idCount,
 			garbageStack.getData()
 		);
-		mergedRectsRt = _mergedRectsRt;
-		overlappedRects = mergedRectsRt.getData();
+		// mergedRectsRt = _mergedRectsRt;
+		// overlappedRects = mergedRectsRt.getData();
 	}
 
 	return {

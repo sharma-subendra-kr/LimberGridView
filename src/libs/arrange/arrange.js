@@ -159,11 +159,9 @@ export const arrangeMove = async (
 
 		const freeRectsArr = freeRects.getData();
 
-		const { mergedRectsRt } = await mergeFreeRects(
-			context,
-			freeRectsArr,
-			idCount
-		);
+		const p0 = performance.now();
+		const arr = await mergeFreeRects(context, freeRectsArr, idCount);
+		// console.log("mergeFreeRects", performance.now() - p0);
 
 		const {
 			arranged: _arranged,
@@ -171,7 +169,8 @@ export const arrangeMove = async (
 		} = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
-			mergedRectsRt,
+			arr,
+			// mergedRectsRt,
 			getRectObjectFromCo(topWorkSpaceCo),
 			getRectObjectFromCo(bottomWorkSpaceCo),
 			combinedWorkSpaceRectCo,
