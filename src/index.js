@@ -102,6 +102,8 @@ import {
 		pseudoElementContainer: string or element
 		itemMouseDownMoveCheck: function 																					// x clicked/touched, y clicked/touched, item, index
 		itemMouseDownResizeCheck: function 																				// x clicked/touched, y clicked/touched, item, index
+	
+		getArrangeTime: function 																									// returns the total arrange time
 
 		gridData : {
 			WIDTH : 1920,																														// width of limberGridView

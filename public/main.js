@@ -35,6 +35,7 @@ const main = function () {
 	const $addButtonIcon = document.getElementsByClassName("add-button-icon");
 	const $rtreeDebugContainer = document.getElementById("rtree-debug-container");
 	const $rtreeButton = document.getElementById("rtree-button");
+	const $animationTime = document.getElementById("animation-time");
 
 	const onRTreeButtonClick = function (event) {
 		$rtreeDebugContainer.classList.toggle("rtree-debug-container-active");
@@ -236,6 +237,10 @@ const main = function () {
 		);
 	};
 
+	const getArrangeTime = function (time, resizeCount) {
+		$animationTime.innerHTML = `${time}, ${resizeCount}`;
+	};
+
 	const obj = {
 		el: "limber-grid-view-implement",
 		// editable: true,
@@ -248,6 +253,7 @@ const main = function () {
 		// itemMouseDownMoveCheck: itemMouseDownMoveCheck,
 		// itemMouseDownResizeCheck: itemMouseDownResizeCheck,
 		// isMobileCheck: isMobileCheck,
+
 		callbacks: {
 			renderContent: renderContent,
 			onItemClickCallback: onItemClickCallback,
@@ -256,6 +262,7 @@ const main = function () {
 			moveComplete: moveComplete,
 			addComplete: addComplete,
 			removeComplete: removeComplete,
+			getArrangeTime: getArrangeTime,
 		},
 		// "{"gridHeight":561,"gridWidth":960,"margin":5}"
 		// "{"gridHeight":482,"gridWidth":999,"margin":3.830521472392638}"

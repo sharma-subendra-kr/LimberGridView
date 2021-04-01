@@ -243,6 +243,10 @@ export const arrangeMove = async (
 	console.log("workSpaceResizeCount", workSpaceResizeCount);
 	console.log("arrange total: ", p2 - p1);
 
+	if (context.options.callbacks?.getArrangeTime) {
+		context.options.callbacks.getArrangeTime(p2 - p1, workSpaceResizeCount);
+	}
+
 	return arranged;
 };
 

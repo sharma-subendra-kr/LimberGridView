@@ -232,6 +232,10 @@ body {
 	user-select: none;
 }
 
+.item-layout > span {
+	user-select: none;
+}
+
 .item-drop-down-button {
 	width: 25px;
 	height: 25px;
