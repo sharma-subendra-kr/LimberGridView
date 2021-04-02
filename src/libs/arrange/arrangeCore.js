@@ -288,7 +288,7 @@ export const sweepLineForFreeSpace = (
 	return { rt };
 };
 
-export const mergeFreeRectsCore = (context, stack, rt, idCount, direction) => {
+export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
 	const findRect = { x1: 0, x2: 0, y1: 0, y2: 0 };
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
@@ -300,15 +300,7 @@ export const mergeFreeRectsCore = (context, stack, rt, idCount, direction) => {
 		findRect.y1 = top.rect.y1;
 		findRect.y2 = top.rect.y2;
 
-		if (direction === 1) {
-			// x
-			findRect.y2 += 1;
-		} else {
-			// y
-			findRect.x2 += 1;
-		}
-
-		const results = rt.find(findRect, false, true, undefined, false);
+		const results = rt.find(findRect, false, true, undefined, true);
 
 		const len = results?.length || 0;
 		if (len > 0) {
@@ -388,14 +380,14 @@ export const mergeFreeRects = async (
 		rt = freeRects;
 	}
 
-	mergeFreeRectsCore(context, stack, rt, idCount, 1);
+	mergeFreeRectsCore(context, stack, rt, idCount);
 	// printMergedFreeRects(context, rt.getData(true));
 	filterMergedFreeRects(rt);
 
 	const mergedArr = rt.getData();
 	stack.setData(mergedArr.sort(rectSortY));
 	rt.reset();
-	mergeFreeRectsCore(context, stack, rt, idCount, 2);
+	mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
 	return { mergedRectsRt: rt };
@@ -431,7 +423,6 @@ export const arrange = async (
 	const itemsInBottomWorkSpace = {};
 
 	let overlappedRects = mergedRectsRt.getData();
-	// printMergedFreeRects(context, overlappedRects);
 	itemsToArrange.sort(rectSortHypotenusSquared(pd));
 
 	let top;
