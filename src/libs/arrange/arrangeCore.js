@@ -42,6 +42,7 @@ import {
 	doOverlapHelper,
 	getSizeTest,
 	getDistanceForTest,
+	rectSortHypotenusSquared,
 	// identicalOrInsideHelper,
 	// sweepTopBottomHelper,
 } from "./arrangeUtils";
@@ -430,14 +431,15 @@ export const arrange = async (
 	const itemsInBottomWorkSpace = {};
 
 	let overlappedRects = mergedRectsRt.getData();
-
-	let iToALen = itemsToArrange.length;
+	// printMergedFreeRects(context, overlappedRects);
+	itemsToArrange.sort(rectSortHypotenusSquared(pd));
 
 	let top;
 	let aItem, oItem;
 
 	const garbageStack = getStack(context, "garbageStack");
 
+	let iToALen = itemsToArrange.length;
 	while (iToALen > 0) {
 		top = itemsToArrange[--iToALen];
 
@@ -508,24 +510,21 @@ export const arrange = async (
 		tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
 		for (let i = 0; i < resLen; i++) {
 			const res = result[i];
-			const _garbageRects = subtractRect(
+			const garbageRects = subtractRect(
 				getRectObjectFromRTreeRect(res.rect),
 				tempAItem
 			);
 
-			const gLen = _garbageRects?.length || 0;
+			const gLen = garbageRects?.length || 0;
 			for (let i = 0; i < gLen; i++) {
 				garbageStack.push({
-					rect: getRTreeRectFromRectObject(_garbageRects[i]),
+					rect: getRTreeRectFromRectObject(garbageRects[i]),
 					data: {
 						id: idCount.idCount++,
-						rect: _garbageRects[i],
 					},
 				});
 			}
-			if (gLen) {
-				mergedRectsRt.remove(res.rect);
-			}
+			mergedRectsRt.remove(res.rect);
 		}
 
 		const { mergedRectsRt: _mergedRectsRt } = await mergeFreeRects(

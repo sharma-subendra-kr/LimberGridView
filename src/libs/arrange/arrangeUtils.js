@@ -335,6 +335,22 @@ export const rectSortY = (a, b) => {
 	}
 };
 
+export const rectSortHypotenusSquared = (pd) => {
+	return (a, b) =>
+		getHypotenuseSquared(
+			pd[a].x,
+			pd[a].y,
+			pd[a].x + pd[a].width,
+			pd[a].y + pd[a].height
+		) -
+		getHypotenuseSquared(
+			pd[b].x,
+			pd[b].y,
+			pd[b].x + pd[b].width,
+			pd[b].y + pd[b].height
+		);
+};
+
 export const doOverlapHelper = function (rect) {
 	return (rectData) => {
 		if (doRectsOverlapRTree(rectData.rect, rect)) {
