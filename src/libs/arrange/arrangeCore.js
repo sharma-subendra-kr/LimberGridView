@@ -57,18 +57,18 @@ import { getMidPoint, getHypotenuseSquared } from "../geometry/geometry";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
-// import {
-// 	sleep,
-// 	printUnmergedFreeRects,
-// 	printMergedFreeRects,
-// 	printResultStackRects,
-// 	printStackRects,
-// 	printMergedTempRects,
-// 	printStackTopRect,
-// 	printStackTopAdjRect,
-// 	printMergedRect,
-// 	printAdjRect,
-// } from "../debug/debug";
+import {
+	sleep,
+	printUnmergedFreeRects,
+	printMergedFreeRects,
+	printResultStackRects,
+	printStackRects,
+	printMergedTempRects,
+	printStackTopRect,
+	printStackTopAdjRect,
+	printMergedRect,
+	printAdjRect,
+} from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
@@ -388,6 +388,7 @@ export const mergeFreeRects = async (
 	}
 
 	mergeFreeRectsCore(context, stack, rt, idCount, 1);
+	// printMergedFreeRects(context, rt.getData(true));
 	filterMergedFreeRects(rt);
 
 	const mergedArr = rt.getData();

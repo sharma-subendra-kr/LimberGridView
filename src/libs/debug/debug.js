@@ -60,12 +60,12 @@ export const printUnmergedFreeRects = (context, arr) => {
 		);
 		node.setAttribute(
 			"id",
-			`limber-grid-view-debug-unmerged-rect-${arr[i].data.id}`
+			`limber-grid-view-debug-unmerged-rect-${arr[i]?.data.id}`
 		);
 		node.setAttribute("tabindex", "-1");
 
-		node.setAttribute("title", `${arr[i].data.id}`);
-		node.innerHTML = arr[i].data.id;
+		node.setAttribute("title", `${arr[i]?.data.id}`);
+		node.innerHTML = arr[i]?.data.id;
 		node.style.transform = `translate(${arr[i].rect.x1}px, ${arr[i].rect.y1}px)`;
 		node.style.width = arr[i].rect.x2 - arr[i].rect.x1 + "px";
 		node.style.height = arr[i].rect.y2 - arr[i].rect.y1 + "px";
@@ -101,13 +101,13 @@ export const printMergedFreeRects = (context, arr) => {
 		);
 		node.setAttribute(
 			"id",
-			`limber-grid-view-debug-merged-free-rect-${arr[i].data.id}`
+			`limber-grid-view-debug-merged-free-rect-${arr[i]?.data?.id}`
 		);
 		node.setAttribute("tabindex", -1);
 
-		node.setAttribute("title", `${arr[i].data.id}`);
+		node.setAttribute("title", `${arr[i]?.data?.id}`);
 
-		node.innerHTML = arr[i].data.id;
+		node.innerHTML = arr[i]?.data?.id;
 		node.style.transform = `translate(${arr[i].rect.x1}px, ${arr[i].rect.y1}px)`;
 		node.style.width = arr[i].rect.x2 - arr[i].rect.x1 + "px";
 		node.style.height = arr[i].rect.y2 - arr[i].rect.y1 + "px";
