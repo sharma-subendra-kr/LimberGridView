@@ -149,13 +149,13 @@ export const arrangeMove = async (
 
 	while (arrangedCount !== iToALen) {
 		if (combinedWorkSpaceRect.y !== 0) {
-			combinedWorkSpaceRect.y += privateConstants.MARGIN + 0.5;
-			combinedWorkSpaceRectCo.tl.y += privateConstants.MARGIN + 0.5;
-			combinedWorkSpaceRectCo.tr.y += privateConstants.MARGIN + 0.5;
+			combinedWorkSpaceRect.y += privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tl.y += privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tr.y += privateConstants.MARGIN;
 		}
-		combinedWorkSpaceRect.height -= privateConstants.MARGIN + 0.5;
-		combinedWorkSpaceRectCo.bl.y -= privateConstants.MARGIN + 0.5;
-		combinedWorkSpaceRectCo.br.y -= privateConstants.MARGIN + 0.5;
+		combinedWorkSpaceRect.height -= privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.bl.y -= privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.br.y -= privateConstants.MARGIN;
 
 		const { rt: freeRects } = sweepLineForFreeSpace(
 			context,
@@ -198,13 +198,13 @@ export const arrangeMove = async (
 		arrangedCount += _arrangedArr.length;
 
 		if (combinedWorkSpaceRect.y !== 0) {
-			combinedWorkSpaceRect.y -= privateConstants.MARGIN + 0.5;
-			combinedWorkSpaceRectCo.tl.y -= privateConstants.MARGIN + 0.5;
-			combinedWorkSpaceRectCo.tr.y -= privateConstants.MARGIN + 0.5;
+			combinedWorkSpaceRect.y -= privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tl.y -= privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tr.y -= privateConstants.MARGIN;
 		}
-		combinedWorkSpaceRect.height += privateConstants.MARGIN + 0.5;
-		combinedWorkSpaceRectCo.bl.y += privateConstants.MARGIN + 0.5;
-		combinedWorkSpaceRectCo.br.y += privateConstants.MARGIN + 0.5;
+		combinedWorkSpaceRect.height += privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.bl.y += privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.br.y += privateConstants.MARGIN;
 
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down
