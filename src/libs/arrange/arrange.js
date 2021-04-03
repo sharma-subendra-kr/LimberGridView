@@ -40,7 +40,6 @@ import {
 	getResizeWSItemsDetail,
 } from "./arrangeUtils";
 import { getRectObjectFromCo } from "../rect/rectUtils";
-// import { sleep } from "../utils/utils";
 // import {
 // 	printUnmergedFreeRects,
 // 	printMergedFreeRects,
@@ -149,6 +148,15 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
+		if (combinedWorkSpaceRect.y !== 0) {
+			combinedWorkSpaceRect.y += privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tl.y += privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tr.y += privateConstants.MARGIN;
+		}
+		combinedWorkSpaceRect.height -= privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.bl.y -= privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.br.y -= privateConstants.MARGIN;
+
 		const { rt: freeRects } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
@@ -188,6 +196,15 @@ export const arrangeMove = async (
 		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
 
 		arrangedCount += _arrangedArr.length;
+
+		if (combinedWorkSpaceRect.y !== 0) {
+			combinedWorkSpaceRect.y -= privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tl.y -= privateConstants.MARGIN;
+			combinedWorkSpaceRectCo.tr.y -= privateConstants.MARGIN;
+		}
+		combinedWorkSpaceRect.height += privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.bl.y += privateConstants.MARGIN;
+		combinedWorkSpaceRectCo.br.y += privateConstants.MARGIN;
 
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down

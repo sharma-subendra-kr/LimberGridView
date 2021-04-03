@@ -63,7 +63,7 @@ import getPublicConstants, {
 	setPublicConstantByName,
 } from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
-import { getRandomString, sanitizeNumberFloor } from "../libs/utils/utils";
+import { getRandomString } from "../libs/utils/utils";
 import { arrangeFromHeight } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 
@@ -76,6 +76,7 @@ export const init = async function (context, isResize, autoArrange) {
 		// * 	autoArrange will be true only during the first render
 		// * 	this if block is always supposed to execute during the first render
 		// 		if autoArrange is true or invalid positionData is supplied
+		// *	below code is basically resetting everything to 1920*1080
 		console.warn("Auto-arranging");
 
 		setModifiedPositionData(context, pd);
@@ -181,16 +182,12 @@ export const init = async function (context, isResize, autoArrange) {
 	);
 	setMargin(
 		context,
-		sanitizeNumberFloor(
-			privateConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR
-		)
+		privateConstants.MARGIN * privateConstants.WIDTH_SCALE_FACTOR
 	);
 	setDefinedMinHeightAndWidth(
 		context,
-		sanitizeNumberFloor(
-			privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
-				privateConstants.WIDTH_SCALE_FACTOR
-		)
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
+			privateConstants.WIDTH_SCALE_FACTOR
 	);
 };
 

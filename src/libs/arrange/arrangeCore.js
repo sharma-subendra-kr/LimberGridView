@@ -58,6 +58,7 @@ import { getMidPoint, getHypotenuseSquared } from "../geometry/geometry";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
+import { sanitizeDimension } from "../utils/utils";
 import {
 	sleep,
 	printUnmergedFreeRects,
@@ -442,6 +443,11 @@ export const arrange = async (
 		// let MIN_Y = Number.MAX_SAFE_INTEGER;
 		let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
 		const tempOItem = getItemDimenWithMargin(privateConstants.MARGIN, oItem);
+		tempAItem.width += 0.5;
+		tempAItem.height += 0.5;
+		tempOItem.width += 0.5;
+		tempOItem.height += 0.5;
+
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i].rect;
@@ -482,8 +488,9 @@ export const arrange = async (
 			continue;
 		}
 
-		aItem.x = pm.rect.x1 + privateConstants.MARGIN;
-		aItem.y = pm.rect.y1 + privateConstants.MARGIN;
+		aItem.x = pm.rect.x1 + privateConstants.MARGIN + 0.5;
+		aItem.y = pm.rect.y1 + privateConstants.MARGIN + 0.5;
+		sanitizeDimension(aItem);
 
 		arranged[top] = aItem;
 
