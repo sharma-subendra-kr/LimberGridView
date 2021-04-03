@@ -220,7 +220,7 @@ export const addItem = async function (context, item) {
 				width: item.width,
 				height: item.height,
 			});
-			sanitizeDimension(mpd[mpd.length - 1]);
+
 			const arranged = await arrangeFromHeight(
 				context,
 				[mpd.length - 1],

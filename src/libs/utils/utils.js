@@ -113,3 +113,14 @@ export const sanitizeDimension = (item) => {
 	item.width = sanitizeNumberFloor(item.width);
 	item.height = sanitizeNumberFloor(item.height);
 };
+
+export const sanitizeDimensionCo = (item) => {
+	item.tl.x = sanitizeNumberCeil(item.tl.x);
+	item.tl.y = sanitizeNumberCeil(item.tl.y);
+	item.tr.x = sanitizeNumberFloor(item.tr.x);
+	item.tr.y = sanitizeNumberCeil(item.tr.y);
+	item.bl.x = sanitizeNumberFloor(item.bl.x);
+	item.bl.y = sanitizeNumberFloor(item.bl.y);
+	item.br.x = sanitizeNumberCeil(item.br.x);
+	item.br.y = sanitizeNumberFloor(item.br.y);
+};
