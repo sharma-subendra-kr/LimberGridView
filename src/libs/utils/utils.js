@@ -62,15 +62,6 @@ export const getRandomString = (len = 22) => {
 	return arr.join("");
 };
 
-export const getItemDimenWithMargin = (MARGIN, item) => {
-	return {
-		x: item.x - MARGIN,
-		y: item.y - MARGIN,
-		width: item.width + MARGIN * 2,
-		height: item.height + MARGIN * 2,
-	};
-};
-
 export const sleep = (ms) => {
 	return new Promise((resolve, reject) => {
 		setTimeout(resolve, ms);

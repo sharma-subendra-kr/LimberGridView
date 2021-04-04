@@ -64,6 +64,29 @@ export const render = function (context, scale = true) {
 		WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
 	}
 
+	for (let i = 0; i < len; i++) {
+		pd[i].x1 *= WIDTH_SCALE_FACTOR;
+		pd[i].x2 *= WIDTH_SCALE_FACTOR;
+		pd[i].y1 *= WIDTH_SCALE_FACTOR;
+		pd[i].y2 *= WIDTH_SCALE_FACTOR;
+
+		pd[i].mX1 = pd[i].x1 - privateConstants.MARGIN;
+		pd[i].mX2 = pd[i].x2 + privateConstants.MARGIN;
+		pd[i].mY1 = pd[i].y1 - privateConstants.MARGIN;
+		pd[i].mY2 = pd[i].y2 + privateConstants.MARGIN;
+
+		pd[i].x *= WIDTH_SCALE_FACTOR;
+		pd[i].y *= WIDTH_SCALE_FACTOR;
+		pd[i].width *= WIDTH_SCALE_FACTOR;
+		pd[i].height *= WIDTH_SCALE_FACTOR;
+
+		pd[i].mX = pd[i].x - privateConstants.MARGIN;
+		pd[i].mY = pd[i].y - privateConstants.MARGIN;
+		pd[i].mWidth *= pd[i].width + privateConstants.MARGIN * 2;
+		pd[i].mHeight *= pd[i].height + privateConstants.MARGIN * 2;
+		sanitizeDimension(pd[i]);
+	}
+
 	const nodes = new Array(len);
 	let spd;
 
@@ -74,17 +97,6 @@ export const render = function (context, scale = true) {
 		}
 
 		for (let i = 0; i < len; i++) {
-			pd[i].x1 *= WIDTH_SCALE_FACTOR;
-			pd[i].x2 *= WIDTH_SCALE_FACTOR;
-			pd[i].y1 *= WIDTH_SCALE_FACTOR;
-			pd[i].y2 *= WIDTH_SCALE_FACTOR;
-
-			pd[i].x *= WIDTH_SCALE_FACTOR;
-			pd[i].y *= WIDTH_SCALE_FACTOR;
-			pd[i].width *= WIDTH_SCALE_FACTOR;
-			pd[i].height *= WIDTH_SCALE_FACTOR;
-			sanitizeDimension(pd[i]);
-
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", i);
@@ -99,17 +111,6 @@ export const render = function (context, scale = true) {
 		spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
-			pd[i].x1 *= WIDTH_SCALE_FACTOR;
-			pd[i].x2 *= WIDTH_SCALE_FACTOR;
-			pd[i].y1 *= WIDTH_SCALE_FACTOR;
-			pd[i].y2 *= WIDTH_SCALE_FACTOR;
-
-			pd[i].x *= WIDTH_SCALE_FACTOR;
-			pd[i].y *= WIDTH_SCALE_FACTOR;
-			pd[i].width *= WIDTH_SCALE_FACTOR;
-			pd[i].height *= WIDTH_SCALE_FACTOR;
-			sanitizeDimension(pd[i]);
-
 			spd[i].width = privateConstants.WIDTH;
 			spd[i].height =
 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;

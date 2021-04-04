@@ -25,7 +25,6 @@ Written by Subendra Kumar Sharma.
 
 import { isValidRect, isValidRectHW } from "../rect/rectUtils";
 import { makeItem, enhanceItemHW } from "../utils/items";
-import { getItemDimenWithMargin } from "../arrange/arrangeUtils";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
 
@@ -52,15 +51,12 @@ export const getPdBottomMax = (context) => {
 	const privateConstants = getPrivateConstants(context);
 
 	let max = privateConstants.MARGIN;
-	let item;
 	const len = pd.length;
-
 	for (let i = 0; i < len; i++) {
-		item = getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
-		if (item.y + item.height > max) {
-			max = item.y + item.height;
+		const item = pd[i];
+		if (item.mY2 > max) {
+			max = item.mY2;
 		}
 	}
-
 	return max;
 };

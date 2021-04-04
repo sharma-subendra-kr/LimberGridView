@@ -85,3 +85,41 @@ export const sanitizeDimension = (item) => {
 	item.width = sanitizeNumberFloor(item.width);
 	item.height = sanitizeNumberFloor(item.height);
 };
+
+export const doRectsOverlapSingleItemMargin = (rectA, rectB) => {
+	// 2nd arg is item and needs to be checked with margin
+	if (
+		rectA.x1 >= rectB.mX2 ||
+		rectB.mX1 >= rectA.x2 ||
+		rectA.y1 >= rectB.mY2 ||
+		rectB.mY1 >= rectA.y2
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const doRectsOverlapOrTouchSingleItemMargin = (rectA, rectB) => {
+	// 2nd arg is item and needs to be checked with margin
+	if (
+		rectA.x1 > rectB.mX2 ||
+		rectB.mX1 > rectA.x2 ||
+		rectA.y1 > rectB.mY2 ||
+		rectB.mY1 > rectA.y2
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const isRectInsideSingleItemMargin = (rectA, rectB) => {
+	// is rectB inside rectA
+	if (
+		rectA.x1 <= rectB.mX1 &&
+		rectA.x2 >= rectB.mX2 &&
+		rectA.y1 <= rectB.mY1 &&
+		rectA.y2 >= rectB.mY2
+	) {
+		return true;
+	}
+};

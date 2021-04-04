@@ -33,13 +33,9 @@ import getPrivateConstants, {
 } from "../../store/constants/privateConstants";
 import {
 	getItemsInWorkSpace,
-	getItemDimenWithMargin,
-	getItemsToArrangeScore,
-	getPerfectMatch,
 	rectSortX,
 	rectSortY,
 	shouldFilterRect,
-	doOverlapHelper,
 	getSizeTest,
 	getDistanceForTest,
 	rectSortHypotenusSquared,
@@ -54,7 +50,6 @@ import {
 	mergeRects,
 	isRectInside,
 } from "../rect/rectUtils";
-import { getMidPoint, getHypotenuseSquared } from "../geometry/geometry";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
@@ -220,23 +215,15 @@ export const sweepLineForFreeSpace = (
 	// area: area to sweep Coordinate Form
 	// items: items in area
 
-	const privateConstants = getPrivateConstants(context);
+	// const privateConstants = getPrivateConstants(context);
 
 	const rt = getTree(context, "rt");
 	rt.reset();
 
-	rt.insert({
-		rect: getRTreeRectFromRectObject(area),
-		data: {
-			id: idCount.idCount++,
-			// rect: area,
-		},
-	});
+	area.id = idCount.idCount++;
+	rt.insert(area);
 
 	let tempItem;
-	let tempItemWithMargin;
-	let tempItemWithMarginRTree;
-	const fRect = { x1: 0, x2: 0, y1: 0, y2: 0 };
 	let resRects;
 	let rLen = 0;
 	let diff;
@@ -245,43 +232,19 @@ export const sweepLineForFreeSpace = (
 	const len = items.length;
 	for (let i = 0; i < len; i++) {
 		tempItem = items[i];
-		tempItemWithMargin = getItemDimenWithMargin(
-			privateConstants.MARGIN,
-			items[i]
-		);
-		tempItemWithMarginRTree = getRTreeRectFromRectObject(tempItemWithMargin);
 
-		fRect.x1 = tempItem.x;
-		fRect.x2 = tempItem.x + tempItem.width;
-		fRect.y1 = tempItem.y;
-		fRect.y2 = tempItem.y + tempItem.height;
-
-		resRects = rt.find(
-			fRect,
-			false,
-			true,
-			doOverlapHelper(tempItemWithMarginRTree),
-			false
-		);
+		resRects = rt.find(tempItem, false, true, undefined, false);
 
 		rLen = resRects.length;
 		for (let j = 0; j < rLen; j++) {
-			diff = subtractRect(
-				getRectObjectFromRTreeRect(resRects[j].rect),
-				tempItemWithMargin
-			);
+			diff = subtractRect(resRects[j], tempItem);
 
-			rt.remove(resRects[j].rect);
+			rt.remove(resRects[j]);
 
 			dLen = diff.length;
 			for (let k = 0; k < dLen; k++) {
-				rt.insert({
-					rect: getRTreeRectFromRectObject(diff[k]),
-					data: {
-						id: idCount.idCount++,
-						// rect: diff[k],
-					},
-				});
+				diff[k].id = idCount.idCount++;
+				rt.insert(diff[k]);
 			}
 		}
 	}
