@@ -31,12 +31,11 @@ import { getPositionData } from "../../store/variables/essentials";
 export const checkPositionData = (pd) => {
 	if (Array.isArray(pd)) {
 		const len = pd.length;
-
 		for (let i = 0; i < len; i++) {
 			if (isValidRect(pd[i])) {
-				enhanceItemHW(pd[i]);
-			} else if (isValidRectHW(pd[i])) {
 				makeItem(pd[i]);
+			} else if (isValidRectHW(pd[i])) {
+				enhanceItemHW(pd[i]);
 			} else {
 				return false;
 			}

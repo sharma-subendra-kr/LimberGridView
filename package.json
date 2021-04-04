@@ -66,6 +66,6 @@
   "dependencies": {
     "IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git#release-1.0.2-beta.1",
     "Stack": "git+https://github.com/sharma-subendra-kr/Stack.git",
-    "rtreejs": "github:sharma-subendra-kr/RTreeJS#quadratic-split-optimization"
+    "rtreejs": "github:sharma-subendra-kr/RTreeJS#quadratic-split-optimization-WIP-1"
   }
 }
