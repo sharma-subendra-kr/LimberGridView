@@ -360,7 +360,7 @@ const verticalSubtract = (rectA, rectB) => {
 		// Case I
 		// result = { tl: rectB.bl, tr: rectB.br, br: rectA.br, bl: rectA.bl };
 		result = { x1: rectA.x1, x2: rectA.x2, y1: rectB.y2, y2: rectA.y2 };
-	} else if (rectA.bl.y === rectB.bl.y) {
+	} else if (rectA.y2 === rectB.y2) {
 		// Case II
 		result = { x1: rectA.x1, x2: rectA.x2, y1: rectA.y1, y2: rectB.y1 };
 	}

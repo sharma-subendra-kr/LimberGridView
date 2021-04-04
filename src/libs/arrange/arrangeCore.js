@@ -175,13 +175,7 @@ export const sweepLineBottom = (context, area, items, rt) => {
 	return resultPoint;
 };
 
-export const sweepLineForFreeSpace = (
-	context,
-	area,
-	areaCo,
-	items,
-	idCount
-) => {
+export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
