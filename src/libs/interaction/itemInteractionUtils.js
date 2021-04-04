@@ -23,12 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import {
-	doRectsOverlap,
-	doRectsOnlyTouch,
-	isPointInsideRect,
-	doesPointTouchRect,
-} from "../rect/rectUtils";
+import { doRectsOverlap, isPointInsideOrTouchRect } from "../rect/rectUtils";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
@@ -208,7 +203,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		temp.width = pd[i].width + privateConstants.MARGIN * 2;
 		temp.height = pd[i].height + privateConstants.MARGIN * 2;
 
-		if (isPointInsideRect(temp, pt) || doesPointTouchRect(temp, pt)) {
+		if (isPointInsideOrTouchRect(temp, pt)) {
 			inside = i;
 			toX = pd[inside].x;
 			toY = pd[inside].y;

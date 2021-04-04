@@ -26,148 +26,41 @@ Written by Subendra Kumar Sharma.
 import { getHypotenuseSquared } from "../geometry/geometry";
 
 export const isPointInsideRect = (rect, point) => {
-	const rectCo = getCoordinates(rect);
-	try {
-		if (
-			point.x > rectCo.tl.x &&
-			point.x < rectCo.tr.x &&
-			point.y > rectCo.tl.y &&
-			point.y < rectCo.bl.y
-		) {
-			return true;
-		}
-		return false;
-	} catch (e) {
-		return false;
+	if (
+		point.x > rect.x1 &&
+		point.x < rect.x2 &&
+		point.y > rect.y1 &&
+		point.y < rect.y2
+	) {
+		return true;
 	}
 };
 
-export const doesPointTouchRect = (rect, point) => {
-	const rectCo = getCoordinates(rect);
-	try {
-		if (
-			point.x >= rectCo.tl.x &&
-			point.x <= rectCo.tr.x &&
-			point.y >= rectCo.tl.y &&
-			point.y <= rectCo.bl.y &&
-			!isPointInsideRect(rect, point)
-		) {
-			return true;
-		}
-		return false;
-	} catch (e) {
-		return false;
+export const isPointInsideOrTouchRect = (rect, point) => {
+	if (
+		point.x >= rect.x1 &&
+		point.x <= rect.x2 &&
+		point.y >= rect.y1 &&
+		point.y <= rect.y2
+	) {
+		return true;
 	}
 };
 
 export const doRectsOverlap = (rectA, rectB) => {
-	try {
-		if (
-			isNaN(rectA.x) ||
-			isNaN(rectA.y) ||
-			isNaN(rectA.width) ||
-			isNaN(rectA.height) ||
-			isNaN(rectB.x) ||
-			isNaN(rectB.y) ||
-			isNaN(rectB.width) ||
-			isNaN(rectB.height)
-		) {
-			return false;
-		}
-
-		const x1A = rectA.x;
-		const y1A = rectA.y;
-		const x2A = rectA.x + rectA.width;
-		const y2A = rectA.y + rectA.height;
-
-		const x1B = rectB.x;
-		const y1B = rectB.y;
-		const x2B = rectB.x + rectB.width;
-		const y2B = rectB.y + rectB.height;
-
-		if (x1A >= x2B || x1B >= x2A || y1A >= y2B || y1B >= y2A) {
-			return false;
-		}
-
-		return true;
-	} catch (e) {
+	if (
+		isNaN(rectA.x1) ||
+		isNaN(rectA.y1) ||
+		isNaN(rectA.x2) ||
+		isNaN(rectA.y2) ||
+		isNaN(rectB.x1) ||
+		isNaN(rectB.y1) ||
+		isNaN(rectB.x2) ||
+		isNaN(rectB.y2)
+	) {
 		return false;
 	}
-};
 
-export const doRectsOverlapOrTouch = (rectA, rectB) => {
-	try {
-		if (
-			isNaN(rectA.x) ||
-			isNaN(rectA.y) ||
-			isNaN(rectA.width) ||
-			isNaN(rectA.height) ||
-			isNaN(rectB.x) ||
-			isNaN(rectB.y) ||
-			isNaN(rectB.width) ||
-			isNaN(rectB.height)
-		) {
-			return false;
-		}
-
-		const x1A = rectA.x;
-		const y1A = rectA.y;
-		const x2A = rectA.x + rectA.width;
-		const y2A = rectA.y + rectA.height;
-
-		const x1B = rectB.x;
-		const y1B = rectB.y;
-		const x2B = rectB.x + rectB.width;
-		const y2B = rectB.y + rectB.height;
-
-		if (x1A > x2B || x1B > x2A || y1A > y2B || y1B > y2A) {
-			return false;
-		}
-
-		return true;
-	} catch (e) {
-		return false;
-	}
-};
-
-export const doRectsOnlyTouch = (rectA, rectB) => {
-	try {
-		if (
-			isNaN(rectA.x) ||
-			isNaN(rectA.y) ||
-			isNaN(rectA.width) ||
-			isNaN(rectA.height) ||
-			isNaN(rectB.x) ||
-			isNaN(rectB.y) ||
-			isNaN(rectB.width) ||
-			isNaN(rectB.height)
-		) {
-			return false;
-		}
-
-		const x1A = rectA.x;
-		const y1A = rectA.y;
-		const x2A = rectA.x + rectA.width;
-		const y2A = rectA.y + rectA.height;
-
-		const x1B = rectB.x;
-		const y1B = rectB.y;
-		const x2B = rectB.x + rectB.width;
-		const y2B = rectB.y + rectB.height;
-
-		if (x1A > x2B || x1B > x2A || y1A > y2B || y1B > y2A) {
-			return false;
-		}
-
-		if (doRectsOverlap(rectA, rectB) === false) return true;
-
-		return false;
-	} catch (e) {
-		return false;
-	}
-};
-
-export const doRectsOverlapRTree = (rectA, rectB) => {
 	if (
 		rectA.x1 >= rectB.x2 ||
 		rectB.x1 >= rectA.x2 ||
@@ -179,7 +72,20 @@ export const doRectsOverlapRTree = (rectA, rectB) => {
 	return true;
 };
 
-export const doRectsOverlapOrTouchRTree = (rectA, rectB) => {
+export const doRectsOverlapOrTouch = (rectA, rectB) => {
+	if (
+		isNaN(rectA.x1) ||
+		isNaN(rectA.y1) ||
+		isNaN(rectA.x2) ||
+		isNaN(rectA.y2) ||
+		isNaN(rectB.x1) ||
+		isNaN(rectB.y1) ||
+		isNaN(rectB.x2) ||
+		isNaN(rectB.y2)
+	) {
+		return false;
+	}
+
 	if (
 		rectA.x1 > rectB.x2 ||
 		rectB.x1 > rectA.x2 ||
@@ -189,6 +95,32 @@ export const doRectsOverlapOrTouchRTree = (rectA, rectB) => {
 		return false;
 	}
 	return true;
+};
+
+export const doRectsOnlyTouch = (rectA, rectB) => {
+	if (
+		isNaN(rectA.x1) ||
+		isNaN(rectA.y1) ||
+		isNaN(rectA.x2) ||
+		isNaN(rectA.y2) ||
+		isNaN(rectB.x1) ||
+		isNaN(rectB.y1) ||
+		isNaN(rectB.x2) ||
+		isNaN(rectB.y2)
+	) {
+		return false;
+	}
+
+	if (
+		rectA.x1 > rectB.x2 ||
+		rectB.x1 > rectA.x2 ||
+		rectA.y1 > rectB.y2 ||
+		rectB.y1 > rectA.y2
+	) {
+		return false;
+	}
+
+	if (doRectsOverlap(rectA, rectB) === false) return true;
 };
 
 export const subtractRect = (rectA, rectB) => {

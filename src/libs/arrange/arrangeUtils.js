@@ -36,8 +36,7 @@ import {
 	getRectObjectFromCo,
 	getRectObjectFromRTreeRect,
 	doRectsOnlyTouch,
-	isPointInsideRect,
-	doesPointTouchRect,
+	isPointInsideOrTouchRect,
 	// areRectsIdentical,
 	// getCoordinates,
 	// areRectsOnSameYAxisExPath,
@@ -547,16 +546,14 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 			};
 			if (
 				pd[i].y - privateConstants.MARGIN < minY &&
-				(isPointInsideRect(tempPlane, topPoint) ||
-					doesPointTouchRect(tempPlane, topPoint))
+				isPointInsideOrTouchRect(tempPlane, topPoint)
 			) {
 				minY = pd[i].y - privateConstants.MARGIN;
 			}
 
 			if (
 				pd[i].y + pd[i].height + privateConstants.MARGIN > maxY &&
-				(isPointInsideRect(tempPlane, bottomPoint) ||
-					doesPointTouchRect(tempPlane, bottomPoint))
+				isPointInsideOrTouchRect(tempPlane, bottomPoint)
 			) {
 				maxY = pd[i].y + pd[i].height + privateConstants.MARGIN;
 			}
