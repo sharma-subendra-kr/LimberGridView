@@ -191,54 +191,55 @@ export const doRectsOverlapOrTouchRTree = (rectA, rectB) => {
 	return true;
 };
 
+window.subtractRect = subtractRect;
 // export const subRectKeys = ["subRectT", "subRectR", "subRectB", "subRectL"];
-
-export const subtractRect = (rectA, rectB, oCoForm) => {
+export const subtractRect = (rectA, rectB) => {
 	// gives the non overlapping free spaces in rectA
 	if (!doRectsOverlap(rectA, rectB)) {
 		return false;
 	}
 
-	const rectACo = getCoordinates(rectA);
-	const rectBCo = getCoordinates(rectB);
-
 	/*
-    ____|_______________|___
-    |   |               |   |
-____|___|_______________|___|____
-    |   |               |   |
-    |   |               |   |
-    |   |               |   |
-    |   |               |   |
-____|___|_______________|___|___
-    |   |               |   |
-    |___|_______________|___|
-        |               |
+
+	       tl        tm         tr
+        ____|_______________|___
+        |   |               |   |
+    ____|___|_______________|___|____
+        |   |               |   |
+        |   |               |   |
+lm      |   |               |   |      rm
+        |   |               |   |
+    ____|___|_______________|___|___
+        |   |               |   |
+        |___|_______________|___|
+            |               |
+         bl        bm         br
+
 	*/
 	const subRects = {
 		subRectT: {
-			tl: rectACo.tl,
-			tr: rectACo.tr,
-			br: { x: rectACo.tr.x, y: rectBCo.tr.y },
-			bl: { x: rectACo.tl.x, y: rectBCo.tl.y },
+			x1: rectA.x1,
+			x2: rectA.x2,
+			y1: rectA.y1,
+			y2: rectB.y1,
 		},
 		subRectR: {
-			tl: { x: rectBCo.tr.x, y: rectACo.tr.y },
-			tr: rectACo.tr,
-			br: rectACo.br,
-			bl: { x: rectBCo.br.x, y: rectACo.br.y },
+			x1: rectB.x2,
+			x2: rectA.x2,
+			y1: rectA.y1,
+			y2: rectA.y2,
 		},
 		subRectB: {
-			tl: { x: rectACo.bl.x, y: rectBCo.bl.y },
-			tr: { x: rectACo.br.x, y: rectBCo.br.y },
-			br: rectACo.br,
-			bl: rectACo.bl,
+			x1: rectA.x1,
+			x2: rectA.x2,
+			y1: rectB.y2,
+			y2: rectA.y2,
 		},
 		subRectL: {
-			tl: rectACo.tl,
-			tr: { x: rectBCo.tl.x, y: rectACo.tl.y },
-			br: { x: rectBCo.bl.x, y: rectACo.bl.y },
-			bl: rectACo.bl,
+			x1: rectA.x1,
+			x2: rectB.x1,
+			y1: rectA.y1,
+			y2: rectA.y2,
 		},
 	};
 
@@ -257,85 +258,85 @@ ____|___|_______________|___|___
 	let tlNtm, tmNtr, trNrm, rmNbr, brNbm, bmNbl, blNlm, lmNtl;
 	if (subRects.subRectT && subRects.subRectR) {
 		tlNtm = {
-			tl: subRects.subRectT.tl,
-			tr: subRects.subRectR.tl,
-			br: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
-			bl: subRects.subRectT.bl,
+			x1: subRects.subRectT.x1,
+			x2: subRects.subRectR.x1,
+			y1: subRects.subRectT.y1,
+			y2: subRects.subRectT.y2,
 		};
 		tr = {
-			tl: subRects.subRectR.tl,
-			tr: subRects.subRectR.tr,
-			br: subRects.subRectT.br,
-			bl: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
+			x1: subRects.subRectR.x1,
+			x2: subRects.subRectR.x2,
+			y1: subRects.subRectR.y1,
+			y2: subRects.subRectT.y2,
 		};
 		rmNbr = {
-			tl: { x: subRects.subRectR.tl.x, y: subRects.subRectT.bl.y },
-			tr: subRects.subRectT.br,
-			br: subRects.subRectR.br,
-			bl: subRects.subRectR.bl,
+			x1: subRects.subRectR.x1,
+			x2: subRects.subRectR.x2,
+			y1: subRects.subRectT.y2,
+			y2: subRects.subRectR.y2,
 		};
 	}
 
 	if (subRects.subRectR && subRects.subRectB) {
 		trNrm = {
-			tl: subRects.subRectR.tl,
-			tr: subRects.subRectR.tr,
-			br: subRects.subRectB.tr,
-			bl: { x: subRects.subRectR.bl.x, y: subRects.subRectB.tl.y },
+			x1: subRects.subRectR.x1,
+			x2: subRects.subRectR.x2,
+			y1: subRects.subRectR.y1,
+			y2: subRects.subRectB.y1,
 		};
 		br = {
-			tl: { x: subRects.subRectR.bl.x, y: subRects.subRectB.tl.y },
-			tr: subRects.subRectB.tr,
-			br: subRects.subRectB.br,
-			bl: subRects.subRectR.bl,
+			x1: subRects.subRectR.x1,
+			x2: subRects.subRectR.x2,
+			y1: subRects.subRectB.y1,
+			y2: subRects.subRectR.y2,
 		};
 		bmNbl = {
-			tl: subRects.subRectB.tl,
-			tr: { x: subRects.subRectR.bl.x, y: subRects.subRectB.tl.y },
-			br: subRects.subRectR.bl,
-			bl: subRects.subRectB.bl,
+			x1: subRects.subRectB.x1,
+			x2: subRects.subRectR.x1,
+			y1: subRects.subRectB.y1,
+			y2: subRects.subRectR.y2,
 		};
 	}
 
 	if (subRects.subRectB && subRects.subRectL) {
 		lmNtl = {
-			tl: subRects.subRectL.tl,
-			tr: subRects.subRectL.tr,
-			br: { x: subRects.subRectL.tr.x, y: subRects.subRectB.tr.y },
-			bl: subRects.subRectB.tl,
+			x1: subRects.subRectL.x1,
+			x2: subRects.subRectL.x2,
+			y1: subRects.subRectL.y1,
+			y2: subRects.subRectB.y1,
 		};
 		bl = {
-			tl: subRects.subRectB.tl,
-			tr: { x: subRects.subRectL.tr.x, y: subRects.subRectB.tr.y },
-			br: subRects.subRectL.br,
-			bl: subRects.subRectB.bl,
+			x1: subRects.subRectB.x1,
+			x2: subRects.subRectL.x2,
+			y1: subRects.subRectB.y1,
+			y2: subRects.subRectL.y2,
 		};
 		brNbm = {
-			tl: { x: subRects.subRectL.tr.x, y: subRects.subRectB.tr.y },
-			tr: subRects.subRectB.tr,
-			br: subRects.subRectB.br,
-			bl: subRects.subRectL.br,
+			x1: subRects.subRectL.x2,
+			x2: subRects.subRectB.x2,
+			y1: subRects.subRectB.y1,
+			y2: subRects.subRectB.y2,
 		};
 	}
 
 	if (subRects.subRectL && subRects.subRectT) {
 		blNlm = {
-			tl: subRects.subRectT.bl,
-			tr: { x: subRects.subRectL.tr.x, y: subRects.subRectT.bl.y },
-			br: subRects.subRectL.br,
-			bl: subRects.subRectL.bl,
+			x1: subRects.subRectL.x1,
+			x2: subRects.subRectL.x2,
+			y1: subRects.subRectT.y2,
+			y2: subRects.subRectL.y2,
 		};
 		tl = {
-			tl: subRects.subRectT.tl,
-			tr: subRects.subRectL.tr,
-			br: { x: subRects.subRectL.tr.x, y: subRects.subRectT.bl.y },
-			bl: subRects.subRectT.bl,
+			x1: subRects.subRectL.x1,
+			x2: subRects.subRectL.x2,
+			y1: subRects.subRectL.y1,
+			y2: subRects.subRectT.y2,
 		};
 		tmNtr = {
-			tl: subRects.subRectL.tr,
-			tr: subRects.subRectT.tr,
-			br: subRects.subRectT.br,
-			bl: { x: subRects.subRectL.tr.x, y: subRects.subRectT.bl.y },
+			x1: subRects.subRectL.x2,
+			x2: subRects.subRectT.x2,
+			y1: subRects.subRectT.y1,
+			y2: subRects.subRectT.y2,
 		};
 	}
 
@@ -364,22 +365,7 @@ ____|___|_______________|___|___
 		blNlm ||
 		lmNtl;
 
-	let rects;
-	if (oCoForm) {
-		rects = [tl, tm, tr, rm, br, bm, bl, lm];
-	} else {
-		rects = [
-			getRectObjectFromCo(tl),
-			getRectObjectFromCo(tm),
-			getRectObjectFromCo(tr),
-			getRectObjectFromCo(rm),
-			getRectObjectFromCo(br),
-			getRectObjectFromCo(bm),
-			getRectObjectFromCo(bl),
-			getRectObjectFromCo(lm),
-		];
-	}
-
+	let rects = [tl, tm, tr, rm, br, bm, bl, lm];
 	rects = rects.filter((o) => o);
 
 	if (rects.length === 0) {
@@ -391,70 +377,72 @@ ____|___|_______________|___|___
 		// 	}
 		// });
 		for (const key in subRects) {
-			if (oCoForm) {
-				rects.push(subRects[key]);
-			} else {
-				rects.push(getRectObjectFromCo(subRects[key]));
-			}
+			rects.push(subRects[key]);
 		}
+	}
+
+	for (const rect of rects) {
+		rect.x = rect.x1;
+		rect.y = rect.y1;
+		rect.width = rect.x2 - rect.x1;
+		rect.height = rect.y2 - rect.y1;
 	}
 
 	return rects;
 };
 
 const horizontalSubtract = (rectA, rectB) => {
-	// rectA and rectB needs to be in Coordinate form
 	if (!rectA || !rectB) return undefined;
 
 	/*
-		Case I
+		Case I   
 		____________________
-		| ____              |
-		||____|             |
+		| A___              |
+		||_B__|             |
 		|___________________|
 
 		Case II
 		____________________
-		|              ____ |
-		|             |____||
+		| A            ____ |
+		|             |_B__||
 		|___________________|
 	*/
 
 	let result;
-	if (rectA.tl.x === rectB.tl.x) {
+	if (rectA.x1 === rectB.x1) {
 		// Case I
-		result = { tl: rectB.tr, tr: rectA.tr, br: rectA.br, bl: rectB.br };
-	} else if (rectA.tr === rectB.tr) {
+		result = { x1: rectB.x2, x2: rectA.x2, y1: rectA.y1, y2: rectA.y2 };
+	} else if (rectA.x2 === rectB.x2) {
 		// Case II
-		result = { tl: rectA.tl, tr: rectB.tl, br: rectB.bl, bl: rectA.bl };
+		result = { x1: rectA.x1, x2: rectB.x1, y1: rectA.y1, y2: rectA.y2 };
 	}
 
 	return result;
 };
 
 const verticalSubtract = (rectA, rectB) => {
-	// rectA and rectB needs to be in Coordinate form
 	if (!rectA || !rectB) return undefined;
 
 	/*
     Case I        Case II
     _______       ________
-    | ____ |      |       |
-    | |   ||      |       |
+    |A____ |      | A     |
+    | |B  ||      |       |
     | |___||      |       |
     |      |      |  ____ |
-    |      |      |  |   ||	
+    |      |      |  |B  ||	
     |      |      |  |___||	
     |______|      |_______|
 	*/
 
 	let result;
-	if (rectA.tl.y === rectB.tl.y) {
+	if (rectA.y1 === rectB.y1) {
 		// Case I
-		result = { tl: rectB.bl, tr: rectB.br, br: rectA.br, bl: rectA.bl };
+		// result = { tl: rectB.bl, tr: rectB.br, br: rectA.br, bl: rectA.bl };
+		result = { x1: rectA.x1, x2: rectA.x2, y1: rectB.y2, y2: rectA.y2 };
 	} else if (rectA.bl.y === rectB.bl.y) {
 		// Case II
-		result = { tl: rectA.tl, tr: rectA.tr, br: rectB.tr, bl: rectB.tl };
+		result = { x1: rectA.x1, x2: rectA.x2, y1: rectA.y1, y2: rectB.y1 };
 	}
 
 	return result;
