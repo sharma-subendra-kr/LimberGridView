@@ -191,8 +191,6 @@ export const doRectsOverlapOrTouchRTree = (rectA, rectB) => {
 	return true;
 };
 
-window.subtractRect = subtractRect;
-// export const subRectKeys = ["subRectT", "subRectR", "subRectB", "subRectL"];
 export const subtractRect = (rectA, rectB) => {
 	// gives the non overlapping free spaces in rectA
 	if (!doRectsOverlap(rectA, rectB)) {
@@ -243,14 +241,9 @@ lm      |   |               |   |      rm
 		},
 	};
 
-	// for (let i = 0; i < 4; i++) {
-	// 	if (!isValidRectCoForm(subRects[subRectKeys[i]])) {
-	// 		delete subRects[subRectKeys[i]];
-	// 	}
-	// }
 	for (const key in subRects) {
-		if (!isValidRectCoForm(subRects[key])) {
-			delete subRects[key];
+		if (!isValidRect(subRects[key])) {
+			subRects[key] = undefined;
 		}
 	}
 
@@ -369,15 +362,10 @@ lm      |   |               |   |      rm
 	rects = rects.filter((o) => o);
 
 	if (rects.length === 0) {
-		// rects = Object.keys(subRects).map((o) => {
-		// 	if (oCoForm) {
-		// 		return subRects[o];
-		// 	} else {
-		// 		return getRectObjectFromCo(subRects[o]);
-		// 	}
-		// });
 		for (const key in subRects) {
-			rects.push(subRects[key]);
+			if (key) {
+				rects.push(subRects[key]);
+			}
 		}
 	}
 
@@ -448,39 +436,11 @@ const verticalSubtract = (rectA, rectB) => {
 	return result;
 };
 
-export const isValidRectCoForm = function (rect) {
-	try {
-		const top = rect.tr.x - rect.tl.x;
-		const right = rect.br.y - rect.tr.y;
-		const bottom = rect.br.x - rect.bl.x;
-		const left = rect.bl.y - rect.tl.y;
-
-		if (top <= 0 || right <= 0 || bottom <= 0 || left <= 0) {
-			return false;
-		}
-		return true;
-	} catch (e) {
+export const isValidRect = function (rect) {
+	if (rect.x1 > rect.x2 || rect.y1 > rect.y2) {
 		return false;
 	}
-};
-
-export const getCoordinates = function (rect) {
-	const tl = { x: rect.x, y: rect.y };
-	const tr = { x: rect.x + rect.width, y: rect.y };
-	const br = { x: rect.x + rect.width, y: rect.y + rect.height };
-	const bl = { x: rect.x, y: rect.y + rect.height };
-
-	return { tl, tr, br, bl };
-};
-
-export const getRectObjectFromCo = function (rect) {
-	if (!isValidRectCoForm(rect)) return undefined;
-	return {
-		x: rect.tl.x,
-		y: rect.tl.y,
-		width: rect.tr.x - rect.tl.x,
-		height: rect.bl.y - rect.tl.y,
-	};
+	return true;
 };
 
 export const merge = (rectA, rectB) => {
@@ -577,65 +537,26 @@ export const mergeRects = (rectA, rectB) => {
 
 export const isRectInside = (rectA, rectB) => {
 	// is rectB inside rectA
-	const rectACo = getCoordinates(rectA);
-	const rectBCo = getCoordinates(rectB);
-
 	if (
-		rectACo.tl.x <= rectBCo.tl.x &&
-		rectACo.tr.x >= rectBCo.tr.x &&
-		rectACo.tl.y <= rectBCo.tl.y &&
-		rectACo.bl.y >= rectBCo.bl.y
+		rectA.x1 <= rectB.x1 &&
+		rectA.x2 >= rectB.x2 &&
+		rectA.y1 <= rectB.y1 &&
+		rectA.y2 >= rectB.y2
 	) {
 		return true;
 	}
-
-	return false;
-};
-
-export const areRectsOnSameYAxisExPath = (rectA, rectB) => {
-	// ExPath: Exclusive Path (in Exclusive and Inclusive)
-	if (!(rectA?.tl?.x && rectA?.tr?.x && rectB?.tl?.x && rectA?.tr?.x)) {
-		return false;
-	}
-
-	if (rectA.tl.x >= rectB.tr.x || rectB.tl.x >= rectA.tr.x) {
-		return false;
-	}
-	return true;
 };
 
 export const areRectsIdentical = (rectA, rectB) => {
 	if (
-		rectA.tl.x === rectB.tl.x &&
-		rectA.tl.y === rectB.tl.y &&
-		rectA.tr.x === rectB.tr.x &&
-		rectA.tr.y === rectB.tr.y &&
-		rectA.br.x === rectB.br.x &&
-		rectA.br.y === rectB.br.y &&
-		rectA.bl.x === rectB.bl.x &&
-		rectA.bl.y === rectB.bl.y
+		rectA.x1 === rectB.x1 &&
+		rectA.x2 === rectB.x2 &&
+		rectA.y1 === rectB.y1 &&
+		rectA.y2 === rectB.y2
 	) {
 		return true;
 	}
 	return false;
-};
-
-export const getRTreeRectFromRectObject = (rect) => {
-	return {
-		x1: rect.x,
-		x2: rect.x + rect.width,
-		y1: rect.y,
-		y2: rect.y + rect.height,
-	};
-};
-
-export const getRectObjectFromRTreeRect = (rect) => {
-	return {
-		x: rect.x1,
-		y: rect.y1,
-		width: rect.x2 - rect.x1,
-		height: rect.y2 - rect.y1,
-	};
 };
 
 export const isRectLarger = (rectA, rectB) => {
@@ -646,3 +567,5 @@ export const isRectLarger = (rectA, rectB) => {
 		return true;
 	}
 };
+
+window.subtractRect = subtractRect;
