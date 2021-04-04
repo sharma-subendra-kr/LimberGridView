@@ -69,9 +69,8 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 		topWSItems = getItemsInWorkSpace(context, topWorkSpace);
 		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
 
-		if (sweepRes < topWorkSpace.bl.y) {
-			topWorkSpace.tl.y = sweepRes;
-			topWorkSpace.tr.y = sweepRes;
+		if (sweepRes < topWorkSpace.y2) {
+			topWorkSpace.y1 = sweepRes;
 
 			res.integrateTop = true;
 		}
@@ -86,9 +85,8 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			rt
 		);
 
-		if (sweepRes > bottomWorkSpace.tl.y) {
-			bottomWorkSpace.bl.y = sweepRes;
-			bottomWorkSpace.br.y = sweepRes;
+		if (sweepRes > bottomWorkSpace.y1) {
+			bottomWorkSpace.y2 = sweepRes;
 
 			res.integrateBottom = true;
 		}
@@ -146,7 +144,7 @@ export const sweepLineBottom = (context, area, items, rt) => {
 		rt.insert(items[i]);
 	}
 
-	let resultPoint = area.tl.y;
+	let resultPoint = area.y1;
 
 	const WIDTH = getWidth(context);
 	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
@@ -298,7 +296,6 @@ export const mergeFreeRects = async (
 	}
 
 	mergeFreeRectsCore(context, stack, rt, idCount);
-	// printMergedFreeRects(context, rt.getData(true));
 	filterMergedFreeRects(rt);
 
 	const mergedArr = rt.getData();
@@ -306,6 +303,9 @@ export const mergeFreeRects = async (
 	rt.reset();
 	mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
+
+	// printMergedFreeRects(context, rt.getData());
+	// debugger;
 
 	return { mergedRectsRt: rt };
 };

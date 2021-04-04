@@ -86,6 +86,19 @@ export const sanitizeDimension = (item) => {
 	item.height = sanitizeNumberFloor(item.height);
 };
 
+export const doRectsOverlapWithMargin = (rectA, rectB) => {
+	// 2nd arg is item and needs to be checked with margin
+	if (
+		rectA.mX1 >= rectB.mX2 ||
+		rectB.mX1 >= rectA.mX2 ||
+		rectA.mY1 >= rectB.mY2 ||
+		rectB.mY1 >= rectA.mY2
+	) {
+		return false;
+	}
+	return true;
+};
+
 export const doRectsOverlapSingleItemMargin = (rectA, rectB) => {
 	// 2nd arg is item and needs to be checked with margin
 	if (

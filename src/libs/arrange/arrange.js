@@ -59,6 +59,7 @@ export const arrangeMove = async (
 	toY,
 	movedBottomY
 ) => {
+	debugger;
 	const privateConstants = getPrivateConstants(context);
 	const mpd = getModifiedPositionData(context);
 

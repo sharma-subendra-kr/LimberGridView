@@ -31,6 +31,7 @@ import {
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { getDistanceBetnPts } from "../geometry/geometry";
+import { doRectsOverlapWithMargin } from "../utils/items";
 
 export const getResizeAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
@@ -71,28 +72,17 @@ export const getResizeAffectedItems = (context, item, index) => {
 };
 
 export const getMoveAffectedItems = (context, item, index) => {
+	debugger;
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
-	const privateConstants = getPrivateConstants(context);
+	// const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
 
-	const _item = { ...item };
-	_item.x -= privateConstants.MARGIN;
-	_item.y -= privateConstants.MARGIN;
-	_item.width += privateConstants.MARGIN * 2;
-	_item.height += privateConstants.MARGIN * 2;
-	const temp = { x: 0, y: 0, height: 0, width: 0 };
-
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x - privateConstants.MARGIN;
-		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN * 2;
-		temp.height = pd[i].height + privateConstants.MARGIN * 2;
-		// if (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) {
-		if (doRectsOverlap(temp, _item)) {
+		if (doRectsOverlapWithMargin(item, pd[i])) {
 			if (i !== index) {
 				affectedArr[count++] = i;
 				mpd[i].x = undefined;

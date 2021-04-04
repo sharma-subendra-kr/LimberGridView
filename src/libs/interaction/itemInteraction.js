@@ -23,6 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getResizeAffectedItems,
 	getMoveAffectedItems,
@@ -171,6 +172,7 @@ export const moveItem = async function (index, toX, toY) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
@@ -202,6 +204,18 @@ export const moveItem = async function (index, toX, toY) {
 		y: toY,
 		width: pd[index].width,
 		height: pd[index].height,
+		mX: toX - privateConstants.MARGIN,
+		mY: toY - privateConstants.MARGIN,
+		mWidth: pd[index].width + privateConstants.MARGIN * 2,
+		mHeight: pd[index].height + privateConstants.MARGIN * 2,
+		x1: toX,
+		y1: toY,
+		x2: toX + pd[index].width,
+		y2: toY + pd[index].height,
+		mX1: toX - privateConstants.MARGIN,
+		mY1: toY - privateConstants.MARGIN,
+		mX2: toX + pd[index].width + privateConstants.MARGIN,
+		mY2: toY + pd[index].height + privateConstants.MARGIN,
 	};
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
@@ -244,6 +258,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -359,6 +374,18 @@ export const moveItemDemo = async function (index, toX, toY) {
 		y: toY,
 		width: pd[index].width,
 		height: pd[index].height,
+		mX: toX - privateConstants.MARGIN,
+		mY: toY - privateConstants.MARGIN,
+		mWidth: pd[index].width + privateConstants.MARGIN * 2,
+		mHeight: pd[index].height + privateConstants.MARGIN * 2,
+		x1: toX,
+		y1: toY,
+		x2: toX + pd[index].width,
+		y2: toY + pd[index].height,
+		mX1: toX - privateConstants.MARGIN,
+		mY1: toY - privateConstants.MARGIN,
+		mX2: toX + pd[index].width + privateConstants.MARGIN,
+		mY2: toY + pd[index].height + privateConstants.MARGIN,
 	};
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
