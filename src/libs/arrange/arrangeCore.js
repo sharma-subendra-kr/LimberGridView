@@ -39,21 +39,12 @@ import {
 	getSizeTest,
 	getDistanceForTest,
 	rectSortHypotenusSquared,
-	// identicalOrInsideHelper,
-	// sweepTopBottomHelper,
 } from "./arrangeUtils";
-import {
-	getRTreeRectFromRectObject,
-	getRectObjectFromRTreeRect,
-	getRectObjectFromCo,
-	subtractRect,
-	mergeRects,
-	isRectInside,
-} from "../rect/rectUtils";
+import { subtractRect, mergeRects, isRectInside } from "../rect/rectUtils";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
-import { sanitizeDimension } from "../utils/utils";
+import { sanitizeDimension } from "../utils/items";
 import {
 	sleep,
 	printUnmergedFreeRects,
@@ -75,10 +66,7 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	const rt = getTree(context, "rt");
 
 	if (topWorkSpace) {
-		topWSItems = getItemsInWorkSpace(
-			context,
-			getRectObjectFromCo(topWorkSpace)
-		);
+		topWSItems = getItemsInWorkSpace(context, topWorkSpace);
 		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
 
 		if (sweepRes < topWorkSpace.bl.y) {
@@ -90,10 +78,7 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	}
 
 	if (bottomWorkSpace) {
-		bottomWSItems = getItemsInWorkSpace(
-			context,
-			getRectObjectFromCo(bottomWorkSpace)
-		);
+		bottomWSItems = getItemsInWorkSpace(context, bottomWorkSpace);
 		const sweepRes = sweepLineBottom(
 			context,
 			bottomWorkSpace,
@@ -118,21 +103,15 @@ export const sweepLineTop = (context, area, items, rt) => {
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		rt.insert({
-			rect: getRTreeRectFromRectObject(items[i]),
-			data: {
-				id: -1,
-				// rect: items[i],
-			},
-		});
+		rt.insert(items[i]);
 	}
 
-	let resultPoint = area.bl.y;
+	let resultPoint = area.y2;
 
 	const WIDTH = getWidth(context);
 	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
 	let w = 0;
-	const suspect = { x1: 0, x2: 0, y1: area.tl.y, y2: area.bl.y };
+	const suspect = { x1: 0, x2: 0, y1: area.y1, y2: area.y2 };
 	let res;
 	while (w < WIDTH) {
 		suspect.x1 = w;
@@ -143,8 +122,8 @@ export const sweepLineTop = (context, area, items, rt) => {
 		const len = res.length;
 		let max = 0;
 		for (let i = 0; i < len; i++) {
-			if (res[i].rect.y2 > max) {
-				max = res[i].rect.y2;
+			if (res[i].y2 > max) {
+				max = res[i].y2;
 			}
 		}
 
@@ -164,13 +143,7 @@ export const sweepLineBottom = (context, area, items, rt) => {
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		rt.insert({
-			rect: getRTreeRectFromRectObject(items[i]),
-			data: {
-				id: -1,
-				// rect: items[i],
-			},
-		});
+		rt.insert(items[i]);
 	}
 
 	let resultPoint = area.tl.y;
@@ -178,7 +151,7 @@ export const sweepLineBottom = (context, area, items, rt) => {
 	const WIDTH = getWidth(context);
 	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
 	let w = 0;
-	const suspect = { x1: 0, x2: 0, y1: area.tl.y, y2: area.bl.y };
+	const suspect = { x1: 0, x2: 0, y1: area.y1, y2: area.y2 };
 	let res;
 	while (w < WIDTH) {
 		suspect.x1 = w;
@@ -189,8 +162,8 @@ export const sweepLineBottom = (context, area, items, rt) => {
 		const len = res.length;
 		let min = Number.MAX_SAFE_INTEGER;
 		for (let i = 0; i < len; i++) {
-			if (res[i].rect.y1 < min) {
-				min = res[i].rect.y1;
+			if (res[i].y1 < min) {
+				min = res[i].y1;
 			}
 		}
 
@@ -253,56 +226,42 @@ export const sweepLineForFreeSpace = (
 };
 
 export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
-	const findRect = { x1: 0, x2: 0, y1: 0, y2: 0 };
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
 		const top = stack.pop();
 		topFullMerged = false;
 
-		findRect.x1 = top.rect.x1;
-		findRect.x2 = top.rect.x2;
-		findRect.y1 = top.rect.y1;
-		findRect.y2 = top.rect.y2;
-
-		const results = rt.find(findRect, false, true, undefined, true);
+		const results = rt.find(top, false, true, undefined, true);
 
 		const len = results?.length || 0;
 		if (len > 0) {
 			for (let i = 0; i < len; i++) {
 				const res = results[i];
 
-				const mergedRects = mergeRects(
-					getRectObjectFromRTreeRect(res.rect),
-					getRectObjectFromRTreeRect(top.rect)
-				);
+				const mergedRects = mergeRects(res, top);
 				if (mergedRects.length === 1) {
 					const mergedRect = mergedRects[0];
+					mergedRect.id = idCount.idCount++;
 
-					if (isRectInside(mergedRect, getRectObjectFromRTreeRect(res.rect))) {
-						rt.remove(res.rect);
+					if (isRectInside(mergedRect, res)) {
+						rt.remove(res);
 					}
 
-					if (isRectInside(mergedRect, getRectObjectFromRTreeRect(top.rect))) {
+					if (isRectInside(mergedRect, top)) {
 						topFullMerged = true;
 					}
 
-					const mergedObject = {
-						rect: getRTreeRectFromRectObject(mergedRect),
-						data: {
-							id: idCount.idCount++,
-							// rect: mergedRect,
-						},
-					};
-
-					rt.insert(mergedObject);
+					rt.insert(mergedRect);
 				}
 			}
 			if (topFullMerged === false) {
 				// put  top in the tree
-				rt.insert({ rect: top.rect, data: { id: idCount.idCount++ } });
+				top.id = idCount.idCount++;
+				rt.insert(top);
 			}
 		} else {
-			rt.insert({ rect: top.rect, data: { id: idCount.idCount++ } });
+			top.id = idCount.idCount++;
+			rt.insert(top);
 		}
 	}
 };
@@ -312,16 +271,10 @@ export const filterMergedFreeRects = (rt) => {
 	const len = arr.length;
 	for (let i = 0; i < len; i++) {
 		const obj = arr[i];
-		const result = rt.find(
-			obj.rect,
-			undefined,
-			undefined,
-			shouldFilterRect,
-			false
-		);
+		const result = rt.find(obj, undefined, undefined, shouldFilterRect, false);
 
 		if (result) {
-			rt.remove(obj.rect);
+			rt.remove(obj);
 		}
 	}
 };
@@ -408,7 +361,7 @@ export const arrange = async (
 
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
-			const oRect = overlappedRects[i].rect;
+			const oRect = overlappedRects[i];
 			const d1 = getDistanceForTest(oRect, tempOItem);
 			const sizeTest1 = getSizeTest(oRect, tempOItem, 0);
 			if (
@@ -438,8 +391,8 @@ export const arrange = async (
 			continue;
 		}
 
-		aItem.x = pm.rect.x1 + privateConstants.MARGIN;
-		aItem.y = pm.rect.y1 + privateConstants.MARGIN;
+		aItem.x = pm.x1 + privateConstants.MARGIN;
+		aItem.y = pm.y1 + privateConstants.MARGIN;
 		aItem.x1 = aItem.x;
 		aItem.y1 = aItem.y;
 		aItem.x2 = aItem.x + aItem.width;

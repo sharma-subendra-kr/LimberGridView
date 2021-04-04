@@ -32,7 +32,7 @@ import {
 	movePointAdjust,
 	resizeSizeAdjust,
 } from "./itemInteractionUtils";
-import { arrangeMove, arrangeResize } from "../arrange/arrange";
+import { arrangeMove } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getPositionData,
@@ -77,12 +77,7 @@ export const resizeItem = async function (index, width, height) {
 
 	let arranged;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeResize(
-			this,
-			affectedItems,
-			modifiedItem.y + modifiedItem.height,
-			modifiedItem.x + modifiedItem.width
-		);
+		arranged = await arrangeMove(this, affectedItems);
 	} else {
 		arranged = await arrangeMove(this, affectedItems);
 	}
@@ -155,12 +150,7 @@ export const resizeItemDemo = async function (index, width, height) {
 
 	let arranged;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeResize(
-			this,
-			affectedItems,
-			modifiedItem.y + modifiedItem.height,
-			modifiedItem.x + modifiedItem.width
-		);
+		arranged = await arrangeMove(this, affectedItems);
 	} else {
 		arranged = await arrangeMove(this, affectedItems);
 	}

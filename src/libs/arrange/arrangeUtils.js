@@ -29,20 +29,14 @@ import {
 	getModifiedPositionData,
 } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
-import {
-	doRectsOverlap,
-	isRectInside,
-	getRectObjectFromRTreeRect,
-	doRectsOnlyTouch,
-	isPointInsideOrTouchRect,
-} from "../rect/rectUtils";
+import { isRectInside, isPointInsideOrTouchRect } from "../rect/rectUtils";
 import {
 	doRectsOverlapSingleItemMargin,
 	doRectsOverlapOrTouchSingleItemMargin,
 	isRectInsideSingleItemMargin,
 } from "../utils/items";
 import {
-	getDistanceBetnPts,
+	// getDistanceBetnPts,
 	getHypotenuseSquared,
 	getMidPoint,
 } from "../geometry/geometry";
@@ -125,29 +119,29 @@ export const getBottomMax = (context, minX, maxX) => {
 	return max;
 };
 
-export const getTopBottomWS = (context, workSpaceRectCo, minX, maxX) => {
-	let topWorkSpaceCo, bottomWorkSpaceCo;
-	if (workSpaceRectCo.tl.y > 0) {
-		topWorkSpaceCo = {
-			tl: { x: minX, y: 0 },
-			tr: { x: maxX, y: 0 },
-			br: { x: maxX, y: workSpaceRectCo.tr.y },
-			bl: { x: minX, y: workSpaceRectCo.tl.y },
+export const getTopBottomWS = (context, workSpaceRect, minX, maxX) => {
+	let topWorkSpace, bottomWorkSpace;
+	if (workSpaceRect.y1 > 0) {
+		topWorkSpace = {
+			x1: minX,
+			x2: maxX,
+			y1: 0,
+			y2: workSpaceRect.y1,
 		};
 	}
 
 	const bottomMax = getBottomMax(context, minX, maxX);
 
-	if (bottomMax > workSpaceRectCo.bl.y) {
-		bottomWorkSpaceCo = {
-			tl: { x: minX, y: workSpaceRectCo.bl.y },
-			tr: { x: maxX, y: workSpaceRectCo.bl.y },
-			br: { x: maxX, y: bottomMax },
-			bl: { x: minX, y: bottomMax },
+	if (bottomMax > workSpaceRect.y2) {
+		bottomWorkSpace = {
+			x1: minX,
+			x2: maxX,
+			y1: workSpaceRect.y2,
+			y2: bottomMax,
 		};
 	}
 
-	return { topWorkSpaceCo, bottomWorkSpaceCo };
+	return { topWorkSpace, bottomWorkSpace };
 };
 
 export const getItemsInWorkSpace = (
@@ -291,18 +285,18 @@ export const sweepLineSortX = (a, b) => {
 };
 
 export const rectSortX = (a, b) => {
-	if (a.rect.x1 === b.rect.x1) {
-		return a.rect.y1 - b.rect.y1;
+	if (a.x1 === b.x1) {
+		return a.y1 - b.y1;
 	} else {
-		return a.rect.x1 - b.rect.x1;
+		return a.x1 - b.x1;
 	}
 };
 
 export const rectSortY = (a, b) => {
-	if (a.rect.y1 === b.rect.y1) {
-		return a.rect.x1 - b.rect.x1;
+	if (a.y1 === b.y1) {
+		return a.x1 - b.x1;
 	} else {
-		return a.rect.y1 - b.rect.y1;
+		return a.y1 - b.y1;
 	}
 };
 
@@ -328,14 +322,8 @@ export const rectSortHypotenusSquared = (pd) => {
 // 	}
 // };
 
-export const shouldFilterRect = function (rectData, rect) {
-	if (
-		isRectInside(
-			getRectObjectFromRTreeRect(rectData.rect),
-			getRectObjectFromRTreeRect(rect)
-		) &&
-		rectData.rect !== rect
-	) {
+export const shouldFilterRect = function (suspect, rect) {
+	if (isRectInside(suspect, rect) && suspect !== rect) {
 		return true;
 	}
 };
@@ -367,29 +355,6 @@ export const getDistanceForTest = (suspect, rect) => {
 		rect.mY + rect.mHeight
 	);
 	return getHypotenuseSquared(p1.x, p1.y, p2.x, p2.y);
-};
-
-export const getPerfectMatch = (arr, item) => {
-	if (item === undefined) {
-		// add item
-		return arr[0];
-	}
-	const len = arr.length;
-	let min = Number.MAX_SAFE_INTEGER;
-	let d;
-	const p1 = { x: item.x, y: item.y };
-	const p2 = { x: 0, y: 0 };
-	let pm;
-	for (let i = 0; i < len; i++) {
-		p2.x = arr[i].rect.x1;
-		p2.y = arr[i].rect.y1;
-		d = getDistanceBetnPts(p1, p2);
-		if (d < min) {
-			pm = arr[i];
-			min = d;
-		}
-	}
-	return pm || arr[0];
 };
 
 export const shiftItemsDown = (context, items, height) => {
