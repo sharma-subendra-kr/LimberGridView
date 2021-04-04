@@ -483,129 +483,58 @@ export const getRectObjectFromCo = function (rect) {
 	};
 };
 
-export const merge = (rectACo, rectBCo) => {
+export const merge = (rectA, rectB) => {
 	let res;
-	// check tl
-	if (
-		rectACo.tl.x >= rectBCo.bl.x &&
-		rectACo.tl.x < rectBCo.br.x &&
-		rectACo.tl.y >= rectBCo.bl.y
-	) {
-		const x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
+
+	// 3
+	if (rectA.x1 >= rectB.x1 && rectA.x1 < rectB.x2 && rectA.y1 >= rectB.y2) {
+		const x = rectA.x2 < rectB.x2 ? rectA.x2 : rectB.x2;
 		res = {
-			tl: { x: rectACo.tl.x, y: rectBCo.tl.y },
-			tr: { x: x, y: rectBCo.tl.y },
-			br: { x: x, y: rectACo.bl.y },
-			bl: { x: rectACo.bl.x, y: rectACo.bl.y },
+			x1: rectA.x1,
+			x2: x,
+			y1: rectB.y1,
+			y2: rectA.y2,
 		};
 	}
 
-	if (
-		rectACo.tl.y >= rectBCo.tr.y &&
-		rectACo.tl.y < rectBCo.br.y &&
-		rectACo.tl.x >= rectBCo.tr.x
-	) {
-		const y = rectACo.br.y < rectBCo.br.y ? rectACo.br.y : rectBCo.br.y;
+	// 1
+	if (rectA.y1 >= rectB.y1 && rectA.y1 < rectB.y2 && rectA.x1 >= rectB.x2) {
+		const y = rectA.y2 < rectB.y2 ? rectA.y2 : rectB.y2;
 		res = {
-			tl: { x: rectBCo.tl.x, y: rectACo.tl.y },
-			tr: { x: rectACo.tr.x, y: rectACo.tr.y },
-			br: { x: rectACo.br.x, y: y },
-			bl: { x: rectBCo.bl.x, y: y },
+			x1: rectB.x1,
+			x2: rectA.x2,
+			y1: rectA.y1,
+			y2: y,
 		};
 	}
 
-	// check tr
-	if (
-		rectACo.tr.x <= rectBCo.br.x &&
-		rectACo.tr.x > rectBCo.bl.x &&
-		rectACo.tr.y >= rectBCo.bl.y
-	) {
-		const x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
+	// 4
+	if (rectA.x2 <= rectB.x2 && rectA.x2 > rectB.x1 && rectA.y1 >= rectB.y2) {
+		const x = rectA.x1 > rectB.x1 ? rectA.x1 : rectB.x1;
 		res = {
-			tl: { x: x, y: rectBCo.tl.y },
-			tr: { x: rectACo.tr.x, y: rectBCo.tr.y },
-			br: { x: rectACo.br.x, y: rectACo.br.y },
-			bl: { x: x, y: rectACo.bl.y },
+			x1: x,
+			x2: rectA.x2,
+			y1: rectB.y1,
+			y2: rectA.y2,
 		};
 	}
 
-	if (
-		rectACo.tr.y >= rectBCo.tl.y &&
-		rectACo.tr.y < rectBCo.bl.y &&
-		rectACo.tr.x <= rectBCo.tl.x
-	) {
-		const y = rectACo.bl.y < rectBCo.bl.y ? rectACo.bl.y : rectBCo.bl.y;
+	// 2
+	if (rectA.y2 <= rectB.y2 && rectA.y2 > rectB.y1 && rectA.x1 >= rectB.x2) {
+		const y = rectA.y1 > rectB.y1 ? rectA.y1 : rectB.y1;
 		res = {
-			tl: { x: rectACo.tl.x, y: rectACo.tl.y },
-			tr: { x: rectBCo.tr.x, y: rectACo.tl.y },
-			br: { x: rectBCo.br.x, y: y },
-			bl: { x: rectACo.bl.x, y: y },
-		};
-	}
-
-	// check br
-	if (
-		rectACo.br.x <= rectBCo.tr.x &&
-		rectACo.br.x > rectBCo.tl.x &&
-		rectACo.br.y <= rectBCo.tl.y
-	) {
-		const x = rectACo.tl.x > rectBCo.tl.x ? rectACo.tl.x : rectBCo.tl.x;
-		res = {
-			tl: { x: x, y: rectACo.tl.y },
-			tr: { x: rectACo.tr.x, y: rectACo.tr.y },
-			br: { x: rectACo.tr.x, y: rectBCo.br.y },
-			bl: { x: x, y: rectBCo.bl.y },
-		};
-	}
-
-	if (
-		rectACo.br.y <= rectBCo.bl.y &&
-		rectACo.br.y > rectBCo.tl.y &&
-		rectACo.br.x <= rectBCo.tl.x
-	) {
-		const y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-		res = {
-			tl: { x: rectACo.tl.x, y: y },
-			tr: { x: rectBCo.tr.x, y: y },
-			br: { x: rectBCo.br.x, y: rectACo.br.y },
-			bl: { x: rectACo.bl.x, y: rectACo.bl.y },
-		};
-	}
-
-	// check bl
-	if (
-		rectACo.bl.x >= rectBCo.tl.x &&
-		rectACo.bl.x < rectBCo.tr.x &&
-		rectACo.bl.y <= rectBCo.tl.y
-	) {
-		const x = rectACo.tr.x < rectBCo.tr.x ? rectACo.tr.x : rectBCo.tr.x;
-		res = {
-			tl: { x: rectACo.tl.x, y: rectACo.tl.y },
-			tr: { x: x, y: rectACo.tr.y },
-			br: { x: x, y: rectBCo.br.y },
-			bl: { x: rectACo.bl.x, y: rectBCo.bl.y },
-		};
-	}
-
-	if (
-		rectACo.bl.y <= rectBCo.br.y &&
-		rectACo.bl.y > rectBCo.tr.y &&
-		rectACo.bl.x >= rectBCo.tr.x
-	) {
-		const y = rectACo.tl.y > rectBCo.tl.y ? rectACo.tl.y : rectBCo.tl.y;
-		res = {
-			tl: { x: rectBCo.tl.x, y: y },
-			tr: { x: rectACo.tr.x, y: y },
-			br: { x: rectACo.br.x, y: rectACo.br.y },
-			bl: { x: rectBCo.bl.x, y: rectACo.bl.y },
+			x1: rectB.x1,
+			x2: rectA.x2,
+			y1: y,
+			y2: rectA.y2,
 		};
 	}
 
 	return res;
 };
 
-export const mergeOverlapping = (rectA, rectB, rectBCo) => {
-	const diff = subtractRect(rectA, rectB, true);
+export const mergeOverlapping = (rectA, rectB) => {
+	const diff = subtractRect(rectA, rectB);
 
 	const arr = new Array(diff?.length || 0);
 	let m;
@@ -613,8 +542,8 @@ export const mergeOverlapping = (rectA, rectB, rectBCo) => {
 	const len = arr.length;
 
 	for (let i = 0; i < len; i++) {
-		m = merge(diff[i], rectBCo);
-		if (m && !isRectInside(rectA, getRectObjectFromCo(m))) {
+		m = merge(diff[i], rectB);
+		if (m && !isRectInside(rectA, m)) {
 			arr[count++] = m;
 		}
 	}
@@ -624,28 +553,26 @@ export const mergeOverlapping = (rectA, rectB, rectBCo) => {
 	return count ? arr : undefined;
 };
 
-export const mergeRects = (rectA, rectB, oCoForm) => {
-	const rectACo = getCoordinates(rectA);
-	const rectBCo = getCoordinates(rectB);
-
+export const mergeRects = (rectA, rectB) => {
 	let result;
 
-	result = merge(rectACo, rectBCo);
-	if (!result) result = merge(rectBCo, rectACo);
+	result = merge(rectA, rectB);
+	if (!result) result = merge(rectB, rectA);
 	if (result) result = [result];
 	if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
-		result = mergeOverlapping(rectA, rectB, rectBCo);
+		result = mergeOverlapping(rectA, rectB);
 	}
 
 	if (result) {
-		if (oCoForm) {
-			return result;
-		} else {
-			return result.map((o) => getRectObjectFromCo(o));
+		for (const rect of result) {
+			rect.x = rect.x1;
+			rect.y = rect.y1;
+			rect.width = rect.x2 - rect.x1;
+			rect.height = rect.y2 - rect.y1;
 		}
 	}
 
-	return false;
+	return result;
 };
 
 export const isRectInside = (rectA, rectB) => {
