@@ -342,10 +342,10 @@ export const shouldFilterRect = function (rectData, rect) {
 
 export const getSizeTest = (suspect, rect, threshold = 70) => {
 	const h1 = getHypotenuseSquared(
-		rect.x,
-		rect.y,
-		rect.x + rect.width,
-		rect.y + rect.height
+		rect.mX,
+		rect.mY,
+		rect.mX + rect.mWidth,
+		rect.mY + rect.mHeight
 	);
 	const h2 = getHypotenuseSquared(
 		suspect.x1,
@@ -361,10 +361,10 @@ export const getSizeTest = (suspect, rect, threshold = 70) => {
 export const getDistanceForTest = (suspect, rect) => {
 	const p1 = getMidPoint(suspect.x1, suspect.y1, suspect.x2, suspect.y2);
 	const p2 = getMidPoint(
-		rect.x,
-		rect.y,
-		rect.x + rect.width,
-		rect.y + rect.height
+		rect.mX,
+		rect.mY,
+		rect.mX + rect.mWidth,
+		rect.mY + rect.mHeight
 	);
 	return getHypotenuseSquared(p1.x, p1.y, p2.x, p2.y);
 };

@@ -82,8 +82,8 @@ export const render = function (context, scale = true) {
 
 		pd[i].mX = pd[i].x - privateConstants.MARGIN;
 		pd[i].mY = pd[i].y - privateConstants.MARGIN;
-		pd[i].mWidth *= pd[i].width + privateConstants.MARGIN * 2;
-		pd[i].mHeight *= pd[i].height + privateConstants.MARGIN * 2;
+		pd[i].mWidth = pd[i].width + privateConstants.MARGIN * 2;
+		pd[i].mHeight = pd[i].height + privateConstants.MARGIN * 2;
 		sanitizeDimension(pd[i]);
 	}
 

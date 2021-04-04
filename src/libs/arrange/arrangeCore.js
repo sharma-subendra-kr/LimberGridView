@@ -403,30 +403,17 @@ export const arrange = async (
 
 		let pm;
 		let MIN_CLOSEST = Number.MAX_SAFE_INTEGER;
-		// let MIN_Y = Number.MAX_SAFE_INTEGER;
-		let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
-		const tempOItem = getItemDimenWithMargin(privateConstants.MARGIN, oItem);
-		tempAItem.width += 0.5;
-		tempAItem.height += 0.5;
-		tempOItem.width += 0.5;
-		tempOItem.height += 0.5;
+		let tempAItem = aItem;
+		const tempOItem = oItem;
 
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i].rect;
-			// if (
-			// 	oRect.x2 - oRect.x1 >= tempAItem.width &&
-			// 	oRect.y2 - oRect.y1 >= tempAItem.height &&
-			// 	oRect.y1 < MIN_Y
-			// ) {
-			// 	MIN_Y = oRect.y1;
-			// 	pm = overlappedRects[i];
-			// }
 			const d1 = getDistanceForTest(oRect, tempOItem);
 			const sizeTest1 = getSizeTest(oRect, tempOItem, 0);
 			if (
-				oRect.x2 - oRect.x1 >= tempAItem.width &&
-				oRect.y2 - oRect.y1 >= tempAItem.height &&
+				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
+				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
 				sizeTest1 &&
 				d1 < MIN_CLOSEST
 			) {
@@ -437,8 +424,8 @@ export const arrange = async (
 			const d = getDistanceForTest(oRect, tempOItem);
 			const sizeTest = getSizeTest(oRect, tempOItem);
 			if (
-				oRect.x2 - oRect.x1 >= tempAItem.width &&
-				oRect.y2 - oRect.y1 >= tempAItem.height &&
+				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
+				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
 				sizeTest &&
 				d < MIN_CLOSEST
 			) {
@@ -451,41 +438,47 @@ export const arrange = async (
 			continue;
 		}
 
-		aItem.x = pm.rect.x1 + privateConstants.MARGIN + 0.5;
-		aItem.y = pm.rect.y1 + privateConstants.MARGIN + 0.5;
+		aItem.x = pm.rect.x1 + privateConstants.MARGIN;
+		aItem.y = pm.rect.y1 + privateConstants.MARGIN;
+		aItem.x1 = aItem.x;
+		aItem.y1 = aItem.y;
+		aItem.x2 = aItem.x + aItem.width;
+		aItem.y2 = aItem.y + aItem.height;
 		sanitizeDimension(aItem);
+		aItem.mX = aItem.x - privateConstants.MARGIN;
+		aItem.mY = aItem.y - privateConstants.MARGIN;
+		aItem.mWidth = aItem.width + privateConstants.MARGIN * 2;
+		aItem.mHeight = aItem.height + privateConstants.MARGIN * 2;
+		aItem.mX1 = aItem.x1 - privateConstants.MARGIN;
+		aItem.mY1 = aItem.y1 - privateConstants.MARGIN;
+		aItem.mX2 = aItem.x2 + privateConstants.MARGIN;
+		aItem.mY2 = aItem.y2 + privateConstants.MARGIN;
 
 		arranged[top] = aItem;
 
-		if (
-			bottomWorkSpace &&
-			isRectInside(bottomWorkSpace, getRectObjectFromRTreeRect(pm.rect))
-		) {
+		if (bottomWorkSpace && isRectInside(bottomWorkSpace, pm)) {
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top] = top;
 		}
 
 		garbageStack.empty();
-		const result = mergedRectsRt.find(pm.rect, false, true, undefined, false);
+		const result = mergedRectsRt.find(pm, false, true, undefined, false);
 		const resLen = result.length;
-		tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+		tempAItem = { ...aItem };
+		tempAItem.x1 -= privateConstants.MARGIN;
+		tempAItem.x2 += privateConstants.MARGIN;
+		tempAItem.y1 -= privateConstants.MARGIN;
+		tempAItem.y2 += privateConstants.MARGIN;
 		for (let i = 0; i < resLen; i++) {
 			const res = result[i];
-			const garbageRects = subtractRect(
-				getRectObjectFromRTreeRect(res.rect),
-				tempAItem
-			);
+			const garbageRects = subtractRect(res, tempAItem);
 
 			const gLen = garbageRects?.length || 0;
 			for (let i = 0; i < gLen; i++) {
-				garbageStack.push({
-					rect: getRTreeRectFromRectObject(garbageRects[i]),
-					data: {
-						id: idCount.idCount++,
-					},
-				});
+				garbageRects[i].idCount.idCount++;
+				garbageStack.push(garbageRects[i]);
 			}
-			mergedRectsRt.remove(res.rect);
+			mergedRectsRt.remove(res);
 		}
 
 		const { mergedRectsRt: _mergedRectsRt } = await mergeFreeRects(
