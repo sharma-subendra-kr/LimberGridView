@@ -23,7 +23,8 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { isValidRectCoForm, getCoordinates } from "../rect/rectUtils";
+import { isValidRect, isValidRectHW } from "../rect/rectUtils";
+import { makeItem, enhanceItemHW } from "../utils/items";
 import { getItemDimenWithMargin } from "../arrange/arrangeUtils";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
@@ -33,20 +34,11 @@ export const checkPositionData = (pd) => {
 		const len = pd.length;
 
 		for (let i = 0; i < len; i++) {
-			if (
-				!pd[i] ||
-				isNaN(pd[i].x) ||
-				pd[i].x < 0 ||
-				isNaN(pd[i].y) ||
-				pd[i].y < 0 ||
-				isNaN(pd[i].height) ||
-				pd[i].height <= 0 ||
-				isNaN(pd[i].width) ||
-				pd[i].width <= 0
-			) {
-				return false;
-			}
-			if (!isValidRectCoForm(getCoordinates(pd[i]))) {
+			if (isValidRect(pd[i])) {
+				enhanceItemHW(pd[i]);
+			} else if (isValidRectHW(pd[i])) {
+				makeItem(pd[i]);
+			} else {
 				return false;
 			}
 		}

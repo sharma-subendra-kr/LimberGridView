@@ -34,7 +34,8 @@ import {
 	setModifiedPositionData,
 	getCallbacks,
 } from "../../store/variables/essentials";
-import { isMobile, sanitizeDimension } from "../utils/utils";
+import { isMobile } from "../utils/utils";
+import { sanitizeDimension } from "../utils/items";
 
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -73,6 +74,11 @@ export const render = function (context, scale = true) {
 		}
 
 		for (let i = 0; i < len; i++) {
+			pd[i].x1 *= WIDTH_SCALE_FACTOR;
+			pd[i].x2 *= WIDTH_SCALE_FACTOR;
+			pd[i].y1 *= WIDTH_SCALE_FACTOR;
+			pd[i].y2 *= WIDTH_SCALE_FACTOR;
+
 			pd[i].x *= WIDTH_SCALE_FACTOR;
 			pd[i].y *= WIDTH_SCALE_FACTOR;
 			pd[i].width *= WIDTH_SCALE_FACTOR;
@@ -93,6 +99,11 @@ export const render = function (context, scale = true) {
 		spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
+			pd[i].x1 *= WIDTH_SCALE_FACTOR;
+			pd[i].x2 *= WIDTH_SCALE_FACTOR;
+			pd[i].y1 *= WIDTH_SCALE_FACTOR;
+			pd[i].y2 *= WIDTH_SCALE_FACTOR;
+
 			pd[i].x *= WIDTH_SCALE_FACTOR;
 			pd[i].y *= WIDTH_SCALE_FACTOR;
 			pd[i].width *= WIDTH_SCALE_FACTOR;

@@ -375,6 +375,13 @@ export const isValidRect = function (rect) {
 	return true;
 };
 
+export const isValidRectHW = function (rect) {
+	if (rect.x > rect.x + rect.width || rect.y > rect.y + rect.height) {
+		return false;
+	}
+	return true;
+};
+
 export const merge = (rectA, rectB) => {
 	let res;
 
