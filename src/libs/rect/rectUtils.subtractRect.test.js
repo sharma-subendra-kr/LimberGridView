@@ -552,194 +552,238 @@ describe("subtractRect", () => {
 
 	test("subtractRect top", () => {
 		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		let rectB = { x1: 1, y1: 8, x2: 4, y2: 4 };
-		// let res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		let rectB = { x1: 1, y1: 4, x2: 4, y2: 8 };
+		let res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 2, y1: 8, x2: 4, y2: 4 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 2, y1: 4, x2: 4, y2: 8 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 3, y1: 8, x2: 4, y2: 4 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 3 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 3 },
-		// 	{ x1: 4, y1: 3, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 3, y1: 4, x2: 4, y2: 8 };
+		res = [
+			{ x1: 2, y1: 2, x2: 3, y2: 4 },
+			{ x1: 3, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 3, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 8, x2: 6, y2: 4 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 4, x2: 6, y2: 8 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 8, x2: 7, y2: 4 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 4, x2: 7, y2: 8 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 		//
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 1, y1: 8, x2: 4, y2: 2 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 1, y1: 2, x2: 4, y2: 8 };
+		res = [{ x1: 4, y1: 2, x2: 6, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 2, y1: 8, x2: 4, y2: 2 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 2, y1: 2, x2: 4, y2: 8 };
+		res = [{ x1: 4, y1: 2, x2: 6, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 3, y1: 8, x2: 4, y2: 2 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 3 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 3 },
-		// 	{ x1: 4, y1: 3, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 3, y1: 2, x2: 4, y2: 8 };
+		res = [
+			{ x1: 4, y1: 2, x2: 6, y2: 6 },
+			{ x1: 2, y1: 2, x2: 3, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 8, x2: 6, y2: 2 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 2, x2: 6, y2: 8 };
+		res = [{ x1: 2, y1: 2, x2: 4, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 8, x2: 7, y2: 2 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 2, x2: 7, y2: 8 };
+		res = [{ x1: 2, y1: 2, x2: 4, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 		//
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 1, y1: 7, x2: 4, y2: 4 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 1, y1: 4, x2: 4, y2: 7 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 2, y1: 7, x2: 4, y2: 4 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 2, y1: 4, x2: 4, y2: 7 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 3, y1: 7, x2: 4, y2: 4 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 3 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 3 },
-		// 	{ x1: 4, y1: 3, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 3, y1: 4, x2: 4, y2: 7 };
+		res = [
+			{ x1: 2, y1: 2, x2: 3, y2: 4 },
+			{ x1: 3, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 3, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 7, x2: 6, y2: 4 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 4, x2: 6, y2: 7 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 7, x2: 7, y2: 4 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 4, x2: 7, y2: 7 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 		//
 
-		rectA = { x1: 2, y1: 6, x2: 6, y2: 6 };
-		rectB = { x1: 1, y1: 7, x2: 4, y2: 2 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 1, y1: 2, x2: 4, y2: 7 };
+		res = [{ x1: 4, y1: 2, x2: 6, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 2, y1: 7, x2: 4, y2: 2 };
-		// res = [
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 2, y1: 2, x2: 4, y2: 7 };
+		res = [{ x1: 4, y1: 2, x2: 6, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 3, y1: 7, x2: 4, y2: 2 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 3 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 3 },
-		// 	{ x1: 4, y1: 3, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// 	{ x1: 2, y1: 4, x2: 4, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 3, y1: 2, x2: 4, y2: 7 };
+		res = [
+			{ x1: 4, y1: 2, x2: 6, y2: 6 },
+			{ x1: 2, y1: 2, x2: 3, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 7, x2: 6, y2: 2 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 2, x2: 6, y2: 7 };
+		res = [{ x1: 2, y1: 2, x2: 4, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 4, y1: 7, x2: 7, y2: 2 };
-		// res = [
-		// 	{ x1: 2, y1: 2, x2: 4, y2: 4 },
-		// 	{ x1: 4, y1: 2, x2: 6, y2: 4 },
-		// 	{ x1: 4, y1: 4, x2: 6, y2: 6 },
-		// ];
-		// expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+		rectB = { x1: 4, y1: 2, x2: 7, y2: 7 };
+		res = [{ x1: 2, y1: 2, x2: 4, y2: 6 }];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+	});
+
+	test("inside 8 conditions", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 2, y1: 4, x2: 4, y2: 6 };
+		let res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 2, x2: 4, y2: 4 };
+		res = [
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 4, y1: 2, x2: 6, y2: 4 };
+		res = [
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 4, y1: 4, x2: 6, y2: 6 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 3, x2: 4, y2: 4 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 3 },
+			{ x1: 4, y1: 2, x2: 6, y2: 3 },
+			{ x1: 4, y1: 3, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 4, y1: 3, x2: 6, y2: 4 };
+		res = [
+			{ x1: 2, y1: 2, x2: 4, y2: 3 },
+			{ x1: 4, y1: 2, x2: 6, y2: 3 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 4, y2: 6 },
+			{ x1: 2, y1: 3, x2: 4, y2: 4 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 4, x2: 4, y2: 6 };
+		res = [
+			{ x1: 2, y1: 2, x2: 3, y2: 4 },
+			{ x1: 3, y1: 2, x2: 4, y2: 4 },
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 2, y1: 4, x2: 3, y2: 6 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 2, x2: 4, y2: 4 };
+		res = [
+			{ x1: 4, y1: 2, x2: 6, y2: 4 },
+			{ x1: 4, y1: 4, x2: 6, y2: 6 },
+			{ x1: 3, y1: 4, x2: 4, y2: 6 },
+			{ x1: 2, y1: 4, x2: 3, y2: 6 },
+			{ x1: 2, y1: 2, x2: 3, y2: 4 },
+		];
+		expect(subtractRect(rectA, rectB)).toStrictEqual(res);
 	});
 });
