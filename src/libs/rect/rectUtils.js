@@ -125,7 +125,7 @@ export const doRectsOnlyTouch = (rectA, rectB) => {
 
 export const subtractRect = (rectA, rectB) => {
 	// gives the non overlapping free spaces in rectA
-	if (!doRectsOverlap(rectA, rectB) || areRectsIdentical(rectA, rectB)) {
+	if (!doRectsOverlap(rectA, rectB)) {
 		return [];
 	}
 
@@ -369,14 +369,14 @@ const verticalSubtract = (rectA, rectB) => {
 };
 
 export const isValidRect = function (rect) {
-	if (rect.x1 > rect.x2 || rect.y1 > rect.y2) {
+	if (rect.x1 >= rect.x2 || rect.y1 >= rect.y2) {
 		return false;
 	}
 	return true;
 };
 
 export const isValidRectHW = function (rect) {
-	if (rect.x > rect.x + rect.width || rect.y > rect.y + rect.height) {
+	if (rect.x >= rect.x + rect.width || rect.y >= rect.y + rect.height) {
 		return false;
 	}
 	return true;
