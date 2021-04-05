@@ -1,14 +1,101 @@
 import { mergeRects } from "./rectUtils";
 
 describe("mergeRects", () => {
-	test("mergeRects", () => {
-		// let rectA = { x: 2, y: 2, width: 4, height: 4 };
-		// let rectB = { x: 4, y: 3, width: 4, height: 2 };
-		// let res = [{ x: 2, y: 3, width: 6, height: 2 }];
-		// expect(mergeRects(rectA, rectB)).toStrictEqual(res);
-		// rectA = { x: 2, y: 2, width: 4, height: 4 };
-		// rectB = { x: 4, y: 4, width: 4, height: 2 };
-		// res = [{ x: 2, y: 4, width: 6, height: 2 }];
-		// expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	test("left", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 6, y1: 5, x2: 8, y2: 6 };
+		let res = [{ x1: 2, y1: 5, x2: 8, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 2, x2: 8, y2: 6 };
+		res = [{ x1: 2, y1: 2, x2: 8, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 1, x2: 8, y2: 6 };
+		res = [{ x1: 2, y1: 2, x2: 8, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 3, x2: 8, y2: 4 };
+		res = [{ x1: 2, y1: 3, x2: 8, y2: 4 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 1, x2: 8, y2: 4 };
+		res = [{ x1: 2, y1: 2, x2: 8, y2: 4 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 2, x2: 8, y2: 4 };
+		res = [{ x1: 2, y1: 2, x2: 8, y2: 4 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	test("left above", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 6, y1: 5, x2: 8, y2: 7 };
+		let res = [{ x1: 2, y1: 5, x2: 8, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 2, x2: 8, y2: 7 };
+		res = [{ x1: 2, y1: 2, x2: 8, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 6, y1: 1, x2: 8, y2: 7 };
+		res = [{ x1: 2, y1: 2, x2: 8, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	test("bottom", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 2, y1: 1, x2: 3, y2: 2 };
+		let res = [{ x1: 2, y1: 1, x2: 3, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 1, x2: 6, y2: 2 };
+		res = [{ x1: 2, y1: 1, x2: 6, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 1, x2: 8, y2: 2 };
+		res = [{ x1: 2, y1: 1, x2: 6, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 5, y2: 2 };
+		res = [{ x1: 3, y1: 1, x2: 5, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 6, y2: 2 };
+		res = [{ x1: 3, y1: 1, x2: 6, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 7, y2: 2 };
+		res = [{ x1: 3, y1: 1, x2: 6, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	test("bottom left", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 1, y1: 1, x2: 3, y2: 2 };
+		let res = [{ x1: 2, y1: 1, x2: 3, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 1, y1: 1, x2: 6, y2: 2 };
+		res = [{ x1: 2, y1: 1, x2: 6, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 1, y1: 1, x2: 7, y2: 2 };
+		res = [{ x1: 2, y1: 1, x2: 6, y2: 6 }];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 	});
 });

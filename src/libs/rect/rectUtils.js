@@ -386,13 +386,13 @@ export const merge = (rectA, rectB) => {
 	let res;
 
 	// 3
-	if (rectA.x1 >= rectB.x1 && rectA.x1 < rectB.x2 && rectA.y1 >= rectB.y2) {
+	if (rectA.x1 >= rectB.x1 && rectA.x1 < rectB.x2 && rectA.y2 <= rectB.y1) {
 		const x = rectA.x2 < rectB.x2 ? rectA.x2 : rectB.x2;
 		res = {
 			x1: rectA.x1,
 			x2: x,
-			y1: rectB.y1,
-			y2: rectA.y2,
+			y1: rectA.y1,
+			y2: rectB.y2,
 		};
 	}
 
@@ -408,24 +408,24 @@ export const merge = (rectA, rectB) => {
 	}
 
 	// 4
-	if (rectA.x2 <= rectB.x2 && rectA.x2 > rectB.x1 && rectA.y1 >= rectB.y2) {
-		const x = rectA.x1 > rectB.x1 ? rectA.x1 : rectB.x1;
+	if (rectA.x1 <= rectB.x1 && rectA.x2 > rectB.x1 && rectA.y2 <= rectB.y1) {
+		const x = rectA.x2 > rectB.x2 ? rectB.x2 : rectA.x2;
 		res = {
-			x1: x,
-			x2: rectA.x2,
-			y1: rectB.y1,
-			y2: rectA.y2,
+			x1: rectB.x1,
+			x2: x,
+			y1: rectA.y1,
+			y2: rectB.y2,
 		};
 	}
 
 	// 2
-	if (rectA.y2 <= rectB.y2 && rectA.y2 > rectB.y1 && rectA.x1 >= rectB.x2) {
-		const y = rectA.y1 > rectB.y1 ? rectA.y1 : rectB.y1;
+	if (rectA.y1 <= rectB.y1 && rectA.y2 > rectB.y1 && rectA.x1 >= rectB.x2) {
+		const y = rectA.y2 > rectB.y2 ? rectB.y2 : rectA.y2;
 		res = {
 			x1: rectB.x1,
 			x2: rectA.x2,
-			y1: y,
-			y2: rectA.y2,
+			y1: rectB.y1,
+			y2: y,
 		};
 	}
 
@@ -453,6 +453,7 @@ export const mergeOverlapping = (rectA, rectB) => {
 };
 
 export const mergeRects = (rectA, rectB) => {
+	debugger;
 	let result;
 
 	result = merge(rectA, rectB);
@@ -463,16 +464,17 @@ export const mergeRects = (rectA, rectB) => {
 	}
 
 	if (result) {
-		for (const rect of result) {
-			rect.x = rect.x1;
-			rect.y = rect.y1;
-			rect.width = rect.x2 - rect.x1;
-			rect.height = rect.y2 - rect.y1;
-		}
+		// for (const rect of result) {
+		// 	rect.x = rect.x1;
+		// 	rect.y = rect.y1;
+		// 	rect.width = rect.x2 - rect.x1;
+		// 	rect.height = rect.y2 - rect.y1;
+		// }
 	}
 
 	return result;
 };
+window.mergeRects = mergeRects;
 
 export const isRectInside = (rectA, rectB) => {
 	// is rectB inside rectA
