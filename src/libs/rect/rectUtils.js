@@ -442,6 +442,7 @@ export const mergeOverlapping = (rectA, rectB) => {
 
 	for (let i = 0; i < len; i++) {
 		m = merge(diff[i], rectB);
+		if (!m) m = merge(rectB, diff[i]);
 		if (m && !isRectInside(rectA, m)) {
 			arr[count++] = m;
 		}
