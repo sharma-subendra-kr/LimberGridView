@@ -454,25 +454,23 @@ export const mergeOverlapping = (rectA, rectB) => {
 };
 
 export const mergeRects = (rectA, rectB) => {
-	debugger;
 	let result;
 
 	result = merge(rectA, rectB);
 	if (!result) result = merge(rectB, rectA);
 	if (result) result = [result];
 	if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
-		result = mergeOverlapping(rectA, rectB);
+		result = mergeOverlapping(rectA, rectB) || [];
+	} else if (!result) {
+		result = [];
 	}
 
-	if (result) {
-		// for (const rect of result) {
-		// 	rect.x = rect.x1;
-		// 	rect.y = rect.y1;
-		// 	rect.width = rect.x2 - rect.x1;
-		// 	rect.height = rect.y2 - rect.y1;
-		// }
+	for (const rect of result) {
+		rect.x = rect.x1;
+		rect.y = rect.y1;
+		rect.width = rect.x2 - rect.x1;
+		rect.height = rect.y2 - rect.y1;
 	}
-
 	return result;
 };
 window.mergeRects = mergeRects;
