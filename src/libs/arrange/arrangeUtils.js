@@ -62,16 +62,16 @@ export const getMinMaxXY = (
 		if (pd[affectedItems[i]].y < minY) {
 			minY = pd[affectedItems[i]].y;
 		}
-		if (pd[affectedItems[i]].y + pd[affectedItems[i]].height > maxY) {
-			maxY = pd[affectedItems[i]].y + pd[affectedItems[i]].height;
+		if (pd[affectedItems[i]].y2 > maxY) {
+			maxY = pd[affectedItems[i]].y2;
 		}
 
 		if (pd[affectedItems[i]].x < minX) {
 			minX = pd[affectedItems[i]].x;
 		}
 
-		if (pd[affectedItems[i]].x + pd[affectedItems[i]].width > maxX) {
-			maxX = pd[affectedItems[i]].x + pd[affectedItems[i]].width;
+		if (pd[affectedItems[i]].x2 > maxX) {
+			maxX = pd[affectedItems[i]].x2;
 		}
 	}
 
@@ -85,7 +85,7 @@ export const getMinMaxXY = (
 
 	if (maxY - minY > privateConstants.HEIGHT * 1.5) {
 		minY = mpd[affectedItems[len - 1]].y;
-		maxY = mpd[affectedItems[len - 1]].y + mpd[affectedItems[len - 1]].height;
+		maxY = mpd[affectedItems[len - 1]].y2;
 	}
 
 	return {
