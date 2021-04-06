@@ -23,12 +23,12 @@ describe("mergeRects", () => {
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 6, y1: 1, x2: 8, y2: 4 };
+		rectB = { x1: 6, y1: 2, x2: 8, y2: 4 };
 		res = [{ x1: 2, y1: 2, x2: 8, y2: 4 }];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-		rectB = { x1: 6, y1: 2, x2: 8, y2: 4 };
+		rectB = { x1: 6, y1: 1, x2: 8, y2: 4 };
 		res = [{ x1: 2, y1: 2, x2: 8, y2: 4 }];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 	});
