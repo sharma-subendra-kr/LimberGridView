@@ -420,22 +420,183 @@ describe("mergeRects reverse", () => {
 	});
 });
 
-// rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-// rectB = { x1: 0, y1: 5, x2: 6, y2: 6 };
-// res = [];
-// expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+describe("mergeRects empty", () => {
+	it("left", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 2, y1: 5, x2: 7, y2: 6 };
+		let res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
-// rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-// rectB = { x1: 0, y1: 5, x2: 6, y2: 6 };
-// res = [];
-// expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 2, x2: 7, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
-// rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-// rectB = { x1: 0, y1: 2, x2: 6, y2: 6 };
-// res = [];
-// expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 1, x2: 7, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
-// rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
-// rectB = { x1: 0, y1: 5, x2: 8, y2: 6 };
-// res = [];
-// expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 3, x2: 7, y2: 4 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 3, x2: 7, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 2, x2: 7, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 1, x2: 7, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	it("bottom", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 2, y1: 1, x2: 3, y2: 6 };
+		let res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 1, x2: 6, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 1, x2: 7, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 4, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 6, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 1, x2: 6, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 1, x2: 7, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	it("right", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 0, y1: 5, x2: 6, y2: 6 };
+		let res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 2, x2: 6, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 1, x2: 6, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 3, x2: 6, y2: 4 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 3, x2: 6, y2: 6 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 2, x2: 6, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 2, x2: 7, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	it("top", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 2, y1: 2, x2: 3, y2: 7 };
+		let res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 2, x2: 6, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 2, y1: 2, x2: 7, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 2, x2: 6, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 2, x2: 7, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	it("horizontal", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 0, y1: 3, x2: 7, y2: 6 };
+		let res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 3, x2: 7, y2: 4 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 0, y1: 2, x2: 7, y2: 4 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	it("vertical", () => {
+		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		let rectB = { x1: 2, y1: 1, x2: 3, y2: 7 };
+		let res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 4, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+
+		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		rectB = { x1: 3, y1: 1, x2: 6, y2: 7 };
+		res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+
+	it("equal", () => {
+		const rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		const rectB = { x1: 2, y1: 2, x2: 6, y2: 6 };
+		const res = [];
+		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
+	});
+});
