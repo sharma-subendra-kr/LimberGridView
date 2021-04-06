@@ -364,6 +364,11 @@ export const shiftItemsDown = (context, items, height) => {
 
 	for (let i = 0; i < len; i++) {
 		mpd[items[i]].y += height;
+		mpd[items[i]].mY += height;
+		mpd[items[i]].y1 += height;
+		mpd[items[i]].y2 += height;
+		mpd[items[i]].mY1 += height;
+		mpd[items[i]].mY2 += height;
 	}
 };
 

@@ -72,7 +72,6 @@ export const getResizeAffectedItems = (context, item, index) => {
 };
 
 export const getMoveAffectedItems = (context, item, index) => {
-	debugger;
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
 	// const privateConstants = getPrivateConstants(context);

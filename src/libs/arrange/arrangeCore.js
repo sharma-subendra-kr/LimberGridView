@@ -214,6 +214,9 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 		}
 	}
 
+	// printMergedFreeRects(context, rt.getData());
+	// debugger;
+
 	return { rt };
 };
 
@@ -422,7 +425,7 @@ export const arrange = async (
 
 			const gLen = garbageRects?.length || 0;
 			for (let i = 0; i < gLen; i++) {
-				garbageRects[i].idCount.idCount++;
+				garbageRects[i].idCount = idCount.idCount++;
 				garbageStack.push(garbageRects[i]);
 			}
 			mergedRectsRt.remove(res);

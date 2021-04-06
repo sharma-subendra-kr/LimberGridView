@@ -301,12 +301,12 @@ lm      |   |               |   |      rm
 		}
 	}
 
-	// for (const rect of rects) {
-	// 	rect.x = rect.x1;
-	// 	rect.y = rect.y1;
-	// 	rect.width = rect.x2 - rect.x1;
-	// 	rect.height = rect.y2 - rect.y1;
-	// }
+	for (const rect of rects) {
+		rect.x = rect.x1;
+		rect.y = rect.y1;
+		rect.width = rect.x2 - rect.x1;
+		rect.height = rect.y2 - rect.y1;
+	}
 
 	return rects;
 };
