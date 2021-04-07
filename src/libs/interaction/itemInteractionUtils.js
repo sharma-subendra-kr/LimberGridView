@@ -49,10 +49,14 @@ export const getResizeAffectedItems = (context, item, index) => {
 			affectedArr[count++] = i;
 			mpd[i].x1 = undefined;
 			mpd[i].y1 = undefined;
-			mpd[i].x = undefined;
-			mpd[i].y = undefined;
+			mpd[i].x2 = undefined;
+			mpd[i].y2 = undefined;
 			mpd[i].mX1 = undefined;
 			mpd[i].mY1 = undefined;
+			mpd[i].mX2 = undefined;
+			mpd[i].mY2 = undefined;
+			mpd[i].x = undefined;
+			mpd[i].y = undefined;
 			mpd[i].mX = undefined;
 			mpd[i].mY = undefined;
 		}
@@ -77,10 +81,14 @@ export const getMoveAffectedItems = (context, item, index) => {
 			affectedArr[count++] = i;
 			mpd[i].x1 = undefined;
 			mpd[i].y1 = undefined;
-			mpd[i].x = undefined;
-			mpd[i].y = undefined;
+			mpd[i].x2 = undefined;
+			mpd[i].y2 = undefined;
 			mpd[i].mX1 = undefined;
 			mpd[i].mY1 = undefined;
+			mpd[i].mX2 = undefined;
+			mpd[i].mY2 = undefined;
+			mpd[i].x = undefined;
+			mpd[i].y = undefined;
 			mpd[i].mX = undefined;
 			mpd[i].mY = undefined;
 		}

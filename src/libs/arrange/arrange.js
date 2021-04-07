@@ -40,17 +40,17 @@ import {
 	// getResizeWSItemsDetail,
 } from "./arrangeUtils";
 
-// import {
-// 	printUnmergedFreeRects,
-// 	printMergedFreeRects,
-// 	printResultStackRects,
-// 	printStackRects,
-// 	printMergedTempRects,
-// 	printStackTopRect,
-// 	printStackTopAdjRect,
-// 	printMergedRect,
-// 	printAdjRect,
-// } from "../debug/debug";
+import {
+	// printUnmergedFreeRects,
+	// printMergedFreeRects,
+	// printResultStackRects,
+	// printStackRects,
+	// printMergedTempRects,
+	printStackTopRect,
+	// printStackTopAdjRect,
+	// printMergedRect,
+	// printAdjRect,
+} from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
 export const arrangeMove = async (
@@ -90,6 +90,9 @@ export const arrangeMove = async (
 		y2: maxY,
 	};
 
+	// printStackTopRect(context, workSpaceRect);
+	// debugger;
+
 	const combinedWorkSpaceRect = { ...workSpaceRect };
 	const { topWorkSpace, bottomWorkSpace } = getTopBottomWS(
 		context,
@@ -97,7 +100,18 @@ export const arrangeMove = async (
 		0,
 		privateConstants.WIDTH
 	);
+
+	// printStackTopRect(context, topWorkSpace);
+	// debugger;
+	// printStackTopRect(context, bottomWorkSpace);
+	// debugger;
+
 	const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
+
+	// printStackTopRect(context, topWorkSpace);
+	// debugger;
+	// printStackTopRect(context, bottomWorkSpace);
+	// debugger;
 
 	if (shrinkRes.integrateTop) {
 		combinedWorkSpaceRect.y1 = topWorkSpace.y1;
@@ -105,6 +119,9 @@ export const arrangeMove = async (
 	if (shrinkRes.integrateBottom) {
 		combinedWorkSpaceRect.y2 = bottomWorkSpace.y2;
 	}
+
+	// printStackTopRect(context, combinedWorkSpaceRect);
+	// debugger;
 
 	let itemsInBottomWorkSpace = getItemsInWorkSpace(
 		context,
@@ -137,10 +154,10 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		if (combinedWorkSpaceRect.y !== 0) {
-			combinedWorkSpaceRect.y1 += privateConstants.MARGIN;
-		}
-		combinedWorkSpaceRect.y2 -= privateConstants.MARGIN;
+		// if (combinedWorkSpaceRect.y !== 0) {
+		// 	combinedWorkSpaceRect.y1 += privateConstants.MARGIN;
+		// }
+		// combinedWorkSpaceRect.y2 -= privateConstants.MARGIN;
 
 		const { rt: freeRects } = sweepLineForFreeSpace(
 			context,
@@ -181,10 +198,10 @@ export const arrangeMove = async (
 
 		arrangedCount += _arrangedArr.length;
 
-		if (combinedWorkSpaceRect.y !== 0) {
-			combinedWorkSpaceRect.y1 -= privateConstants.MARGIN;
-		}
-		combinedWorkSpaceRect.y2 += privateConstants.MARGIN;
+		// if (combinedWorkSpaceRect.y !== 0) {
+		// 	combinedWorkSpaceRect.y1 -= privateConstants.MARGIN;
+		// }
+		// combinedWorkSpaceRect.y2 += privateConstants.MARGIN;
 
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down

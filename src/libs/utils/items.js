@@ -102,6 +102,15 @@ export const doRectsOverlapWithMargin = (rectA, rectB) => {
 export const doRectsOverlapSingleItemMargin = (rectA, rectB) => {
 	// 2nd arg is item and needs to be checked with margin
 	if (
+		isNaN(rectA.x1) ||
+		isNaN(rectA.x2) ||
+		isNaN(rectB.mX1) ||
+		isNaN(rectB.mX2)
+	) {
+		return false;
+	}
+
+	if (
 		rectA.x1 >= rectB.mX2 ||
 		rectB.mX1 >= rectA.x2 ||
 		rectA.y1 >= rectB.mY2 ||
@@ -114,6 +123,15 @@ export const doRectsOverlapSingleItemMargin = (rectA, rectB) => {
 
 export const doRectsOverlapOrTouchSingleItemMargin = (rectA, rectB) => {
 	// 2nd arg is item and needs to be checked with margin
+	if (
+		isNaN(rectA.x1) ||
+		isNaN(rectA.x2) ||
+		isNaN(rectB.mX1) ||
+		isNaN(rectB.mX2)
+	) {
+		return false;
+	}
+
 	if (
 		rectA.x1 > rectB.mX2 ||
 		rectB.mX1 > rectA.x2 ||

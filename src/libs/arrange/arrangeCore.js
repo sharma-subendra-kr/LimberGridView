@@ -120,8 +120,8 @@ export const sweepLineTop = (context, area, items, rt) => {
 		const len = res.length;
 		let max = -1;
 		for (let i = 0; i < len; i++) {
-			if (res[i].y2 > max) {
-				max = res[i].y2;
+			if (res[i].mY2 > max) {
+				max = res[i].mY2;
 			}
 		}
 
@@ -160,8 +160,8 @@ export const sweepLineBottom = (context, area, items, rt) => {
 		const len = res.length;
 		let min = Number.MAX_SAFE_INTEGER;
 		for (let i = 0; i < len; i++) {
-			if (res[i].y1 < min) {
-				min = res[i].y1;
+			if (res[i].mY1 < min) {
+				min = res[i].mY1;
 			}
 		}
 
