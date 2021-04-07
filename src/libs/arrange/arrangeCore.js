@@ -214,7 +214,7 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 		}
 	}
 
-	// printMergedFreeRects(context, rt.getData());
+	// printUnmergedFreeRects(context, rt.getData());
 	// debugger;
 
 	return { rt };

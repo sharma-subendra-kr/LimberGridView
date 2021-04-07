@@ -196,8 +196,6 @@ export const moveItem = async function (index, toX, toY) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].x = toX;
-	mpd[index].y = toY;
 
 	const modifiedItem = {
 		x: toX,
@@ -217,6 +215,8 @@ export const moveItem = async function (index, toX, toY) {
 		mX2: toX + pd[index].width + privateConstants.MARGIN,
 		mY2: toY + pd[index].height + privateConstants.MARGIN,
 	};
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeMove(
