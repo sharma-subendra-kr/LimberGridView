@@ -52,9 +52,8 @@ export const getPdBottomMax = (context) => {
 	let max = privateConstants.MARGIN;
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
-		const item = pd[i];
-		if (item.mY2 > max) {
-			max = item.mY2;
+		if (pd[i].mY2 > max) {
+			max = pd[i].mY2;
 		}
 	}
 	return max;

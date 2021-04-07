@@ -23,13 +23,13 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const emptyObject = function (obj) {
-	const keys = Object.keys(obj);
-	const length = keys.length;
-	for (let i = 0; i < length; i++) {
-		delete obj[keys[i]];
-	}
-};
+// export const emptyObject = function (obj) {
+// 	const keys = Object.keys(obj);
+// 	const length = keys.length;
+// 	for (let i = 0; i < length; i++) {
+// 		delete obj[keys[i]];
+// 	}
+// };
 
 export const isMobile = function (context) {
 	const isMobileFunction = context.options.isMobileCheck;

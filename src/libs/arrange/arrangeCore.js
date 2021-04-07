@@ -118,14 +118,14 @@ export const sweepLineTop = (context, area, items, rt) => {
 		res = rt.find(suspect, false, true, undefined, false);
 
 		const len = res.length;
-		let max = 0;
+		let max = -1;
 		for (let i = 0; i < len; i++) {
 			if (res[i].y2 > max) {
 				max = res[i].y2;
 			}
 		}
 
-		if (max < resultPoint) {
+		if (max !== -1 && max < resultPoint) {
 			resultPoint = max;
 		}
 
@@ -165,7 +165,7 @@ export const sweepLineBottom = (context, area, items, rt) => {
 			}
 		}
 
-		if (min > resultPoint) {
+		if (min !== Number.MAX_SAFE_INTEGER && min > resultPoint) {
 			resultPoint = min;
 		}
 

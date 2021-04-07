@@ -23,7 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { doRectsOverlap, isPointInsideOrTouchRect } from "../rect/rectUtils";
+// import { doRectsOverlap, isPointInsideOrTouchRect } from "../rect/rectUtils";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
@@ -31,37 +31,30 @@ import {
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { getDistanceBetnPts } from "../geometry/geometry";
-import { doRectsOverlapWithMargin } from "../utils/items";
+import {
+	doRectsOverlapWithMargin,
+	isPointInsideOrTouchRectWithMargin,
+} from "../utils/items";
 
 export const getResizeAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
-	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
 
-	const _item = { ...item };
-	_item.x -= privateConstants.MARGIN;
-	_item.y -= privateConstants.MARGIN;
-	_item.width += privateConstants.MARGIN * 2;
-	_item.height += privateConstants.MARGIN * 2;
-	const temp = { x: 0, y: 0, height: 0, width: 0 };
-
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x - privateConstants.MARGIN;
-		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN * 2;
-		temp.height = pd[i].height + privateConstants.MARGIN * 2;
-		if (
-			// (doRectsOverlap(temp, _item) || doRectsOnlyTouch(temp, _item)) &&
-			doRectsOverlap(temp, _item) &&
-			i !== index
-		) {
+		if (doRectsOverlapWithMargin(item, pd[i]) && i !== index) {
 			affectedArr[count++] = i;
+			mpd[i].x1 = undefined;
+			mpd[i].y1 = undefined;
 			mpd[i].x = undefined;
 			mpd[i].y = undefined;
+			mpd[i].mX1 = undefined;
+			mpd[i].mY1 = undefined;
+			mpd[i].mX = undefined;
+			mpd[i].mY = undefined;
 		}
 	}
 
@@ -74,19 +67,22 @@ export const getResizeAffectedItems = (context, item, index) => {
 export const getMoveAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
 	const mpd = getModifiedPositionData(context);
-	// const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
 	const affectedArr = new Array(len);
 	let count = 0;
 
 	for (let i = 0; i < len; i++) {
-		if (doRectsOverlapWithMargin(item, pd[i])) {
-			if (i !== index) {
-				affectedArr[count++] = i;
-				mpd[i].x = undefined;
-				mpd[i].y = undefined;
-			}
+		if (doRectsOverlapWithMargin(item, pd[i]) && i !== index) {
+			affectedArr[count++] = i;
+			mpd[i].x1 = undefined;
+			mpd[i].y1 = undefined;
+			mpd[i].x = undefined;
+			mpd[i].y = undefined;
+			mpd[i].mX1 = undefined;
+			mpd[i].mY1 = undefined;
+			mpd[i].mX = undefined;
+			mpd[i].mY = undefined;
 		}
 	}
 
@@ -165,7 +161,7 @@ export const resetDemoUIChanges = (context) => {
 	const len = pd.length;
 	for (var i = 0; i < len; i++) {
 		e.$limberGridViewItems[i].style.transform =
-			"translate(" + pd[i].x + "px, " + pd[i].y + "px)";
+			"translate(" + pd[i].x1 + "px, " + pd[i].y1 + "px)";
 	}
 };
 
@@ -174,7 +170,6 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
-	const temp = { x: 0, y: 0, height: 0, width: 0 };
 	const pt = { x: toX, y: toY };
 	let inside;
 	let tl, tr, bl, tld, trd, bld;
@@ -187,12 +182,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	let toAdjDirection;
 
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x - privateConstants.MARGIN;
-		temp.y = pd[i].y - privateConstants.MARGIN;
-		temp.width = pd[i].width + privateConstants.MARGIN * 2;
-		temp.height = pd[i].height + privateConstants.MARGIN * 2;
-
-		if (isPointInsideOrTouchRect(temp, pt)) {
+		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
 			inside = i;
 			toX = pd[inside].x;
 			toY = pd[inside].y;
@@ -203,9 +193,9 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			continue;
 		}
 
-		tl = { x: temp.x, y: temp.y };
-		tr = { x: temp.x + temp.width, y: temp.y };
-		bl = { x: temp.x, y: temp.y + temp.height };
+		tl = { x: pd[i].mX1, y: pd[i].mY1 };
+		tr = { x: pd[i].mX2, y: pd[i].mY1 };
+		bl = { x: pd[i].mX1, y: pd[i].mY2 };
 
 		tld = getDistanceBetnPts(tl, pt);
 		trd = getDistanceBetnPts(tr, pt);
@@ -291,11 +281,10 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
-	const temp = { x: 0, y: 0, height: 0, width: 0 };
-	const tlpt = { x: pd[index].x, y: pd[index].y };
-	const trpt = { x: pd[index].x + width, y: pd[index].y };
-	const brpt = { x: pd[index].x + width, y: pd[index].y + height };
-	const blpt = { x: pd[index].x, y: pd[index].y + height };
+	const tlpt = { x: pd[index].x1, y: pd[index].y1 };
+	const trpt = { x: pd[index].x2, y: pd[index].y1 };
+	const brpt = { x: pd[index].x2, y: pd[index].y2 };
+	const blpt = { x: pd[index].x1, y: pd[index].y2 };
 
 	let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
 	let ldistance = Number.MAX_SAFE_INTEGER;
@@ -311,18 +300,13 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 	let latchPoint;
 
 	for (let i = 0; i < len; i++) {
-		temp.x = pd[i].x;
-		temp.y = pd[i].y;
-		temp.width = pd[i].width;
-		temp.height = pd[i].height;
-
 		if (i === index) {
 			continue;
 		}
 
-		bl = { x: temp.x, y: temp.y + temp.height };
-		br = { x: temp.x + temp.width, y: temp.y + temp.height };
-		tr = { x: temp.x + temp.width, y: temp.y };
+		bl = { x: pd[i].x1, y: pd[i].y2 };
+		br = { x: pd[i].x2, y: pd[i].y2 };
+		tr = { x: pd[i].x2, y: pd[i].y1 };
 
 		brptTobl = getDistanceBetnPts(bl, brpt);
 		blptTobr = getDistanceBetnPts(br, blpt);

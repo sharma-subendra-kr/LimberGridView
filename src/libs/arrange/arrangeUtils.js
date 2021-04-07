@@ -98,22 +98,23 @@ export const getMinMaxXY = (
 
 export const getBottomMax = (context, minX, maxX) => {
 	const pd = getPositionData(context);
-	const mpd = getModifiedPositionData(context);
+	// const mpd = getModifiedPositionData(context);
 
 	let max = 0;
-	let item, mItem;
+	let item;
+	// let mItem;
 	const len = pd.length;
 
 	for (let i = 0; i < len; i++) {
 		item = pd[i];
-		mItem = mpd[i];
+		// mItem = mpd[i];
 		if (pd[i].y2 > max && item.mX < maxX && item.mX2 > minX) {
 			max = pd[i].y2;
 		}
 
-		if (mpd[i].y2 > max && mItem.mX < maxX && mItem.mX2 > minX) {
-			max = mpd[i].y2;
-		}
+		// if (mpd[i].y2 > max && mItem.mX < maxX && mItem.mX2 > minX) {
+		// 	max = mpd[i].y2;
+		// }
 	}
 
 	return max;

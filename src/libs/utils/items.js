@@ -136,3 +136,14 @@ export const isRectInsideSingleItemMargin = (rectA, rectB) => {
 		return true;
 	}
 };
+
+export const isPointInsideOrTouchRectWithMargin = (rect, point) => {
+	if (
+		point.x >= rect.mX1 &&
+		point.x <= rect.mX2 &&
+		point.y >= rect.mY1 &&
+		point.y <= rect.mY2
+	) {
+		return true;
+	}
+};
