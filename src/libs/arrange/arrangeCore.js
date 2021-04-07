@@ -44,7 +44,10 @@ import { subtractRect, mergeRects, isRectInside } from "../rect/rectUtils";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
-import { sanitizeDimension } from "../utils/items";
+import {
+	sanitizeDimension,
+	swapDimensActualAndWithMargin,
+} from "../utils/items";
 import {
 	sleep,
 	printUnmergedFreeRects,
@@ -188,7 +191,7 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 	area.id = idCount.idCount++;
 	rt.insert(area);
 
-	let tempItem;
+	let item;
 	let resRects;
 	let rLen = 0;
 	let diff;
@@ -196,13 +199,15 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 
 	const len = items.length;
 	for (let i = 0; i < len; i++) {
-		tempItem = items[i];
+		item = items[i];
 
-		resRects = rt.find(tempItem, false, true, undefined, false);
+		resRects = rt.find(item, false, true, undefined, false);
 
 		rLen = resRects.length;
 		for (let j = 0; j < rLen; j++) {
-			diff = subtractRect(resRects[j], tempItem);
+			swapDimensActualAndWithMargin(item);
+			diff = subtractRect(resRects[j], item);
+			swapDimensActualAndWithMargin(item);
 
 			rt.remove(resRects[j]);
 

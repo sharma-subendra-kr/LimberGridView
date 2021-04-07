@@ -59,7 +59,6 @@ export const arrangeMove = async (
 	toY,
 	movedBottomY
 ) => {
-	debugger;
 	const privateConstants = getPrivateConstants(context);
 	const mpd = getModifiedPositionData(context);
 
@@ -104,9 +103,9 @@ export const arrangeMove = async (
 	// printStackTopRect(context, topWorkSpace);
 	// debugger;
 	// printStackTopRect(context, bottomWorkSpace);
-	debugger;
 
-	const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
+	// const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
+	shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
 
 	// printStackTopRect(context, topWorkSpace);
 	// debugger;

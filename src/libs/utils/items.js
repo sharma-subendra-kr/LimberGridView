@@ -165,3 +165,20 @@ export const isPointInsideOrTouchRectWithMargin = (rect, point) => {
 		return true;
 	}
 };
+
+export const swapDimensActualAndWithMargin = (rect) => {
+	const tempX1 = rect.x1;
+	const tempX2 = rect.x2;
+	const tempY1 = rect.y1;
+	const tempY2 = rect.y2;
+
+	rect.x1 = rect.mX1;
+	rect.x2 = rect.mX2;
+	rect.y1 = rect.mY1;
+	rect.y2 = rect.mY2;
+
+	rect.mX1 = tempX1;
+	rect.mX2 = tempX2;
+	rect.mY1 = tempY1;
+	rect.mY2 = tempY2;
+};
