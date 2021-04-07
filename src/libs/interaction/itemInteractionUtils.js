@@ -332,9 +332,9 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 
 	const len = pd.length;
 	const tlpt = { x: pd[index].x1, y: pd[index].y1 };
-	const trpt = { x: pd[index].x2, y: pd[index].y1 };
-	const brpt = { x: pd[index].x2, y: pd[index].y2 };
-	const blpt = { x: pd[index].x1, y: pd[index].y2 };
+	const trpt = { x: pd[index].x1 + width, y: pd[index].y1 };
+	const brpt = { x: pd[index].x1 + width, y: pd[index].y1 + height };
+	const blpt = { x: pd[index].x1, y: pd[index].y1 + height };
 
 	let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
 	let ldistance = Number.MAX_SAFE_INTEGER;

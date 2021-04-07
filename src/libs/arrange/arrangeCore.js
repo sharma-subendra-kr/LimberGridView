@@ -183,8 +183,6 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 	// area: area to sweep Coordinate Form
 	// items: items in area
 
-	// const privateConstants = getPrivateConstants(context);
-
 	const rt = getTree(context, "rt");
 	rt.reset();
 
