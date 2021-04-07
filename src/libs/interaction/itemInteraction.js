@@ -32,6 +32,8 @@ import {
 	resetDemoUIChanges,
 	movePointAdjust,
 	resizeSizeAdjust,
+	getMoveModifiedItem,
+	getResizeModifiedItem,
 } from "./itemInteractionUtils";
 import { arrangeMove } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -52,6 +54,7 @@ export const resizeItem = async function (index, width, height) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -65,15 +68,16 @@ export const resizeItem = async function (index, width, height) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].width = width;
-	mpd[index].height = height;
 
-	const modifiedItem = {
-		x: pd[index].x,
-		y: pd[index].y,
-		width: width,
-		height: height,
-	};
+	const modifiedItem = getResizeModifiedItem(
+		pd[index].x,
+		pd[index].y,
+		width,
+		height,
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
@@ -107,6 +111,7 @@ export const resizeItemDemo = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -138,15 +143,16 @@ export const resizeItemDemo = async function (index, width, height) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].width = width;
-	mpd[index].height = height;
 
-	const modifiedItem = {
-		x: pd[index].x,
-		y: pd[index].y,
-		width: width,
-		height: height,
-	};
+	const modifiedItem = getResizeModifiedItem(
+		pd[index].x,
+		pd[index].y,
+		width,
+		height,
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
@@ -197,24 +203,12 @@ export const moveItem = async function (index, toX, toY) {
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
 
-	const modifiedItem = {
-		x: toX,
-		y: toY,
-		width: pd[index].width,
-		height: pd[index].height,
-		mX: toX - privateConstants.MARGIN,
-		mY: toY - privateConstants.MARGIN,
-		mWidth: pd[index].width + privateConstants.MARGIN * 2,
-		mHeight: pd[index].height + privateConstants.MARGIN * 2,
-		x1: toX,
-		y1: toY,
-		x2: toX + pd[index].width,
-		y2: toY + pd[index].height,
-		mX1: toX - privateConstants.MARGIN,
-		mY1: toY - privateConstants.MARGIN,
-		mX2: toX + pd[index].width + privateConstants.MARGIN,
-		mY2: toY + pd[index].height + privateConstants.MARGIN,
-	};
+	const modifiedItem = getMoveModifiedItem(
+		toX,
+		toY,
+		pd[index],
+		privateConstants.MARGIN
+	);
 	mpd[index] = { ...modifiedItem };
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
@@ -367,24 +361,12 @@ export const moveItemDemo = async function (index, toX, toY) {
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
 
-	const modifiedItem = {
-		x: toX,
-		y: toY,
-		width: pd[index].width,
-		height: pd[index].height,
-		mX: toX - privateConstants.MARGIN,
-		mY: toY - privateConstants.MARGIN,
-		mWidth: pd[index].width + privateConstants.MARGIN * 2,
-		mHeight: pd[index].height + privateConstants.MARGIN * 2,
-		x1: toX,
-		y1: toY,
-		x2: toX + pd[index].width,
-		y2: toY + pd[index].height,
-		mX1: toX - privateConstants.MARGIN,
-		mY1: toY - privateConstants.MARGIN,
-		mX2: toX + pd[index].width + privateConstants.MARGIN,
-		mY2: toY + pd[index].height + privateConstants.MARGIN,
-	};
+	const modifiedItem = getMoveModifiedItem(
+		toX,
+		toY,
+		pd[index],
+		privateConstants.MARGIN
+	);
 	mpd[index] = { ...modifiedItem };
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);

@@ -162,6 +162,48 @@ export const moveItemInitialChecks = (context, index, toX, toY) => {
 	return true;
 };
 
+export const getResizeModifiedItem = (toX, toY, width, height, MARGIN) => {
+	return {
+		x: toX,
+		y: toY,
+		width: width,
+		height: height,
+		mX: toX - MARGIN,
+		mY: toY - MARGIN,
+		mWidth: width + MARGIN * 2,
+		mHeight: height + MARGIN * 2,
+		x1: toX,
+		y1: toY,
+		x2: toX + width,
+		y2: toY + height,
+		mX1: toX - MARGIN,
+		mY1: toY - MARGIN,
+		mX2: toX + width + MARGIN,
+		mY2: toY + height + MARGIN,
+	};
+};
+
+export const getMoveModifiedItem = (toX, toY, item, MARGIN) => {
+	return {
+		x: toX,
+		y: toY,
+		width: item.width,
+		height: item.height,
+		mX: toX - MARGIN,
+		mY: toY - MARGIN,
+		mWidth: item.width + MARGIN * 2,
+		mHeight: item.height + MARGIN * 2,
+		x1: toX,
+		y1: toY,
+		x2: toX + item.width,
+		y2: toY + item.height,
+		mX1: toX - MARGIN,
+		mY1: toY - MARGIN,
+		mX2: toX + item.width + MARGIN,
+		mY2: toY + item.height + MARGIN,
+	};
+};
+
 export const resetDemoUIChanges = (context) => {
 	const pd = getPositionData(context);
 	const e = getElements(context);
