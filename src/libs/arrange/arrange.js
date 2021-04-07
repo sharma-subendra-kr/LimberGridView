@@ -103,6 +103,7 @@ export const arrangeMove = async (
 	// printStackTopRect(context, topWorkSpace);
 	// debugger;
 	// printStackTopRect(context, bottomWorkSpace);
+	// debugger;
 
 	// const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
 	shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
