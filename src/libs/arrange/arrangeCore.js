@@ -61,7 +61,7 @@ import {
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
-	const res = { integrateTop: false, integrateBottom: false };
+	// const res = { integrateTop: false, integrateBottom: false };
 
 	const rt = getTree(context, "rt");
 
@@ -69,11 +69,11 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 		topWSItems = getItemsInWorkSpace(context, topWorkSpace);
 		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
 
-		if (sweepRes < topWorkSpace.y2) {
-			topWorkSpace.y1 = sweepRes;
+		// if (sweepRes < topWorkSpace.y2) {
+		topWorkSpace.y1 = sweepRes;
 
-			res.integrateTop = true;
-		}
+		// res.integrateTop = true;
+		// }
 	}
 
 	if (bottomWorkSpace) {
@@ -85,14 +85,14 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			rt
 		);
 
-		if (sweepRes > bottomWorkSpace.y1) {
-			bottomWorkSpace.y2 = sweepRes;
+		// if (sweepRes > bottomWorkSpace.y1) {
+		bottomWorkSpace.y2 = sweepRes;
 
-			res.integrateBottom = true;
-		}
+		// res.integrateBottom = true;
+		// }
 	}
 
-	return res;
+	// return res;
 };
 
 export const sweepLineTop = (context, area, items, rt) => {

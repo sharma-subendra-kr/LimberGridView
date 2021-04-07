@@ -104,7 +104,7 @@ export const arrangeMove = async (
 	// printStackTopRect(context, topWorkSpace);
 	// debugger;
 	// printStackTopRect(context, bottomWorkSpace);
-	// debugger;
+	debugger;
 
 	const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
 
@@ -113,12 +113,12 @@ export const arrangeMove = async (
 	// printStackTopRect(context, bottomWorkSpace);
 	// debugger;
 
-	if (shrinkRes.integrateTop) {
-		combinedWorkSpaceRect.y1 = topWorkSpace.y1;
-	}
-	if (shrinkRes.integrateBottom) {
-		combinedWorkSpaceRect.y2 = bottomWorkSpace.y2;
-	}
+	// if (shrinkRes.integrateTop) {
+	combinedWorkSpaceRect.y1 = topWorkSpace.y1;
+	// }
+	// if (shrinkRes.integrateBottom) {
+	combinedWorkSpaceRect.y2 = bottomWorkSpace.y2;
+	// }
 
 	// printStackTopRect(context, combinedWorkSpaceRect);
 	// debugger;
