@@ -237,8 +237,8 @@ const main = function () {
 		);
 	};
 
-	const getArrangeTime = function (time, resizeCount) {
-		$animationTime.innerHTML = `${time}, ${resizeCount}`;
+	const getArrangeTime = function (time, resizeCount, count) {
+		$animationTime.innerHTML = `${time}, ${resizeCount}, ${count}`;
 	};
 
 	const obj = {
