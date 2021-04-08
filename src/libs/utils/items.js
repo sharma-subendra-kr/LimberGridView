@@ -53,7 +53,7 @@ export const sanitizeNumberFloor = (num) => {
 		return integerPart + 0.25;
 	} else if (decimalPart <= 0.75) {
 		return integerPart + 0.5;
-	} else if (decimalPart <= 0.99) {
+	} else if (decimalPart <= 0.9999999999999999) {
 		return integerPart + 0.75;
 	}
 	return integerPart - 0.25;
@@ -68,7 +68,7 @@ export const sanitizeNumberCeil = (num) => {
 		return integerPart + 0.5;
 	} else if (decimalPart <= 0.75) {
 		return integerPart + 0.75;
-	} else if (decimalPart <= 0.99) {
+	} else if (decimalPart <= 0.9999999999999999) {
 		return integerPart + 1;
 	}
 	return integerPart + 0.25;

@@ -70,8 +70,8 @@ export const render = function (context, scale = true) {
 		pd[i].y1 *= WIDTH_SCALE_FACTOR;
 		pd[i].y2 *= WIDTH_SCALE_FACTOR;
 
-		pd[i].x *= WIDTH_SCALE_FACTOR;
-		pd[i].y *= WIDTH_SCALE_FACTOR;
+		pd[i].x = pd[i].x1;
+		pd[i].y = pd[i].y1;
 		pd[i].width *= WIDTH_SCALE_FACTOR;
 		pd[i].height *= WIDTH_SCALE_FACTOR;
 
