@@ -23,30 +23,24 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { isValidRectCoForm, getCoordinates } from "../rect/rectUtils";
-import { getItemDimenWithMargin } from "../arrange/arrangeUtils";
+import {
+	makeItem,
+	enhanceItemHW,
+	isValidRect,
+	isValidRectHW,
+} from "../utils/items";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
 
 export const checkPositionData = (pd) => {
 	if (Array.isArray(pd)) {
 		const len = pd.length;
-
 		for (let i = 0; i < len; i++) {
-			if (
-				!pd[i] ||
-				isNaN(pd[i].x) ||
-				pd[i].x < 0 ||
-				isNaN(pd[i].y) ||
-				pd[i].y < 0 ||
-				isNaN(pd[i].height) ||
-				pd[i].height <= 0 ||
-				isNaN(pd[i].width) ||
-				pd[i].width <= 0
-			) {
-				return false;
-			}
-			if (!isValidRectCoForm(getCoordinates(pd[i]))) {
+			if (isValidRect(pd[i])) {
+				enhanceItemHW(pd[i]);
+			} else if (isValidRectHW(pd[i])) {
+				makeItem(pd[i]);
+			} else {
 				return false;
 			}
 		}
@@ -60,15 +54,11 @@ export const getPdBottomMax = (context) => {
 	const privateConstants = getPrivateConstants(context);
 
 	let max = privateConstants.MARGIN;
-	let item;
 	const len = pd.length;
-
 	for (let i = 0; i < len; i++) {
-		item = getItemDimenWithMargin(privateConstants.MARGIN, pd[i]);
-		if (item.y + item.height > max) {
-			max = item.y + item.height;
+		if (pd[i].mY2 > max) {
+			max = pd[i].mY2;
 		}
 	}
-
 	return max;
 };

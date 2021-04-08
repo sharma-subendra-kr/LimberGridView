@@ -23,6 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getResizeAffectedItems,
 	getMoveAffectedItems,
@@ -31,8 +32,10 @@ import {
 	resetDemoUIChanges,
 	movePointAdjust,
 	resizeSizeAdjust,
+	getMoveModifiedItem,
+	getResizeModifiedItem,
 } from "./itemInteractionUtils";
-import { arrangeMove, arrangeResize } from "../arrange/arrange";
+import { arrangeMove } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getPositionData,
@@ -51,6 +54,7 @@ export const resizeItem = async function (index, width, height) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -64,25 +68,21 @@ export const resizeItem = async function (index, width, height) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].width = width;
-	mpd[index].height = height;
 
-	const modifiedItem = {
-		x: pd[index].x,
-		y: pd[index].y,
-		width: width,
-		height: height,
-	};
+	const modifiedItem = getResizeModifiedItem(
+		pd[index].x,
+		pd[index].y,
+		width,
+		height,
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeResize(
-			this,
-			affectedItems,
-			modifiedItem.y + modifiedItem.height,
-			modifiedItem.x + modifiedItem.width
-		);
+		arranged = await arrangeMove(this, affectedItems);
 	} else {
 		arranged = await arrangeMove(this, affectedItems);
 	}
@@ -111,6 +111,7 @@ export const resizeItemDemo = async function (index, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -142,25 +143,21 @@ export const resizeItemDemo = async function (index, width, height) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].width = width;
-	mpd[index].height = height;
 
-	const modifiedItem = {
-		x: pd[index].x,
-		y: pd[index].y,
-		width: width,
-		height: height,
-	};
+	const modifiedItem = getResizeModifiedItem(
+		pd[index].x,
+		pd[index].y,
+		width,
+		height,
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeResize(
-			this,
-			affectedItems,
-			modifiedItem.y + modifiedItem.height,
-			modifiedItem.x + modifiedItem.width
-		);
+		arranged = await arrangeMove(this, affectedItems);
 	} else {
 		arranged = await arrangeMove(this, affectedItems);
 	}
@@ -181,6 +178,7 @@ export const moveItem = async function (index, toX, toY) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
@@ -204,15 +202,15 @@ export const moveItem = async function (index, toX, toY) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].x = toX;
-	mpd[index].y = toY;
 
-	const modifiedItem = {
-		x: toX,
-		y: toY,
-		width: pd[index].width,
-		height: pd[index].height,
-	};
+	const modifiedItem = getMoveModifiedItem(
+		toX,
+		toY,
+		pd[index],
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeMove(
@@ -254,6 +252,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -361,15 +360,15 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].x = toX;
-	mpd[index].y = toY;
 
-	const modifiedItem = {
-		x: toX,
-		y: toY,
-		width: pd[index].width,
-		height: pd[index].height,
-	};
+	const modifiedItem = getMoveModifiedItem(
+		toX,
+		toY,
+		pd[index],
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
 	const arranged = await arrangeMove(

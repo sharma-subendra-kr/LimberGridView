@@ -33,32 +33,21 @@ import getPrivateConstants, {
 } from "../../store/constants/privateConstants";
 import {
 	getItemsInWorkSpace,
-	getItemDimenWithMargin,
-	getItemsToArrangeScore,
-	getPerfectMatch,
 	rectSortX,
 	rectSortY,
 	shouldFilterRect,
-	doOverlapHelper,
 	getSizeTest,
 	getDistanceForTest,
 	rectSortHypotenusSquared,
-	// identicalOrInsideHelper,
-	// sweepTopBottomHelper,
 } from "./arrangeUtils";
-import {
-	getRTreeRectFromRectObject,
-	getRectObjectFromRTreeRect,
-	getRectObjectFromCo,
-	subtractRect,
-	mergeRects,
-	isRectInside,
-} from "../rect/rectUtils";
-import { getMidPoint, getHypotenuseSquared } from "../geometry/geometry";
+import { subtractRect, mergeRects, isRectInside } from "../rect/rectUtils";
 // import { shuffle } from "../array/arrayUtils";
 import getTree from "../../store/variables/trees";
 import getStack from "../../store/variables/stacks";
-import { sanitizeDimension } from "../utils/utils";
+import {
+	sanitizeDimension,
+	swapDimensActualAndWithMargin,
+} from "../utils/items";
 import {
 	sleep,
 	printUnmergedFreeRects,
@@ -75,30 +64,23 @@ import {
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
-	const res = { integrateTop: false, integrateBottom: false };
+	// const res = { integrateTop: false, integrateBottom: false };
 
 	const rt = getTree(context, "rt");
 
 	if (topWorkSpace) {
-		topWSItems = getItemsInWorkSpace(
-			context,
-			getRectObjectFromCo(topWorkSpace)
-		);
+		topWSItems = getItemsInWorkSpace(context, topWorkSpace);
 		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
 
-		if (sweepRes < topWorkSpace.bl.y) {
-			topWorkSpace.tl.y = sweepRes;
-			topWorkSpace.tr.y = sweepRes;
+		// if (sweepRes < topWorkSpace.y2) {
+		topWorkSpace.y1 = sweepRes;
 
-			res.integrateTop = true;
-		}
+		// res.integrateTop = true;
+		// }
 	}
 
 	if (bottomWorkSpace) {
-		bottomWSItems = getItemsInWorkSpace(
-			context,
-			getRectObjectFromCo(bottomWorkSpace)
-		);
+		bottomWSItems = getItemsInWorkSpace(context, bottomWorkSpace);
 		const sweepRes = sweepLineBottom(
 			context,
 			bottomWorkSpace,
@@ -106,15 +88,14 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			rt
 		);
 
-		if (sweepRes > bottomWorkSpace.tl.y) {
-			bottomWorkSpace.bl.y = sweepRes;
-			bottomWorkSpace.br.y = sweepRes;
+		// if (sweepRes > bottomWorkSpace.y1) {
+		bottomWorkSpace.y2 = sweepRes;
 
-			res.integrateBottom = true;
-		}
+		// res.integrateBottom = true;
+		// }
 	}
 
-	return res;
+	// return res;
 };
 
 export const sweepLineTop = (context, area, items, rt) => {
@@ -123,21 +104,15 @@ export const sweepLineTop = (context, area, items, rt) => {
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		rt.insert({
-			rect: getRTreeRectFromRectObject(items[i]),
-			data: {
-				id: -1,
-				// rect: items[i],
-			},
-		});
+		rt.insert(items[i]);
 	}
 
-	let resultPoint = area.bl.y;
+	let resultPoint = area.y2;
 
 	const WIDTH = getWidth(context);
 	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
 	let w = 0;
-	const suspect = { x1: 0, x2: 0, y1: area.tl.y, y2: area.bl.y };
+	const suspect = { x1: 0, x2: 0, y1: area.y1, y2: area.y2 };
 	let res;
 	while (w < WIDTH) {
 		suspect.x1 = w;
@@ -146,14 +121,14 @@ export const sweepLineTop = (context, area, items, rt) => {
 		res = rt.find(suspect, false, true, undefined, false);
 
 		const len = res.length;
-		let max = 0;
+		let max = -1;
 		for (let i = 0; i < len; i++) {
-			if (res[i].rect.y2 > max) {
-				max = res[i].rect.y2;
+			if (res[i].mY2 > max) {
+				max = res[i].mY2;
 			}
 		}
 
-		if (max < resultPoint) {
+		if (max !== -1 && max < resultPoint) {
 			resultPoint = max;
 		}
 
@@ -169,21 +144,15 @@ export const sweepLineBottom = (context, area, items, rt) => {
 	const len = items.length;
 
 	for (let i = 0; i < len; i++) {
-		rt.insert({
-			rect: getRTreeRectFromRectObject(items[i]),
-			data: {
-				id: -1,
-				// rect: items[i],
-			},
-		});
+		rt.insert(items[i]);
 	}
 
-	let resultPoint = area.tl.y;
+	let resultPoint = area.y1;
 
 	const WIDTH = getWidth(context);
 	const DEFINED_MIN_HEIGHT_AND_WIDTH = getDefinedMinHeightAndWidth(context);
 	let w = 0;
-	const suspect = { x1: 0, x2: 0, y1: area.tl.y, y2: area.bl.y };
+	const suspect = { x1: 0, x2: 0, y1: area.y1, y2: area.y2 };
 	let res;
 	while (w < WIDTH) {
 		suspect.x1 = w;
@@ -194,12 +163,12 @@ export const sweepLineBottom = (context, area, items, rt) => {
 		const len = res.length;
 		let min = Number.MAX_SAFE_INTEGER;
 		for (let i = 0; i < len; i++) {
-			if (res[i].rect.y1 < min) {
-				min = res[i].rect.y1;
+			if (res[i].mY1 < min) {
+				min = res[i].mY1;
 			}
 		}
 
-		if (min > resultPoint) {
+		if (min !== Number.MAX_SAFE_INTEGER && min > resultPoint) {
 			resultPoint = min;
 		}
 
@@ -209,34 +178,18 @@ export const sweepLineBottom = (context, area, items, rt) => {
 	return resultPoint;
 };
 
-export const sweepLineForFreeSpace = (
-	context,
-	area,
-	areaCo,
-	items,
-	idCount
-) => {
+export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
 
-	const privateConstants = getPrivateConstants(context);
-
 	const rt = getTree(context, "rt");
 	rt.reset();
 
-	rt.insert({
-		rect: getRTreeRectFromRectObject(area),
-		data: {
-			id: idCount.idCount++,
-			// rect: area,
-		},
-	});
+	area.id = idCount.idCount++;
+	rt.insert(area);
 
-	let tempItem;
-	let tempItemWithMargin;
-	let tempItemWithMarginRTree;
-	const fRect = { x1: 0, x2: 0, y1: 0, y2: 0 };
+	let item;
 	let resRects;
 	let rLen = 0;
 	let diff;
@@ -244,102 +197,69 @@ export const sweepLineForFreeSpace = (
 
 	const len = items.length;
 	for (let i = 0; i < len; i++) {
-		tempItem = items[i];
-		tempItemWithMargin = getItemDimenWithMargin(
-			privateConstants.MARGIN,
-			items[i]
-		);
-		tempItemWithMarginRTree = getRTreeRectFromRectObject(tempItemWithMargin);
+		item = items[i];
 
-		fRect.x1 = tempItem.x;
-		fRect.x2 = tempItem.x + tempItem.width;
-		fRect.y1 = tempItem.y;
-		fRect.y2 = tempItem.y + tempItem.height;
-
-		resRects = rt.find(
-			fRect,
-			false,
-			true,
-			doOverlapHelper(tempItemWithMarginRTree),
-			false
-		);
+		resRects = rt.find(item, false, true, undefined, false);
 
 		rLen = resRects.length;
 		for (let j = 0; j < rLen; j++) {
-			diff = subtractRect(
-				getRectObjectFromRTreeRect(resRects[j].rect),
-				tempItemWithMargin
-			);
+			swapDimensActualAndWithMargin(item);
+			diff = subtractRect(resRects[j], item);
+			swapDimensActualAndWithMargin(item);
 
-			rt.remove(resRects[j].rect);
+			rt.remove(resRects[j]);
 
 			dLen = diff.length;
 			for (let k = 0; k < dLen; k++) {
-				rt.insert({
-					rect: getRTreeRectFromRectObject(diff[k]),
-					data: {
-						id: idCount.idCount++,
-						// rect: diff[k],
-					},
-				});
+				diff[k].id = idCount.idCount++;
+				rt.insert(diff[k]);
 			}
 		}
 	}
+
+	// printUnmergedFreeRects(context, rt.getData());
+	// debugger;
 
 	return { rt };
 };
 
 export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
-	const findRect = { x1: 0, x2: 0, y1: 0, y2: 0 };
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
 		const top = stack.pop();
 		topFullMerged = false;
 
-		findRect.x1 = top.rect.x1;
-		findRect.x2 = top.rect.x2;
-		findRect.y1 = top.rect.y1;
-		findRect.y2 = top.rect.y2;
-
-		const results = rt.find(findRect, false, true, undefined, true);
+		const results = rt.find(top, false, true, undefined, true);
 
 		const len = results?.length || 0;
 		if (len > 0) {
 			for (let i = 0; i < len; i++) {
 				const res = results[i];
 
-				const mergedRects = mergeRects(
-					getRectObjectFromRTreeRect(res.rect),
-					getRectObjectFromRTreeRect(top.rect)
-				);
+				const mergedRects = mergeRects(res, top);
 				if (mergedRects.length === 1) {
 					const mergedRect = mergedRects[0];
+					mergedRect.id = idCount.idCount++;
 
-					if (isRectInside(mergedRect, getRectObjectFromRTreeRect(res.rect))) {
-						rt.remove(res.rect);
+					if (isRectInside(mergedRect, res)) {
+						rt.remove(res);
 					}
 
-					if (isRectInside(mergedRect, getRectObjectFromRTreeRect(top.rect))) {
+					if (isRectInside(mergedRect, top)) {
 						topFullMerged = true;
 					}
 
-					const mergedObject = {
-						rect: getRTreeRectFromRectObject(mergedRect),
-						data: {
-							id: idCount.idCount++,
-							// rect: mergedRect,
-						},
-					};
-
-					rt.insert(mergedObject);
+					rt.insert(mergedRect);
 				}
 			}
 			if (topFullMerged === false) {
 				// put  top in the tree
-				rt.insert({ rect: top.rect, data: { id: idCount.idCount++ } });
+				top.id = idCount.idCount++;
+				rt.insert(top);
 			}
 		} else {
-			rt.insert({ rect: top.rect, data: { id: idCount.idCount++ } });
+			top.id = idCount.idCount++;
+			rt.insert(top);
 		}
 	}
 };
@@ -349,16 +269,10 @@ export const filterMergedFreeRects = (rt) => {
 	const len = arr.length;
 	for (let i = 0; i < len; i++) {
 		const obj = arr[i];
-		const result = rt.find(
-			obj.rect,
-			undefined,
-			undefined,
-			shouldFilterRect,
-			false
-		);
+		const result = rt.find(obj, undefined, undefined, shouldFilterRect, false);
 
 		if (result) {
-			rt.remove(obj.rect);
+			rt.remove(obj);
 		}
 	}
 };
@@ -382,7 +296,6 @@ export const mergeFreeRects = async (
 	}
 
 	mergeFreeRectsCore(context, stack, rt, idCount);
-	// printMergedFreeRects(context, rt.getData(true));
 	filterMergedFreeRects(rt);
 
 	const mergedArr = rt.getData();
@@ -390,6 +303,9 @@ export const mergeFreeRects = async (
 	rt.reset();
 	mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
+
+	// printMergedFreeRects(context, rt.getData());
+	// debugger;
 
 	return { mergedRectsRt: rt };
 };
@@ -440,30 +356,17 @@ export const arrange = async (
 
 		let pm;
 		let MIN_CLOSEST = Number.MAX_SAFE_INTEGER;
-		// let MIN_Y = Number.MAX_SAFE_INTEGER;
-		let tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
-		const tempOItem = getItemDimenWithMargin(privateConstants.MARGIN, oItem);
-		tempAItem.width += 0.5;
-		tempAItem.height += 0.5;
-		tempOItem.width += 0.5;
-		tempOItem.height += 0.5;
+		let tempAItem = aItem;
+		const tempOItem = oItem || { mX1: 0, mY1: 0, mX2: 0, mY2: 0 };
 
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {
-			const oRect = overlappedRects[i].rect;
-			// if (
-			// 	oRect.x2 - oRect.x1 >= tempAItem.width &&
-			// 	oRect.y2 - oRect.y1 >= tempAItem.height &&
-			// 	oRect.y1 < MIN_Y
-			// ) {
-			// 	MIN_Y = oRect.y1;
-			// 	pm = overlappedRects[i];
-			// }
+			const oRect = overlappedRects[i];
 			const d1 = getDistanceForTest(oRect, tempOItem);
 			const sizeTest1 = getSizeTest(oRect, tempOItem, 0);
 			if (
-				oRect.x2 - oRect.x1 >= tempAItem.width &&
-				oRect.y2 - oRect.y1 >= tempAItem.height &&
+				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
+				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
 				sizeTest1 &&
 				d1 < MIN_CLOSEST
 			) {
@@ -474,8 +377,8 @@ export const arrange = async (
 			const d = getDistanceForTest(oRect, tempOItem);
 			const sizeTest = getSizeTest(oRect, tempOItem);
 			if (
-				oRect.x2 - oRect.x1 >= tempAItem.width &&
-				oRect.y2 - oRect.y1 >= tempAItem.height &&
+				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
+				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
 				sizeTest &&
 				d < MIN_CLOSEST
 			) {
@@ -488,41 +391,47 @@ export const arrange = async (
 			continue;
 		}
 
-		aItem.x = pm.rect.x1 + privateConstants.MARGIN + 0.5;
-		aItem.y = pm.rect.y1 + privateConstants.MARGIN + 0.5;
+		aItem.x = pm.x1 + privateConstants.MARGIN;
+		aItem.y = pm.y1 + privateConstants.MARGIN;
+		aItem.x1 = aItem.x;
+		aItem.y1 = aItem.y;
+		aItem.x2 = aItem.x + aItem.width;
+		aItem.y2 = aItem.y + aItem.height;
 		sanitizeDimension(aItem);
+		aItem.mX = aItem.x - privateConstants.MARGIN;
+		aItem.mY = aItem.y - privateConstants.MARGIN;
+		aItem.mWidth = aItem.width + privateConstants.MARGIN * 2;
+		aItem.mHeight = aItem.height + privateConstants.MARGIN * 2;
+		aItem.mX1 = aItem.x1 - privateConstants.MARGIN;
+		aItem.mY1 = aItem.y1 - privateConstants.MARGIN;
+		aItem.mX2 = aItem.x2 + privateConstants.MARGIN;
+		aItem.mY2 = aItem.y2 + privateConstants.MARGIN;
 
 		arranged[top] = aItem;
 
-		if (
-			bottomWorkSpace &&
-			isRectInside(bottomWorkSpace, getRectObjectFromRTreeRect(pm.rect))
-		) {
+		if (bottomWorkSpace && isRectInside(bottomWorkSpace, pm)) {
 			// put in bottom and combined workspace
 			itemsInBottomWorkSpace[top] = top;
 		}
 
 		garbageStack.empty();
-		const result = mergedRectsRt.find(pm.rect, false, true, undefined, false);
+		const result = mergedRectsRt.find(pm, false, true, undefined, false);
 		const resLen = result.length;
-		tempAItem = getItemDimenWithMargin(privateConstants.MARGIN, aItem);
+		tempAItem = { ...aItem };
+		tempAItem.x1 -= privateConstants.MARGIN;
+		tempAItem.x2 += privateConstants.MARGIN;
+		tempAItem.y1 -= privateConstants.MARGIN;
+		tempAItem.y2 += privateConstants.MARGIN;
 		for (let i = 0; i < resLen; i++) {
 			const res = result[i];
-			const garbageRects = subtractRect(
-				getRectObjectFromRTreeRect(res.rect),
-				tempAItem
-			);
+			const garbageRects = subtractRect(res, tempAItem);
 
 			const gLen = garbageRects?.length || 0;
 			for (let i = 0; i < gLen; i++) {
-				garbageStack.push({
-					rect: getRTreeRectFromRectObject(garbageRects[i]),
-					data: {
-						id: idCount.idCount++,
-					},
-				});
+				garbageRects[i].idCount = idCount.idCount++;
+				garbageStack.push(garbageRects[i]);
 			}
-			mergedRectsRt.remove(res.rect);
+			mergedRectsRt.remove(res);
 		}
 
 		const { mergedRectsRt: _mergedRectsRt } = await mergeFreeRects(

@@ -77,6 +77,7 @@ export const init = async function (context, isResize, autoArrange) {
 		// * 	this if block is always supposed to execute during the first render
 		// 		if autoArrange is true or invalid positionData is supplied
 		// *	below code is basically resetting everything to 1920*1080
+		// *	everything will be scaled to new height and width in render function
 		console.warn("Auto-arranging");
 
 		setModifiedPositionData(context, pd);
@@ -85,8 +86,14 @@ export const init = async function (context, isResize, autoArrange) {
 		const arr = new Array(len);
 		for (let i = 0; i < len; i++) {
 			arr[i] = i;
-			mpd[i].x = undefined;
-			mpd[i].y = undefined;
+
+			mpd[i].x1 = 0;
+			mpd[i].x2 = 0;
+			mpd[i].y1 = 0;
+			mpd[i].y2 = 0;
+
+			mpd[i].x = 0;
+			mpd[i].y = 0;
 			mpd[i].width =
 				mpd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
 				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
@@ -94,14 +101,17 @@ export const init = async function (context, isResize, autoArrange) {
 				mpd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
 				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
 
-			pd[i].x = undefined;
-			pd[i].y = undefined;
-			pd[i].width =
-				pd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
-				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
-			pd[i].height =
-				pd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
-				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+			mpd[i].mX1 = 0;
+			mpd[i].mX2 = 0;
+			mpd[i].mY1 = 0;
+			mpd[i].mY2 = 0;
+
+			mpd[i].mX = 0;
+			mpd[i].mY = 0;
+			mpd[i].mWidth = mpd[i].width + privateConstants.MARGIN * 2;
+			mpd[i].mHeight = mpd[i].height + privateConstants.MARGIN * 2;
+
+			Object.assign(pd[i], mpd[i]);
 		}
 
 		setWidth(context, privateConstants.GRID_WIDTH);
@@ -162,9 +172,16 @@ export const init = async function (context, isResize, autoArrange) {
 	);
 
 	if (isResize) {
-		// resiet item x, y, width, height; MARGIN, MIN_HEIGHT_AND_WIDTH
+		// *	reset item x, y, width, height, x1, x2, y1, y2; MARGIN, MIN_HEIGHT_AND_WIDTH
+		// *	below code is basically resetting everything to 1920*1080
+		// *	everything will be scaled to new height and width in render function
 		const len = pd.length;
 		for (let i = 0; i < len; i++) {
+			pd[i].x1 /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].x2 /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].y1 /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].y2 /= privateConstants.WIDTH_SCALE_FACTOR;
+
 			pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
 			pd[i].y /= privateConstants.WIDTH_SCALE_FACTOR;
 			pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;

@@ -34,7 +34,8 @@ import {
 	setModifiedPositionData,
 	getCallbacks,
 } from "../../store/variables/essentials";
-import { isMobile, sanitizeDimension } from "../utils/utils";
+import { isMobile } from "../utils/utils";
+import { sanitizeDimension } from "../utils/items";
 
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -63,6 +64,30 @@ export const render = function (context, scale = true) {
 		WIDTH_SCALE_FACTOR = privateConstants.WIDTH_SCALE_FACTOR;
 	}
 
+	for (let i = 0; i < len; i++) {
+		pd[i].x1 *= WIDTH_SCALE_FACTOR;
+		pd[i].x2 *= WIDTH_SCALE_FACTOR;
+		pd[i].y1 *= WIDTH_SCALE_FACTOR;
+		pd[i].y2 *= WIDTH_SCALE_FACTOR;
+
+		pd[i].x = pd[i].x1;
+		pd[i].y = pd[i].y1;
+		pd[i].width *= WIDTH_SCALE_FACTOR;
+		pd[i].height *= WIDTH_SCALE_FACTOR;
+
+		sanitizeDimension(pd[i]);
+
+		pd[i].mX1 = pd[i].x1 - privateConstants.MARGIN;
+		pd[i].mX2 = pd[i].x2 + privateConstants.MARGIN;
+		pd[i].mY1 = pd[i].y1 - privateConstants.MARGIN;
+		pd[i].mY2 = pd[i].y2 + privateConstants.MARGIN;
+
+		pd[i].mX = pd[i].x - privateConstants.MARGIN;
+		pd[i].mY = pd[i].y - privateConstants.MARGIN;
+		pd[i].mWidth = pd[i].width + privateConstants.MARGIN * 2;
+		pd[i].mHeight = pd[i].height + privateConstants.MARGIN * 2;
+	}
+
 	const nodes = new Array(len);
 	let spd;
 
@@ -73,12 +98,6 @@ export const render = function (context, scale = true) {
 		}
 
 		for (let i = 0; i < len; i++) {
-			pd[i].x *= WIDTH_SCALE_FACTOR;
-			pd[i].y *= WIDTH_SCALE_FACTOR;
-			pd[i].width *= WIDTH_SCALE_FACTOR;
-			pd[i].height *= WIDTH_SCALE_FACTOR;
-			sanitizeDimension(pd[i]);
-
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
 			itemEl.setAttribute("data-index", i);
@@ -93,12 +112,6 @@ export const render = function (context, scale = true) {
 		spd = getSerializedPositionData(pd);
 
 		for (let i = 0; i < len; i++) {
-			pd[i].x *= WIDTH_SCALE_FACTOR;
-			pd[i].y *= WIDTH_SCALE_FACTOR;
-			pd[i].width *= WIDTH_SCALE_FACTOR;
-			pd[i].height *= WIDTH_SCALE_FACTOR;
-			sanitizeDimension(pd[i]);
-
 			spd[i].width = privateConstants.WIDTH;
 			spd[i].height =
 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
@@ -219,13 +232,21 @@ export const addItem = async function (context, item) {
 				y: undefined,
 				width: item.width,
 				height: item.height,
+				mX: undefined,
+				mY: undefined,
+				mWidth: item.width + privateConstants.MARGIN * 2,
+				mHeight: item.height + privateConstants.MARGIN * 2,
+				x1: undefined,
+				y1: undefined,
+				x2: undefined,
+				y2: undefined,
+				mX1: undefined,
+				mY1: undefined,
+				mX2: undefined,
+				mY2: undefined,
 			});
 
-			const arranged = await arrangeFromHeight(
-				context,
-				[mpd.length - 1],
-				bottomY
-			);
+			await arrangeFromHeight(context, [mpd.length - 1], bottomY);
 			sanitizeDimension(mpd[mpd.length - 1]);
 			setPositionData(context, mpd);
 		} else {
@@ -282,6 +303,12 @@ export const addItem = async function (context, item) {
 		set$limberGridViewItems(context, [
 			...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
 		]);
+
+		e.$limberGridView.scrollTo({
+			left: 0,
+			top: pd[index].y1,
+			behavior: "smooth",
+		});
 
 		if (callbacks.addComplete) {
 			callbacks.addComplete(index);
