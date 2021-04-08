@@ -293,11 +293,12 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		0,
 		privateConstants.WIDTH
 	);
-	const shrinkRes = shrinkTopBottomWS(context, topWorkSpace);
+	// const shrinkRes = shrinkTopBottomWS(context, topWorkSpace);
+	shrinkTopBottomWS(context, topWorkSpace);
 
-	if (shrinkRes.integrateTop) {
-		combinedWorkSpaceRect.y1 = topWorkSpace.y1;
-	}
+	// if (shrinkRes.integrateTop) {
+	combinedWorkSpaceRect.y1 = topWorkSpace.y1;
+	// }
 
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
 		context,

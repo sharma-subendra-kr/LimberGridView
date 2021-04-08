@@ -357,7 +357,7 @@ export const arrange = async (
 		let pm;
 		let MIN_CLOSEST = Number.MAX_SAFE_INTEGER;
 		let tempAItem = aItem;
-		const tempOItem = oItem;
+		const tempOItem = oItem || { mX1: 0, mY1: 0, mX2: 0, mY2: 0 };
 
 		const oLen = overlappedRects.length;
 		for (let i = 0; i < oLen; i++) {

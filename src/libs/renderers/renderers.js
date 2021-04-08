@@ -232,13 +232,21 @@ export const addItem = async function (context, item) {
 				y: undefined,
 				width: item.width,
 				height: item.height,
+				mX: undefined,
+				mY: undefined,
+				mWidth: item.width + privateConstants.MARGIN * 2,
+				mHeight: item.height + privateConstants.MARGIN * 2,
+				x1: undefined,
+				y1: undefined,
+				x2: undefined,
+				y2: undefined,
+				mX1: undefined,
+				mY1: undefined,
+				mX2: undefined,
+				mY2: undefined,
 			});
 
-			const arranged = await arrangeFromHeight(
-				context,
-				[mpd.length - 1],
-				bottomY
-			);
+			await arrangeFromHeight(context, [mpd.length - 1], bottomY);
 			sanitizeDimension(mpd[mpd.length - 1]);
 			setPositionData(context, mpd);
 		} else {
