@@ -23,8 +23,12 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { isValidRect, isValidRectHW } from "../rect/rectUtils";
-import { makeItem, enhanceItemHW } from "../utils/items";
+import {
+	makeItem,
+	enhanceItemHW,
+	isValidRect,
+	isValidRectHW,
+} from "../utils/items";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
 
@@ -33,9 +37,9 @@ export const checkPositionData = (pd) => {
 		const len = pd.length;
 		for (let i = 0; i < len; i++) {
 			if (isValidRect(pd[i])) {
-				makeItem(pd[i]);
-			} else if (isValidRectHW(pd[i])) {
 				enhanceItemHW(pd[i]);
+			} else if (isValidRectHW(pd[i])) {
+				makeItem(pd[i]);
 			} else {
 				return false;
 			}

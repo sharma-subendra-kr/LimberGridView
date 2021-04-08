@@ -87,13 +87,13 @@ export const init = async function (context, isResize, autoArrange) {
 		for (let i = 0; i < len; i++) {
 			arr[i] = i;
 
-			mpd[i].x1 = undefined;
-			mpd[i].x2 = undefined;
-			mpd[i].y1 = undefined;
-			mpd[i].y2 = undefined;
+			mpd[i].x1 = 0;
+			mpd[i].x2 = 0;
+			mpd[i].y1 = 0;
+			mpd[i].y2 = 0;
 
-			mpd[i].x = undefined;
-			mpd[i].y = undefined;
+			mpd[i].x = 0;
+			mpd[i].y = 0;
 			mpd[i].width =
 				mpd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
 				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
@@ -101,19 +101,17 @@ export const init = async function (context, isResize, autoArrange) {
 				mpd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
 				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
 
-			pd[i].x1 = undefined;
-			pd[i].x2 = undefined;
-			pd[i].y1 = undefined;
-			pd[i].y2 = undefined;
+			mpd[i].mX1 = 0;
+			mpd[i].mX2 = 0;
+			mpd[i].mY1 = 0;
+			mpd[i].mY2 = 0;
 
-			pd[i].x = undefined;
-			pd[i].y = undefined;
-			pd[i].width =
-				pd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
-				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
-			pd[i].height =
-				pd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
-				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+			mpd[i].mX = 0;
+			mpd[i].mY = 0;
+			mpd[i].mWidth = mpd[i].width + privateConstants.MARGIN * 2;
+			mpd[i].mHeight = mpd[i].height + privateConstants.MARGIN * 2;
+
+			Object.assign(pd[i], mpd[i]);
 		}
 
 		setWidth(context, privateConstants.GRID_WIDTH);

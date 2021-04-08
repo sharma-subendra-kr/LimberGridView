@@ -182,3 +182,30 @@ export const swapDimensActualAndWithMargin = (rect) => {
 	rect.mY1 = tempY1;
 	rect.mY2 = tempY2;
 };
+
+export const isValidRect = function (rect) {
+	if (isNaN(rect.x1) || isNaN(rect.x2) || isNaN(rect.y1) || isNaN(rect.y2)) {
+		return false;
+	}
+
+	if (rect.x1 >= rect.x2 || rect.y1 >= rect.y2) {
+		return false;
+	}
+	return true;
+};
+
+export const isValidRectHW = function (rect) {
+	if (
+		isNaN(rect.x) ||
+		isNaN(rect.y) ||
+		isNaN(rect.width) ||
+		isNaN(rect.height)
+	) {
+		return false;
+	}
+
+	if (rect.x >= rect.x + rect.width || rect.y >= rect.y + rect.height) {
+		return false;
+	}
+	return true;
+};
