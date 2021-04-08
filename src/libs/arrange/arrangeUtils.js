@@ -122,25 +122,25 @@ export const getBottomMax = (context, minX, maxX) => {
 
 export const getTopBottomWS = (context, workSpaceRect, minX, maxX) => {
 	let topWorkSpace, bottomWorkSpace;
-	if (workSpaceRect.y1 > 0) {
-		topWorkSpace = {
-			x1: minX,
-			x2: maxX,
-			y1: 0,
-			y2: workSpaceRect.y1,
-		};
-	}
+	// if (workSpaceRect.y1 > 0) {
+	topWorkSpace = {
+		x1: minX,
+		x2: maxX,
+		y1: 0,
+		y2: workSpaceRect.y1 < 0 ? 0 : workSpaceRect.y1,
+	};
+	// }
 
 	const bottomMax = getBottomMax(context, minX, maxX);
 
-	if (bottomMax > workSpaceRect.y2) {
-		bottomWorkSpace = {
-			x1: minX,
-			x2: maxX,
-			y1: workSpaceRect.y2,
-			y2: bottomMax,
-		};
-	}
+	// if (bottomMax > workSpaceRect.y2) {
+	bottomWorkSpace = {
+		x1: minX,
+		x2: maxX,
+		y1: workSpaceRect.y2,
+		y2: bottomMax > workSpaceRect.y2 ? bottomMax : workSpaceRect.y2,
+	};
+	// }
 
 	return { topWorkSpace, bottomWorkSpace };
 };
