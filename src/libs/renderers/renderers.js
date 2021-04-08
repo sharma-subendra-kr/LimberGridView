@@ -304,6 +304,12 @@ export const addItem = async function (context, item) {
 			...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
 		]);
 
+		e.$limberGridView.scrollTo({
+			left: 0,
+			top: pd[index].y1,
+			behavior: "smooth",
+		});
+
 		if (callbacks.addComplete) {
 			callbacks.addComplete(index);
 		}
