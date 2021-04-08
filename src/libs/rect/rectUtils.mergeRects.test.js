@@ -128,8 +128,8 @@ describe("mergeRects", () => {
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
 		rectB = { x1: 5, y1: 1, x2: 8, y2: 4 };
 		res = [
-			{ x1: 5, y1: 1, x2: 6, y2: 6 },
 			{ x1: 2, y1: 2, x2: 8, y2: 4 },
+			{ x1: 5, y1: 1, x2: 6, y2: 6 },
 		];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 	});
@@ -138,8 +138,8 @@ describe("mergeRects", () => {
 		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
 		let rectB = { x1: 5, y1: 5, x2: 8, y2: 7 };
 		let res = [
-			{ x1: 5, y1: 2, x2: 6, y2: 7 },
 			{ x1: 2, y1: 5, x2: 8, y2: 6 },
+			{ x1: 5, y1: 2, x2: 6, y2: 7 },
 		];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
@@ -183,8 +183,8 @@ describe("mergeRects", () => {
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
 		rectB = { x1: 3, y1: 1, x2: 7, y2: 3 };
 		res = [
-			{ x1: 3, y1: 1, x2: 6, y2: 6 },
 			{ x1: 2, y1: 2, x2: 7, y2: 3 },
+			{ x1: 3, y1: 1, x2: 6, y2: 6 },
 		];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 	});
@@ -348,8 +348,8 @@ describe("mergeRects reverse", () => {
 		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
 		let rectB = { x1: 0, y1: 5, x2: 3, y2: 7 };
 		let res = [
-			{ x1: 2, y1: 2, x2: 3, y2: 7 },
 			{ x1: 0, y1: 5, x2: 6, y2: 6 },
+			{ x1: 2, y1: 2, x2: 3, y2: 7 },
 		];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
@@ -393,8 +393,8 @@ describe("mergeRects reverse", () => {
 		rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
 		rectB = { x1: 3, y1: 5, x2: 7, y2: 7 };
 		res = [
-			{ x1: 3, y1: 2, x2: 6, y2: 7 },
 			{ x1: 2, y1: 5, x2: 7, y2: 6 },
+			{ x1: 3, y1: 2, x2: 6, y2: 7 },
 		];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 	});
@@ -403,8 +403,8 @@ describe("mergeRects reverse", () => {
 		let rectA = { x1: 2, y1: 2, x2: 6, y2: 6 };
 		let rectB = { x1: 0, y1: 5, x2: 3, y2: 7 };
 		let res = [
-			{ x1: 2, y1: 2, x2: 3, y2: 7 },
 			{ x1: 0, y1: 5, x2: 6, y2: 6 },
+			{ x1: 2, y1: 2, x2: 3, y2: 7 },
 		];
 		expect(mergeRects(rectA, rectB)).toStrictEqual(res);
 
