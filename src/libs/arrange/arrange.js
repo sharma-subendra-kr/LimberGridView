@@ -262,7 +262,6 @@ export const arrangeMove = async (
 		);
 	}
 
-	// return arranged;
 	return { arranged, resized };
 };
 

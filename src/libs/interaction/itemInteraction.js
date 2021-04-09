@@ -34,6 +34,7 @@ import {
 	resizeSizeAdjust,
 	getMoveModifiedItem,
 	getResizeModifiedItem,
+	positionArranged,
 } from "./itemInteractionUtils";
 import { arrangeMove } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
@@ -93,23 +94,10 @@ export const resizeItem = async function (index, width, height) {
 	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
 	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
-
-		if (resized[key]) {
-			e.$limberGridViewItems[key].style.width = `${item.width}px`;
-			e.$limberGridViewItems[key].style.height = `${item.height}px`;
-		}
-	}
+	positionArranged(this, arranged);
 
 	if (callbacks.resizeComplete) {
-		callbacks.resizeComplete(index, width, height, arrangedArr);
+		callbacks.resizeComplete(index, width, height, Object.keys(arranged));
 	}
 
 	renderItem(this, index);
@@ -166,27 +154,14 @@ export const resizeItemDemo = async function (index, width, height) {
 
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	let arranged, resized;
+	let arranged;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		({ arranged, resized } = await arrangeMove(this, affectedItems));
+		({ arranged } = await arrangeMove(this, affectedItems));
 	} else {
-		({ arranged, resized } = await arrangeMove(this, affectedItems));
+		({ arranged } = await arrangeMove(this, affectedItems));
 	}
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
-
-		if (resized[key]) {
-			e.$limberGridViewItems[key].style.width = `${item.width}px`;
-			e.$limberGridViewItems[key].style.height = `${item.height}px`;
-		}
-	}
+	positionArranged(this, arranged);
 };
 
 export const moveItem = async function (index, toX, toY) {
@@ -249,23 +224,10 @@ export const moveItem = async function (index, toX, toY) {
 		}, publicConstants.ANIMATE_TIME);
 	}
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
-
-		if (resized[key]) {
-			e.$limberGridViewItems[key].style.width = `${item.width}px`;
-			e.$limberGridViewItems[key].style.height = `${item.height}px`;
-		}
-	}
+	positionArranged(this, arranged);
 
 	if (callbacks.resizeComplete) {
-		callbacks.moveComplete(index, toX, toY, arrangedArr);
+		callbacks.moveComplete(index, toX, toY, Object.keys(arranged));
 	}
 
 	for (const key in resized) {
@@ -396,7 +358,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const { arranged, resized } = await arrangeMove(
+	const { arranged } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
@@ -404,18 +366,5 @@ export const moveItemDemo = async function (index, toX, toY) {
 		true
 	);
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
-
-		if (resized[key]) {
-			e.$limberGridViewItems[key].style.width = `${item.width}px`;
-			e.$limberGridViewItems[key].style.height = `${item.height}px`;
-		}
-	}
+	positionArranged(this, arranged);
 };
