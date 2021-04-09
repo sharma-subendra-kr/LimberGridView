@@ -338,6 +338,7 @@ export const arrange = async (
 
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
+	const resized = {};
 
 	let overlappedRects = mergedRectsRt.getData();
 	itemsToArrange.sort(rectSortHypotenusSquared(pd));
@@ -356,6 +357,7 @@ export const arrange = async (
 
 		let pm;
 		let MIN_CLOSEST = Number.MAX_SAFE_INTEGER;
+		let match;
 		let tempAItem = aItem;
 		const tempOItem = oItem || { mX1: 0, mY1: 0, mX2: 0, mY2: 0 };
 
@@ -363,32 +365,39 @@ export const arrange = async (
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i];
 			const d1 = getDistanceForTest(oRect, tempOItem);
-			const sizeTest1 = getSizeTest(oRect, tempOItem, 0);
+			const sizeTest1 = getSizeTest(oRect, tempAItem, privateConstants.MARGIN);
 			if (
-				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
-				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
+				// oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
+				// oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
 				sizeTest1 &&
 				d1 < MIN_CLOSEST
 			) {
 				MIN_CLOSEST = d1;
 				pm = overlappedRects[i];
+				match = typeof sizeTest1 === "object" ? sizeTest1 : undefined;
 			}
 
-			const d = getDistanceForTest(oRect, tempOItem);
-			const sizeTest = getSizeTest(oRect, tempOItem);
-			if (
-				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
-				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
-				sizeTest &&
-				d < MIN_CLOSEST
-			) {
-				MIN_CLOSEST = d;
-				pm = overlappedRects[i];
-			}
+			// const d = getDistanceForTest(oRect, tempOItem);
+			// const sizeTest = getSizeTest(oRect, tempOItem);
+			// if (
+			// 	oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
+			// 	oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
+			// 	sizeTest &&
+			// 	d < MIN_CLOSEST
+			// ) {
+			// 	MIN_CLOSEST = d;
+			// 	pm = overlappedRects[i];
+			// }
 		}
 
 		if (!pm) {
 			continue;
+		}
+
+		if (match) {
+			aItem.width = match.width;
+			aItem.height = match.height;
+			resized[top] = true;
 		}
 
 		aItem.x = pm.x1 + privateConstants.MARGIN;
@@ -447,5 +456,6 @@ export const arrange = async (
 	return {
 		arranged,
 		itemsInBottomWorkSpace,
+		resized,
 	};
 };

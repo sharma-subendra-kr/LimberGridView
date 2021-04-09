@@ -597,5 +597,7 @@ export const revertShowMoveOrResizeDemo = function (context) {
 		e.$limberGridViewItems[
 			i
 		].style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
+		e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
+		e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
 	}
 };

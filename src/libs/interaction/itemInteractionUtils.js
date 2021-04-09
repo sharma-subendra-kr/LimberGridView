@@ -210,8 +210,11 @@ export const resetDemoUIChanges = (context) => {
 
 	const len = pd.length;
 	for (var i = 0; i < len; i++) {
-		e.$limberGridViewItems[i].style.transform =
-			"translate(" + pd[i].x1 + "px, " + pd[i].y1 + "px)";
+		e.$limberGridViewItems[
+			i
+		].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1})`;
+		e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
+		e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
 	}
 };
 

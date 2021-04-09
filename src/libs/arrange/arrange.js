@@ -151,6 +151,7 @@ export const arrangeMove = async (
 	let passCount = 0;
 	let arranged = {};
 	let arrangedCount = 0;
+	let resized = {};
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
@@ -177,6 +178,7 @@ export const arrangeMove = async (
 		const {
 			arranged: _arranged,
 			itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
+			resized: _resized,
 		} = await arrange(
 			context,
 			itemsToArrange.filter((id) => !arranged[id]),
@@ -193,6 +195,7 @@ export const arrangeMove = async (
 		];
 
 		arranged = { ...arranged, ..._arranged };
+		resized = { ...resized, ..._resized };
 		const _arrangedArr = Object.values(_arranged);
 		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
 
@@ -259,7 +262,8 @@ export const arrangeMove = async (
 		);
 	}
 
-	return arranged;
+	// return arranged;
+	return { arranged, resized };
 };
 
 /*

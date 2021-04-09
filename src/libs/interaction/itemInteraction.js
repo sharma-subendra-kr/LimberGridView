@@ -80,11 +80,11 @@ export const resizeItem = async function (index, width, height) {
 
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	let arranged;
+	let arranged, resized;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeMove(this, affectedItems);
+		({ arranged, resized } = await arrangeMove(this, affectedItems));
 	} else {
-		arranged = await arrangeMove(this, affectedItems);
+		({ arranged, resized } = await arrangeMove(this, affectedItems));
 	}
 
 	setPositionData(this, mpd);
@@ -100,6 +100,11 @@ export const resizeItem = async function (index, width, height) {
 		e.$limberGridViewItems[
 			key
 		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+
+		if (resized[key]) {
+			e.$limberGridViewItems[key].style.width = `${item.width}px`;
+			e.$limberGridViewItems[key].style.height = `${item.height}px`;
+		}
 	}
 
 	if (callbacks.resizeComplete) {
@@ -155,11 +160,11 @@ export const resizeItemDemo = async function (index, width, height) {
 
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	let arranged;
+	let arranged, resized;
 	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeMove(this, affectedItems);
+		({ arranged, resized } = await arrangeMove(this, affectedItems));
 	} else {
-		arranged = await arrangeMove(this, affectedItems);
+		({ arranged, resized } = await arrangeMove(this, affectedItems));
 	}
 
 	const arrangedArr = Object.keys(arranged);
@@ -170,6 +175,11 @@ export const resizeItemDemo = async function (index, width, height) {
 		e.$limberGridViewItems[
 			key
 		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+
+		if (resized[key]) {
+			e.$limberGridViewItems[key].style.width = `${item.width}px`;
+			e.$limberGridViewItems[key].style.height = `${item.height}px`;
+		}
 	}
 };
 
@@ -213,7 +223,7 @@ export const moveItem = async function (index, toX, toY) {
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeMove(
+	const { arranged, resized } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
@@ -241,6 +251,11 @@ export const moveItem = async function (index, toX, toY) {
 		e.$limberGridViewItems[
 			key
 		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+
+		if (resized[key]) {
+			e.$limberGridViewItems[key].style.width = `${item.width}px`;
+			e.$limberGridViewItems[key].style.height = `${item.height}px`;
+		}
 	}
 
 	if (callbacks.resizeComplete) {
@@ -371,7 +386,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeMove(
+	const { arranged, resized } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
@@ -387,5 +402,10 @@ export const moveItemDemo = async function (index, toX, toY) {
 		e.$limberGridViewItems[
 			key
 		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+
+		if (resized[key]) {
+			e.$limberGridViewItems[key].style.width = `${item.width}px`;
+			e.$limberGridViewItems[key].style.height = `${item.height}px`;
+		}
 	}
 };

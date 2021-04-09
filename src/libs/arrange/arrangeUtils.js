@@ -329,23 +329,71 @@ export const shouldFilterRect = function (suspect, rect) {
 	}
 };
 
-export const getSizeTest = (suspect, rect, threshold = 70) => {
-	const h1 = getHypotenuseSquared(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
+export const getSizeTest = (suspect, rect, MARGIN) => {
+	// const h1 = getHypotenuseSquared(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
+	const h1 = rect.mWidth * rect.mWidth + rect.mHeight * rect.mHeight;
 	const h2 = getHypotenuseSquared(
 		suspect.x1,
 		suspect.y1,
 		suspect.x2,
 		suspect.y2
 	);
-	if (h1 < h2 && (h1 / h2) * 100 >= threshold) {
+	// if (h1 < h2 && (h1 / h2) * 100 >= threshold) {
+	if (
+		h1 < h2 &&
+		suspect.x2 - suspect.x1 >= rect.mWidth &&
+		suspect.y2 - suspect.y1 >= rect.mHeight
+	) {
 		return true;
+	}
+
+	const THRESHOLD = 20;
+
+	let match1 = { width: 0, height: 0 };
+	let match2 = { width: 0, height: 0 };
+
+	const aw = rect.mWidth;
+	const bw = suspect.x2 - suspect.x1;
+	const xw = (100 * aw - 100 * bw) / aw;
+	if (xw <= THRESHOLD) {
+		const h = (100 * rect.mHeight - rect.mHeight * xw) / 100;
+		if (h <= suspect.y2 - suspect.y1) {
+			match1 = {
+				width: suspect.x2 - suspect.x1 - MARGIN * 2,
+				height: h - MARGIN * 2,
+			};
+		}
+	}
+
+	const ah = rect.mHeight;
+	const bh = suspect.y2 - suspect.y1;
+	const xh = (100 * ah - 100 * bh) / ah;
+	if (xh <= THRESHOLD) {
+		const w = (100 * rect.mWidth - rect.mWidth * xh) / 100;
+		if (w <= suspect.x2 - suspect.x1) {
+			match2 = {
+				width: w - MARGIN * 2,
+				height: suspect.y2 - suspect.y1 - MARGIN * 2,
+			};
+		}
+	}
+
+	const m1Hypo = match1.width * match1.width + match1.height * match1.height;
+	const m2Hypo = match2.width * match2.width + match2.height * match2.height;
+
+	if (m1Hypo < m2Hypo && match1.width !== 0) {
+		return match1.width > 0 ? match1 : undefined;
+	} else {
+		return match2.width > 0 ? match2 : undefined;
 	}
 };
 
 export const getDistanceForTest = (suspect, rect) => {
-	const p1 = getMidPoint(suspect.x1, suspect.y1, suspect.x2, suspect.y2);
-	const p2 = getMidPoint(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
-	return getHypotenuseSquared(p1.x, p1.y, p2.x, p2.y);
+	// const p1 = getMidPoint(suspect.x1, suspect.y1, suspect.x2, suspect.y2);
+	// const p2 = getMidPoint(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
+	// return getHypotenuseSquared(p1.x, p1.y, p2.x, p2.y);
+	return getHypotenuseSquared(suspect.x1, suspect.y1, rect.mX1, rect.mY1);
+	// return true;
 };
 
 export const shiftItemsDown = (context, items, height) => {
