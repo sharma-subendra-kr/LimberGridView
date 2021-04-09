@@ -172,7 +172,7 @@ const main = function () {
 				);
 			}
 		}, 2000);
-		window.limberGridView.renderItem(index);
+		// window.limberGridView.renderItem(index);
 	};
 
 	const moveComplete = function (index, toX, toY, arrangedIndices) {

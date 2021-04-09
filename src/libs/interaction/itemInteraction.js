@@ -48,6 +48,7 @@ import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";
 import getMessage from "../../store/constants/messages";
 import { isPointInsideRect } from "../rect/rectUtils";
+import { renderItem } from "../renderers/renderers";
 
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
@@ -109,6 +110,11 @@ export const resizeItem = async function (index, width, height) {
 
 	if (callbacks.resizeComplete) {
 		callbacks.resizeComplete(index, width, height, arrangedArr);
+	}
+
+	renderItem(this, index);
+	for (const key in resized) {
+		renderItem(this, key);
 	}
 };
 
@@ -260,6 +266,10 @@ export const moveItem = async function (index, toX, toY) {
 
 	if (callbacks.resizeComplete) {
 		callbacks.moveComplete(index, toX, toY, arrangedArr);
+	}
+
+	for (const key in resized) {
+		renderItem(this, key);
 	}
 };
 
