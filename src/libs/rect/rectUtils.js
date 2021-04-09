@@ -301,16 +301,16 @@ lm      |   |               |   |      rm
 		}
 	}
 
-	for (const rect of rects) {
-		rect.x = rect.x1;
-		rect.y = rect.y1;
-		rect.width = rect.x2 - rect.x1;
-		rect.height = rect.y2 - rect.y1;
-	}
+	// for (const rect of rects) {
+	// 	rect.x = rect.x1;
+	// 	rect.y = rect.y1;
+	// 	rect.width = rect.x2 - rect.x1;
+	// 	rect.height = rect.y2 - rect.y1;
+	// }
 
 	return rects;
 };
-window.subtractRect = subtractRect;
+
 const horizontalSubtract = (rectA, rectB) => {
 	if (!rectA || !rectB) return undefined;
 
@@ -382,98 +382,61 @@ export const isValidRectHW = function (rect) {
 	return true;
 };
 
-export const merge = (rectA, rectB) => {
-	let res;
-
-	// 3
-	if (rectA.x1 >= rectB.x1 && rectA.x1 < rectB.x2 && rectA.y2 <= rectB.y1) {
-		const x = rectA.x2 < rectB.x2 ? rectA.x2 : rectB.x2;
-		res = {
-			x1: rectA.x1,
-			x2: x,
-			y1: rectA.y1,
-			y2: rectB.y2,
-		};
-	}
-
-	// 1
-	if (rectA.y1 >= rectB.y1 && rectA.y1 < rectB.y2 && rectA.x1 >= rectB.x2) {
-		const y = rectA.y2 < rectB.y2 ? rectA.y2 : rectB.y2;
-		res = {
-			x1: rectB.x1,
-			x2: rectA.x2,
-			y1: rectA.y1,
-			y2: y,
-		};
-	}
-
-	// 4
-	if (rectA.x1 <= rectB.x1 && rectA.x2 > rectB.x1 && rectA.y2 <= rectB.y1) {
-		const x = rectA.x2 > rectB.x2 ? rectB.x2 : rectA.x2;
-		res = {
-			x1: rectB.x1,
-			x2: x,
-			y1: rectA.y1,
-			y2: rectB.y2,
-		};
-	}
-
-	// 2
-	if (rectA.y1 <= rectB.y1 && rectA.y2 > rectB.y1 && rectA.x1 >= rectB.x2) {
-		const y = rectA.y2 > rectB.y2 ? rectB.y2 : rectA.y2;
-		res = {
-			x1: rectB.x1,
-			x2: rectA.x2,
-			y1: rectB.y1,
-			y2: y,
-		};
-	}
-
-	return res;
-};
-
-export const mergeOverlapping = (rectA, rectB) => {
-	const diff = subtractRect(rectA, rectB);
-
-	const arr = new Array(diff?.length || 0);
-	let m;
-	let count = 0;
-	const len = arr.length;
-
-	for (let i = 0; i < len; i++) {
-		m = merge(diff[i], rectB);
-		if (!m) m = merge(rectB, diff[i]);
-		if (m && !isRectInside(rectA, m)) {
-			arr[count++] = m;
-		}
-	}
-
-	arr.length = count;
-
-	return count ? arr : undefined;
-};
-
 export const mergeRects = (rectA, rectB) => {
-	let result;
+	const result = new Array(2);
+	let count = 0;
 
-	result = merge(rectA, rectB);
-	if (!result) result = merge(rectB, rectA);
-	if (result) result = [result];
-	if (!result && !isRectInside(rectA, rectB) && !isRectInside(rectB, rectA)) {
-		result = mergeOverlapping(rectA, rectB) || [];
-	} else if (!result) {
-		result = [];
+	const leftX1 = rectA.x1 < rectB.x1 ? rectA : rectB;
+	const rightX2 = rectA.x2 > rectB.x2 ? rectA : rectB;
+	const higherY1 = rectA.y1 > rectB.y1 ? rectA : rectB;
+	const lowerY2 = rectA.y2 < rectB.y2 ? rectA : rectB;
+
+	const horizotal = {
+		x1: leftX1.x1,
+		x2: rightX2.x2,
+		y1: higherY1.y1,
+		y2: lowerY2.y2,
+	};
+
+	const higherX1 = rectA.x1 > rectB.x1 ? rectA : rectB;
+	const lowerX2 = rectA.x2 < rectB.x2 ? rectA : rectB;
+	const upperY1 = rectA.y1 < rectB.y1 ? rectA : rectB;
+	const bottomY2 = rectA.y2 > rectB.y2 ? rectA : rectB;
+
+	const vertical = {
+		x1: higherX1.x1,
+		x2: lowerX2.x2,
+		y1: upperY1.y1,
+		y2: bottomY2.y2,
+	};
+
+	if (
+		isValidRect(horizotal) &&
+		!isRectInside(rectA, horizotal) &&
+		!isRectInside(rectB, horizotal)
+	) {
+		result[count++] = horizotal;
 	}
 
-	for (const rect of result) {
-		rect.x = rect.x1;
-		rect.y = rect.y1;
-		rect.width = rect.x2 - rect.x1;
-		rect.height = rect.y2 - rect.y1;
+	if (
+		isValidRect(vertical) &&
+		!isRectInside(rectA, vertical) &&
+		!isRectInside(rectB, vertical)
+	) {
+		result[count++] = vertical;
 	}
+
+	result.length = count;
+
+	// for (const rect of result) {
+	// 	rect.x = rect.x1;
+	// 	rect.y = rect.y1;
+	// 	rect.width = rect.x2 - rect.x1;
+	// 	rect.height = rect.y2 - rect.y1;
+	// }
+
 	return result;
 };
-window.mergeRects = mergeRects;
 
 export const isRectInside = (rectA, rectB) => {
 	// is rectB inside rectA
@@ -507,5 +470,3 @@ export const isRectLarger = (rectA, rectB) => {
 		return true;
 	}
 };
-
-window.subtractRect = subtractRect;

@@ -488,7 +488,7 @@ LimberGridView.prototype.initializeStore = function () {
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
 
-				DESK_INTERACTION_MODE: "ADD",
+				DESK_INTERACTION_MODE: "CUTSPACE",
 
 				LATCH_MOVED_ITEM: true,
 

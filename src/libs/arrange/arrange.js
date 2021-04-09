@@ -252,7 +252,11 @@ export const arrangeMove = async (
 	console.log("arrange total: ", p2 - p1);
 
 	if (context.options.callbacks?.getArrangeTime) {
-		context.options.callbacks.getArrangeTime(p2 - p1, workSpaceResizeCount);
+		context.options.callbacks.getArrangeTime(
+			p2 - p1,
+			workSpaceResizeCount,
+			idCount.idCount
+		);
 	}
 
 	return arranged;
@@ -367,6 +371,14 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	console.log("p2: ", p2);
 	console.log("workSpaceResizeCount", workSpaceResizeCount);
 	console.log("arrange total: ", p2 - p1);
+
+	if (context.options.callbacks?.getArrangeTime) {
+		context.options.callbacks.getArrangeTime(
+			p2 - p1,
+			workSpaceResizeCount,
+			idCount.idCount
+		);
+	}
 
 	return arranged;
 };
