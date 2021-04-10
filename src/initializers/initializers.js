@@ -210,31 +210,25 @@ export const init = async function (context, isResize, autoArrange) {
 
 export const initConstantsAndFlags = function (options) {
 	// Private Constants BEGIN
-	if (options?.gridData?.WIDTH && !isNaN(options.gridData.WIDTH)) {
+	if (typeof options?.gridData?.WIDTH === "number") {
 		setGridWidth(this, options.gridData.WIDTH);
 	}
 
-	if (options?.gridData?.HEIGHT && !isNaN(options.gridData.HEIGHT)) {
+	if (typeof options?.gridData?.HEIGHT === "number") {
 		setGridHeight(this, options.gridData.HEIGHT);
 	}
 
-	if (options?.gridData?.MARGIN && !isNaN(options.gridData.MARGIN)) {
+	if (typeof options?.gridData?.MARGIN === "number") {
 		setGridMargin(this, options.gridData.MARGIN);
 	}
 
-	if (
-		options?.gridData?.MIN_HEIGHT_AND_WIDTH &&
-		!isNaN(options.gridData.MIN_HEIGHT_AND_WIDTH)
-	) {
+	if (typeof options?.gridData?.MIN_HEIGHT_AND_WIDTH === "number") {
 		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
 	}
 	// Private Constants ENDED
 
 	// Public Constants BEGIN
-	if (
-		options?.publicConstants?.mobileAspectRatio &&
-		!isNaN(options.publicConstants.mobileAspectRatio)
-	) {
+	if (typeof options?.publicConstants?.mobileAspectRatio === "number") {
 		setPublicConstantByName(
 			this,
 			"MOBILE_ASPECT_RATIO",
@@ -242,10 +236,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.moveGuideRadius &&
-		!isNaN(options.publicConstants.moveGuideRadius)
-	) {
+	if (typeof options?.publicConstants?.moveGuideRadius === "number") {
 		setPublicConstantByName(
 			this,
 			"MOVE_GUIDE_RADIUS",
@@ -253,10 +244,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.resizeSquareGuideLength &&
-		!isNaN(options.publicConstants.resizeSquareGuideLength)
-	) {
+	if (typeof options?.publicConstants?.resizeSquareGuideLength === "number") {
 		setPublicConstantByName(
 			this,
 			"RESIZE_SQUARE_GUIDE_LENGTH",
@@ -265,8 +253,7 @@ export const initConstantsAndFlags = function (options) {
 	}
 
 	if (
-		options?.publicConstants?.resizeSquareBorderGuideWidth &&
-		!isNaN(options.publicConstants.resizeSquareBorderGuideWidth)
+		typeof options?.publicConstants?.resizeSquareBorderGuideWidth === "number"
 	) {
 		setPublicConstantByName(
 			this,
@@ -275,10 +262,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.autoScrollDistance &&
-		!isNaN(options.publicConstants.autoScrollDistance)
-	) {
+	if (typeof options?.publicConstants?.autoScrollDistance === "number") {
 		setPublicConstantByName(
 			this,
 			"AUTO_SCROLL_DISTANCE",
@@ -286,10 +270,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.autoScrollPoint &&
-		!isNaN(options.publicConstants.autoScrollPoint)
-	) {
+	if (typeof options?.publicConstants?.autoScrollPoint === "number") {
 		setPublicConstantByName(
 			this,
 			"AUTO_SCROLL_POINT",
@@ -298,8 +279,7 @@ export const initConstantsAndFlags = function (options) {
 	}
 
 	if (
-		options?.publicConstants?.moveOrResizeHeightIncrements &&
-		!isNaN(options.publicConstants.moveOrResizeHeightIncrements)
+		typeof options?.publicConstants?.moveOrResizeHeightIncrements === "number"
 	) {
 		setPublicConstantByName(
 			this,
@@ -308,10 +288,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.mouseDownTime &&
-		!isNaN(options.publicConstants.mouseDownTime)
-	) {
+	if (typeof options?.publicConstants?.mouseDownTime === "number") {
 		setPublicConstantByName(
 			this,
 			"MOUSE_DOWN_TIME",
@@ -319,10 +296,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.touchHoldTime &&
-		!isNaN(options.publicConstants.touchHoldTime)
-	) {
+	if (typeof options?.publicConstants?.touchHoldTime === "number") {
 		setPublicConstantByName(
 			this,
 			"TOUCH_HOLD_TIME",
@@ -330,10 +304,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.demoWaitTime &&
-		!isNaN(options.publicConstants.demoWaitTime)
-	) {
+	if (typeof options?.publicConstants?.demoWaitTime === "number") {
 		setPublicConstantByName(
 			this,
 			"DEMO_WAIT_TIME",
@@ -341,10 +312,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.windowResizeWaitTime &&
-		!isNaN(options.publicConstants.windowResizeWaitTime)
-	) {
+	if (typeof options?.publicConstants?.windowResizeWaitTime === "number") {
 		setPublicConstantByName(
 			this,
 			"WINDOW_RESIZE_WAIT_TIME",
@@ -379,10 +347,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.animateTime &&
-		!isNaN(options.publicConstants.animateTime)
-	) {
+	if (typeof options?.publicConstants?.animateTime === "number") {
 		setPublicConstantByName(
 			this,
 			"ANIMATE_TIME",
@@ -390,10 +355,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.crossHairWidth &&
-		!isNaN(options.publicConstants.crossHairWidth)
-	) {
+	if (typeof options?.publicConstants?.crossHairWidth === "number") {
 		setPublicConstantByName(
 			this,
 			"CROSS_HAIR_WIDTH",
@@ -401,10 +363,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.crossHairHeight &&
-		!isNaN(options.publicConstants.crossHairHeight)
-	) {
+	if (typeof options?.publicConstants?.crossHairHeight === "number") {
 		setPublicConstantByName(
 			this,
 			"CROSS_HAIR_HEIGHT",
@@ -412,22 +371,14 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	// if (
-	// 	options?.publicConstants?.useFastAlgorithm &&
-	// 	!isNaN(options.publicConstants.useFastAlgorithm)
-	// ) {
-	// 	setPublicConstantByName(
-	// 		this,
-	// 		"USE_FAST_ALGORITHM",
-	// 		options.publicConstants.useFastAlgorithm
-	// 	);
-	// }
-
-	if (typeof options?.publicConstants?.useVerticalArrOnResize === "boolean") {
+	if (
+		typeof options?.publicConstants?.shrinkToFit === "number" &&
+		options?.publicConstants?.shrinkToFit <= 10
+	) {
 		setPublicConstantByName(
 			this,
-			"USE_VERTICAL_ARR_ON_RESIZE",
-			options.publicConstants.useVerticalArrOnResize
+			"SHRINK_TO_FIT",
+			options.publicConstants.shrinkToFit
 		);
 	}
 

@@ -83,11 +83,7 @@ export const resizeItem = async function (index, width, height) {
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged, resized;
-	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		({ arranged, resized } = await arrangeMove(this, affectedItems));
-	} else {
-		({ arranged, resized } = await arrangeMove(this, affectedItems));
-	}
+	({ arranged, resized } = await arrangeMove(this, affectedItems));
 
 	setPositionData(this, mpd);
 
@@ -155,11 +151,7 @@ export const resizeItemDemo = async function (index, width, height) {
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
-	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		({ arranged } = await arrangeMove(this, affectedItems));
-	} else {
-		({ arranged } = await arrangeMove(this, affectedItems));
-	}
+	({ arranged } = await arrangeMove(this, affectedItems));
 
 	positionArranged(this, arranged);
 };

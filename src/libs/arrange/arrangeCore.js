@@ -31,6 +31,7 @@ import getPrivateConstants, {
 	getWidth,
 	getDefinedMinHeightAndWidth,
 } from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getItemsInWorkSpace,
 	rectSortX,
@@ -335,6 +336,7 @@ export const arrange = async (
 	const mpd = getModifiedPositionData(context);
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
 
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
@@ -369,7 +371,8 @@ export const arrange = async (
 				oRect,
 				tempAItem,
 				privateConstants.MARGIN,
-				privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH
+				privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH,
+				publicConstants.SHRINK_TO_FIT
 			);
 			if (
 				// oRect.x2 - oRect.x1 >= tempAItem.mWidth &&

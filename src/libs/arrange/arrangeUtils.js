@@ -333,7 +333,8 @@ export const getSizeTest = (
 	suspect,
 	rect,
 	MARGIN,
-	DEFINED_MIN_HEIGHT_AND_WIDTH
+	DEFINED_MIN_HEIGHT_AND_WIDTH,
+	SHRINK_TO_FIT
 ) => {
 	// const h1 = getHypotenuseSquared(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
 	const h1 = rect.mWidth * rect.mWidth + rect.mHeight * rect.mHeight;
@@ -352,7 +353,11 @@ export const getSizeTest = (
 		return true;
 	}
 
-	const THRESHOLD = 10;
+	if (!SHRINK_TO_FIT) {
+		return;
+	}
+
+	const THRESHOLD = SHRINK_TO_FIT;
 
 	let match1 = { width: 0, height: 0 };
 	let match2 = { width: 0, height: 0 };
