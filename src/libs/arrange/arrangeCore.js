@@ -65,19 +65,13 @@ import {
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
-	// const res = { integrateTop: false, integrateBottom: false };
 
 	const rt = getTree(context, "rt");
 
 	if (topWorkSpace) {
 		topWSItems = getItemsInWorkSpace(context, topWorkSpace);
 		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
-
-		// if (sweepRes < topWorkSpace.y2) {
 		topWorkSpace.y1 = sweepRes;
-
-		// res.integrateTop = true;
-		// }
 	}
 
 	if (bottomWorkSpace) {
@@ -89,14 +83,8 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			rt
 		);
 
-		// if (sweepRes > bottomWorkSpace.y1) {
 		bottomWorkSpace.y2 = sweepRes;
-
-		// res.integrateBottom = true;
-		// }
 	}
-
-	// return res;
 };
 
 export const sweepLineTop = (context, area, items, rt) => {
@@ -374,28 +362,11 @@ export const arrange = async (
 				privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH,
 				publicConstants.SHRINK_TO_FIT
 			);
-			if (
-				// oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
-				// oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
-				sizeTest1 &&
-				d1 < MIN_CLOSEST
-			) {
+			if (sizeTest1 && d1 < MIN_CLOSEST) {
 				MIN_CLOSEST = d1;
 				pm = overlappedRects[i];
 				match = typeof sizeTest1 === "object" ? sizeTest1 : undefined;
 			}
-
-			// const d = getDistanceForTest(oRect, tempOItem);
-			// const sizeTest = getSizeTest(oRect, tempOItem);
-			// if (
-			// 	oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
-			// 	oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
-			// 	sizeTest &&
-			// 	d < MIN_CLOSEST
-			// ) {
-			// 	MIN_CLOSEST = d;
-			// 	pm = overlappedRects[i];
-			// }
 		}
 
 		if (!pm) {

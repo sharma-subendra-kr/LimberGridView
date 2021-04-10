@@ -37,20 +37,19 @@ import {
 	getItemsInWorkSpace,
 	getItemsBelowBottomWorkSpace,
 	shiftItemsDown,
-	// getResizeWSItemsDetail,
 } from "./arrangeUtils";
 
-import {
-	// printUnmergedFreeRects,
-	// printMergedFreeRects,
-	// printResultStackRects,
-	// printStackRects,
-	// printMergedTempRects,
-	printStackTopRect,
-	// printStackTopAdjRect,
-	// printMergedRect,
-	// printAdjRect,
-} from "../debug/debug";
+// import {
+// printUnmergedFreeRects,
+// printMergedFreeRects,
+// printResultStackRects,
+// printStackRects,
+// printMergedTempRects,
+// printStackTopRect,
+// printStackTopAdjRect,
+// printMergedRect,
+// printAdjRect,
+// } from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
 export const arrangeMove = async (
@@ -113,12 +112,8 @@ export const arrangeMove = async (
 	// printStackTopRect(context, bottomWorkSpace);
 	// debugger;
 
-	// if (shrinkRes.integrateTop) {
 	combinedWorkSpaceRect.y1 = topWorkSpace.y1;
-	// }
-	// if (shrinkRes.integrateBottom) {
 	combinedWorkSpaceRect.y2 = bottomWorkSpace.y2;
-	// }
 
 	// printStackTopRect(context, combinedWorkSpaceRect);
 	// debugger;
@@ -155,11 +150,6 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		// if (combinedWorkSpaceRect.y !== 0) {
-		// 	combinedWorkSpaceRect.y1 += privateConstants.MARGIN;
-		// }
-		// combinedWorkSpaceRect.y2 -= privateConstants.MARGIN;
-
 		const { rt: freeRects } = sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
@@ -200,11 +190,6 @@ export const arrangeMove = async (
 		itemsInCombinedWorkSpace = [...itemsInCombinedWorkSpace, ..._arrangedArr];
 
 		arrangedCount += _arrangedArr.length;
-
-		// if (combinedWorkSpaceRect.y !== 0) {
-		// 	combinedWorkSpaceRect.y1 -= privateConstants.MARGIN;
-		// }
-		// combinedWorkSpaceRect.y2 += privateConstants.MARGIN;
 
 		if (arrangedCount !== iToALen) {
 			// resize workSpace and push bottom workspace down
@@ -300,12 +285,9 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 		0,
 		privateConstants.WIDTH
 	);
-	// const shrinkRes = shrinkTopBottomWS(context, topWorkSpace);
-	shrinkTopBottomWS(context, topWorkSpace);
 
-	// if (shrinkRes.integrateTop) {
+	shrinkTopBottomWS(context, topWorkSpace);
 	combinedWorkSpaceRect.y1 = topWorkSpace.y1;
-	// }
 
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
 		context,
