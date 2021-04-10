@@ -155,6 +155,8 @@ import {
 			latchMovedItem: boolean
 			animateMovedItem: boolean
 			animateTime: number
+
+			shrinkToFit: number
 		}
 	}
 	*/
@@ -500,8 +502,7 @@ LimberGridView.prototype.initializeStore = function () {
 				CROSS_HAIR_HEIGHT: 500,
 
 				// Algorithm
-				// USE_FAST_ALGORITHM: true,
-				USE_VERTICAL_ARR_ON_RESIZE: false,
+				SHRINK_TO_FIT: 10,
 			},
 			messages: {
 				latchedMoveDemo1:
@@ -580,13 +581,13 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 
 /**
  * @method
- * @name LimberGridView#setUseVerticalArrOnResize
- * @description Call this function to change USE_VERTICAL_ARR_ON_RESIZE during runtime.
- * @param {boolean} flag Boolean true or false. To use or not to use vertical arrangements on resize.
+ * @name LimberGridView#setShrinkToFit
+ * @description Call this function to change SHRINK_TO_FIT during runtime.
+ * @param {number} Value indicates up to a certain percentage an item can be shrinked. Specify 0 if no shrink is desired.
  */
-LimberGridView.prototype.setUseVerticalArrOnResize = function (flag) {
-	if (typeof flag === "boolean") {
-		setPublicConstantByName(this, "USE_VERTICAL_ARR_ON_RESIZE", flag);
+LimberGridView.prototype.setShrinkToFit = function (value) {
+	if (typeof value === "number" && value <= 10) {
+		setPublicConstantByName(this, "SHRINK_TO_FIT", value);
 	}
 };
 

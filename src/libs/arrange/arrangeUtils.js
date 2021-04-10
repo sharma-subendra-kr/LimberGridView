@@ -35,11 +35,7 @@ import {
 	doRectsOverlapOrTouchSingleItemMargin,
 	isRectInsideSingleItemMargin,
 } from "../utils/items";
-import {
-	// getDistanceBetnPts,
-	getHypotenuseSquared,
-	getMidPoint,
-} from "../geometry/geometry";
+import { getHypotenuseSquared } from "../geometry/geometry";
 
 export const getMinMaxXY = (
 	context,
@@ -98,49 +94,37 @@ export const getMinMaxXY = (
 
 export const getBottomMax = (context, minX, maxX) => {
 	const pd = getPositionData(context);
-	// const mpd = getModifiedPositionData(context);
 
 	let max = 0;
 	let item;
-	// let mItem;
 	const len = pd.length;
 
 	for (let i = 0; i < len; i++) {
 		item = pd[i];
-		// mItem = mpd[i];
 		if (pd[i].y2 > max && item.mX < maxX && item.mX2 > minX) {
 			max = pd[i].y2;
 		}
-
-		// if (mpd[i].y2 > max && mItem.mX < maxX && mItem.mX2 > minX) {
-		// 	max = mpd[i].y2;
-		// }
 	}
 
 	return max;
 };
 
 export const getTopBottomWS = (context, workSpaceRect, minX, maxX) => {
-	let topWorkSpace, bottomWorkSpace;
-	// if (workSpaceRect.y1 > 0) {
-	topWorkSpace = {
+	const topWorkSpace = {
 		x1: minX,
 		x2: maxX,
 		y1: 0,
 		y2: workSpaceRect.y1 < 0 ? 0 : workSpaceRect.y1,
 	};
-	// }
 
 	const bottomMax = getBottomMax(context, minX, maxX);
 
-	// if (bottomMax > workSpaceRect.y2) {
-	bottomWorkSpace = {
+	const bottomWorkSpace = {
 		x1: minX,
 		x2: maxX,
 		y1: workSpaceRect.y2,
 		y2: bottomMax > workSpaceRect.y2 ? bottomMax : workSpaceRect.y2,
 	};
-	// }
 
 	return { topWorkSpace, bottomWorkSpace };
 };
@@ -317,35 +301,100 @@ export const rectSortHypotenusSquared = (pd) => {
 		);
 };
 
-// export const doOverlapHelper = function (suspect, rect) {
-// 	if (doRectsOverlapWithMargin(suspect, rect)) {
-// 		return true;
-// 	}
-// };
-
 export const shouldFilterRect = function (suspect, rect) {
 	if (isRectInside(suspect, rect) && suspect !== rect) {
 		return true;
 	}
 };
 
-export const getSizeTest = (suspect, rect, threshold = 70) => {
-	const h1 = getHypotenuseSquared(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
+export const getSizeTest = (
+	suspect,
+	rect,
+	MARGIN,
+	DEFINED_MIN_HEIGHT_AND_WIDTH,
+	SHRINK_TO_FIT
+) => {
+	const h1 = rect.mWidth * rect.mWidth + rect.mHeight * rect.mHeight;
 	const h2 = getHypotenuseSquared(
 		suspect.x1,
 		suspect.y1,
 		suspect.x2,
 		suspect.y2
 	);
-	if (h1 < h2 && (h1 / h2) * 100 >= threshold) {
+
+	if (
+		h1 < h2 &&
+		suspect.x2 - suspect.x1 >= rect.mWidth &&
+		suspect.y2 - suspect.y1 >= rect.mHeight
+	) {
 		return true;
+	}
+
+	if (!SHRINK_TO_FIT) {
+		return;
+	}
+
+	const THRESHOLD = SHRINK_TO_FIT;
+
+	let match1 = { width: 0, height: 0 };
+	let match2 = { width: 0, height: 0 };
+
+	const aw = rect.mWidth;
+	const bw = suspect.x2 - suspect.x1;
+	const xw = (100 * aw - 100 * bw) / aw;
+	if (xw <= THRESHOLD) {
+		const factor = (suspect.x2 - suspect.x1) / rect.mWidth;
+		const h = rect.mHeight * factor;
+		if (h <= suspect.y2 - suspect.y1) {
+			match1 = {
+				width: suspect.x2 - suspect.x1 - MARGIN * 2,
+				height: h - MARGIN * 2,
+			};
+		}
+	}
+
+	const ah = rect.mHeight;
+	const bh = suspect.y2 - suspect.y1;
+	const xh = (100 * ah - 100 * bh) / ah;
+	if (xh <= THRESHOLD) {
+		const factor = (suspect.y2 - suspect.y1) / rect.mHeight;
+		const w = factor * rect.mWidth;
+		if (w <= suspect.x2 - suspect.x1) {
+			match2 = {
+				width: w - MARGIN * 2,
+				height: suspect.y2 - suspect.y1 - MARGIN * 2,
+			};
+		}
+	}
+
+	if (
+		match1.width < DEFINED_MIN_HEIGHT_AND_WIDTH ||
+		match1.height < DEFINED_MIN_HEIGHT_AND_WIDTH
+	) {
+		match1.width = 0;
+		match1.height = 0;
+	}
+
+	if (
+		match2.width < DEFINED_MIN_HEIGHT_AND_WIDTH ||
+		match2.height < DEFINED_MIN_HEIGHT_AND_WIDTH
+	) {
+		match2.width = 0;
+		match2.height = 0;
+	}
+
+	const m1Hypo = match1.width * match1.width + match1.height * match1.height;
+	const m2Hypo = match2.width * match2.width + match2.height * match2.height;
+
+	if (m1Hypo < m2Hypo && match1.width !== 0) {
+		return match1.width > 0 ? match1 : undefined;
+	} else {
+		return match2.width > 0 ? match2 : undefined;
 	}
 };
 
 export const getDistanceForTest = (suspect, rect) => {
-	const p1 = getMidPoint(suspect.x1, suspect.y1, suspect.x2, suspect.y2);
-	const p2 = getMidPoint(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
-	return getHypotenuseSquared(p1.x, p1.y, p2.x, p2.y);
+	return getHypotenuseSquared(suspect.x1, suspect.y1, rect.mX1, rect.mY1);
 };
 
 export const shiftItemsDown = (context, items, height) => {

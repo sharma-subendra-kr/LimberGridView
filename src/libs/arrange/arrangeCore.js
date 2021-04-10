@@ -31,6 +31,7 @@ import getPrivateConstants, {
 	getWidth,
 	getDefinedMinHeightAndWidth,
 } from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getItemsInWorkSpace,
 	rectSortX,
@@ -64,19 +65,13 @@ import {
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 	let topWSItems, bottomWSItems;
-	// const res = { integrateTop: false, integrateBottom: false };
 
 	const rt = getTree(context, "rt");
 
 	if (topWorkSpace) {
 		topWSItems = getItemsInWorkSpace(context, topWorkSpace);
 		const sweepRes = sweepLineTop(context, topWorkSpace, topWSItems, rt);
-
-		// if (sweepRes < topWorkSpace.y2) {
 		topWorkSpace.y1 = sweepRes;
-
-		// res.integrateTop = true;
-		// }
 	}
 
 	if (bottomWorkSpace) {
@@ -88,14 +83,8 @@ export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
 			rt
 		);
 
-		// if (sweepRes > bottomWorkSpace.y1) {
 		bottomWorkSpace.y2 = sweepRes;
-
-		// res.integrateBottom = true;
-		// }
 	}
-
-	// return res;
 };
 
 export const sweepLineTop = (context, area, items, rt) => {
@@ -335,9 +324,11 @@ export const arrange = async (
 	const mpd = getModifiedPositionData(context);
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
+	const publicConstants = getPublicConstants(context);
 
 	const arranged = {};
 	const itemsInBottomWorkSpace = {};
+	const resized = {};
 
 	let overlappedRects = mergedRectsRt.getData();
 	itemsToArrange.sort(rectSortHypotenusSquared(pd));
@@ -356,6 +347,7 @@ export const arrange = async (
 
 		let pm;
 		let MIN_CLOSEST = Number.MAX_SAFE_INTEGER;
+		let match;
 		let tempAItem = aItem;
 		const tempOItem = oItem || { mX1: 0, mY1: 0, mX2: 0, mY2: 0 };
 
@@ -363,32 +355,28 @@ export const arrange = async (
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i];
 			const d1 = getDistanceForTest(oRect, tempOItem);
-			const sizeTest1 = getSizeTest(oRect, tempOItem, 0);
-			if (
-				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
-				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
-				sizeTest1 &&
-				d1 < MIN_CLOSEST
-			) {
+			const sizeTest1 = getSizeTest(
+				oRect,
+				tempAItem,
+				privateConstants.MARGIN,
+				privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH,
+				publicConstants.SHRINK_TO_FIT
+			);
+			if (sizeTest1 && d1 < MIN_CLOSEST) {
 				MIN_CLOSEST = d1;
 				pm = overlappedRects[i];
-			}
-
-			const d = getDistanceForTest(oRect, tempOItem);
-			const sizeTest = getSizeTest(oRect, tempOItem);
-			if (
-				oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
-				oRect.y2 - oRect.y1 >= tempAItem.mHeight &&
-				sizeTest &&
-				d < MIN_CLOSEST
-			) {
-				MIN_CLOSEST = d;
-				pm = overlappedRects[i];
+				match = typeof sizeTest1 === "object" ? sizeTest1 : undefined;
 			}
 		}
 
 		if (!pm) {
 			continue;
+		}
+
+		if (match) {
+			aItem.width = match.width;
+			aItem.height = match.height;
+			resized[top] = true;
 		}
 
 		aItem.x = pm.x1 + privateConstants.MARGIN;
@@ -447,5 +435,6 @@ export const arrange = async (
 	return {
 		arranged,
 		itemsInBottomWorkSpace,
+		resized,
 	};
 };

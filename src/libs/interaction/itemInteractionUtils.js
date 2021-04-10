@@ -209,9 +209,12 @@ export const resetDemoUIChanges = (context) => {
 	const e = getElements(context);
 
 	const len = pd.length;
-	for (var i = 0; i < len; i++) {
-		e.$limberGridViewItems[i].style.transform =
-			"translate(" + pd[i].x1 + "px, " + pd[i].y1 + "px)";
+	for (let i = 0; i < len; i++) {
+		e.$limberGridViewItems[
+			i
+		].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
+		e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
+		e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
 	}
 };
 
@@ -446,4 +449,18 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 		wToAdjDirection,
 		latchPoint,
 	};
+};
+
+export const positionArranged = (context, arranged) => {
+	const e = getElements(context);
+
+	for (const key in arranged) {
+		const item = arranged[key];
+		e.$limberGridViewItems[
+			key
+		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+
+		e.$limberGridViewItems[key].style.width = `${item.width}px`;
+		e.$limberGridViewItems[key].style.height = `${item.height}px`;
+	}
 };
