@@ -365,7 +365,12 @@ export const arrange = async (
 		for (let i = 0; i < oLen; i++) {
 			const oRect = overlappedRects[i];
 			const d1 = getDistanceForTest(oRect, tempOItem);
-			const sizeTest1 = getSizeTest(oRect, tempAItem, privateConstants.MARGIN);
+			const sizeTest1 = getSizeTest(
+				oRect,
+				tempAItem,
+				privateConstants.MARGIN,
+				privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH
+			);
 			if (
 				// oRect.x2 - oRect.x1 >= tempAItem.mWidth &&
 				// oRect.y2 - oRect.y1 >= tempAItem.mHeight &&

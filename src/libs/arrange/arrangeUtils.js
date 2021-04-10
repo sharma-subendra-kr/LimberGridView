@@ -329,7 +329,12 @@ export const shouldFilterRect = function (suspect, rect) {
 	}
 };
 
-export const getSizeTest = (suspect, rect, MARGIN) => {
+export const getSizeTest = (
+	suspect,
+	rect,
+	MARGIN,
+	DEFINED_MIN_HEIGHT_AND_WIDTH
+) => {
 	// const h1 = getHypotenuseSquared(rect.mX1, rect.mY1, rect.mX2, rect.mY2);
 	const h1 = rect.mWidth * rect.mWidth + rect.mHeight * rect.mHeight;
 	const h2 = getHypotenuseSquared(
@@ -347,7 +352,7 @@ export const getSizeTest = (suspect, rect, MARGIN) => {
 		return true;
 	}
 
-	const THRESHOLD = 20;
+	const THRESHOLD = 10;
 
 	let match1 = { width: 0, height: 0 };
 	let match2 = { width: 0, height: 0 };
@@ -356,7 +361,9 @@ export const getSizeTest = (suspect, rect, MARGIN) => {
 	const bw = suspect.x2 - suspect.x1;
 	const xw = (100 * aw - 100 * bw) / aw;
 	if (xw <= THRESHOLD) {
-		const h = (100 * rect.mHeight - rect.mHeight * xw) / 100;
+		const factor = (suspect.x2 - suspect.x1) / rect.mWidth;
+		const h = rect.mHeight * factor;
+		// const h = (100 * rect.mHeight - rect.mHeight * xw) / 100;
 		if (h <= suspect.y2 - suspect.y1) {
 			match1 = {
 				width: suspect.x2 - suspect.x1 - MARGIN * 2,
@@ -369,13 +376,31 @@ export const getSizeTest = (suspect, rect, MARGIN) => {
 	const bh = suspect.y2 - suspect.y1;
 	const xh = (100 * ah - 100 * bh) / ah;
 	if (xh <= THRESHOLD) {
-		const w = (100 * rect.mWidth - rect.mWidth * xh) / 100;
+		const factor = (suspect.y2 - suspect.y1) / rect.mHeight;
+		const w = factor * rect.mWidth;
+		// const w = (100 * rect.mWidth - rect.mWidth * xh) / 100;
 		if (w <= suspect.x2 - suspect.x1) {
 			match2 = {
 				width: w - MARGIN * 2,
 				height: suspect.y2 - suspect.y1 - MARGIN * 2,
 			};
 		}
+	}
+
+	if (
+		match1.width < DEFINED_MIN_HEIGHT_AND_WIDTH ||
+		match1.height < DEFINED_MIN_HEIGHT_AND_WIDTH
+	) {
+		match1.width = 0;
+		match1.height = 0;
+	}
+
+	if (
+		match2.width < DEFINED_MIN_HEIGHT_AND_WIDTH ||
+		match2.height < DEFINED_MIN_HEIGHT_AND_WIDTH
+	) {
+		match2.width = 0;
+		match2.height = 0;
 	}
 
 	const m1Hypo = match1.width * match1.width + match1.height * match1.height;
