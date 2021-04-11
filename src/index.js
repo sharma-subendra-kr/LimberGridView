@@ -83,6 +83,8 @@ import {
 	initRender,
 } from "./initializers/initializers";
 import getUndoRedo from "./store/variables/undoRedo";
+import { resetDemoUIChanges } from "./libs/interaction/itemInteractionUtils";
+import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -639,13 +641,15 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
 LimberGridView.prototype.undo = function () {
 	const pd = getUndoRedo(this).undo();
 	if (pd) {
-		setPositionData(this, pd);
-		setTimeout(
-			async function () {
-				await init(this, false, false);
-				render(this, false);
-			}.bind(this)
+		const rerenderItems = getItemsToRerenderOnUndoRedo(
+			getPositionData(this),
+			pd
 		);
+		setPositionData(this, pd);
+		resetDemoUIChanges(this);
+		for (const item in rerenderItems) {
+			this.renderItem(item);
+		}
 	}
 };
 
@@ -657,13 +661,15 @@ LimberGridView.prototype.undo = function () {
 LimberGridView.prototype.redo = function () {
 	const pd = getUndoRedo(this).redo();
 	if (pd) {
-		setPositionData(this, pd);
-		setTimeout(
-			async function () {
-				await init(this, false, false);
-				render(this, false);
-			}.bind(this)
+		const rerenderItems = getItemsToRerenderOnUndoRedo(
+			getPositionData(this),
+			pd
 		);
+		setPositionData(this, pd);
+		resetDemoUIChanges(this);
+		for (const item in rerenderItems) {
+			this.renderItem(item);
+		}
 	}
 };
 

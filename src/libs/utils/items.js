@@ -37,13 +37,6 @@ export const enhanceItemHW = (item) => {
 	item.height = item.y2 - item.y1;
 };
 
-// export const enhancePositionData = (pd) => {
-// 	const len = pd.length;
-// 	for (let i = 0; i < len; i++) {
-// 		enhanceItem(pd[i]);
-// 	}
-// };
-
 export const sanitizeNumberFloor = (num) => {
 	const decimalPart = num % 1;
 	const integerPart = Math.trunc(num);
@@ -208,4 +201,23 @@ export const isValidRectHW = function (rect) {
 		return false;
 	}
 	return true;
+};
+
+export const getItemsToRerenderOnUndoRedo = function (cpd, npd) {
+	// cpd: current position data
+	// npd: new position data
+
+	const changed = {};
+	for (const [index] of cpd.entries()) {
+		if (
+			cpd[index].x1 !== npd[index].x1 ||
+			cpd[index].x2 !== npd[index].x2 ||
+			cpd[index].y1 !== npd[index].y1 ||
+			cpd[index].y2 !== npd[index].y2
+		) {
+			changed[index] = true;
+		}
+	}
+
+	return changed;
 };
