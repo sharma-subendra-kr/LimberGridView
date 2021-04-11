@@ -262,6 +262,16 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
+	if (
+		typeof options?.publicConstants?.showBottomLeftResizeGuide === "boolean"
+	) {
+		setPublicConstantByName(
+			this,
+			"SHOW_BOTTOM_LEFT_RESIZE_GUIDE",
+			options.publicConstants.showBottomLeftResizeGuide
+		);
+	}
+
 	if (typeof options?.publicConstants?.autoScrollDistance === "number") {
 		setPublicConstantByName(
 			this,

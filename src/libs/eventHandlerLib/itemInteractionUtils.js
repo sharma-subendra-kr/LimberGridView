@@ -74,6 +74,17 @@ export const getUserActionData = (context, event) => {
 			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
 	};
 
+	const resizeUIBoxBL = {
+		x: -publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
+		y:
+			event.currentTarget.offsetHeight -
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
+		width: publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
+		height:
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
+			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
+	};
+
 	if (
 		options.itemMouseDownMoveCheck &&
 		options.itemMouseDownMoveCheck(
@@ -108,12 +119,31 @@ export const getUserActionData = (context, event) => {
 			Y,
 			{ ...pd[itemIndex] },
 			itemIndex,
-			event.target
+			event.target,
+			"bottomRight"
 		)
 	) {
 		// call developer defined function to check if mousedown for RESIZE is in a valid place
 		return {
 			type: "resize",
+			itemIndex: event.currentTarget.attributes["data-index"].value,
+		};
+	}
+
+	if (
+		options.itemMouseDownResizeCheck &&
+		options.itemMouseDownResizeCheck(
+			X,
+			Y,
+			{ ...pd[itemIndex] },
+			itemIndex,
+			event.target,
+			"bottomLeft"
+		)
+	) {
+		// call developer defined function to check if mousedown for RESIZE is in a valid place
+		return {
+			type: "resizeBottomLeft",
 			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 	}
@@ -127,6 +157,19 @@ export const getUserActionData = (context, event) => {
 	) {
 		return {
 			type: "resize",
+			itemIndex: event.currentTarget.attributes["data-index"].value,
+		};
+	}
+
+	if (
+		X >= resizeUIBoxBL.x &&
+		X <= resizeUIBoxBL.width &&
+		Y >= resizeUIBoxBL.y &&
+		Y <= resizeUIBoxBL.y + resizeUIBoxBL.height &&
+		!options.itemMouseDownResizeCheck
+	) {
+		return {
+			type: "resizeBottomLeft",
 			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 	}

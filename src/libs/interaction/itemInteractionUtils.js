@@ -100,7 +100,14 @@ export const getMoveAffectedItems = (context, item, index) => {
 	return affectedArr;
 };
 
-export const resizeItemInitialChecks = (context, index, width, height) => {
+export const resizeItemInitialChecks = (
+	context,
+	index,
+	x,
+	y,
+	width,
+	height
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -109,11 +116,20 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 		throw "Index out of bounds.";
 	}
 
+	if (typeof x !== "number" || typeof y !== "number") {
+		throw "x or y is not a number.";
+	}
+
+	if (x < privateConstants.MARGIN || y < privateConstants.MARGIN) {
+		// falls outside
+		throw "Left edges falls outside the grid area.";
+	}
+
 	if (typeof width !== "number" || typeof height !== "number") {
 		throw "Width or Height is not a number.";
 	}
 
-	if (pd[index].x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
+	if (x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
 		throw "Right edges falls outside the grid area.";
 	}
@@ -329,7 +345,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	};
 };
 
-export const resizeSizeAdjust = (context, width, height, index) => {
+export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 

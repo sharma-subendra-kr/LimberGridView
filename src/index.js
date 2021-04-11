@@ -103,8 +103,8 @@ import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
 		reRenderOnResize : true, 																									// true/false (optional default true)
 		isMobileCheck: function
 		pseudoElementContainer: string or element
-		itemMouseDownMoveCheck: function 																					// x clicked/touched, y clicked/touched, item, index
-		itemMouseDownResizeCheck: function 																				// x clicked/touched, y clicked/touched, item, index
+		itemMouseDownMoveCheck: function 																					// x clicked/touched, y clicked/touched, item, index, event.target, which
+		itemMouseDownResizeCheck: function 																				// x clicked/touched, y clicked/touched, item, index, event.target, which
 	
 		getArrangeTime: function 																									// returns the total arrange time
 
@@ -144,6 +144,7 @@ import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
 			moveGuideRadius: number,
 			resizeSquareGuideLength: number
 			resizeSquareGuideBorderWidth: number
+			showBottomLeftResizeGuide: boolean
 			autoScrollDistance: number
 			autoScrollPoint: number
 			moveOrResizeHeightIncrements: number
@@ -483,6 +484,7 @@ LimberGridView.prototype.initializeStore = function () {
 				MOVE_GUIDE_RADIUS: 10,
 				RESIZE_SQUARE_GUIDE_LENGTH: 10,
 				RESIZE_SQUARE_GUIDE_BORDER_WIDTH: 3,
+				SHOW_BOTTOM_LEFT_RESIZE_GUIDE: false,
 				AUTO_SCROLL_DISTANCE: 50,
 				AUTO_SCROLL_POINT: 50,
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,

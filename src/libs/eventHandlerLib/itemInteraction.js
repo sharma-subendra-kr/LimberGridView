@@ -95,6 +95,8 @@ export const onItemMouseDown = function (event) {
 
 		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
 		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
+		iiv.userActionData.itemX2 = pd[iiv.userActionData.itemIndex].x2;
+		iiv.userActionData.itemY2 = pd[iiv.userActionData.itemIndex].y2;
 
 		loadResizingState(this, iiv.userActionData);
 
@@ -155,6 +157,8 @@ export const onItemTouchStart = function (event) {
 
 		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
 		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
+		iiv.userActionData.itemX2 = pd[iiv.userActionData.itemIndex].x2;
+		iiv.userActionData.itemY2 = pd[iiv.userActionData.itemIndex].y2;
 
 		loadResizingState(this, iiv.userActionData);
 
@@ -167,21 +171,21 @@ export const onItemTouchStart = function (event) {
 export const mouseDownCheck = function (event) {
 	const iiv = getItemInteractionVars(this);
 
-	if (iiv.mouseDownCancel === false) {
-		iiv.mouseDownTimerComplete = true;
+	// if (iiv.mouseDownCancel === false) {
+	iiv.mouseDownTimerComplete = true;
 
-		loadMoveState(this, iiv.userActionData, event);
-	}
+	loadMoveState(this, iiv.userActionData, event);
+	// }
 };
 
 export const tapHoldCheck = function (event) {
 	const iiv = getItemInteractionVars(this);
 
-	if (iiv.touchHoldCancel === false) {
-		iiv.touchHoldTimerComplete = true;
+	// if (iiv.touchHoldCancel === false) {
+	iiv.touchHoldTimerComplete = true;
 
-		loadMoveState(this, iiv.userActionData, event);
-	}
+	loadMoveState(this, iiv.userActionData, event);
+	// }
 };
 
 export const onItemMouseMove = function (event) {
@@ -222,12 +226,26 @@ export const onItemMouseMove = function (event) {
 
 			const x = iiv.userActionData.itemX;
 			const y = iiv.userActionData.itemY;
+			console.log("event.offsetY", event.offsetY);
 
-			const newWidth =
-				event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
-			const newHeight =
-				event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
+			let newX1, newY1, newWidth, newHeight;
+			if (iiv.userActionData.type === "resize") {
+				newX1 = x;
+				newY1 = y;
+				newWidth =
+					event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
+				newHeight =
+					event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
+			} else {
+				// resizeBottomLeft
+				newX1 = event.offsetX + scrollLeft - privateConstants.PADDING_LEFT;
+				newY1 = event.offsetY + scrollTop - privateConstants.PADDING_TOP;
+				newWidth = iiv.userActionData.itemX2 - newX1;
+				newHeight = iiv.userActionData.itemY2 - newY1;
+			}
 
+			iiv.userActionData.newX1 = newX1;
+			iiv.userActionData.newY1 = newY1;
 			iiv.userActionData.newWidth = newWidth;
 			iiv.userActionData.newHeight = newHeight;
 
@@ -235,6 +253,7 @@ export const onItemMouseMove = function (event) {
 			adjustHeight(this, yMousePosition);
 
 			if (newWidth > 0 && newHeight > 0) {
+				e.$limberGridViewPseudoItem.style.transform = `translate(${newX1}px, ${newY1}px)`;
 				e.$limberGridViewPseudoItem.style.width = newWidth + "px";
 				e.$limberGridViewPseudoItem.style.height = newHeight + "px";
 				e.$limberGridViewPseudoItem.setAttribute(
@@ -247,6 +266,8 @@ export const onItemMouseMove = function (event) {
 				showResizeDemo.bind(
 					this,
 					iiv.userActionData.itemIndex,
+					newX1,
+					newY1,
 					newWidth,
 					newHeight
 				),
@@ -376,6 +397,8 @@ export const onItemTouchMove = function (event) {
 						showResizeDemo.bind(
 							this,
 							iiv.userActionData.itemIndex,
+							0,
+							0,
 							newWidth,
 							newHeight
 						),
@@ -424,12 +447,16 @@ export const onItemMouseUp = async function (event) {
 			}
 		} else {
 			try {
-				var newWidth = iiv.userActionData.newWidth;
-				var newHeight = iiv.userActionData.newHeight;
+				const newX1 = iiv.userActionData.newX1;
+				const newY1 = iiv.userActionData.newY1;
+				const newWidth = iiv.userActionData.newWidth;
+				const newHeight = iiv.userActionData.newHeight;
 
 				await resizeItem.call(
 					this,
 					iiv.userActionData.itemIndex,
+					newX1,
+					newY1,
 					newWidth,
 					newHeight
 				);
@@ -573,11 +600,11 @@ export const showMoveDemo = async function (index, mousePosition) {
 	}
 };
 
-export const showResizeDemo = async function (index, width, height) {
+export const showResizeDemo = async function (index, x, y, width, height) {
 	const e = getElements(this);
 
 	try {
-		await resizeItemDemo.call(this, index, width, height);
+		await resizeItemDemo.call(this, index, x, y, width, height);
 		e.$limberGridViewPseudoItem.classList.add(
 			"limber-grid-view-pseudo-item-resize-allow"
 		);
