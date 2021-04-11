@@ -350,12 +350,12 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 	const privateConstants = getPrivateConstants(context);
 
 	const len = pd.length;
-	const tlpt = { x: pd[index].x1, y: pd[index].y1 };
-	const trpt = { x: pd[index].x1 + width, y: pd[index].y1 };
-	const brpt = { x: pd[index].x1 + width, y: pd[index].y1 + height };
-	const blpt = { x: pd[index].x1, y: pd[index].y1 + height };
+	const tlpt = { x: x, y: y };
+	const trpt = { x: x + width, y: y };
+	const brpt = { x: x + width, y: y + height };
+	const blpt = { x: x, y: y + height };
 
-	let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
+	let tl, bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
 	let tdistance = Number.MAX_SAFE_INTEGER;
@@ -373,6 +373,7 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 			continue;
 		}
 
+		tl = { x: pd[i].x1, y: pd[i].y1 };
 		bl = { x: pd[i].x1, y: pd[i].y2 };
 		br = { x: pd[i].x2, y: pd[i].y2 };
 		tr = { x: pd[i].x2, y: pd[i].y1 };
@@ -381,6 +382,9 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 		blptTobr = getDistanceBetnPts(br, blpt);
 		trptTobr = getDistanceBetnPts(br, trpt);
 		brptTotr = getDistanceBetnPts(tr, brpt);
+
+		blptTotl = getDistanceBetnPts(tl, blpt);
+		tlptTobl = getDistanceBetnPts(bl, tlpt);
 
 		if (
 			brptTobl < rdistance &&

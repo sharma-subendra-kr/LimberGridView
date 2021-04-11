@@ -85,7 +85,10 @@ export const onItemMouseDown = function (event) {
 		);
 
 		event.preventDefault();
-	} else if (iiv.userActionData.type === "resize") {
+	} else if (
+		iiv.userActionData.type === "resize" ||
+		iiv.userActionData.type === "resizeBottomLeft"
+	) {
 		iiv.mouseDownCancel = false;
 		iiv.mouseDownTimerComplete = true;
 
@@ -146,7 +149,10 @@ export const onItemTouchStart = function (event) {
 		);
 
 		event.preventDefault();
-	} else if (iiv.userActionData.type === "resize") {
+	} else if (
+		iiv.userActionData.type === "resize" ||
+		iiv.userActionData.type === "resizeBottomLeft"
+	) {
 		iiv.touchHoldCancel = false;
 		iiv.touchHoldTimerComplete = true;
 
@@ -171,21 +177,21 @@ export const onItemTouchStart = function (event) {
 export const mouseDownCheck = function (event) {
 	const iiv = getItemInteractionVars(this);
 
-	// if (iiv.mouseDownCancel === false) {
-	iiv.mouseDownTimerComplete = true;
+	if (iiv.mouseDownCancel === false) {
+		iiv.mouseDownTimerComplete = true;
 
-	loadMoveState(this, iiv.userActionData, event);
-	// }
+		loadMoveState(this, iiv.userActionData, event);
+	}
 };
 
 export const tapHoldCheck = function (event) {
 	const iiv = getItemInteractionVars(this);
 
-	// if (iiv.touchHoldCancel === false) {
-	iiv.touchHoldTimerComplete = true;
+	if (iiv.touchHoldCancel === false) {
+		iiv.touchHoldTimerComplete = true;
 
-	loadMoveState(this, iiv.userActionData, event);
-	// }
+		loadMoveState(this, iiv.userActionData, event);
+	}
 };
 
 export const onItemMouseMove = function (event) {
@@ -269,7 +275,8 @@ export const onItemMouseMove = function (event) {
 					newX1,
 					newY1,
 					newWidth,
-					newHeight
+					newHeight,
+					iiv.userActionData.type === "resize"
 				),
 				publicConstants.DEMO_WAIT_TIME
 			);
@@ -400,7 +407,8 @@ export const onItemTouchMove = function (event) {
 							0,
 							0,
 							newWidth,
-							newHeight
+							newHeight,
+							iiv.userActionData.type === "resize"
 						),
 						publicConstants.DEMO_WAIT_TIME
 					);
@@ -458,7 +466,8 @@ export const onItemMouseUp = async function (event) {
 					newX1,
 					newY1,
 					newWidth,
-					newHeight
+					newHeight,
+					iiv.userActionData.type === "resize"
 				);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
@@ -502,14 +511,19 @@ export const onItemTouchEnd = async function (event) {
 			}
 		} else {
 			try {
-				var newWidth = iiv.userActionData.newWidth;
-				var newHeight = iiv.userActionData.newHeight;
+				const newX1 = iiv.userActionData.newX1;
+				const newY1 = iiv.userActionData.newY1;
+				const newWidth = iiv.userActionData.newWidth;
+				const newHeight = iiv.userActionData.newHeight;
 
 				await resizeItem.call(
 					this,
 					iiv.userActionData.itemIndex,
+					newX1,
+					newY1,
 					newWidth,
-					newHeight
+					newHeight,
+					iiv.userActionData.type === "resize"
 				);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
@@ -600,11 +614,18 @@ export const showMoveDemo = async function (index, mousePosition) {
 	}
 };
 
-export const showResizeDemo = async function (index, x, y, width, height) {
+export const showResizeDemo = async function (
+	index,
+	x,
+	y,
+	width,
+	height,
+	forBottomRight
+) {
 	const e = getElements(this);
 
 	try {
-		await resizeItemDemo.call(this, index, x, y, width, height);
+		await resizeItemDemo.call(this, index, x, y, width, height, forBottomRight);
 		e.$limberGridViewPseudoItem.classList.add(
 			"limber-grid-view-pseudo-item-resize-allow"
 		);
