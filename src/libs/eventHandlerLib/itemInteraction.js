@@ -245,9 +245,10 @@ export const onItemMouseMove = function (event) {
 			} else {
 				// resizeBottomLeft
 				newX1 = event.offsetX + scrollLeft - privateConstants.PADDING_LEFT;
-				newY1 = event.offsetY + scrollTop - privateConstants.PADDING_TOP;
+				newY1 = y;
 				newWidth = iiv.userActionData.itemX2 - newX1;
-				newHeight = iiv.userActionData.itemY2 - newY1;
+				newHeight =
+					event.offsetY + scrollTop - privateConstants.PADDING_TOP - newY1;
 			}
 
 			iiv.userActionData.newX1 = newX1;

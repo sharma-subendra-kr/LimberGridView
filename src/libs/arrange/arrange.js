@@ -70,6 +70,7 @@ export const arrangeMove = async (
 		affectedItems,
 		undefined,
 		undefined,
+		undefined,
 		toY,
 		movedBottomY
 	);

@@ -40,6 +40,7 @@ import { getHypotenuseSquared } from "../geometry/geometry";
 export const getMinMaxXY = (
 	context,
 	affectedItems,
+	resizedLeftX,
 	resizedRightX,
 	resizedBottomY,
 	toY,
@@ -74,6 +75,8 @@ export const getMinMaxXY = (
 	if (resizedBottomY > maxY) maxY = resizedBottomY;
 
 	if (resizedRightX > maxX) maxX = resizedRightX;
+
+	if (resizedLeftX < minX) minX = resizedLeftX;
 
 	if (toY < minY) minY = toY;
 

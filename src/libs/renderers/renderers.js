@@ -96,7 +96,11 @@ export const render = function (context, scale = true) {
 	if (!isMobile(context)) {
 		let classList = "limber-grid-view-item";
 		if (options.editable === true) {
-			classList = "limber-grid-view-item limber-grid-view-item-editable";
+			classList = `limber-grid-view-item limber-grid-view-item-editable ${
+				publicConstants.SHOW_BOTTOM_LEFT_RESIZE_GUIDE
+					? "limber-grid-view-item-editable-left-resize"
+					: ""
+			}`;
 		}
 
 		for (let i = 0; i < len; i++) {
@@ -268,7 +272,11 @@ export const addItem = async function (context, item) {
 		if (!isMobile(context)) {
 			let classList = "limber-grid-view-item";
 			if (options.editable === true) {
-				classList = "limber-grid-view-item limber-grid-view-item-editable";
+				classList = `limber-grid-view-item limber-grid-view-item-editable ${
+					publicConstants.SHOW_BOTTOM_LEFT_RESIZE_GUIDE
+						? "limber-grid-view-item-editable-left-resize"
+						: ""
+				}`;
 			}
 
 			itemEl.setAttribute("class", classList);
