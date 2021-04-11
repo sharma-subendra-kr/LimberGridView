@@ -46,6 +46,7 @@ import {
 import { addItemAllowCheck } from "../arrange/arrangeUtils";
 import { arrangeFromHeight } from "../arrange/arrange";
 import { getPdBottomMax } from "./rendererUtils";
+import getUndoRedo from "../../store/variables/undoRedo";
 
 export const render = function (context, scale = true) {
 	const options = getOptions(context);
@@ -87,6 +88,7 @@ export const render = function (context, scale = true) {
 		pd[i].mWidth = pd[i].width + privateConstants.MARGIN * 2;
 		pd[i].mHeight = pd[i].height + privateConstants.MARGIN * 2;
 	}
+	getUndoRedo(context).setCurrent(pd);
 
 	const nodes = new Array(len);
 	let spd;
@@ -215,6 +217,8 @@ export const addItem = async function (context, item) {
 				const mpd = getModifiedPositionData(context);
 				mpd.push(item);
 				setPositionData(context, mpd);
+				getUndoRedo(context).reset();
+				getUndoRedo(context).push(mpd);
 			} else {
 				return false;
 			}
@@ -249,6 +253,8 @@ export const addItem = async function (context, item) {
 			await arrangeFromHeight(context, [mpd.length - 1], bottomY);
 			sanitizeDimension(mpd[mpd.length - 1]);
 			setPositionData(context, mpd);
+			getUndoRedo(context).reset();
+			getUndoRedo(context).push(mpd);
 		} else {
 			return false;
 		}
@@ -330,6 +336,8 @@ export const removeItem = function (context, index) {
 	unInitializeEvents.call(context);
 
 	pd.splice(index, 1);
+	getUndoRedo(context).reset();
+	getUndoRedo(context).push(pd);
 
 	if (callbacks.removePlugin) {
 		callbacks.removePlugin(e.$limberGridViewItems[index]);

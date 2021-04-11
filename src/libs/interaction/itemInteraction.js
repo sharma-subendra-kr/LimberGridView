@@ -50,6 +50,7 @@ import { setStatus, getStatus } from "../../store/variables/status";
 import getMessage from "../../store/constants/messages";
 import { isPointInsideRect } from "../rect/rectUtils";
 import { renderItem } from "../renderers/renderers";
+import getUndoRedo from "../../store/variables/undoRedo";
 
 export const resizeItem = async function (index, width, height) {
 	const pd = getPositionData(this);
@@ -86,6 +87,7 @@ export const resizeItem = async function (index, width, height) {
 	({ arranged, resized } = await arrangeMove(this, affectedItems));
 
 	setPositionData(this, mpd);
+	getUndoRedo(this).push(mpd);
 
 	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
 	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
@@ -204,6 +206,7 @@ export const moveItem = async function (index, toX, toY) {
 	);
 
 	setPositionData(this, mpd);
+	getUndoRedo(this).push(mpd);
 
 	e.$limberGridViewItems[
 		index

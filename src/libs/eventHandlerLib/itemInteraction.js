@@ -48,6 +48,7 @@ import {
 	resizeItem,
 	resizeItemDemo,
 } from "../interaction/itemInteraction";
+import { resetDemoUIChanges } from "../interaction/itemInteractionUtils";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
 import { setStatus } from "../../store/variables/status";
@@ -530,8 +531,8 @@ export const onItemContextMenu = function (event) {
 	setStatus(this, "moveDemo", undefined);
 	setStatus(this, "resizeDemo", undefined);
 
-	const it = getTree(this, "it");
-	it.emptyTree();
+	const rt = getTree(this, "rt");
+	rt.emptyTree();
 
 	event.preventDefault();
 	event.stopPropagation();
@@ -588,16 +589,4 @@ export const showResizeDemo = async function (index, width, height) {
 	}
 };
 
-export const revertShowMoveOrResizeDemo = function (context) {
-	const e = getElements(context);
-	const pd = getPositionData(context);
-
-	const len = e.$limberGridViewItems.length;
-	for (let i = 0; i < len; i++) {
-		e.$limberGridViewItems[
-			i
-		].style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
-		e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
-		e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
-	}
-};
+export const revertShowMoveOrResizeDemo = resetDemoUIChanges;
