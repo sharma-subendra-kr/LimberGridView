@@ -530,8 +530,8 @@ export const onItemContextMenu = function (event) {
 	setStatus(this, "moveDemo", undefined);
 	setStatus(this, "resizeDemo", undefined);
 
-	const it = getTree(this, "it");
-	it.emptyTree();
+	const rt = getTree(this, "rt");
+	rt.emptyTree();
 
 	event.preventDefault();
 	event.stopPropagation();

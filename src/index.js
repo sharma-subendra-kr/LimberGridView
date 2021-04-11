@@ -23,9 +23,9 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { IntervalTreesIterative } from "IntervalTreeJS";
 import { RTreeIterative } from "rtreejs";
 import { ArrayStack as Stack } from "Stack";
+import UndoRedo from "undo-redo";
 
 import "./index.css";
 import "./index.scss";
@@ -82,6 +82,7 @@ import {
 	initConstantsAndFlags,
 	initRender,
 } from "./initializers/initializers";
+import getUndoRedo from "./store/variables/undoRedo";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -318,6 +319,8 @@ function LimberGridView(options) {
 	setPositionData(this, options.positionData);
 	setCallbacks(this, options.callbacks);
 
+	getUndoRedo(this).push(getPositionData(this));
+
 	if (typeof options.el === "string") {
 		const el = document.getElementById(options.el);
 		if (!el) {
@@ -436,10 +439,6 @@ LimberGridView.prototype.initializeStore = function () {
 			},
 			status: {},
 			trees: {
-				it: new IntervalTreesIterative({
-					initialStackSize: 100,
-					initialQueueSize: 100,
-				}),
 				rt: new RTreeIterative({
 					M: 4,
 					// splitNode: "linear",
@@ -448,9 +447,10 @@ LimberGridView.prototype.initializeStore = function () {
 			stacks: {
 				stack: new Stack(),
 				garbageStack: new Stack(),
-				resStack: new Stack(),
-				itemsToArrangeStack: new Stack(),
+				// resStack: new Stack(),
+				// itemsToArrangeStack: new Stack(),
 			},
+			undoRedo: new UndoRedo(),
 		},
 		constants: {
 			privateConstants: {
@@ -629,6 +629,60 @@ LimberGridView.prototype.removeItem = function (index) {
  */
 LimberGridView.prototype.setIsMobileCheck = function (f) {
 	this.options.isMobileCheck = f;
+};
+
+/**
+ * @method
+ * @name LimberGridView#undo
+ * @description undo previous move or drag
+ */
+LimberGridView.prototype.undo = function () {
+	const pd = getUndoRedo(this).undo();
+	if (pd) {
+		setPositionData(this, pd);
+		setTimeout(
+			async function () {
+				await init(this, false, false);
+				render(this, false);
+			}.bind(this)
+		);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#redo
+ * @description redo move or drag
+ */
+LimberGridView.prototype.redo = function () {
+	const pd = getUndoRedo(this).redo();
+	if (pd) {
+		setPositionData(this, pd);
+		setTimeout(
+			async function () {
+				await init(this, false, false);
+				render(this, false);
+			}.bind(this)
+		);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#isUndoAvailable
+ * @description returns true if undo is possible
+ */
+LimberGridView.prototype.isUndoAvailable = function () {
+	return getUndoRedo(this).isUndoAvailable();
+};
+
+/**
+ * @method
+ * @name LimberGridView#isRedoAvailable
+ * @description returns true if redo is possible
+ */
+LimberGridView.prototype.isRedoAvailable = function () {
+	return getUndoRedo(this).isRedoAvailable();
 };
 
 export default LimberGridView;
