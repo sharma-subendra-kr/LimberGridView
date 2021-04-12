@@ -23,7 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// import { doRectsOverlap, isPointInsideOrTouchRect } from "../rect/rectUtils";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
@@ -238,6 +237,9 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
+	// const THRESHOLD = privateConstants.WIDTH / 4;
+	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
 	let inside;
@@ -275,7 +277,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			tld < rdistance &&
 			tld < bdistance &&
 			pt.x < tl.x &&
-			tld <= privateConstants.WIDTH / 4
+			tld <= THRESHOLD
 		) {
 			if (
 				tl.x - privateConstants.MARGIN - pd[index].width >=
@@ -296,7 +298,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			trd < ldistance &&
 			trd < bdistance &&
 			pt.x > tr.x &&
-			trd <= privateConstants.WIDTH / 4
+			trd <= THRESHOLD
 		) {
 			if (
 				tr.x + privateConstants.MARGIN + pd[index].width <
@@ -318,7 +320,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			bld < rdistance &&
 			pt.y >= bl.y &&
 			pt.x >= bl.x &&
-			bld <= privateConstants.WIDTH / 4
+			bld <= THRESHOLD
 		) {
 			if (
 				tl.x + privateConstants.MARGIN + pd[index].width <
@@ -356,6 +358,10 @@ export const resizeSizeAdjust = (
 ) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
+
+	// const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
+	const DISTANCE_THRESHOLD = privateConstants.MIN_HEIGHT_AND_WIDTH / 2;
+	const AXIS_DISTANCE_THRESHOLD = privateConstants.MIN_HEIGHT_AND_WIDTH / 10;
 
 	const len = pd.length;
 	const tlpt = { x: x, y: y };
@@ -408,7 +414,7 @@ export const resizeSizeAdjust = (
 			brptTobl < rdistance &&
 			brptTobl < ldistance &&
 			brpt.x < bl.x &&
-			Math.abs(brpt.y - bl.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD &&
 			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
 		) {
 			height = bl.y - trpt.y;
@@ -424,7 +430,7 @@ export const resizeSizeAdjust = (
 			blptTobr < ldistance &&
 			blptTobr < rdistance &&
 			blpt.x > br.x &&
-			Math.abs(blpt.y - br.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD &&
 			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
 		) {
 			height = br.y - tlpt.y;
@@ -439,8 +445,8 @@ export const resizeSizeAdjust = (
 		if (
 			trptTobr < tdistance &&
 			trptTobr < bdistance &&
-			trptTobr <= privateConstants.WIDTH / 4 &&
-			Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			trptTobr <= DISTANCE_THRESHOLD &&
+			Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD &&
 			forBottomRight
 		) {
 			width = br.x - tlpt.x;
@@ -455,8 +461,8 @@ export const resizeSizeAdjust = (
 		if (
 			brptTotr < bdistance &&
 			brptTotr < tdistance &&
-			brptTotr <= privateConstants.WIDTH / 4 &&
-			Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			brptTotr <= DISTANCE_THRESHOLD &&
+			Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD &&
 			forBottomRight
 		) {
 			width = tr.x - blpt.x;
@@ -471,8 +477,8 @@ export const resizeSizeAdjust = (
 		if (
 			tlptTobl < tdistance &&
 			tlptTobl < bdistance &&
-			tlptTobl <= privateConstants.MIN_HEIGHT_AND_WIDTH / 2 &&
-			Math.abs(tlpt.x - bl.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			tlptTobl <= DISTANCE_THRESHOLD &&
+			Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD &&
 			!forBottomRight
 		) {
 			width = trpt.x - bl.x;
@@ -488,8 +494,8 @@ export const resizeSizeAdjust = (
 		if (
 			blptTotl < bdistance &&
 			blptTotl < tdistance &&
-			blptTotl <= privateConstants.MIN_HEIGHT_AND_WIDTH / 2 &&
-			Math.abs(blpt.x - tl.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			blptTotl <= DISTANCE_THRESHOLD &&
+			Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD &&
 			!forBottomRight
 		) {
 			width = brpt.x - tl.x;
