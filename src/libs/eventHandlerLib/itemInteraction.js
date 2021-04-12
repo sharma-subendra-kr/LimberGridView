@@ -85,7 +85,10 @@ export const onItemMouseDown = function (event) {
 		);
 
 		event.preventDefault();
-	} else if (iiv.userActionData.type === "resize") {
+	} else if (
+		iiv.userActionData.type === "resize" ||
+		iiv.userActionData.type === "resizeBottomLeft"
+	) {
 		iiv.mouseDownCancel = false;
 		iiv.mouseDownTimerComplete = true;
 
@@ -95,6 +98,8 @@ export const onItemMouseDown = function (event) {
 
 		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
 		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
+		iiv.userActionData.itemX2 = pd[iiv.userActionData.itemIndex].x2;
+		iiv.userActionData.itemY2 = pd[iiv.userActionData.itemIndex].y2;
 
 		loadResizingState(this, iiv.userActionData);
 
@@ -144,7 +149,10 @@ export const onItemTouchStart = function (event) {
 		);
 
 		event.preventDefault();
-	} else if (iiv.userActionData.type === "resize") {
+	} else if (
+		iiv.userActionData.type === "resize" ||
+		iiv.userActionData.type === "resizeBottomLeft"
+	) {
 		iiv.touchHoldCancel = false;
 		iiv.touchHoldTimerComplete = true;
 
@@ -155,6 +163,8 @@ export const onItemTouchStart = function (event) {
 
 		iiv.userActionData.itemX = pd[iiv.userActionData.itemIndex].x;
 		iiv.userActionData.itemY = pd[iiv.userActionData.itemIndex].y;
+		iiv.userActionData.itemX2 = pd[iiv.userActionData.itemIndex].x2;
+		iiv.userActionData.itemY2 = pd[iiv.userActionData.itemIndex].y2;
 
 		loadResizingState(this, iiv.userActionData);
 
@@ -223,11 +233,25 @@ export const onItemMouseMove = function (event) {
 			const x = iiv.userActionData.itemX;
 			const y = iiv.userActionData.itemY;
 
-			const newWidth =
-				event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
-			const newHeight =
-				event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
+			let newX1, newY1, newWidth, newHeight;
+			if (iiv.userActionData.type === "resize") {
+				newX1 = x;
+				newY1 = y;
+				newWidth =
+					event.offsetX - x + scrollLeft - privateConstants.PADDING_LEFT;
+				newHeight =
+					event.offsetY - y + scrollTop - privateConstants.PADDING_TOP;
+			} else {
+				// resizeBottomLeft
+				newX1 = event.offsetX + scrollLeft - privateConstants.PADDING_LEFT;
+				newY1 = y;
+				newWidth = iiv.userActionData.itemX2 - newX1;
+				newHeight =
+					event.offsetY + scrollTop - privateConstants.PADDING_TOP - newY1;
+			}
 
+			iiv.userActionData.newX1 = newX1;
+			iiv.userActionData.newY1 = newY1;
 			iiv.userActionData.newWidth = newWidth;
 			iiv.userActionData.newHeight = newHeight;
 
@@ -235,6 +259,7 @@ export const onItemMouseMove = function (event) {
 			adjustHeight(this, yMousePosition);
 
 			if (newWidth > 0 && newHeight > 0) {
+				e.$limberGridViewPseudoItem.style.transform = `translate(${newX1}px, ${newY1}px)`;
 				e.$limberGridViewPseudoItem.style.width = newWidth + "px";
 				e.$limberGridViewPseudoItem.style.height = newHeight + "px";
 				e.$limberGridViewPseudoItem.setAttribute(
@@ -247,8 +272,11 @@ export const onItemMouseMove = function (event) {
 				showResizeDemo.bind(
 					this,
 					iiv.userActionData.itemIndex,
+					newX1,
+					newY1,
 					newWidth,
-					newHeight
+					newHeight,
+					iiv.userActionData.type === "resize"
 				),
 				publicConstants.DEMO_WAIT_TIME
 			);
@@ -327,14 +355,28 @@ export const onItemTouchMove = function (event) {
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 
-			const newWidth = touchPositionOnLimberGrid.x - x;
-			const newHeight = touchPositionOnLimberGrid.y - y;
+			let newX1, newY1, newWidth, newHeight;
+			if (iiv.userActionData.type === "resize") {
+				newX1 = x;
+				newY1 = y;
+				newWidth = touchPositionOnLimberGrid.x - x;
+				newHeight = touchPositionOnLimberGrid.y - y;
+			} else {
+				// resizeBottomLeft
+				newX1 = touchPositionOnLimberGrid.x;
+				newY1 = y;
+				newWidth = iiv.userActionData.itemX2 - touchPositionOnLimberGrid.x;
+				newHeight = touchPositionOnLimberGrid.y - y;
+			}
 
 			if (touchPositionOnLimberGrid !== false) {
+				iiv.userActionData.newX1 = newX1;
+				iiv.userActionData.newY1 = newY1;
 				iiv.userActionData.newWidth = newWidth;
 				iiv.userActionData.newHeight = newHeight;
 
 				if (newWidth > 0 && newHeight > 0) {
+					e.$limberGridViewPseudoItem.style.transform = `translate(${newX1}px, ${newY1}px)`;
 					e.$limberGridViewPseudoItem.style.width = newWidth + "px";
 					e.$limberGridViewPseudoItem.style.height = newHeight + "px";
 					e.$limberGridViewPseudoItem.setAttribute(
@@ -376,8 +418,11 @@ export const onItemTouchMove = function (event) {
 						showResizeDemo.bind(
 							this,
 							iiv.userActionData.itemIndex,
+							newX1,
+							newY1,
 							newWidth,
-							newHeight
+							newHeight,
+							iiv.userActionData.type === "resize"
 						),
 						publicConstants.DEMO_WAIT_TIME
 					);
@@ -424,14 +469,19 @@ export const onItemMouseUp = async function (event) {
 			}
 		} else {
 			try {
-				var newWidth = iiv.userActionData.newWidth;
-				var newHeight = iiv.userActionData.newHeight;
+				const newX1 = iiv.userActionData.newX1;
+				const newY1 = iiv.userActionData.newY1;
+				const newWidth = iiv.userActionData.newWidth;
+				const newHeight = iiv.userActionData.newHeight;
 
 				await resizeItem.call(
 					this,
 					iiv.userActionData.itemIndex,
+					newX1,
+					newY1,
 					newWidth,
-					newHeight
+					newHeight,
+					iiv.userActionData.type === "resize"
 				);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
@@ -475,14 +525,19 @@ export const onItemTouchEnd = async function (event) {
 			}
 		} else {
 			try {
-				var newWidth = iiv.userActionData.newWidth;
-				var newHeight = iiv.userActionData.newHeight;
+				const newX1 = iiv.userActionData.newX1;
+				const newY1 = iiv.userActionData.newY1;
+				const newWidth = iiv.userActionData.newWidth;
+				const newHeight = iiv.userActionData.newHeight;
 
 				await resizeItem.call(
 					this,
 					iiv.userActionData.itemIndex,
+					newX1,
+					newY1,
 					newWidth,
-					newHeight
+					newHeight,
+					iiv.userActionData.type === "resize"
 				);
 			} catch (error) {
 				revertShowMoveOrResizeDemo(this);
@@ -573,11 +628,18 @@ export const showMoveDemo = async function (index, mousePosition) {
 	}
 };
 
-export const showResizeDemo = async function (index, width, height) {
+export const showResizeDemo = async function (
+	index,
+	x,
+	y,
+	width,
+	height,
+	forBottomRight
+) {
 	const e = getElements(this);
 
 	try {
-		await resizeItemDemo.call(this, index, width, height);
+		await resizeItemDemo.call(this, index, x, y, width, height, forBottomRight);
 		e.$limberGridViewPseudoItem.classList.add(
 			"limber-grid-view-pseudo-item-resize-allow"
 		);

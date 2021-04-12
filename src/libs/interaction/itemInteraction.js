@@ -52,7 +52,7 @@ import { isPointInsideRect } from "../rect/rectUtils";
 import { renderItem } from "../renderers/renderers";
 import getUndoRedo from "../../store/variables/undoRedo";
 
-export const resizeItem = async function (index, width, height) {
+export const resizeItem = async function (index, x, y, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
@@ -63,18 +63,20 @@ export const resizeItem = async function (index, width, height) {
 
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedSize = getStatus(this, "resizeDemo");
+		x = adjustedSize?.x || x;
+		y = adjustedSize?.y || y;
 		height = adjustedSize?.height || height;
 		width = adjustedSize?.width || width;
 	}
 
-	resizeItemInitialChecks(this, index, width, height);
+	resizeItemInitialChecks(this, index, x, y, width, height);
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
 
 	const modifiedItem = getResizeModifiedItem(
-		pd[index].x,
-		pd[index].y,
+		x,
+		y,
 		width,
 		height,
 		privateConstants.MARGIN
@@ -84,11 +86,17 @@ export const resizeItem = async function (index, width, height) {
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged, resized;
-	({ arranged, resized } = await arrangeMove(this, affectedItems));
+	({ arranged, resized } = await arrangeMove(
+		this,
+		affectedItems,
+		y,
+		y + height
+	));
 
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
+	e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
 	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
 	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
 
@@ -104,7 +112,14 @@ export const resizeItem = async function (index, width, height) {
 	}
 };
 
-export const resizeItemDemo = async function (index, width, height) {
+export const resizeItemDemo = async function (
+	index,
+	x,
+	y,
+	width,
+	height,
+	forBottomRight
+) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
@@ -114,8 +129,18 @@ export const resizeItemDemo = async function (index, width, height) {
 
 	let adjustedSize;
 	if (publicConstants.LATCH_MOVED_ITEM) {
-		adjustedSize = resizeSizeAdjust(this, width, height, index);
+		adjustedSize = resizeSizeAdjust(
+			this,
+			x,
+			y,
+			width,
+			height,
+			index,
+			forBottomRight
+		);
 		setStatus(this, "resizeDemo", adjustedSize);
+		x = adjustedSize.x;
+		y = adjustedSize.y;
 		height = adjustedSize.height;
 		width = adjustedSize.width;
 	}
@@ -134,7 +159,7 @@ export const resizeItemDemo = async function (index, width, height) {
 		}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 	}
 
-	resizeItemInitialChecks(this, index, width, height);
+	resizeItemInitialChecks(this, index, x, y, width, height);
 
 	resetDemoUIChanges(this);
 
@@ -142,8 +167,8 @@ export const resizeItemDemo = async function (index, width, height) {
 	const mpd = getModifiedPositionData(this);
 
 	const modifiedItem = getResizeModifiedItem(
-		pd[index].x,
-		pd[index].y,
+		x,
+		y,
 		width,
 		height,
 		privateConstants.MARGIN
@@ -153,7 +178,7 @@ export const resizeItemDemo = async function (index, width, height) {
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
-	({ arranged } = await arrangeMove(this, affectedItems));
+	({ arranged } = await arrangeMove(this, affectedItems, y, y + height));
 
 	positionArranged(this, arranged);
 };
@@ -357,8 +382,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 		this,
 		affectedItems,
 		toY,
-		toY + pd[index].height,
-		true
+		toY + pd[index].height
 	);
 
 	positionArranged(this, arranged);

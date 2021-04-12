@@ -36,6 +36,7 @@ import {
 	getTopBottomWS,
 	getItemsInWorkSpace,
 	getItemsBelowBottomWorkSpace,
+	getItemsInWorkSpaceMap,
 	shiftItemsDown,
 } from "./arrangeUtils";
 
@@ -68,6 +69,7 @@ export const arrangeMove = async (
 	const { minY, maxY } = getMinMaxXY(
 		context,
 		affectedItems,
+		undefined,
 		undefined,
 		undefined,
 		toY,
@@ -118,20 +120,30 @@ export const arrangeMove = async (
 	// printStackTopRect(context, combinedWorkSpaceRect);
 	// debugger;
 
+	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
+		context,
+		combinedWorkSpaceRect
+	);
+	let itemsInCombinedWorkSpaceMap = getItemsInWorkSpace(
+		context,
+		combinedWorkSpaceRect,
+		true
+	);
+	itemsInCombinedWorkSpaceMap = getItemsInWorkSpaceMap(
+		itemsInCombinedWorkSpaceMap
+	);
+
 	let itemsInBottomWorkSpace = getItemsInWorkSpace(
 		context,
 		bottomWorkSpace,
-		true
+		true,
+		itemsInCombinedWorkSpaceMap
 	);
 	const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(
 		context,
 		bottomWorkSpace,
-		true
-	);
-
-	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
-		context,
-		combinedWorkSpaceRect
+		true,
+		itemsInCombinedWorkSpaceMap
 	);
 
 	// const shiftHeight =

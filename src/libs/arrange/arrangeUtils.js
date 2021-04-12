@@ -40,6 +40,7 @@ import { getHypotenuseSquared } from "../geometry/geometry";
 export const getMinMaxXY = (
 	context,
 	affectedItems,
+	resizedLeftX,
 	resizedRightX,
 	resizedBottomY,
 	toY,
@@ -74,6 +75,8 @@ export const getMinMaxXY = (
 	if (resizedBottomY > maxY) maxY = resizedBottomY;
 
 	if (resizedRightX > maxX) maxX = resizedRightX;
+
+	if (resizedLeftX < minX) minX = resizedLeftX;
 
 	if (toY < minY) minY = toY;
 
@@ -129,10 +132,19 @@ export const getTopBottomWS = (context, workSpaceRect, minX, maxX) => {
 	return { topWorkSpace, bottomWorkSpace };
 };
 
+export const getItemsInWorkSpaceMap = (arr) => {
+	const map = {};
+	for (const index of arr) {
+		map[index] = true;
+	}
+	return map;
+};
+
 export const getItemsInWorkSpace = (
 	context,
 	workSpaceRect,
-	getIndices = false
+	getIndices = false,
+	excludeMap
 ) => {
 	const mpd = getModifiedPositionData(context);
 
@@ -142,6 +154,9 @@ export const getItemsInWorkSpace = (
 	let item;
 	for (let i = 0; i < len; i++) {
 		item = mpd[i];
+		if (excludeMap && excludeMap[i]) {
+			continue;
+		}
 		if (doRectsOverlapSingleItemMargin(workSpaceRect, item)) {
 			if (!getIndices) {
 				itemsInWorkSpace[count++] = mpd[i];
@@ -159,7 +174,8 @@ export const getItemsInWorkSpace = (
 export const getItemsBelowBottomWorkSpace = (
 	context,
 	workSpaceRect,
-	getIndices = false
+	getIndices = false,
+	excludeMap
 ) => {
 	const mpd = getModifiedPositionData(context);
 
@@ -172,6 +188,9 @@ export const getItemsBelowBottomWorkSpace = (
 	let count = 0;
 
 	for (let i = 0; i < len; i++) {
+		if (excludeMap && excludeMap[i]) {
+			continue;
+		}
 		if (workSpaceRect.y2 <= mpd[i].mY1) {
 			if (!getIndices) {
 				items[count++] = mpd[i];

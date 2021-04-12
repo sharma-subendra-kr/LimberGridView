@@ -23,7 +23,6 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// import { doRectsOverlap, isPointInsideOrTouchRect } from "../rect/rectUtils";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
@@ -100,7 +99,14 @@ export const getMoveAffectedItems = (context, item, index) => {
 	return affectedArr;
 };
 
-export const resizeItemInitialChecks = (context, index, width, height) => {
+export const resizeItemInitialChecks = (
+	context,
+	index,
+	x,
+	y,
+	width,
+	height
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -109,11 +115,20 @@ export const resizeItemInitialChecks = (context, index, width, height) => {
 		throw "Index out of bounds.";
 	}
 
+	if (typeof x !== "number" || typeof y !== "number") {
+		throw "x or y is not a number.";
+	}
+
+	if (x < privateConstants.MARGIN || y < privateConstants.MARGIN) {
+		// falls outside
+		throw "Left edges falls outside the grid area.";
+	}
+
 	if (typeof width !== "number" || typeof height !== "number") {
 		throw "Width or Height is not a number.";
 	}
 
-	if (pd[index].x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
+	if (x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
 		// falls outside
 		throw "Right edges falls outside the grid area.";
 	}
@@ -222,6 +237,9 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
+	// const THRESHOLD = privateConstants.WIDTH / 4;
+	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
 	let inside;
@@ -259,7 +277,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			tld < rdistance &&
 			tld < bdistance &&
 			pt.x < tl.x &&
-			tld <= privateConstants.WIDTH / 4
+			tld <= THRESHOLD
 		) {
 			if (
 				tl.x - privateConstants.MARGIN - pd[index].width >=
@@ -280,7 +298,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			trd < ldistance &&
 			trd < bdistance &&
 			pt.x > tr.x &&
-			trd <= privateConstants.WIDTH / 4
+			trd <= THRESHOLD
 		) {
 			if (
 				tr.x + privateConstants.MARGIN + pd[index].width <
@@ -302,7 +320,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			bld < rdistance &&
 			pt.y >= bl.y &&
 			pt.x >= bl.x &&
-			bld <= privateConstants.WIDTH / 4
+			bld <= THRESHOLD
 		) {
 			if (
 				tl.x + privateConstants.MARGIN + pd[index].width <
@@ -329,17 +347,38 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	};
 };
 
-export const resizeSizeAdjust = (context, width, height, index) => {
+export const resizeSizeAdjust = (
+	context,
+	x,
+	y,
+	width,
+	height,
+	index,
+	forBottomRight
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const len = pd.length;
-	const tlpt = { x: pd[index].x1, y: pd[index].y1 };
-	const trpt = { x: pd[index].x1 + width, y: pd[index].y1 };
-	const brpt = { x: pd[index].x1 + width, y: pd[index].y1 + height };
-	const blpt = { x: pd[index].x1, y: pd[index].y1 + height };
+	// const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
+	const DISTANCE_THRESHOLD = privateConstants.MIN_HEIGHT_AND_WIDTH / 2;
+	const AXIS_DISTANCE_THRESHOLD = privateConstants.MIN_HEIGHT_AND_WIDTH / 10;
 
-	let bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
+	const len = pd.length;
+	const tlpt = { x: x, y: y };
+	const trpt = { x: x + width, y: y };
+	const brpt = { x: x + width, y: y + height };
+	const blpt = { x: x, y: y + height };
+
+	let tl,
+		bl,
+		br,
+		tr,
+		blptTobr,
+		brptTobl,
+		trptTobr,
+		brptTotr,
+		blptTotl,
+		tlptTobl;
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
 	let tdistance = Number.MAX_SAFE_INTEGER;
@@ -357,20 +396,25 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 			continue;
 		}
 
+		tl = { x: pd[i].x1, y: pd[i].y1 };
 		bl = { x: pd[i].x1, y: pd[i].y2 };
 		br = { x: pd[i].x2, y: pd[i].y2 };
 		tr = { x: pd[i].x2, y: pd[i].y1 };
 
 		brptTobl = getDistanceBetnPts(bl, brpt);
 		blptTobr = getDistanceBetnPts(br, blpt);
+
 		trptTobr = getDistanceBetnPts(br, trpt);
 		brptTotr = getDistanceBetnPts(tr, brpt);
+
+		blptTotl = getDistanceBetnPts(tl, blpt);
+		tlptTobl = getDistanceBetnPts(bl, tlpt);
 
 		if (
 			brptTobl < rdistance &&
 			brptTobl < ldistance &&
 			brpt.x < bl.x &&
-			Math.abs(brpt.y - bl.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD &&
 			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
 		) {
 			height = bl.y - trpt.y;
@@ -386,7 +430,7 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 			blptTobr < ldistance &&
 			blptTobr < rdistance &&
 			blpt.x > br.x &&
-			Math.abs(blpt.y - br.y) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD &&
 			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
 		) {
 			height = br.y - tlpt.y;
@@ -401,8 +445,9 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 		if (
 			trptTobr < tdistance &&
 			trptTobr < bdistance &&
-			trptTobr <= privateConstants.WIDTH / 4 &&
-			Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+			trptTobr <= DISTANCE_THRESHOLD &&
+			Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD &&
+			forBottomRight
 		) {
 			width = br.x - tlpt.x;
 
@@ -416,8 +461,9 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 		if (
 			brptTotr < bdistance &&
 			brptTotr < tdistance &&
-			brptTotr <= privateConstants.WIDTH / 4 &&
-			Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+			brptTotr <= DISTANCE_THRESHOLD &&
+			Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD &&
+			forBottomRight
 		) {
 			width = tr.x - blpt.x;
 
@@ -426,6 +472,40 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 			toAdjIndex = i;
 			wToAdjDirection = "bottom";
 			wLatchPoint = tr;
+		}
+
+		if (
+			tlptTobl < tdistance &&
+			tlptTobl < bdistance &&
+			tlptTobl <= DISTANCE_THRESHOLD &&
+			Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD &&
+			!forBottomRight
+		) {
+			width = trpt.x - bl.x;
+			x = bl.x;
+
+			tdistance = tlptTobl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "top";
+			wLatchPoint = bl;
+		}
+
+		if (
+			blptTotl < bdistance &&
+			blptTotl < tdistance &&
+			blptTotl <= DISTANCE_THRESHOLD &&
+			Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD &&
+			!forBottomRight
+		) {
+			width = brpt.x - tl.x;
+			x = tl.x;
+
+			bdistance = blptTotl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "bottom";
+			wLatchPoint = tl;
 		}
 	}
 
@@ -441,6 +521,8 @@ export const resizeSizeAdjust = (context, width, height, index) => {
 	}
 
 	return {
+		x: x,
+		y: y,
 		height,
 		width,
 		isToAdjPresent,

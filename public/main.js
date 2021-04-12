@@ -272,7 +272,10 @@ const main = function () {
 		// 	// WIDTH: 999,
 		// 	// MARGIN: 3.830521472392638,
 		// },
-		publicConstants: { useVerticalArrOnResize: false },
+		publicConstants: {
+			useVerticalArrOnResize: false,
+			showBottomLeftResizeGuide: true,
+		},
 		// eslint-disable-next-line no-undef
 		positionData: positionData,
 
