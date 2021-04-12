@@ -321,7 +321,7 @@ export const onItemTouchMove = function (event) {
 							touchPositionOnLimberGrid.offsetY
 						);
 						iiv.isScrolling = false;
-					}, 100);
+					}, publicConstants.AUTO_SCROLL_DELAY);
 				}
 
 				if (programScrolled !== true) {
@@ -388,7 +388,7 @@ export const onItemTouchMove = function (event) {
 							touchPositionOnLimberGrid.offsetY
 						);
 						iiv.isScrolling = false;
-					}, 100);
+					}, publicConstants.AUTO_SCROLL_DELAY);
 				}
 
 				if (programScrolled !== true) {

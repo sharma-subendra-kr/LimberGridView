@@ -293,7 +293,7 @@ export const onDeskTouchMove = function (event) {
 						touchPositionOnLimberGrid.offsetY
 					);
 					dkiv.isScrolling = false;
-				}, 100);
+				}, publicConstants.AUTO_SCROLL_DELAY);
 			}
 
 			if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
