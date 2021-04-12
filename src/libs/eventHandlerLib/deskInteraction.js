@@ -23,11 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import {
-	adjustHeight,
-	adjustScroll,
-	adjustHeightAndScroll,
-} from "../utils/essentials";
+import { adjustHeightAndScroll } from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getElements from "../../store/variables/elements";
@@ -205,7 +201,18 @@ export const onDeskMouseMove = function (event) {
 		dkiv.userActionData.newHeight = newHeight;
 
 		const yMousePosition = event.offsetY + scrollTop;
-		adjustHeight(this, yMousePosition);
+		if (!dkiv.isScrolling) {
+			dkiv.isScrolling = true;
+			setTimeout(() => {
+				adjustHeightAndScroll(
+					this,
+					yMousePosition,
+					event.offsetY,
+					publicConstants.AUTO_SCROLL_FOR_MOUSE
+				);
+				dkiv.isScrolling = false;
+			}, publicConstants.AUTO_SCROLL_DELAY);
+		}
 
 		if (newWidth > 0 && newHeight > 0) {
 			e.$limberGridViewAddCutGuide.style.width = newWidth + "px";
@@ -290,7 +297,8 @@ export const onDeskTouchMove = function (event) {
 					programScrolled = adjustHeightAndScroll(
 						this,
 						yTouchPosition,
-						touchPositionOnLimberGrid.offsetY
+						touchPositionOnLimberGrid.offsetY,
+						true
 					);
 					dkiv.isScrolling = false;
 				}, publicConstants.AUTO_SCROLL_DELAY);

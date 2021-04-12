@@ -23,11 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import {
-	adjustHeight,
-	adjustScroll,
-	adjustHeightAndScroll,
-} from "../utils/essentials";
+import { adjustHeightAndScroll } from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
@@ -214,7 +210,18 @@ export const onItemMouseMove = function (event) {
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
 			if (mousePositionOnLimberGrid) {
 				const yMousePosition = mousePositionOnLimberGrid.y;
-				adjustHeight(this, yMousePosition);
+				if (!iiv.isScrolling) {
+					iiv.isScrolling = true;
+					setTimeout(() => {
+						adjustHeightAndScroll(
+							this,
+							yMousePosition,
+							mousePositionOnLimberGrid.offsetY,
+							publicConstants.AUTO_SCROLL_FOR_MOUSE
+						);
+						iiv.isScrolling = false;
+					}, publicConstants.AUTO_SCROLL_DELAY);
+				}
 
 				iiv.showMoveDemoTimeOutVariable = setTimeout(
 					showMoveDemo.bind(
@@ -259,7 +266,18 @@ export const onItemMouseMove = function (event) {
 			iiv.userActionData.newHeight = newHeight;
 
 			const yMousePosition = event.offsetY + scrollTop;
-			adjustHeight(this, yMousePosition);
+			if (!iiv.isScrolling) {
+				iiv.isScrolling = true;
+				setTimeout(() => {
+					adjustHeightAndScroll(
+						this,
+						yMousePosition,
+						event.offsetY,
+						publicConstants.AUTO_SCROLL_FOR_MOUSE
+					);
+					iiv.isScrolling = false;
+				}, publicConstants.AUTO_SCROLL_DELAY);
+			}
 
 			if (newWidth > 0 && newHeight > 0) {
 				e.$limberGridViewPseudoItem.style.transform = `translate(${newX1}px, ${newY1}px)`;
@@ -318,7 +336,8 @@ export const onItemTouchMove = function (event) {
 						programScrolled = adjustHeightAndScroll(
 							this,
 							yTouchPosition,
-							touchPositionOnLimberGrid.offsetY
+							touchPositionOnLimberGrid.offsetY,
+							true
 						);
 						iiv.isScrolling = false;
 					}, publicConstants.AUTO_SCROLL_DELAY);
@@ -385,7 +404,8 @@ export const onItemTouchMove = function (event) {
 						programScrolled = adjustHeightAndScroll(
 							this,
 							yTouchPosition,
-							touchPositionOnLimberGrid.offsetY
+							touchPositionOnLimberGrid.offsetY,
+							true
 						);
 						iiv.isScrolling = false;
 					}, publicConstants.AUTO_SCROLL_DELAY);

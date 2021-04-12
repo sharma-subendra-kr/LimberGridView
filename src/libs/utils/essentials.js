@@ -68,8 +68,11 @@ export const adjustScroll = function (context, yMouseOrTouchPositionOffset) {
 export const adjustHeightAndScroll = function (
 	context,
 	yMouseOrTouchPosition,
-	yMouseOrTouchPositionOffset
+	yMouseOrTouchPositionOffset,
+	autoScroll
 ) {
 	adjustHeight(context, yMouseOrTouchPosition);
-	return adjustScroll(context, yMouseOrTouchPositionOffset);
+	if (autoScroll) {
+		return adjustScroll(context, yMouseOrTouchPositionOffset);
+	}
 };
