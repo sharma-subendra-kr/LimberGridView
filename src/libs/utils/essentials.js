@@ -42,7 +42,7 @@ export const adjustHeight = function (context, yMouseOrTouchPosition) {
 	}
 };
 
-export const adjustScroll = function (context, yMouseOrTouchPosition) {
+export const adjustScroll = function (context, yMouseOrTouchPositionOffset) {
 	const e = getElements(context);
 	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
@@ -51,16 +51,25 @@ export const adjustScroll = function (context, yMouseOrTouchPosition) {
 	let programScrolled = false;
 
 	if (
-		privateConstants.HEIGHT - yMouseOrTouchPosition <
+		privateConstants.HEIGHT - yMouseOrTouchPositionOffset <
 		publicConstants.AUTO_SCROLL_POINT
 	) {
 		e.$limberGridView.scrollTop =
 			scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
 		programScrolled = true;
-	} else if (yMouseOrTouchPosition < publicConstants.AUTO_SCROLL_POINT) {
+	} else if (yMouseOrTouchPositionOffset < publicConstants.AUTO_SCROLL_POINT) {
 		e.$limberGridView.scrollTop =
 			scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
 		programScrolled = true;
 	}
 	return programScrolled;
+};
+
+export const adjustHeightAndScroll = function (
+	context,
+	yMouseOrTouchPosition,
+	yMouseOrTouchPositionOffset
+) {
+	adjustHeight(context, yMouseOrTouchPosition);
+	return adjustScroll(context, yMouseOrTouchPositionOffset);
 };

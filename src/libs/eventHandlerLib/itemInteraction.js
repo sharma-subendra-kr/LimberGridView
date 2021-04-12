@@ -23,7 +23,11 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { adjustHeight, adjustScroll } from "../utils/essentials";
+import {
+	adjustHeight,
+	adjustScroll,
+	adjustHeightAndScroll,
+} from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
@@ -123,7 +127,7 @@ export const onItemTouchStart = function (event) {
 	}
 
 	const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
-	if (touchPosOnLimberGridItem) {
+	if (!touchPosOnLimberGridItem) {
 		return;
 	}
 
@@ -307,11 +311,18 @@ export const onItemTouchMove = function (event) {
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 			if (touchPositionOnLimberGrid) {
 				const yTouchPosition = touchPositionOnLimberGrid.y;
-				adjustHeight(this, yTouchPosition);
-				const programScrolled = adjustScroll(
-					this,
-					touchPositionOnLimberGrid.offsetY
-				);
+				let programScrolled;
+				if (!iiv.isScrolling) {
+					iiv.isScrolling = true;
+					setTimeout(() => {
+						programScrolled = adjustHeightAndScroll(
+							this,
+							yTouchPosition,
+							touchPositionOnLimberGrid.offsetY
+						);
+						iiv.isScrolling = false;
+					}, 100);
+				}
 
 				if (programScrolled !== true) {
 					iiv.showMoveDemoTimeOutVariable = setTimeout(
@@ -367,11 +378,18 @@ export const onItemTouchMove = function (event) {
 
 			if (touchPositionOnLimberGrid) {
 				const yTouchPosition = touchPositionOnLimberGrid.y;
-				adjustHeight(this, yTouchPosition);
-				const programScrolled = adjustScroll(
-					this,
-					touchPositionOnLimberGrid.offsetY
-				);
+				let programScrolled;
+				if (!iiv.isScrolling) {
+					iiv.isScrolling = true;
+					setTimeout(() => {
+						programScrolled = adjustHeightAndScroll(
+							this,
+							yTouchPosition,
+							touchPositionOnLimberGrid.offsetY
+						);
+						iiv.isScrolling = false;
+					}, 100);
+				}
 
 				if (programScrolled !== true) {
 					iiv.showResizeDemoTimeOutVariable = setTimeout(

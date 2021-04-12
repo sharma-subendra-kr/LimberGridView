@@ -23,7 +23,11 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { adjustHeight, adjustScroll } from "../utils/essentials";
+import {
+	adjustHeight,
+	adjustScroll,
+	adjustHeightAndScroll,
+} from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getElements from "../../store/variables/elements";
@@ -279,11 +283,18 @@ export const onDeskTouchMove = function (event) {
 
 		if (touchPositionOnLimberGrid) {
 			const yTouchPosition = touchPositionOnLimberGrid.y;
-			adjustHeight(this, yTouchPosition);
-			const programScrolled = adjustScroll(
-				this,
-				touchPositionOnLimberGrid.offsetY
-			);
+			let programScrolled;
+			if (!dkiv.isScrolling) {
+				dkiv.isScrolling = true;
+				setTimeout(() => {
+					programScrolled = adjustHeightAndScroll(
+						this,
+						yTouchPosition,
+						touchPositionOnLimberGrid.offsetY
+					);
+					dkiv.isScrolling = false;
+				}, 100);
+			}
 
 			if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
 				clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
