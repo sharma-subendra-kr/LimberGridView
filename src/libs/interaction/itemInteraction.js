@@ -63,6 +63,8 @@ export const resizeItem = async function (index, x, y, width, height) {
 
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedSize = getStatus(this, "resizeDemo");
+		x = adjustedSize?.x || x;
+		y = adjustedSize?.y || y;
 		height = adjustedSize?.height || height;
 		width = adjustedSize?.width || width;
 	}
@@ -117,6 +119,8 @@ export const resizeItemDemo = async function (index, x, y, width, height) {
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		adjustedSize = resizeSizeAdjust(this, x, y, width, height, index);
 		setStatus(this, "resizeDemo", adjustedSize);
+		x = adjustedSize.x;
+		y = adjustedSize.y;
 		height = adjustedSize.height;
 		width = adjustedSize.width;
 	}

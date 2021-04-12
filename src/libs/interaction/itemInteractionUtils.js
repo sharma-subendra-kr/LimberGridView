@@ -345,7 +345,15 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	};
 };
 
-export const resizeSizeAdjust = (context, x, y, width, height, index) => {
+export const resizeSizeAdjust = (
+	context,
+	x,
+	y,
+	width,
+	height,
+	index,
+	forBottomRight
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
@@ -355,7 +363,16 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 	const brpt = { x: x + width, y: y + height };
 	const blpt = { x: x, y: y + height };
 
-	let tl, bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr;
+	let tl,
+		bl,
+		br,
+		tr,
+		blptTobr,
+		brptTobl,
+		trptTobr,
+		brptTotr,
+		blptTotl,
+		tlptTobl;
 	let ldistance = Number.MAX_SAFE_INTEGER;
 	let rdistance = Number.MAX_SAFE_INTEGER;
 	let tdistance = Number.MAX_SAFE_INTEGER;
@@ -380,6 +397,7 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 
 		brptTobl = getDistanceBetnPts(bl, brpt);
 		blptTobr = getDistanceBetnPts(br, blpt);
+
 		trptTobr = getDistanceBetnPts(br, trpt);
 		brptTotr = getDistanceBetnPts(tr, brpt);
 
@@ -422,7 +440,8 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 			trptTobr < tdistance &&
 			trptTobr < bdistance &&
 			trptTobr <= privateConstants.WIDTH / 4 &&
-			Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+			Math.abs(trpt.x - br.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			forBottomRight
 		) {
 			width = br.x - tlpt.x;
 
@@ -437,7 +456,8 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 			brptTotr < bdistance &&
 			brptTotr < tdistance &&
 			brptTotr <= privateConstants.WIDTH / 4 &&
-			Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10
+			Math.abs(brpt.x - tr.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			forBottomRight
 		) {
 			width = tr.x - blpt.x;
 
@@ -446,6 +466,40 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 			toAdjIndex = i;
 			wToAdjDirection = "bottom";
 			wLatchPoint = tr;
+		}
+
+		if (
+			tlptTobl < tdistance &&
+			tlptTobl < bdistance &&
+			tlptTobl <= privateConstants.MIN_HEIGHT_AND_WIDTH / 2 &&
+			Math.abs(tlpt.x - bl.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			!forBottomRight
+		) {
+			width = trpt.x - bl.x;
+			x = bl.x;
+
+			tdistance = tlptTobl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "top";
+			wLatchPoint = bl;
+		}
+
+		if (
+			blptTotl < bdistance &&
+			blptTotl < tdistance &&
+			blptTotl <= privateConstants.MIN_HEIGHT_AND_WIDTH / 2 &&
+			Math.abs(blpt.x - tl.x) <= privateConstants.MIN_HEIGHT_AND_WIDTH / 10 &&
+			!forBottomRight
+		) {
+			width = brpt.x - tl.x;
+			x = tl.x;
+
+			bdistance = blptTotl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "bottom";
+			wLatchPoint = tl;
 		}
 	}
 
@@ -461,6 +515,8 @@ export const resizeSizeAdjust = (context, x, y, width, height, index) => {
 	}
 
 	return {
+		x: x,
+		y: y,
 		height,
 		width,
 		isToAdjPresent,
