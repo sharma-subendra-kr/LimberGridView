@@ -86,7 +86,12 @@ export const resizeItem = async function (index, x, y, width, height) {
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged, resized;
-	({ arranged, resized } = await arrangeMove(this, affectedItems));
+	({ arranged, resized } = await arrangeMove(
+		this,
+		affectedItems,
+		y,
+		y + height
+	));
 
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
@@ -173,7 +178,7 @@ export const resizeItemDemo = async function (
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
-	({ arranged } = await arrangeMove(this, affectedItems));
+	({ arranged } = await arrangeMove(this, affectedItems, y, y + height));
 
 	positionArranged(this, arranged);
 };
@@ -377,8 +382,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 		this,
 		affectedItems,
 		toY,
-		toY + pd[index].height,
-		true
+		toY + pd[index].height
 	);
 
 	positionArranged(this, arranged);
