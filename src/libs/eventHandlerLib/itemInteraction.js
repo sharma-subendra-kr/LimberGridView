@@ -232,7 +232,6 @@ export const onItemMouseMove = function (event) {
 
 			const x = iiv.userActionData.itemX;
 			const y = iiv.userActionData.itemY;
-			console.log("event.offsetY", event.offsetY);
 
 			let newX1, newY1, newWidth, newHeight;
 			if (iiv.userActionData.type === "resize") {
@@ -356,14 +355,28 @@ export const onItemTouchMove = function (event) {
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 
-			const newWidth = touchPositionOnLimberGrid.x - x;
-			const newHeight = touchPositionOnLimberGrid.y - y;
+			let newX1, newY1, newWidth, newHeight;
+			if (iiv.userActionData.type === "resize") {
+				newX1 = x;
+				newY1 = y;
+				newWidth = touchPositionOnLimberGrid.x - x;
+				newHeight = touchPositionOnLimberGrid.y - y;
+			} else {
+				// resizeBottomLeft
+				newX1 = touchPositionOnLimberGrid.x;
+				newY1 = y;
+				newWidth = iiv.userActionData.itemX2 - touchPositionOnLimberGrid.x;
+				newHeight = touchPositionOnLimberGrid.y - y;
+			}
 
 			if (touchPositionOnLimberGrid !== false) {
+				iiv.userActionData.newX1 = newX1;
+				iiv.userActionData.newY1 = newY1;
 				iiv.userActionData.newWidth = newWidth;
 				iiv.userActionData.newHeight = newHeight;
 
 				if (newWidth > 0 && newHeight > 0) {
+					e.$limberGridViewPseudoItem.style.transform = `translate(${newX1}px, ${newY1}px)`;
 					e.$limberGridViewPseudoItem.style.width = newWidth + "px";
 					e.$limberGridViewPseudoItem.style.height = newHeight + "px";
 					e.$limberGridViewPseudoItem.setAttribute(
@@ -405,8 +418,8 @@ export const onItemTouchMove = function (event) {
 						showResizeDemo.bind(
 							this,
 							iiv.userActionData.itemIndex,
-							0,
-							0,
+							newX1,
+							newY1,
 							newWidth,
 							newHeight,
 							iiv.userActionData.type === "resize"
