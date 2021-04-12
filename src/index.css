@@ -87,7 +87,7 @@ Written by Subendra Kumar Sharma.
 	background-color: black;
 	opacity: 0;
 	position: absolute;
-	z-index: 2000px;
+	z-index: 2000;
 
 	cursor: grab;
 }
@@ -109,7 +109,7 @@ Written by Subendra Kumar Sharma.
 	top: calc(100% - 10px);
 	left: -3px;
 	background-color: transparent;
-	z-index: 2000px;
+	z-index: 2000;
 
 	opacity: 0;
 	position: absolute;
@@ -132,7 +132,7 @@ Written by Subendra Kumar Sharma.
 	top: calc(100% - 10px);
 	left: calc(100% - 10px);
 	background-color: transparent;
-	z-index: 2000px;
+	z-index: 2000;
 
 	opacity: 0;
 	position: absolute;
