@@ -275,6 +275,7 @@ const main = function () {
 		publicConstants: {
 			useVerticalArrOnResize: false,
 			showBottomLeftResizeGuide: true,
+			autoScrollForMouse: true,
 		},
 		// eslint-disable-next-line no-undef
 		positionData: positionData,

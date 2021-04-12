@@ -53,12 +53,14 @@ export const calculateMousePosOnDesk = function (context, event) {
 			scrollTop;
 
 		if (mouseXOnLimberGridView < 0 || mouseYOnLimberGridView < 0) {
-			return false;
+			return;
 		}
-		return { x: mouseXOnLimberGridView, y: mouseYOnLimberGridView };
-	} else {
-		// mouse pointer NOT inside limberGridView
-		return false;
+		return {
+			x: mouseXOnLimberGridView,
+			y: mouseYOnLimberGridView,
+			offsetX: mouseXOnLimberGridView - scrollLeft,
+			offsetY: mouseYOnLimberGridView - scrollTop,
+		};
 	}
 };
 
@@ -102,12 +104,14 @@ export const calculateTouchPosOnDesk = function (context, event) {
 			scrollTop;
 
 		if (touchXOnLimberGridView < 0 || touchYOnLimberGridView < 0) {
-			return false;
+			return;
 		}
-		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
-	} else {
-		// touch NOT inside limberGridView
-		return false;
+		return {
+			x: touchXOnLimberGridView,
+			y: touchYOnLimberGridView,
+			offsetX: touchXOnLimberGridView - scrollLeft,
+			offsetY: touchYOnLimberGridView - scrollTop,
+		};
 	}
 };
 
@@ -132,8 +136,5 @@ export const calculateTouchPosOnItem = function (context, event) {
 			event.touches[0].clientY - limberGridViewItemPosition.top;
 
 		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
-	} else {
-		// touch NOT inside limberGridViewItem
-		return false;
 	}
 };

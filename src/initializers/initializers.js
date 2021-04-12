@@ -298,6 +298,14 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
+	if (typeof options?.publicConstants?.autoScrollForMouse === "boolean") {
+		setPublicConstantByName(
+			this,
+			"AUTO_SCROLL_FOR_MOUSE",
+			options.publicConstants.autoScrollForMouse
+		);
+	}
+
 	if (typeof options?.publicConstants?.mouseDownTime === "number") {
 		setPublicConstantByName(
 			this,
@@ -327,6 +335,14 @@ export const initConstantsAndFlags = function (options) {
 			this,
 			"WINDOW_RESIZE_WAIT_TIME",
 			options.publicConstants.windowResizeWaitTime
+		);
+	}
+
+	if (typeof options?.publicConstants?.autoScrollDelay === "number") {
+		setPublicConstantByName(
+			this,
+			"AUTO_SCROLL_DELAY",
+			options.publicConstants.autoScrollDelay
 		);
 	}
 

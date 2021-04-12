@@ -148,11 +148,13 @@ import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
 			autoScrollDistance: number
 			autoScrollPoint: number
 			moveOrResizeHeightIncrements: number
+			autoScrollForMouse: boolean
 
 			mouseDownTime: number
 			touchHoldTime: number
 			demoWaitTime: number
 			windowResizeWaitTime: number
+			autoScrollDelay: number
 
 			deskInteractionMode: "ADD"/"CUTSPACE"
 
@@ -488,11 +490,13 @@ LimberGridView.prototype.initializeStore = function () {
 				AUTO_SCROLL_DISTANCE: 50,
 				AUTO_SCROLL_POINT: 50,
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
+				AUTO_SCROLL_FOR_MOUSE: false,
 
 				MOUSE_DOWN_TIME: 300,
 				TOUCH_HOLD_TIME: 300,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
+				AUTO_SCROLL_DELAY: 100,
 
 				DESK_INTERACTION_MODE: "CUTSPACE",
 
@@ -691,6 +695,28 @@ LimberGridView.prototype.isUndoAvailable = function () {
  */
 LimberGridView.prototype.isRedoAvailable = function () {
 	return getUndoRedo(this).isRedoAvailable();
+};
+
+/**
+ * @method
+ * @name LimberGridView#setAutoScrollDelay
+ * @description set auto scroll delay for resize, move, add, cut in milliseconds
+ */
+LimberGridView.prototype.setAutoScrollDelay = function (value) {
+	if (typeof value === "number") {
+		setPublicConstantByName(this, "AUTO_SCROLL_DELAY", value);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#setAutoScrollForMouse
+ * @description set auto scroll for resize, move, add, cut
+ */
+LimberGridView.prototype.setAutoScrollForMouse = function (value) {
+	if (typeof value === "boolean") {
+		setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
+	}
 };
 
 export default LimberGridView;

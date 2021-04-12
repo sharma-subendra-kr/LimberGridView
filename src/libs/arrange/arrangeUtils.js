@@ -505,52 +505,40 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 		return false;
 	}
 
-	let minY = y + height;
-	let maxY = y;
-
-	let atLeastOneOverlapping = false;
-	let isOverlapping;
+	let minY = tempPlane.y2;
+	let maxY = tempPlane.y1;
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
-		if (isRectInsideSingleItemMargin(tempPlane, pd[i])) {
+		if (
+			isRectInsideSingleItemMargin(tempPlane, pd[i]) ||
+			(pd[i].mY1 < tempPlane.y1 && pd[i].mY2 > tempPlane.y2)
+		) {
 			return false;
 		}
 
-		isOverlapping = doRectsOverlapOrTouchSingleItemMargin(tempPlane, pd[i]);
+		if (!doRectsOverlapOrTouchSingleItemMargin(tempPlane, pd[i])) {
+			continue;
+		}
 
-		if (isOverlapping) {
-			atLeastOneOverlapping = true;
-			const topPoint = {
-				x: pd[i].x,
-				y: pd[i].y - privateConstants.MARGIN,
-			};
-			const bottomPoint = {
-				x: pd[i].x,
-				y: pd[i].y + pd[i].height + privateConstants.MARGIN,
-			};
-			if (
-				pd[i].y - privateConstants.MARGIN < minY &&
-				isPointInsideOrTouchRect(tempPlane, topPoint)
-			) {
-				minY = pd[i].y - privateConstants.MARGIN;
-			}
+		const topPoint = {
+			x: pd[i].mX1,
+			y: pd[i].mY1,
+		};
+		const bottomPoint = {
+			x: pd[i].mX2,
+			y: pd[i].mY2,
+		};
+		if (pd[i].mY1 < minY && isPointInsideOrTouchRect(tempPlane, topPoint)) {
+			minY = pd[i].mY1;
+		}
 
-			if (
-				pd[i].y + pd[i].height + privateConstants.MARGIN > maxY &&
-				isPointInsideOrTouchRect(tempPlane, bottomPoint)
-			) {
-				maxY = pd[i].y + pd[i].height + privateConstants.MARGIN;
-			}
+		if (pd[i].mY2 > maxY && isPointInsideOrTouchRect(tempPlane, bottomPoint)) {
+			maxY = pd[i].mY2;
 		}
 	}
 
-	if (atLeastOneOverlapping) {
-		if (minY - maxY > 0) {
-			return { y: maxY, shiftHeight: minY - maxY };
-		} else {
-			return false;
-		}
+	if (minY - maxY > 0) {
+		return { y: maxY, shiftHeight: minY - maxY };
 	}
-
-	return { y: y, shiftHeight: height };
+	return false;
 };
