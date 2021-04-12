@@ -49,6 +49,9 @@ export const getUserActionData = (context, event) => {
 		Y = event.offsetY;
 	} else if (event.touches) {
 		touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
+		if (!touchPosOnLimberGridItem) {
+			return false;
+		}
 		radius = Math.sqrt(
 			Math.pow(0 - touchPosOnLimberGridItem.x, 2) +
 				Math.pow(0 - touchPosOnLimberGridItem.y, 2)

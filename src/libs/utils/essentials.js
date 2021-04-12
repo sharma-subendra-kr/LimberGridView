@@ -33,56 +33,34 @@ export const adjustHeight = function (context, yMouseOrTouchPosition) {
 
 	const scrollHeight = e.$limberGridView.scrollHeight;
 	if (
-		scrollHeight - yMouseOrTouchPosition <=
+		scrollHeight - yMouseOrTouchPosition <
 		publicConstants.AUTO_SCROLL_POINT
 	) {
-		e.$limberGridViewHeightAdjustGuide.style.height =
-			yMouseOrTouchPosition +
-			publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
-			"px";
+		e.$limberGridViewHeightAdjustGuide.style.height = `${
+			scrollHeight + publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS
+		}px`;
 	}
 };
 
-export const adjustScroll = function (
-	context,
-	limberGridViewOnVisibleAreaY,
-	limberGridViewHeightVisibleHeight
-) {
+export const adjustScroll = function (context, yMouseOrTouchPosition) {
 	const e = getElements(context);
 	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const scrollTop = e.$limberGridView.scrollTop;
-	// var scrollLeft = this.$limberGridView[0].scrollLeft;
 	let programScrolled = false;
-	if (limberGridViewOnVisibleAreaY > 0) {
-		if (
-			limberGridViewHeightVisibleHeight - limberGridViewOnVisibleAreaY <
-			publicConstants.AUTO_SCROLL_POINT
-		) {
-			e.$limberGridView.scrollTop =
-				scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
-			programScrolled = true;
-		}
-		if (
-			limberGridViewOnVisibleAreaY < privateConstants.HEIGHT / 10 &&
-			scrollTop !== 0
-		) {
-			e.$limberGridView.scrollTop =
-				scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
-			programScrolled = true;
-		}
-	}
 
-	// if(limberGridViewOnVisibleAreaX > 0){
-	// 	if((limberGridViewWidthVisibleWidth - limberGridViewOnVisibleAreaX) < (this.WIDTH/10)){
-	// 		this.$limberGridView[0].scrollLeft = scrollLeft + 100;
-	// 		var programScrolled = true;
-	// 	}
-	// 	if((limberGridViewOnVisibleAreaX) < (this.WIDTH/10) && scrollLeft != 0){
-	// 		this.$limberGridView[0].scrollLeft = scrollLeft - 100;
-	// 		var programScrolled = true;
-	// 	}
-	// }
+	if (
+		privateConstants.HEIGHT - yMouseOrTouchPosition <
+		publicConstants.AUTO_SCROLL_POINT
+	) {
+		e.$limberGridView.scrollTop =
+			scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
+		programScrolled = true;
+	} else if (yMouseOrTouchPosition < publicConstants.AUTO_SCROLL_POINT) {
+		e.$limberGridView.scrollTop =
+			scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
+		programScrolled = true;
+	}
 	return programScrolled;
 };

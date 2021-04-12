@@ -123,7 +123,7 @@ export const onItemTouchStart = function (event) {
 	}
 
 	const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
-	if (touchPosOnLimberGridItem === false) {
+	if (touchPosOnLimberGridItem) {
 		return;
 	}
 
@@ -208,8 +208,7 @@ export const onItemMouseMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
-
-			if (mousePositionOnLimberGrid !== false) {
+			if (mousePositionOnLimberGrid) {
 				const yMousePosition = mousePositionOnLimberGrid.y;
 				adjustHeight(this, yMousePosition);
 
@@ -294,7 +293,7 @@ export const onItemMouseMove = function (event) {
 
 export const onItemTouchMove = function (event) {
 	const e = getElements(this);
-	const privateConstants = getPrivateConstants(this);
+	// const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 
 	const iiv = getItemInteractionVars(this);
@@ -306,32 +305,12 @@ export const onItemTouchMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
-
-			if (touchPositionOnLimberGrid !== false) {
-				const scrollTop = e.$limberGridView.scrollTop;
-				const scrollLeft = e.$limberGridView.scrollLeft;
-
-				const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
-				const limberGridViewWidthVisibleWidth =
-					e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
-				const limberGridViewHeightVisibleHeight =
-					e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
-				const limberGridViewOnVisibleAreaX =
-					touchPositionOnLimberGrid.x +
-					privateConstants.PADDING_LEFT -
-					scrollLeft;
-				const limberGridViewOnVisibleAreaY =
-					touchPositionOnLimberGrid.y +
-					privateConstants.PADDING_TOP -
-					scrollTop;
-
+			if (touchPositionOnLimberGrid) {
 				const yTouchPosition = touchPositionOnLimberGrid.y;
 				adjustHeight(this, yTouchPosition);
-
 				const programScrolled = adjustScroll(
 					this,
-					limberGridViewOnVisibleAreaY,
-					limberGridViewHeightVisibleHeight
+					touchPositionOnLimberGrid.offsetY
 				);
 
 				if (programScrolled !== true) {
@@ -356,12 +335,12 @@ export const onItemTouchMove = function (event) {
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 
 			let newX1, newY1, newWidth, newHeight;
-			if (iiv.userActionData.type === "resize") {
+			if (iiv.userActionData.type === "resize" && touchPositionOnLimberGrid) {
 				newX1 = x;
 				newY1 = y;
 				newWidth = touchPositionOnLimberGrid.x - x;
 				newHeight = touchPositionOnLimberGrid.y - y;
-			} else {
+			} else if (touchPositionOnLimberGrid) {
 				// resizeBottomLeft
 				newX1 = touchPositionOnLimberGrid.x;
 				newY1 = y;
@@ -369,7 +348,7 @@ export const onItemTouchMove = function (event) {
 				newHeight = touchPositionOnLimberGrid.y - y;
 			}
 
-			if (touchPositionOnLimberGrid !== false) {
+			if (touchPositionOnLimberGrid) {
 				iiv.userActionData.newX1 = newX1;
 				iiv.userActionData.newY1 = newY1;
 				iiv.userActionData.newWidth = newWidth;
@@ -386,31 +365,12 @@ export const onItemTouchMove = function (event) {
 				}
 			}
 
-			if (touchPositionOnLimberGrid !== false) {
-				const scrollTop = e.$limberGridView.scrollTop;
-				const scrollLeft = e.$limberGridView.scrollLeft;
-
-				const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
-				const limberGridViewWidthVisibleWidth =
-					e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
-				const limberGridViewHeightVisibleHeight =
-					e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
-				const limberGridViewOnVisibleAreaX =
-					touchPositionOnLimberGrid.x +
-					privateConstants.PADDING_LEFT -
-					scrollLeft;
-				const limberGridViewOnVisibleAreaY =
-					touchPositionOnLimberGrid.y +
-					privateConstants.PADDING_TOP -
-					scrollTop;
-
+			if (touchPositionOnLimberGrid) {
 				const yTouchPosition = touchPositionOnLimberGrid.y;
 				adjustHeight(this, yTouchPosition);
-
 				const programScrolled = adjustScroll(
 					this,
-					limberGridViewOnVisibleAreaY,
-					limberGridViewHeightVisibleHeight
+					touchPositionOnLimberGrid.offsetY
 				);
 
 				if (programScrolled !== true) {
@@ -451,7 +411,7 @@ export const onItemMouseUp = async function (event) {
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
 			var updatedCoordinates = {};
 			try {
-				if (mousePositionOnLimberGrid !== false) {
+				if (mousePositionOnLimberGrid) {
 					await moveItem.call(
 						this,
 						iiv.userActionData.itemIndex,
@@ -507,7 +467,7 @@ export const onItemTouchEnd = async function (event) {
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 			var updatedCoordinates = {};
 			try {
-				if (touchPositionOnLimberGrid !== false) {
+				if (touchPositionOnLimberGrid) {
 					await moveItem.call(
 						this,
 						iiv.userActionData.itemIndex,

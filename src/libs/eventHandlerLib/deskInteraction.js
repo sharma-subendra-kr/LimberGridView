@@ -139,10 +139,10 @@ export const tapHoldCheck = function (event) {
 	if (dkiv.tapHoldCancel === false) {
 		dkiv.tapHoldTimerComplete = true;
 
-		var touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+		const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 
-		var x = touchPositionOnLimberGrid.x;
-		var y = touchPositionOnLimberGrid.y;
+		const x = touchPositionOnLimberGrid.x;
+		const y = touchPositionOnLimberGrid.y;
 
 		dkiv.userActionData = {
 			type: "add",
@@ -150,7 +150,7 @@ export const tapHoldCheck = function (event) {
 			addPositionY: y,
 		};
 
-		var removeAddItemOnTouchHoldGuideFunction = function () {
+		const removeAddItemOnTouchHoldGuideFunction = function () {
 			e.$limberGridViewTouchHoldGuide.classList.remove(
 				"limber-grid-view-touch-hold-guide-active"
 			);
@@ -245,7 +245,7 @@ export const onDeskMouseMove = function (event) {
 
 export const onDeskTouchMove = function (event) {
 	const e = getElements(this);
-	const privateConstants = getPrivateConstants(this);
+	// const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 
 	const dkiv = getDeskInteractionVars(this);
@@ -256,18 +256,14 @@ export const onDeskTouchMove = function (event) {
 			"limber-grid-view-add-cut-guide-disallow"
 		);
 
-		const scrollTop = e.$limberGridView.scrollTop;
-		const scrollLeft = e.$limberGridView.scrollLeft;
-
 		const x = dkiv.userActionData.addPositionX;
 		const y = dkiv.userActionData.addPositionY;
 
 		const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+		const newWidth = touchPositionOnLimberGrid?.x - x;
+		const newHeight = touchPositionOnLimberGrid?.y - y;
 
-		const newWidth = touchPositionOnLimberGrid.x - x;
-		const newHeight = touchPositionOnLimberGrid.y - y;
-
-		if (touchPositionOnLimberGrid !== false) {
+		if (touchPositionOnLimberGrid) {
 			dkiv.userActionData.newWidth = newWidth;
 			dkiv.userActionData.newHeight = newHeight;
 
@@ -281,26 +277,12 @@ export const onDeskTouchMove = function (event) {
 			}
 		}
 
-		if (touchPositionOnLimberGrid !== false) {
-			const limberGridViewBoundingClientRect = e.$limberGridView.getBoundingClientRect();
-			const limberGridViewWidthVisibleWidth =
-				e.$limberGridView.offsetWidth - limberGridViewBoundingClientRect.left;
-			const limberGridViewHeightVisibleHeight =
-				e.$limberGridView.offsetHeight - limberGridViewBoundingClientRect.top;
-			const limberGridViewOnVisibleAreaX =
-				touchPositionOnLimberGrid.x +
-				privateConstants.PADDING_LEFT -
-				scrollLeft;
-			const limberGridViewOnVisibleAreaY =
-				touchPositionOnLimberGrid.y + privateConstants.PADDING_TOP - scrollTop;
-
+		if (touchPositionOnLimberGrid) {
 			const yTouchPosition = touchPositionOnLimberGrid.y;
 			adjustHeight(this, yTouchPosition);
-
 			const programScrolled = adjustScroll(
 				this,
-				limberGridViewOnVisibleAreaY,
-				limberGridViewHeightVisibleHeight
+				touchPositionOnLimberGrid.offsetY
 			);
 
 			if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
@@ -413,14 +395,14 @@ export const onDeskTouchEnd = function (event) {
 					dkiv.userActionData.newHeight
 				)
 			) {
-				var item = {
+				const item = {
 					x: dkiv.userActionData.addPositionX,
 					y: dkiv.userActionData.addPositionY,
 					width: dkiv.userActionData.newWidth,
 					height: dkiv.userActionData.newHeight,
 				};
 
-				var scrollTop = e.$limberGridView.scrollTop;
+				const scrollTop = e.$limberGridView.scrollTop;
 
 				addItem(this, item, false, "addItemInteractive");
 
