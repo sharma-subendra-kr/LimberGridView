@@ -54,8 +54,8 @@ import {
 } from "./libs/eventHandlerLib/deskInteraction";
 import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
-	onWindowResize,
-	onWindowResizeTimerCallback,
+	instantiateResizeObserver,
+	resizeObserverCallback,
 } from "./libs/eventHandlerLib/miscellaneous";
 
 import { fixTo } from "./libs/utils/utils";
@@ -74,7 +74,6 @@ import {
 	get$limberGridViewContainer,
 } from "./store/variables/elements";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
-import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 import {
 	render,
@@ -345,10 +344,7 @@ function LimberGridView(options) {
 
 	initConstantsAndFlags.call(this, options);
 	initRender.call(this);
-
-	if (this.options.reRenderOnResize === true) {
-		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
-	}
+	instantiateResizeObserver.call(this);
 
 	setTimeout(
 		async function () {
@@ -420,8 +416,7 @@ LimberGridView.prototype.initializeStore = function () {
 				onDeskContextMenu: onDeskContextMenu.bind(this),
 
 				//
-				onWindowResize: onWindowResize.bind(this),
-				onWindowResizeTimerCallback: onWindowResizeTimerCallback.bind(this),
+				resizeObserverCallback: resizeObserverCallback.bind(this),
 			},
 			eventSpecific: {
 				itemInteraction: {
@@ -457,8 +452,6 @@ LimberGridView.prototype.initializeStore = function () {
 			stacks: {
 				stack: new Stack(),
 				garbageStack: new Stack(),
-				// resStack: new Stack(),
-				// itemsToArrangeStack: new Stack(),
 			},
 			undoRedo: new UndoRedo(),
 		},
@@ -521,6 +514,12 @@ LimberGridView.prototype.initializeStore = function () {
 				latchedMoveDemo1:
 					"Move curser close to an adjacent item over this box to latch next to that item.",
 				latchedMoveDemo2: "Move curser over this box to latch on to this item.",
+			},
+		},
+		observer: {
+			resizeObserver: {
+				resizeObserver: undefined,
+				isResizeObserving: false,
 			},
 		},
 	};

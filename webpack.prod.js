@@ -37,17 +37,29 @@ module.exports = merge(common, {
 				: "limber.grid.view.development.js",
 	},
 	externals: {
-		IntervalTreeJS: {
-			commonjs: "IntervalTreeJS",
-			commonjs2: "IntervalTreeJS",
-			amd: "IntervalTreeJS",
-			root: "IntervalTreeJS",
+		rtreejs: {
+			commonjs: "RTreeJS",
+			commonjs2: "RTreeJS",
+			amd: "RTreeJS",
+			root: "RTreeJS",
 		},
 		Stack: {
 			commonjs: "Stack",
 			commonjs2: "Stack",
 			amd: "Stack",
 			root: "Stack",
+		},
+		"undo-redo": {
+			commonjs: "UndoRedo",
+			commonjs2: "UndoRedo",
+			amd: "UndoRedo",
+			root: "UndoRedo",
+		},
+		"resize-observer-polyfill": {
+			commonjs: "ResizeObserver",
+			commonjs2: "ResizeObserver",
+			amd: "ResizeObserver",
+			root: "ResizeObserver",
 		},
 	},
 });

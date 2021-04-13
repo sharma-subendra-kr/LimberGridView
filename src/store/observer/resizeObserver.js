@@ -23,34 +23,10 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
-
-export const isMobile = function (context) {
-	const isMobileFunction = context.options.isMobileCheck;
-
-	if (isMobileFunction) {
-		return isMobileFunction(getLimberGridViewBoundingClientRect(context));
-	}
-
-	return getLimberGridViewBoundingClientRect(context).width < 980;
+export const setIsResizeObserving = function (context, value) {
+	context.store.observer.resizeObserver.isResizeObserving = value;
 };
 
-export const fixTo = (num, to = 6) => {
-	return Math.trunc(num * Math.pow(10, to)) / Math.pow(10, to);
-};
-
-export const getRandomString = (len = 22) => {
-	const alpNum = "0123456789abcdefghijklmnopqrstuvwxyz";
-
-	const arr = new Array(len);
-	for (let i = 0; i < len; i++) {
-		arr[i] = alpNum[Math.floor(Math.random() * 36)];
-	}
-	return arr.join("");
-};
-
-export const sleep = (ms) => {
-	return new Promise((resolve, reject) => {
-		setTimeout(resolve, ms);
-	});
+export const getIsResizeObserving = function (context) {
+	return context.store.observer.resizeObserver.isResizeObserving;
 };

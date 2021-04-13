@@ -83,6 +83,14 @@ const getCallbacks = function (context) {
 	return context.store.variables.essentials.callbacks;
 };
 
+const setLimberGridViewBoundingClientRect = function (context, value) {
+	context.store.variables.essentials.limberGridViewBoundingClientRect = value;
+};
+
+const getLimberGridViewBoundingClientRect = function (context) {
+	return context.store.variables.essentials.limberGridViewBoundingClientRect;
+};
+
 export default getEssentialVariables;
 export {
 	// setElementId,
@@ -98,4 +106,6 @@ export {
 	getGridData,
 	setCallbacks,
 	getCallbacks,
+	setLimberGridViewBoundingClientRect,
+	getLimberGridViewBoundingClientRect,
 };
