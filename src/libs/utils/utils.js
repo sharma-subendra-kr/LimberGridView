@@ -23,29 +23,16 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// export const emptyObject = function (obj) {
-// 	const keys = Object.keys(obj);
-// 	const length = keys.length;
-// 	for (let i = 0; i < length; i++) {
-// 		delete obj[keys[i]];
-// 	}
-// };
+import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 
 export const isMobile = function (context) {
 	const isMobileFunction = context.options.isMobileCheck;
 
 	if (isMobileFunction) {
-		return isMobileFunction();
+		return isMobileFunction(getLimberGridViewBoundingClientRect(context));
 	}
 
-	return (
-		window.matchMedia(
-			"only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)"
-		).matches ||
-		window.matchMedia(
-			"only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)"
-		).matches
-	);
+	return getLimberGridViewBoundingClientRect(context).width < 980;
 };
 
 export const fixTo = (num, to = 6) => {
