@@ -43,11 +43,11 @@ export const initializeEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (options.editable === true) {
+	if (options.editable) {
 		if (!isMobile(this)) {
-			if (options.enableInteractiveAddAndCut !== false) {
+			if (options.enableInteractiveAddAndCut) {
 				e.$limberGridView.addEventListener("mousedown", bf.onDeskMouseDown);
-				if (options.enableTouchInteraction !== false) {
+				if (options.enableTouchInteraction) {
 					e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 				}
 			}
@@ -60,7 +60,7 @@ export const initializeEvents = function () {
 					"mousedown",
 					bf.onItemMouseDown
 				);
-				if (options.enableTouchInteraction !== false) {
+				if (options.enableTouchInteraction) {
 					e.$limberGridViewItems[i].addEventListener(
 						"touchstart",
 						bf.onItemTouchStart
@@ -81,13 +81,13 @@ export const unInitializeEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (options.editable === true) {
-		if (e.$limberGridView !== undefined) {
+	if (options.editable) {
+		if (e.$limberGridView) {
 			e.$limberGridView.removeEventListener("mousedown", bf.onDeskMouseDown);
 			e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
 		}
 
-		if (e.$limberGridViewItems !== undefined) {
+		if (e.$limberGridViewItems) {
 			const len = e.$limberGridViewItems.length;
 			for (let i = 0; i < len; i++) {
 				e.$limberGridViewItems[i].removeEventListener(
@@ -110,7 +110,7 @@ export const initializeItemTouchEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (e.$limberGridViewItems !== undefined) {
+	if (e.$limberGridViewItems) {
 		const len = e.$limberGridViewItems.length;
 		for (let i = 0; i < len; i++) {
 			e.$limberGridViewItems[i].addEventListener(
@@ -130,7 +130,7 @@ export const unInitializeItemTouchEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (e.$limberGridViewItems !== undefined) {
+	if (e.$limberGridViewItems) {
 		const len = e.$limberGridViewItems.length;
 		for (let i = 0; i < len; i++) {
 			e.$limberGridViewItems[i].removeEventListener(

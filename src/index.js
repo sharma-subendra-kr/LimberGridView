@@ -52,6 +52,7 @@ import {
 	onDeskTouchContextMenu,
 	onDeskTouchCancel,
 } from "./libs/eventHandlerLib/deskInteraction";
+import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
 	onWindowResize,
 	onWindowResizeTimerCallback,
@@ -67,7 +68,11 @@ import {
 	getPositionData,
 	setCallbacks,
 } from "./store/variables/essentials";
-import { set$el } from "./store/variables/elements";
+import {
+	set$el,
+	get$pseudoContainer,
+	get$limberGridViewContainer,
+} from "./store/variables/elements";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
 import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
@@ -717,6 +722,19 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
 	if (typeof value === "boolean") {
 		setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
 	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#destroy
+ * @description free event listeners and all other resources
+ */
+LimberGridView.prototype.destroy = function (value) {
+	unInitializeEvents.call(this);
+	const $pseudoContainer = get$pseudoContainer(this);
+	const $limberGridViewContainer = get$limberGridViewContainer(this);
+	$pseudoContainer.remove();
+	$limberGridViewContainer.remove();
 };
 
 export default LimberGridView;
