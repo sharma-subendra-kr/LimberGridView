@@ -39,6 +39,8 @@ const main = function () {
 
 	const onRTreeButtonClick = function (event) {
 		$rtreeDebugContainer.classList.toggle("rtree-debug-container-active");
+		// document.getElementsByClassName("limber-grid-view")[0].style.width =
+		// 	"900px";
 	};
 
 	$rtreeButton.addEventListener("click", onRTreeButtonClick);

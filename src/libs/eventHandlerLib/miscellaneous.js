@@ -23,6 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import ResizeObserverPolyfill from "resize-observer-polyfill";
 import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getCallbacks,
@@ -50,6 +51,11 @@ export const instantiateResizeObserver = function () {
 			get$limberGridView(this).getBoundingClientRect()
 		)
 	);
+
+	const ResizeObserver = window.ResizeObserver
+		? window.ResizeObserver
+		: ResizeObserverPolyfill;
+
 	this.store.observer.resizeObserver.resizeObserver = new ResizeObserver(
 		getBindedFunctions(this).resizeObserverCallback
 	);
@@ -63,15 +69,15 @@ export const resizeObserverCallback = function () {
 	if (!getIsResizeObserving(this)) {
 		setIsResizeObserving(this, true);
 		setTimeout(async () => {
-			await init(this, true, false);
-			render(this);
-			setIsResizeObserving(this, false);
 			setLimberGridViewBoundingClientRect(
 				this,
 				getAllBoundingClientRectKeys(
 					get$limberGridView(this).getBoundingClientRect()
 				)
 			);
+			await init(this, true, false);
+			render(this);
+			setIsResizeObserving(this, false);
 		}, publicConstants.WINDOW_RESIZE_WAIT_TIME);
 	}
 };
