@@ -225,7 +225,7 @@ export const unloadResizingState = (context, userActionData) => {
 	e.$limberGridViewPseudoItem.classList.remove(
 		"limber-grid-view-pseudo-item-active"
 	);
-	e.$limberGridViewPseudoItem.style.transform = `translate(0px, 0px)`;
+	e.$limberGridViewPseudoItem.style.transform = `translate(-1000px, -1000px)`;
 
 	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
 
@@ -291,7 +291,7 @@ export const unloadMoveState = (context, userActionData) => {
 	e.$pseudoContainerItem.style.width = "0px";
 	e.$pseudoContainerItem.style.height = "0px";
 
-	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
+	e.$pseudoContainerItem.style.transform = `translate(-1000px, -1000px)`;
 
 	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
 
@@ -332,4 +332,5 @@ export const unloadOnMoveState = (context) => {
 	e.$limberGridViewMoveGuide.classList.remove(
 		"limber-grid-view-move-guide-active"
 	);
+	e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
 };

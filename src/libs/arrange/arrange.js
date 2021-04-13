@@ -39,6 +39,7 @@ import {
 	getItemsInWorkSpaceMap,
 	shiftItemsDown,
 } from "./arrangeUtils";
+import { sanitizeDimension } from "../utils/items";
 
 // import {
 // printUnmergedFreeRects,
@@ -378,6 +379,44 @@ export const arrangeFromHeight = async (context, itemsToArrange, height) => {
 	}
 
 	return arranged;
+};
+
+export const autoArrangeGrid = async (context) => {
+	const mpd = getModifiedPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const width = privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+	const height = width;
+	const rowSize = Math.floor(privateConstants.WIDTH / width);
+	const len = mpd.length;
+	let iter = 0;
+	for (let i = 0; i < len; i += rowSize) {
+		const row = i / rowSize;
+		for (let j = 0; j < rowSize && iter < len; j++) {
+			mpd[iter].x1 =
+				j * privateConstants.MARGIN * 2 + j * width + privateConstants.MARGIN;
+			mpd[iter].x2 = mpd[iter].x1 + width;
+			mpd[iter].y1 =
+				row * privateConstants.MARGIN * 2 +
+				row * height +
+				privateConstants.MARGIN;
+			mpd[iter].y2 = mpd[iter].y1 + height;
+
+			mpd[iter].x = mpd[iter].x1;
+			mpd[iter].y = mpd[iter].y1;
+
+			sanitizeDimension(mpd[iter]);
+
+			mpd[iter].mX1 = mpd[iter].x1 - privateConstants.MARGIN;
+			mpd[iter].mX2 = mpd[iter].x2 + privateConstants.MARGIN;
+			mpd[iter].mY1 = mpd[iter].y1 - privateConstants.MARGIN;
+			mpd[iter].mY2 = mpd[iter].y1 + privateConstants.MARGIN;
+
+			mpd[iter].mX = mpd[iter].mX1;
+			mpd[iter].mY = mpd[iter].mY2;
+			iter++;
+		}
+	}
 };
 
 // export const arrangeResize = async (
