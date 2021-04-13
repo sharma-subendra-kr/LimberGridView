@@ -250,11 +250,17 @@ Written by Subendra Kumar Sharma.
 	background-color: transparent;
 
 	position: absolute;
-	display: none;
+	transform: translate(-1000px, -1000px);
 	vertical-align: top;
 	box-sizing: border-box;
 
 	cursor: grabbing;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-size: 12px;
 }
 
 .limber-grid-view-move-guide::before {
@@ -272,11 +278,6 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-move-guide-active {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	font-size: 12px;
 }
 
 .limber-grid-view-height-adjust-guide {
@@ -286,13 +287,14 @@ Written by Subendra Kumar Sharma.
 	background-color: transparent;
 
 	position: absolute;
-	display: none;
+
+	transform: translate(-1000px, -1000px);
 	vertical-align: top;
 	box-sizing: border-box;
 }
 
 .limber-grid-view-height-adjust-guide-active {
-	display: block;
+	transform: translate(0px, 0px);
 }
 
 .limber-grid-view-add-cut-guide {

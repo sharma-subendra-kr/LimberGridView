@@ -332,4 +332,5 @@ export const unloadOnMoveState = (context) => {
 	e.$limberGridViewMoveGuide.classList.remove(
 		"limber-grid-view-move-guide-active"
 	);
+	e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
 };
