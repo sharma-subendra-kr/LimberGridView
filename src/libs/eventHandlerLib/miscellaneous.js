@@ -24,35 +24,39 @@ Written by Subendra Kumar Sharma.
 */
 
 import getPublicConstants from "../../store/constants/publicConstants";
-import getOptions from "../../store/variables/options";
 import { getCallbacks } from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
-
-export const onWindowResize = function (event) {
-	const publicConstants = getPublicConstants(this);
-
-	setTimeout(
-		getBindedFunctions(this).onWindowResizeTimerCallback,
-		publicConstants.WINDOW_RESIZE_WAIT_TIME
-	);
-	window.removeEventListener("resize", getBindedFunctions(this).onWindowResize);
-};
-
-export const onWindowResizeTimerCallback = async function (event) {
-	await init(this, true, false);
-	render(this);
-
-	const options = getOptions(this);
-
-	if (options.reRenderOnResize !== false) {
-		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
-	}
-};
+import { get$limberGridView } from "../../store/variables/elements";
+import {
+	setIsResizeObserving,
+	getIsResizeObserving,
+} from "../../store/observer/resizeObserver";
 
 export const onItemClick = function (event) {
 	const callbacks = getCallbacks(this);
 
 	callbacks.onItemClickCallback(event);
+};
+
+export const instantiateResizeObserver = function () {
+	this.store.observer.resizeObserver.resizeObserver = new ResizeObserver(
+		getBindedFunctions(this).resizeObserverCallback
+	);
+	this.store.observer.resizeObserver.resizeObserver.observe(
+		get$limberGridView(this)
+	);
+};
+
+export const resizeObserverCallback = function () {
+	const publicConstants = getPublicConstants(this);
+	if (!getIsResizeObserving(this)) {
+		setIsResizeObserving(this, true);
+		setTimeout(async () => {
+			await init(this, true, false);
+			render(this);
+			setIsResizeObserving(this, false);
+		}, publicConstants.WINDOW_RESIZE_WAIT_TIME);
+	}
 };
