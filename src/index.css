@@ -427,7 +427,7 @@ Written by Subendra Kumar Sharma.
 	height: 12px;
 	width: auto;
 	white-space: nowrap;
-	z-index: 999;
+	z-index: 2000;
 }
 
 .limber-grid-view-license-details {
