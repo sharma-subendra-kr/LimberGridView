@@ -301,7 +301,7 @@ Written by Subendra Kumar Sharma.
 	width: 1px;
 	height: 1px;
 	position: absolute;
-	display: none;
+	transform: translate(-1000px, -1000px);
 	vertical-align: top;
 	border: dotted 2px black;
 	box-sizing: border-box;
@@ -334,7 +334,6 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-add-cut-guide-active {
-	display: block;
 }
 
 .limber-grid-view-add-cut-guide-allow {
@@ -349,7 +348,7 @@ Written by Subendra Kumar Sharma.
 	width: 100px;
 	height: 100px;
 	position: absolute;
-	display: none;
+	transform: translate(-1000px, -1000px);
 	vertical-align: top;
 	box-sizing: border-box;
 
@@ -370,7 +369,6 @@ Written by Subendra Kumar Sharma.
 }
 
 .limber-grid-view-touch-hold-guide-active {
-	display: block;
 }
 
 @keyframes limber-grid-view-touch-hold-guide-ripple {

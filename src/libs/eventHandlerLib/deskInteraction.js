@@ -154,6 +154,7 @@ export const tapHoldCheck = function (event) {
 			e.$limberGridViewTouchHoldGuide.classList.remove(
 				"limber-grid-view-touch-hold-guide-active"
 			);
+			e.$limberGridViewTouchHoldGuide.style.transform = `translate(-1000px, -1000px)`;
 		};
 		setTimeout(removeAddItemOnTouchHoldGuideFunction.bind(this), 500);
 
