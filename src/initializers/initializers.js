@@ -64,7 +64,7 @@ import getPublicConstants, {
 } from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
 import { getRandomString } from "../libs/utils/utils";
-import { arrangeFromHeight } from "../libs/arrange/arrange";
+import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 
 export const init = async function (context, isResize, autoArrange) {
@@ -120,7 +120,7 @@ export const init = async function (context, isResize, autoArrange) {
 		setWidthScaleFactor(context, 1);
 		setDefinedMinHeightAndWidth(context, privateConstants.MIN_HEIGHT_AND_WIDTH);
 
-		await arrangeFromHeight(context, arr, privateConstants.MARGIN);
+		await autoArrangeGrid(context);
 		setPositionData(context, mpd);
 	}
 
