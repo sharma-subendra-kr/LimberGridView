@@ -201,6 +201,7 @@ export const onDeskMouseMove = function (event) {
 		dkiv.userActionData.newWidth = newWidth;
 		dkiv.userActionData.newHeight = newHeight;
 
+		const offsetY = event.offsetY;
 		const yMousePosition = event.offsetY + scrollTop;
 		if (!dkiv.isScrolling) {
 			dkiv.isScrolling = true;
@@ -208,7 +209,7 @@ export const onDeskMouseMove = function (event) {
 				adjustHeightAndScroll(
 					this,
 					yMousePosition,
-					event.offsetY,
+					offsetY,
 					publicConstants.AUTO_SCROLL_FOR_MOUSE
 				);
 				dkiv.isScrolling = false;

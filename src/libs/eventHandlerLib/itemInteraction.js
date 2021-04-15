@@ -265,6 +265,7 @@ export const onItemMouseMove = function (event) {
 			iiv.userActionData.newWidth = newWidth;
 			iiv.userActionData.newHeight = newHeight;
 
+			const offsetY = event.offsetY;
 			const yMousePosition = event.offsetY + scrollTop;
 			if (!iiv.isScrolling) {
 				iiv.isScrolling = true;
@@ -272,7 +273,7 @@ export const onItemMouseMove = function (event) {
 					adjustHeightAndScroll(
 						this,
 						yMousePosition,
-						event.offsetY,
+						offsetY,
 						publicConstants.AUTO_SCROLL_FOR_MOUSE
 					);
 					iiv.isScrolling = false;
