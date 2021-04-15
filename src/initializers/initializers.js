@@ -43,6 +43,8 @@ import getElements, {
 	set$limberGridViewAddCutGuide,
 	set$limberGridViewTouchHoldGuide,
 	set$limberGridViewCrossHairGuide,
+	set$limberGridViewIOTopHelper,
+	set$limberGridViewIOBottomHelper,
 } from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
@@ -465,6 +467,8 @@ export const initRender = function () {
 	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
 	const limberGridViewCrossHairGuide = document.createElement("div");
 	limberGridViewCrossHairGuide.innerHTML = `<hr></hr><hr></hr>`;
+	const limberGridViewIOTopHelper = document.createElement("div");
+	const limberGridViewIOBottomHelper = document.createElement("div");
 
 	pseudoContainerItem.setAttribute(
 		"class",
@@ -494,6 +498,14 @@ export const initRender = function () {
 	limberGridViewCrossHairGuide.style.transform = `translate(-${
 		publicConstants.CROSS_HAIR_WIDTH * 2
 	}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+	limberGridViewIOTopHelper.setAttribute(
+		"class",
+		"limber-grid-view-io-top-helper"
+	);
+	limberGridViewIOBottomHelper.setAttribute(
+		"class",
+		"limber-grid-view-io-bottom-helper"
+	);
 
 	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
@@ -502,6 +514,8 @@ export const initRender = function () {
 	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
 	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
 	e.$limberGridView.appendChild(limberGridViewCrossHairGuide);
+	e.$limberGridView.appendChild(limberGridViewIOTopHelper);
+	e.$limberGridView.appendChild(limberGridViewIOBottomHelper);
 
 	set$pseudoContainerItem(this, pseudoContainerItem);
 	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
@@ -510,4 +524,6 @@ export const initRender = function () {
 	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
 	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
 	set$limberGridViewCrossHairGuide(this, limberGridViewCrossHairGuide);
+	set$limberGridViewIOTopHelper(this, limberGridViewIOTopHelper);
+	set$limberGridViewIOBottomHelper(this, limberGridViewIOBottomHelper);
 };

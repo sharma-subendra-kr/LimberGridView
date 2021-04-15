@@ -91,6 +91,14 @@ const getLimberGridViewBoundingClientRect = function (context) {
 	return context.store.variables.essentials.limberGridViewBoundingClientRect;
 };
 
+const setRenderedItems = function (context, renderedItems) {
+	context.store.variables.essentials.renderedItems = [...renderedItems];
+};
+
+const getRenderedItems = function (context) {
+	return context.store.variables.essentials.renderedItems;
+};
+
 export default getEssentialVariables;
 export {
 	// setElementId,

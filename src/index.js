@@ -56,6 +56,8 @@ import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
 	instantiateResizeObserver,
 	resizeObserverCallback,
+	instantiateIntersectionObserver,
+	intersectionObserverCallback,
 } from "./libs/eventHandlerLib/miscellaneous";
 
 import { fixTo } from "./libs/utils/utils";
@@ -345,6 +347,7 @@ function LimberGridView(options) {
 	initConstantsAndFlags.call(this, options);
 	initRender.call(this);
 	instantiateResizeObserver.call(this);
+	instantiateIntersectionObserver.call(this);
 
 	setTimeout(
 		async function () {
@@ -391,6 +394,7 @@ LimberGridView.prototype.initializeStore = function () {
 				pseudoContainerId: undefined,
 				positionData: [],
 				modifiedPositionData: [],
+				renderedItems: [],
 				gridData: {},
 				callbacks: {},
 			},
@@ -417,6 +421,7 @@ LimberGridView.prototype.initializeStore = function () {
 
 				//
 				resizeObserverCallback: resizeObserverCallback.bind(this),
+				intersectionObserverCallback: intersectionObserverCallback.bind(this),
 			},
 			eventSpecific: {
 				itemInteraction: {
@@ -520,6 +525,9 @@ LimberGridView.prototype.initializeStore = function () {
 			resizeObserver: {
 				resizeObserver: undefined,
 				isResizeObserving: false,
+			},
+			intersectionObserver: {
+				intersectionObserver: undefined,
 			},
 		},
 	};

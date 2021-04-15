@@ -32,7 +32,11 @@ import {
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
-import { get$limberGridView } from "../../store/variables/elements";
+import {
+	get$limberGridView,
+	get$limberGridViewIOTopHelper,
+	get$limberGridViewIOBottomHelper,
+} from "../../store/variables/elements";
 import {
 	setIsResizeObserving,
 	getIsResizeObserving,
@@ -94,3 +98,23 @@ export const getAllBoundingClientRectKeys = function (rect) {
 		left: rect.left,
 	};
 };
+
+export const instantiateIntersectionObserver = function () {
+	this.store.observer.intersectionObserver.intersectionObserver = new IntersectionObserver(
+		getBindedFunctions(this).intersectionObserverCallback,
+		{
+			root: get$limberGridView,
+			// rootMargin: "0px",
+			threshold: 1.0,
+		}
+	);
+
+	this.store.observer.intersectionObserver.intersectionObserver.observe(
+		get$limberGridViewIOTopHelper(this)
+	);
+	this.store.observer.intersectionObserver.intersectionObserver.observe(
+		get$limberGridViewIOBottomHelper(this)
+	);
+};
+
+export const intersectionObserverCallback = function (entries, observer) {};
