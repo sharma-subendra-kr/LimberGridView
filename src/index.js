@@ -56,9 +56,11 @@ import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
 	instantiateResizeObserver,
 	resizeObserverCallback,
+} from "./libs/eventHandlerLib/miscellaneous";
+import {
 	instantiateIntersectionObserver,
 	intersectionObserverCallback,
-} from "./libs/eventHandlerLib/miscellaneous";
+} from "./libs/eventHandlerLib/intersectionObserver";
 
 import { fixTo } from "./libs/utils/utils";
 import { setPublicConstantByName } from "./store/constants/publicConstants";
