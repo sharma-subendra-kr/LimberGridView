@@ -29,12 +29,21 @@ import {
 	get$limberGridViewIOTopHelper,
 	get$limberGridViewIOBottomHelper,
 } from "../../store/variables/elements";
+import {
+	setRenderedItems,
+	getRenderedItems,
+	setIOTopHelperPos,
+	getIOTopHelperPos,
+	setIOBottomHelperPos,
+	getIOBottomHelperPos,
+} from "../../store/variables/essentials";
+import { getPrivateConstants } from "../../store/constants/privateConstants";
 
 export const instantiateIntersectionObserver = function () {
 	this.store.observer.intersectionObserver.intersectionObserver = new IntersectionObserver(
 		getBindedFunctions(this).intersectionObserverCallback,
 		{
-			root: get$limberGridView,
+			root: get$limberGridView(this),
 			// rootMargin: "0px",
 			threshold: 1.0,
 		}
@@ -48,4 +57,25 @@ export const instantiateIntersectionObserver = function () {
 	);
 };
 
-export const intersectionObserverCallback = function (entries, observer) {};
+export const intersectionObserverCallback = function (entries, observer) {
+	if (entries.length !== 1 || !entries[0].isIntersecting) {
+		return;
+	}
+
+	const privateConstants = getPrivateConstants(this);
+
+	const entry = entries[0];
+	if (entry.target.classList.contains("limber-grid-view-io-top-helper")) {
+		setIOBottomHelperPos(this, getIOTopHelperPos(this) + 1.5);
+		setIOTopHelperPos(this, getIOTopHelperPos(this) - 1);
+	} else {
+		setIOTopHelperPos(this, getIOBottomHelperPos(this) - 1.5);
+		setIOBottomHelperPos(this, getIOBottomHelperPos(this) + 1);
+	}
+	get$limberGridViewIOTopHelper(this).style.transform = `translate(0px, ${
+		getIOTopHelperPos(this) * privateConstants.HEIGHT
+	}px)`;
+	get$limberGridViewIOBottomHelper(this).style.transform = `translate(0px, ${
+		getIOBottomHelperPos(this) * privateConstants.HEIGHT
+	}px)`;
+};

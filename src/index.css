@@ -424,14 +424,14 @@ Written by Subendra Kumar Sharma.
 	position: absolute;
 	transform: translate(-1000px, -1000px);
 	width: 0px;
-	height: 0px;
+	height: 1px;
 }
 
 .limber-grid-view-io-bottom-helper {
 	position: absolute;
 	transform: translate(-1000px, -1000px);
 	width: 0px;
-	height: 0px;
+	height: 1px;
 }
 
 .limber-grid-view-license {

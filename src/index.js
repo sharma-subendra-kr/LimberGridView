@@ -397,6 +397,8 @@ LimberGridView.prototype.initializeStore = function () {
 				positionData: [],
 				modifiedPositionData: [],
 				renderedItems: [],
+				ioTopHelperPos: -1,
+				ioBottomHelperPos: 1.5,
 				gridData: {},
 				callbacks: {},
 			},

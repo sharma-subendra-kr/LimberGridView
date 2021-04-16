@@ -30,6 +30,12 @@ import {
 	getModifiedPositionData,
 	setModifiedPositionData,
 	setPseudoContainerId,
+	// setRenderedItems,
+	// getRenderedItems,
+	// setIOTopHelperPos,
+	getIOTopHelperPos,
+	// setIOBottomHelperPos,
+	getIOBottomHelperPos,
 } from "../store/variables/essentials";
 import getElements, {
 	set$body,
@@ -44,7 +50,9 @@ import getElements, {
 	set$limberGridViewTouchHoldGuide,
 	set$limberGridViewCrossHairGuide,
 	set$limberGridViewIOTopHelper,
+	get$limberGridViewIOTopHelper,
 	set$limberGridViewIOBottomHelper,
+	get$limberGridViewIOBottomHelper,
 } from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
@@ -208,6 +216,13 @@ export const init = async function (context, isResize, autoArrange) {
 		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
 			privateConstants.WIDTH_SCALE_FACTOR
 	);
+
+	get$limberGridViewIOTopHelper(context).style.transform = `translate(0px, ${
+		getIOTopHelperPos(context) * privateConstants.HEIGHT
+	}px)`;
+	get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${
+		getIOBottomHelperPos(context) * privateConstants.HEIGHT
+	}px)`;
 };
 
 export const initConstantsAndFlags = function (options) {

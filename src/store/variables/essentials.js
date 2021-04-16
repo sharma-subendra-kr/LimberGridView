@@ -99,6 +99,22 @@ const getRenderedItems = function (context) {
 	return context.store.variables.essentials.renderedItems;
 };
 
+const setIOTopHelperPos = function (context, position) {
+	context.store.variables.essentials.ioTopHelperPos = position;
+};
+
+const getIOTopHelperPos = function (context) {
+	return context.store.variables.essentials.ioTopHelperPos;
+};
+
+const setIOBottomHelperPos = function (context, position) {
+	context.store.variables.essentials.ioBottomHelperPos = position;
+};
+
+const getIOBottomHelperPos = function (context) {
+	return context.store.variables.essentials.ioBottomHelperPos;
+};
+
 export default getEssentialVariables;
 export {
 	// setElementId,
@@ -116,4 +132,10 @@ export {
 	getCallbacks,
 	setLimberGridViewBoundingClientRect,
 	getLimberGridViewBoundingClientRect,
+	setRenderedItems,
+	getRenderedItems,
+	setIOTopHelperPos,
+	getIOTopHelperPos,
+	setIOBottomHelperPos,
+	getIOBottomHelperPos,
 };
