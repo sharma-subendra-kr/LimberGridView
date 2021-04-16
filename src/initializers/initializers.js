@@ -30,7 +30,7 @@ import {
 	getModifiedPositionData,
 	setModifiedPositionData,
 	setPseudoContainerId,
-	// setRenderedItems,
+	setRenderedItems,
 	// getRenderedItems,
 	// setIOTopHelperPos,
 	getIOTopHelperPos,
@@ -76,6 +76,7 @@ import { checkPositionData } from "../libs/renderers/rendererUtils";
 import { getRandomString } from "../libs/utils/utils";
 import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
+import { getItemsInWorkSpace } from "../libs/utils/items";
 
 export const init = async function (context, isResize, autoArrange) {
 	const e = getElements(context);
@@ -223,6 +224,19 @@ export const init = async function (context, isResize, autoArrange) {
 	get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${
 		getIOBottomHelperPos(context) * privateConstants.HEIGHT
 	}px)`;
+
+	const renderSpace = {
+		x1: 0,
+		x2: privateConstants.WIDTH,
+		y1:
+			getIOTopHelperPos(context) * privateConstants.HEIGHT -
+			privateConstants.HEIGHT,
+		y2:
+			getIOBottomHelperPos(context) * privateConstants.HEIGHT +
+			privateConstants.HEIGHT,
+	};
+
+	setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
 };
 
 export const initConstantsAndFlags = function (options) {

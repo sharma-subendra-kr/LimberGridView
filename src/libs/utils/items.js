@@ -23,6 +23,8 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import { getPositionData } from "../../store/variables/essentials";
+
 export const makeItem = (item) => {
 	item.x1 = item.x;
 	item.x2 = item.x + item.width;
@@ -220,4 +222,35 @@ export const getItemsToRerenderOnUndoRedo = function (cpd, npd) {
 	}
 
 	return changed;
+};
+
+export const getItemsInWorkSpace = (
+	context,
+	workSpaceRect,
+	getIndices = false,
+	excludeMap
+) => {
+	const pd = getPositionData(context);
+
+	const len = pd.length;
+	const itemsInWorkSpace = new Array(len);
+	let count = 0;
+	let item;
+	for (let i = 0; i < len; i++) {
+		item = pd[i];
+		if (excludeMap && excludeMap[i]) {
+			continue;
+		}
+		if (doRectsOverlapSingleItemMargin(workSpaceRect, item)) {
+			if (!getIndices) {
+				itemsInWorkSpace[count++] = pd[i];
+			} else {
+				itemsInWorkSpace[count++] = i;
+			}
+		}
+	}
+
+	itemsInWorkSpace.length = count;
+
+	return itemsInWorkSpace;
 };

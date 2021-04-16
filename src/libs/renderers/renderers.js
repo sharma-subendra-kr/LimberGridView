@@ -26,6 +26,7 @@ Written by Subendra Kumar Sharma.
 import getOptions from "../../store/variables/options";
 import getElements, {
 	set$limberGridViewItems,
+	get$limberGridViewItems,
 } from "../../store/variables/elements";
 import {
 	getPositionData,
@@ -33,6 +34,7 @@ import {
 	getModifiedPositionData,
 	setModifiedPositionData,
 	getCallbacks,
+	getRenderedItems,
 } from "../../store/variables/essentials";
 import { isMobile } from "../utils/utils";
 import { sanitizeDimension } from "../utils/items";
@@ -90,7 +92,9 @@ export const render = function (context, scale = true) {
 	}
 	getUndoRedo(context).setCurrent(pd);
 
-	const nodes = new Array(len);
+	const renderedItems = getRenderedItems(context);
+	const renderedItemsLen = renderedItems.length;
+	const nodes = new Array(renderedItemsLen);
 	let spd;
 
 	if (!isMobile(context)) {
@@ -103,13 +107,14 @@ export const render = function (context, scale = true) {
 			}`;
 		}
 
-		for (let i = 0; i < len; i++) {
+		for (let i = 0; i < renderedItemsLen; i++) {
+			const index = renderedItems[i];
 			const itemEl = document.createElement("div");
 			itemEl.setAttribute("class", classList);
-			itemEl.setAttribute("data-index", i);
-			itemEl.style.transform = `translate(${pd[i].x}px, ${pd[i].y}px)`;
-			itemEl.style.width = `${pd[i].width}px`;
-			itemEl.style.height = `${pd[i].height}px`;
+			itemEl.setAttribute("data-index", index);
+			itemEl.style.transform = `translate(${pd[index].x}px, ${pd[index].y}px)`;
+			itemEl.style.width = `${pd[index].width}px`;
+			itemEl.style.height = `${pd[index].height}px`;
 
 			nodes[i] = itemEl;
 		}
@@ -117,7 +122,7 @@ export const render = function (context, scale = true) {
 		const classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
 		spd = getSerializedPositionData(pd);
 
-		for (let i = 0; i < len; i++) {
+		for (let i = 0; i < renderedItemsLen; i++) {
 			spd[i].width = privateConstants.WIDTH;
 			spd[i].height =
 				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO;
@@ -137,14 +142,19 @@ export const render = function (context, scale = true) {
 		e.$limberGridView.removeChild(e.$limberGridViewItems[i]);
 	}
 
-	for (let i = 0; i < len; i++) {
+	for (let i = 0; i < renderedItemsLen; i++) {
 		e.$limberGridView.appendChild(nodes[i]);
 	}
 
-	for (let i = 0; i < len; i++) {
+	for (let i = 0; i < renderedItemsLen; i++) {
+		const index = renderedItems[i];
 		const itemEl = nodes[i];
 		if (!isMobile(context)) {
-			const renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+			const renderData = callbacks.renderContent(
+				index,
+				pd[index].width,
+				pd[index].height
+			);
 			renderItemContent(context, renderData, itemEl);
 		} else {
 			const renderData = callbacks.renderContent(
@@ -194,6 +204,73 @@ export const renderItem = function (context, index) {
 	if (callbacks.renderComplete) {
 		callbacks.renderComplete(index);
 	}
+};
+
+export const unmountItems = function (context, items) {
+	const e = getElements(context);
+	for (const elem of e.$limberGridViewItems) {
+		const dataIndex = elem.getAttribute("data-index");
+		if (items[dataIndex]) {
+			elem.remove();
+		}
+	}
+
+	set$limberGridViewItems(
+		context,
+		e.$limberGridViewItems.filter((o) => o)
+	);
+};
+
+export const mountItems = function (context, items) {
+	const options = getOptions(context);
+	const publicConstants = getPublicConstants(context);
+	const pd = getPositionData(context);
+	const callbacks = getCallbacks(context);
+	const e = getElements(context);
+
+	let classList = "limber-grid-view-item";
+	if (options.editable === true) {
+		classList = `limber-grid-view-item limber-grid-view-item-editable ${
+			publicConstants.SHOW_BOTTOM_LEFT_RESIZE_GUIDE
+				? "limber-grid-view-item-editable-left-resize"
+				: ""
+		}`;
+	}
+	const len = items.length;
+	const nodes = new Array(len);
+	for (let i = 0; i < len; i++) {
+		const index = items[i];
+		const itemEl = document.createElement("div");
+		itemEl.setAttribute("class", classList);
+		itemEl.setAttribute("data-index", index);
+		itemEl.style.transform = `translate(${pd[index].x}px, ${pd[index].y}px)`;
+		itemEl.style.width = `${pd[index].width}px`;
+		itemEl.style.height = `${pd[index].height}px`;
+
+		nodes[i] = itemEl;
+	}
+
+	for (let i = 0; i < len; i++) {
+		const index = items[i];
+		const itemEl = nodes[i];
+		if (!isMobile(context)) {
+			const renderData = callbacks.renderContent(
+				index,
+				pd[index].width,
+				pd[index].height
+			);
+			renderItemContent(context, renderData, itemEl);
+		}
+	}
+
+	for (let i = 0; i < len; i++) {
+		e.$limberGridView.appendChild(nodes[i]);
+	}
+
+	set$limberGridViewItems(context, [
+		...get$limberGridViewItems(context),
+		...nodes,
+	]);
 };
 
 export const addItem = async function (context, item) {

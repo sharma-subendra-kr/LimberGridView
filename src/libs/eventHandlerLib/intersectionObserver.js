@@ -38,6 +38,8 @@ import {
 	getIOBottomHelperPos,
 } from "../../store/variables/essentials";
 import { getPrivateConstants } from "../../store/constants/privateConstants";
+import { getItemsInWorkSpace } from "../utils/items";
+import { mountItems, unmountItems } from "../renderers/renderers";
 
 export const instantiateIntersectionObserver = function () {
 	this.store.observer.intersectionObserver.intersectionObserver = new IntersectionObserver(
@@ -72,6 +74,45 @@ export const intersectionObserverCallback = function (entries, observer) {
 		setIOTopHelperPos(this, getIOBottomHelperPos(this) - 1.5);
 		setIOBottomHelperPos(this, getIOBottomHelperPos(this) + 1);
 	}
+
+	const renderSpace = {
+		x1: 0,
+		x2: privateConstants.WIDTH,
+		y1:
+			getIOTopHelperPos(this) * privateConstants.HEIGHT -
+			privateConstants.HEIGHT,
+		y2:
+			getIOBottomHelperPos(this) * privateConstants.HEIGHT +
+			privateConstants.HEIGHT,
+	};
+	const renderedItems = getItemsInWorkSpace(this, renderSpace, true);
+	const renderedItemsMap = {};
+	for (const item of renderedItems) {
+		renderedItemsMap[item] = true;
+	}
+	const prevRenderedItems = getRenderedItems(this);
+	const prevRenderedItemsMap = {};
+	for (const item of prevRenderedItems) {
+		prevRenderedItemsMap[item] = true;
+	}
+
+	const toMountItems = {};
+	for (const index of renderedItems) {
+		if (!prevRenderedItemsMap[index]) {
+			toMountItems[index] = true;
+		}
+	}
+	const toUnmountItems = {};
+	for (const index of prevRenderedItems) {
+		if (!renderedItemsMap[index]) {
+			toUnmountItems[index] = true;
+		}
+	}
+
+	setRenderedItems(this, renderedItems);
+	unmountItems(this, toUnmountItems);
+	mountItems(this, Object.keys(toMountItems));
+
 	get$limberGridViewIOTopHelper(this).style.transform = `translate(0px, ${
 		getIOTopHelperPos(this) * privateConstants.HEIGHT
 	}px)`;
