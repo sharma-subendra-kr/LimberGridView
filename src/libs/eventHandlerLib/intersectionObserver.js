@@ -80,10 +80,10 @@ export const intersectionObserverCallback = function (entries, observer) {
 		x2: privateConstants.WIDTH,
 		y1:
 			getIOTopHelperPos(this) * privateConstants.HEIGHT -
-			privateConstants.HEIGHT,
+			privateConstants.HEIGHT / 2,
 		y2:
 			getIOBottomHelperPos(this) * privateConstants.HEIGHT +
-			privateConstants.HEIGHT,
+			privateConstants.HEIGHT / 2,
 	};
 	const renderedItems = getItemsInWorkSpace(this, renderSpace, true);
 	const renderedItemsMap = {};

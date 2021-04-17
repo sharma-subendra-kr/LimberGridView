@@ -230,10 +230,10 @@ export const init = async function (context, isResize, autoArrange) {
 		x2: privateConstants.WIDTH,
 		y1:
 			getIOTopHelperPos(context) * privateConstants.HEIGHT -
-			privateConstants.HEIGHT,
+			privateConstants.HEIGHT / 2,
 		y2:
 			getIOBottomHelperPos(context) * privateConstants.HEIGHT +
-			privateConstants.HEIGHT,
+			privateConstants.HEIGHT / 2,
 	};
 
 	setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
