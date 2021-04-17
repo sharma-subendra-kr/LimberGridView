@@ -31,7 +31,6 @@ import {
 	setModifiedPositionData,
 	setPseudoContainerId,
 	setRenderedItems,
-	setRenderedItemsMap,
 	// getRenderedItems,
 	// setIOTopHelperPos,
 	getIOTopHelperPos,
@@ -77,7 +76,7 @@ import { checkPositionData } from "../libs/renderers/rendererUtils";
 import { getRandomString } from "../libs/utils/utils";
 import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
-import { getItemsInWorkSpace, getRenderedItemsMap } from "../libs/utils/items";
+import { getItemsInWorkSpace } from "../libs/utils/items";
 
 export const init = async function (context, isResize, autoArrange) {
 	const e = getElements(context);
@@ -238,7 +237,6 @@ export const init = async function (context, isResize, autoArrange) {
 	};
 
 	setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
-	setRenderedItemsMap(context, getRenderedItemsMap(context));
 };
 
 export const initConstantsAndFlags = function (options) {

@@ -27,7 +27,6 @@ import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
 	getModifiedPositionData,
-	getRenderedItemsMap,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { getDistanceBetnPts } from "../geometry/geometry";

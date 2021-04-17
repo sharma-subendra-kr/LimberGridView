@@ -32,7 +32,6 @@ import {
 import {
 	setRenderedItems,
 	getRenderedItems,
-	setRenderedItemsMap,
 	setIOTopHelperPos,
 	getIOTopHelperPos,
 	setIOBottomHelperPos,
@@ -119,7 +118,6 @@ export const adjustItems = function (context) {
 	}
 
 	setRenderedItems(context, renderedItems);
-	setRenderedItemsMap(context, renderedItemsMap);
 	unmountItems(context, toUnmountItems);
 	mountItems(context, Object.keys(toMountItems));
 

@@ -44,7 +44,6 @@ import {
 	setPositionData,
 	setModifiedPositionData,
 	getCallbacks,
-	getRenderedItemsMap,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";

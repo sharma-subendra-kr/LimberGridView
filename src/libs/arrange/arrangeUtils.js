@@ -27,7 +27,6 @@ import getElements from "../../store/variables/elements";
 import {
 	getPositionData,
 	getModifiedPositionData,
-	getRenderedItemsMap,
 } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { isRectInside, isPointInsideOrTouchRect } from "../rect/rectUtils";

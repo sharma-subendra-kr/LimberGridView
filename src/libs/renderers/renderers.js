@@ -35,6 +35,7 @@ import {
 	setModifiedPositionData,
 	getCallbacks,
 	getRenderedItems,
+	setRenderedItems,
 } from "../../store/variables/essentials";
 import { isMobile } from "../utils/utils";
 import { sanitizeDimension } from "../utils/items";
@@ -462,6 +463,8 @@ export const removeItem = function (context, index) {
 		}
 		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
 	}
+
+	// don't remove from renderedItems here cuz next item will take the index
 
 	initializeEvents.call(context);
 };
