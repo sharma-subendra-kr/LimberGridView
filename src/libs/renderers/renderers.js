@@ -392,10 +392,9 @@ export const addItem = async function (context, item) {
 		}
 
 		e.$limberGridView.appendChild(itemEl);
-
 		renderItemContent(context, renderData, itemEl);
-
 		e.$limberGridViewItems.push(itemEl);
+		getRenderedItems(context).push(index);
 
 		e.$limberGridView.scrollTo({
 			left: 0,
