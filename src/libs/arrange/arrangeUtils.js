@@ -435,7 +435,6 @@ export const shiftItemsDown = (context, items, height) => {
 export const shiftItemsUp = function (context, y, shiftHeight) {
 	const pd = getPositionData(context);
 	const e = getElements(context);
-	const renderedItemsMap = getRenderedItemsMap(context);
 
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
@@ -447,7 +446,7 @@ export const shiftItemsUp = function (context, y, shiftHeight) {
 			pd[i].mY1 -= shiftHeight;
 			pd[i].mY2 -= shiftHeight;
 
-			if (renderedItemsMap[i]) {
+			if (e.$limberGridViewItems[i]) {
 				e.$limberGridViewItems[i].style.transform =
 					"translate(" + pd[i].x1 + "px, " + pd[i].y1 + "px)";
 			}

@@ -219,7 +219,9 @@ export const unmountItems = function (context, items) {
 		if (callbacks.removePlugin) {
 			callbacks.removePlugin(e.$limberGridViewItems[index]);
 		}
-		elem.remove();
+		if (elem) {
+			elem.remove();
+		}
 		e.$limberGridViewItems[index] = undefined;
 	}
 };
@@ -440,10 +442,15 @@ export const removeItem = function (context, index) {
 
 	const len = pd.length;
 	for (let i = index; i < len; i++) {
-		e.$limberGridViewItems[i].setAttribute("data-index", i);
+		if (e.$limberGridViewItems[i]) {
+			e.$limberGridViewItems[i].setAttribute("data-index", i);
+		}
 	}
 
 	for (let i = index; i < len; i++) {
+		if (!e.$limberGridViewItems[i]) {
+			continue;
+		}
 		let renderData;
 		if (!isMobile(context)) {
 			renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
