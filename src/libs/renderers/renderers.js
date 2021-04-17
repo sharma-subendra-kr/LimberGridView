@@ -228,6 +228,8 @@ export const mountItems = function (context, items) {
 	const callbacks = getCallbacks(context);
 	const e = getElements(context);
 
+	unInitializeEvents.call(context);
+
 	let classList = "limber-grid-view-item";
 	if (options.editable === true) {
 		classList = `limber-grid-view-item limber-grid-view-item-editable ${
@@ -271,6 +273,8 @@ export const mountItems = function (context, items) {
 		...get$limberGridViewItems(context),
 		...nodes,
 	]);
+
+	initializeEvents.call(context);
 };
 
 export const addItem = async function (context, item) {

@@ -27,6 +27,7 @@ import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getPositionData,
 	getModifiedPositionData,
+	getRenderedItemsMap,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { getDistanceBetnPts } from "../geometry/geometry";
@@ -222,14 +223,17 @@ export const getMoveModifiedItem = (toX, toY, item, MARGIN) => {
 export const resetDemoUIChanges = (context) => {
 	const pd = getPositionData(context);
 	const e = getElements(context);
+	const renderedItemsMap = getRenderedItemsMap(context);
 
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
-		e.$limberGridViewItems[
-			i
-		].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
-		e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
-		e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
+		if (renderedItemsMap[i]) {
+			e.$limberGridViewItems[
+				i
+			].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
+			e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
+			e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
+		}
 	}
 };
 
@@ -535,14 +539,17 @@ export const resizeSizeAdjust = (
 
 export const positionArranged = (context, arranged) => {
 	const e = getElements(context);
+	const renderedItemsMap = getRenderedItemsMap(context);
 
 	for (const key in arranged) {
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+		if (renderedItemsMap[key]) {
+			const item = arranged[key];
+			e.$limberGridViewItems[
+				key
+			].style.transform = `translate(${item.x}px, ${item.y}px)`;
 
-		e.$limberGridViewItems[key].style.width = `${item.width}px`;
-		e.$limberGridViewItems[key].style.height = `${item.height}px`;
+			e.$limberGridViewItems[key].style.width = `${item.width}px`;
+			e.$limberGridViewItems[key].style.height = `${item.height}px`;
+		}
 	}
 };

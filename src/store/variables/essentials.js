@@ -99,6 +99,14 @@ const getRenderedItems = function (context) {
 	return context.store.variables.essentials.renderedItems;
 };
 
+const setRenderedItemsMap = function (context, renderedItemsMap) {
+	context.store.variables.essentials.renderedItemsMap = { ...renderedItemsMap };
+};
+
+const getRenderedItemsMap = function (context) {
+	return context.store.variables.essentials.renderedItemsMap;
+};
+
 const setIOTopHelperPos = function (context, position) {
 	context.store.variables.essentials.ioTopHelperPos = position;
 };
@@ -134,6 +142,8 @@ export {
 	getLimberGridViewBoundingClientRect,
 	setRenderedItems,
 	getRenderedItems,
+	setRenderedItemsMap,
+	getRenderedItemsMap,
 	setIOTopHelperPos,
 	getIOTopHelperPos,
 	setIOBottomHelperPos,

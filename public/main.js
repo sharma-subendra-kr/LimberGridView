@@ -154,54 +154,53 @@ const main = function () {
 			window.limberGridView.store.variables.elements.$limberGridViewItems;
 		const len = arrangedIndices.length;
 
-		for (let i = 0; i < len; i++) {
-			items[arrangedIndices[i]].classList.add(
-				"limber-grid-view-item-no-shadow"
-			);
-		}
+		// for (let i = 0; i < len; i++) {
+		// 	items[arrangedIndices[i]].classList.add(
+		// 		"limber-grid-view-item-no-shadow"
+		// 	);
+		// }
 
-		setTimeout(function () {
-			for (let i = 0; i < len; i++) {
-				items[arrangedIndices[i]].classList.add("limber-grid-view-item-glow");
-			}
-		}, 250);
+		// setTimeout(function () {
+		// 	for (let i = 0; i < len; i++) {
+		// 		items[arrangedIndices[i]].classList.add("limber-grid-view-item-glow");
+		// 	}
+		// }, 250);
 
-		setTimeout(function () {
-			for (let i = 0; i < len; i++) {
-				items[arrangedIndices[i]].classList.remove(
-					"limber-grid-view-item-no-shadow",
-					"limber-grid-view-item-glow"
-				);
-			}
-		}, 2000);
-		// window.limberGridView.renderItem(index);
+		// setTimeout(function () {
+		// 	for (let i = 0; i < len; i++) {
+		// 		items[arrangedIndices[i]].classList.remove(
+		// 			"limber-grid-view-item-no-shadow",
+		// 			"limber-grid-view-item-glow"
+		// 		);
+		// 	}
+		// }, 2000);
 	};
 
 	const moveComplete = function (index, toX, toY, arrangedIndices) {
 		const items =
 			window.limberGridView.store.variables.elements.$limberGridViewItems;
-
 		const len = arrangedIndices.length;
-		for (let i = 0; i < len; i++) {
-			items[arrangedIndices[i]].classList.add(
-				"limber-grid-view-item-no-shadow"
-			);
-		}
 
-		setTimeout(function () {
-			for (let i = 0; i < len; i++) {
-				items[arrangedIndices[i]].classList.add("limber-grid-view-item-glow");
-			}
-		}, 250);
+		// for (let i = 0; i < len; i++) {
+		// 	items[arrangedIndices[i]].classList.add(
+		// 		"limber-grid-view-item-no-shadow"
+		// 	);
+		// }
 
-		setTimeout(function () {
-			for (let i = 0; i < len; i++) {
-				items[arrangedIndices[i]].classList.remove(
-					"limber-grid-view-item-no-shadow",
-					"limber-grid-view-item-glow"
-				);
-			}
-		}, 2000);
+		// setTimeout(function () {
+		// 	for (let i = 0; i < len; i++) {
+		// 		items[arrangedIndices[i]].classList.add("limber-grid-view-item-glow");
+		// 	}
+		// }, 250);
+
+		// setTimeout(function () {
+		// 	for (let i = 0; i < len; i++) {
+		// 		items[arrangedIndices[i]].classList.remove(
+		// 			"limber-grid-view-item-no-shadow",
+		// 			"limber-grid-view-item-glow"
+		// 		);
+		// 	}
+		// }, 2000);
 	};
 
 	const addComplete = function (indices, width, height, processType) {

@@ -44,6 +44,7 @@ import {
 	setPositionData,
 	setModifiedPositionData,
 	getCallbacks,
+	getRenderedItemsMap,
 } from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";
@@ -96,9 +97,12 @@ export const resizeItem = async function (index, x, y, width, height) {
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
-	e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
-	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
-	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
+	const renderedItemsMap = getRenderedItemsMap(this);
+	if (renderedItemsMap[index]) {
+		e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
+		e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+		e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
+	}
 
 	positionArranged(this, arranged);
 
@@ -233,15 +237,18 @@ export const moveItem = async function (index, toX, toY) {
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
-	e.$limberGridViewItems[
-		index
-	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
-	if (!publicConstants.ANIMATE_MOVED_ITEM) {
-		// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
-		e.$limberGridViewItems[index].style.transition = "none";
-		setTimeout(() => {
-			e.$limberGridViewItems[index].style.transition = "";
-		}, publicConstants.ANIMATE_TIME);
+	const renderedItemsMap = getRenderedItemsMap(this);
+	if (renderedItemsMap[index]) {
+		e.$limberGridViewItems[
+			index
+		].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+		if (!publicConstants.ANIMATE_MOVED_ITEM) {
+			// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
+			e.$limberGridViewItems[index].style.transition = "none";
+			setTimeout(() => {
+				e.$limberGridViewItems[index].style.transition = "";
+			}, publicConstants.ANIMATE_TIME);
+		}
 	}
 
 	positionArranged(this, arranged);

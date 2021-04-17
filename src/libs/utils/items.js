@@ -23,7 +23,10 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { getPositionData } from "../../store/variables/essentials";
+import {
+	getPositionData,
+	getRenderedItems,
+} from "../../store/variables/essentials";
 
 export const makeItem = (item) => {
 	item.x1 = item.x;
@@ -253,4 +256,13 @@ export const getItemsInWorkSpace = (
 	itemsInWorkSpace.length = count;
 
 	return itemsInWorkSpace;
+};
+
+export const getRenderedItemsMap = (context) => {
+	const renderedItems = getRenderedItems(context);
+	const renderedItemsMap = {};
+	for (const item of renderedItems) {
+		renderedItemsMap[item] = true;
+	}
+	return renderedItemsMap;
 };

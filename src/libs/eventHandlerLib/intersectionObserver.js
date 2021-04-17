@@ -32,6 +32,7 @@ import {
 import {
 	setRenderedItems,
 	getRenderedItems,
+	setRenderedItemsMap,
 	setIOTopHelperPos,
 	getIOTopHelperPos,
 	setIOBottomHelperPos,
@@ -110,6 +111,7 @@ export const intersectionObserverCallback = function (entries, observer) {
 	}
 
 	setRenderedItems(this, renderedItems);
+	setRenderedItemsMap(this, renderedItemsMap);
 	unmountItems(this, toUnmountItems);
 	mountItems(this, Object.keys(toMountItems));
 
