@@ -57,6 +57,12 @@ import {
 	instantiateResizeObserver,
 	resizeObserverCallback,
 } from "./libs/eventHandlerLib/miscellaneous";
+import {
+	instantiateIntersectionObserver,
+	intersectionObserverCallback,
+	onScroll,
+	onScrollCallback,
+} from "./libs/eventHandlerLib/intersectionObserver";
 
 import { fixTo } from "./libs/utils/utils";
 import { setPublicConstantByName } from "./store/constants/publicConstants";
@@ -68,7 +74,7 @@ import {
 	getPositionData,
 	setCallbacks,
 } from "./store/variables/essentials";
-import {
+import getElements, {
 	set$el,
 	get$pseudoContainer,
 	get$limberGridViewContainer,
@@ -89,6 +95,7 @@ import {
 import getUndoRedo from "./store/variables/undoRedo";
 import { resetDemoUIChanges } from "./libs/interaction/itemInteractionUtils";
 import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
+import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -345,6 +352,13 @@ function LimberGridView(options) {
 	initConstantsAndFlags.call(this, options);
 	initRender.call(this);
 	instantiateResizeObserver.call(this);
+	instantiateIntersectionObserver.call(this);
+
+	const e = getElements(this);
+	e.$limberGridView.addEventListener(
+		"scroll",
+		getBindedFunctions(this).onScroll
+	);
 
 	setTimeout(
 		async function () {
@@ -391,6 +405,9 @@ LimberGridView.prototype.initializeStore = function () {
 				pseudoContainerId: undefined,
 				positionData: [],
 				modifiedPositionData: [],
+				renderedItems: [],
+				ioTopHelperPos: -1,
+				ioBottomHelperPos: 1.5,
 				gridData: {},
 				callbacks: {},
 			},
@@ -417,6 +434,9 @@ LimberGridView.prototype.initializeStore = function () {
 
 				//
 				resizeObserverCallback: resizeObserverCallback.bind(this),
+				intersectionObserverCallback: intersectionObserverCallback.bind(this),
+				onScroll: onScroll.bind(this),
+				onScrollCallback: onScrollCallback.bind(this),
 			},
 			eventSpecific: {
 				itemInteraction: {
@@ -520,6 +540,9 @@ LimberGridView.prototype.initializeStore = function () {
 			resizeObserver: {
 				resizeObserver: undefined,
 				isResizeObserving: false,
+			},
+			intersectionObserver: {
+				intersectionObserver: undefined,
 			},
 		},
 	};

@@ -205,6 +205,9 @@ export const loadResizingState = (context, userActionData) => {
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
+		if (!e.$limberGridViewItems[i]) {
+			continue;
+		}
 		e.$limberGridViewItems[i].classList.add(
 			"limber-grid-view-item-resizing-state"
 		);
@@ -231,6 +234,9 @@ export const unloadResizingState = (context, userActionData) => {
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
+		if (!e.$limberGridViewItems[i]) {
+			continue;
+		}
 		e.$limberGridViewItems[i].classList.remove(
 			"limber-grid-view-item-resizing-state"
 		);
@@ -252,9 +258,11 @@ export const loadMoveState = (context, userActionData, event) => {
 		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewItems[userActionData.itemIndex].classList.add(
-		"limber-grid-view-item-demo"
-	);
+	if (e.$limberGridViewItems[userActionData.itemIndex]) {
+		e.$limberGridViewItems[userActionData.itemIndex].classList.add(
+			"limber-grid-view-item-demo"
+		);
+	}
 
 	e.$pseudoContainerItem.classList.add(
 		"limber-grid-view-pseudo-container-item-active"
@@ -280,9 +288,11 @@ export const unloadMoveState = (context, userActionData) => {
 		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewItems[userActionData.itemIndex].classList.remove(
-		"limber-grid-view-item-demo"
-	);
+	if (e.$limberGridViewItems[userActionData.itemIndex]) {
+		e.$limberGridViewItems[userActionData.itemIndex].classList.remove(
+			"limber-grid-view-item-demo"
+		);
+	}
 
 	e.$pseudoContainerItem.classList.remove(
 		"limber-grid-view-pseudo-container-item-active"

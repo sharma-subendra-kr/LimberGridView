@@ -483,6 +483,7 @@ export const onItemMouseUp = async function (event) {
 					iiv.userActionData.type === "resize"
 				);
 			} catch (error) {
+				console.error(error);
 				revertShowMoveOrResizeDemo(this);
 			}
 		}
@@ -539,6 +540,7 @@ export const onItemTouchEnd = async function (event) {
 					iiv.userActionData.type === "resize"
 				);
 			} catch (error) {
+				console.error(error);
 				revertShowMoveOrResizeDemo(this);
 			}
 		}

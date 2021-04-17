@@ -49,7 +49,7 @@ import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";
 import getMessage from "../../store/constants/messages";
 import { isPointInsideRect } from "../rect/rectUtils";
-import { renderItem } from "../renderers/renderers";
+import { renderItem, mountItems } from "../renderers/renderers";
 import getUndoRedo from "../../store/variables/undoRedo";
 
 export const resizeItem = async function (index, x, y, width, height) {
@@ -96,9 +96,11 @@ export const resizeItem = async function (index, x, y, width, height) {
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
-	e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
-	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
-	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
+	if (e.$limberGridViewItems[index]) {
+		e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
+		e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+		e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
+	}
 
 	positionArranged(this, arranged);
 
@@ -233,15 +235,20 @@ export const moveItem = async function (index, toX, toY) {
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
-	e.$limberGridViewItems[
-		index
-	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
-	if (!publicConstants.ANIMATE_MOVED_ITEM) {
-		// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
-		e.$limberGridViewItems[index].style.transition = "none";
-		setTimeout(() => {
-			e.$limberGridViewItems[index].style.transition = "";
-		}, publicConstants.ANIMATE_TIME);
+	if (e.$limberGridViewItems[index]) {
+		e.$limberGridViewItems[
+			index
+		].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+		if (!publicConstants.ANIMATE_MOVED_ITEM) {
+			// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
+			e.$limberGridViewItems[index].style.transition = "none";
+			setTimeout(() => {
+				e.$limberGridViewItems[index].style.transition = "";
+			}, publicConstants.ANIMATE_TIME);
+		}
+	} else {
+		// render the moved item
+		mountItems(this, [index]);
 	}
 
 	positionArranged(this, arranged);

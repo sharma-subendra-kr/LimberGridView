@@ -55,7 +55,7 @@ export const initializeEvents = function () {
 
 		var len = e.$limberGridViewItems.length;
 		for (var i = 0; i < len; i++) {
-			if (!isMobile(this)) {
+			if (!isMobile(this) && e.$limberGridViewItems[i]) {
 				e.$limberGridViewItems[i].addEventListener(
 					"mousedown",
 					bf.onItemMouseDown
@@ -68,7 +68,7 @@ export const initializeEvents = function () {
 				}
 			}
 
-			if (callbacks.onItemClickCallback) {
+			if (callbacks.onItemClickCallback && e.$limberGridViewItems[i]) {
 				e.$limberGridViewItems[i].addEventListener("click", bf.onItemClick);
 			}
 		}
@@ -90,6 +90,9 @@ export const unInitializeEvents = function () {
 		if (e.$limberGridViewItems) {
 			const len = e.$limberGridViewItems.length;
 			for (let i = 0; i < len; i++) {
+				if (!e.$limberGridViewItems[i]) {
+					continue;
+				}
 				e.$limberGridViewItems[i].removeEventListener(
 					"mousedown",
 					bf.onItemMouseDown
@@ -113,6 +116,9 @@ export const initializeItemTouchEvents = function () {
 	if (e.$limberGridViewItems) {
 		const len = e.$limberGridViewItems.length;
 		for (let i = 0; i < len; i++) {
+			if (!e.$limberGridViewItems[i]) {
+				continue;
+			}
 			e.$limberGridViewItems[i].addEventListener(
 				"mousedown",
 				bf.onItemMouseDown
@@ -133,6 +139,9 @@ export const unInitializeItemTouchEvents = function () {
 	if (e.$limberGridViewItems) {
 		const len = e.$limberGridViewItems.length;
 		for (let i = 0; i < len; i++) {
+			if (!e.$limberGridViewItems[i]) {
+				continue;
+			}
 			e.$limberGridViewItems[i].removeEventListener(
 				"mousedown",
 				bf.onItemMouseDown

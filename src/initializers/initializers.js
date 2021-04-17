@@ -30,6 +30,12 @@ import {
 	getModifiedPositionData,
 	setModifiedPositionData,
 	setPseudoContainerId,
+	setRenderedItems,
+	// getRenderedItems,
+	// setIOTopHelperPos,
+	getIOTopHelperPos,
+	// setIOBottomHelperPos,
+	getIOBottomHelperPos,
 } from "../store/variables/essentials";
 import getElements, {
 	set$body,
@@ -43,6 +49,10 @@ import getElements, {
 	set$limberGridViewAddCutGuide,
 	set$limberGridViewTouchHoldGuide,
 	set$limberGridViewCrossHairGuide,
+	set$limberGridViewIOTopHelper,
+	get$limberGridViewIOTopHelper,
+	set$limberGridViewIOBottomHelper,
+	get$limberGridViewIOBottomHelper,
 } from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
@@ -66,6 +76,7 @@ import { checkPositionData } from "../libs/renderers/rendererUtils";
 import { getRandomString } from "../libs/utils/utils";
 import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
+import { getItemsInWorkSpace } from "../libs/utils/items";
 
 export const init = async function (context, isResize, autoArrange) {
 	const e = getElements(context);
@@ -206,6 +217,26 @@ export const init = async function (context, isResize, autoArrange) {
 		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
 			privateConstants.WIDTH_SCALE_FACTOR
 	);
+
+	get$limberGridViewIOTopHelper(context).style.transform = `translate(0px, ${
+		getIOTopHelperPos(context) * privateConstants.HEIGHT
+	}px)`;
+	get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${
+		getIOBottomHelperPos(context) * privateConstants.HEIGHT
+	}px)`;
+
+	const renderSpace = {
+		x1: 0,
+		x2: privateConstants.WIDTH,
+		y1:
+			getIOTopHelperPos(context) * privateConstants.HEIGHT -
+			privateConstants.HEIGHT / 2,
+		y2:
+			getIOBottomHelperPos(context) * privateConstants.HEIGHT +
+			privateConstants.HEIGHT / 2,
+	};
+
+	setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
 };
 
 export const initConstantsAndFlags = function (options) {
@@ -465,6 +496,8 @@ export const initRender = function () {
 	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
 	const limberGridViewCrossHairGuide = document.createElement("div");
 	limberGridViewCrossHairGuide.innerHTML = `<hr></hr><hr></hr>`;
+	const limberGridViewIOTopHelper = document.createElement("div");
+	const limberGridViewIOBottomHelper = document.createElement("div");
 
 	pseudoContainerItem.setAttribute(
 		"class",
@@ -494,6 +527,14 @@ export const initRender = function () {
 	limberGridViewCrossHairGuide.style.transform = `translate(-${
 		publicConstants.CROSS_HAIR_WIDTH * 2
 	}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+	limberGridViewIOTopHelper.setAttribute(
+		"class",
+		"limber-grid-view-io-top-helper"
+	);
+	limberGridViewIOBottomHelper.setAttribute(
+		"class",
+		"limber-grid-view-io-bottom-helper"
+	);
 
 	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
@@ -502,6 +543,8 @@ export const initRender = function () {
 	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
 	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
 	e.$limberGridView.appendChild(limberGridViewCrossHairGuide);
+	e.$limberGridView.appendChild(limberGridViewIOTopHelper);
+	e.$limberGridView.appendChild(limberGridViewIOBottomHelper);
 
 	set$pseudoContainerItem(this, pseudoContainerItem);
 	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
@@ -510,4 +553,6 @@ export const initRender = function () {
 	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
 	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
 	set$limberGridViewCrossHairGuide(this, limberGridViewCrossHairGuide);
+	set$limberGridViewIOTopHelper(this, limberGridViewIOTopHelper);
+	set$limberGridViewIOBottomHelper(this, limberGridViewIOBottomHelper);
 };

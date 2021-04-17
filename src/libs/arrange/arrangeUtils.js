@@ -445,8 +445,10 @@ export const shiftItemsUp = function (context, y, shiftHeight) {
 			pd[i].mY1 -= shiftHeight;
 			pd[i].mY2 -= shiftHeight;
 
-			e.$limberGridViewItems[i].style.transform =
-				"translate(" + pd[i].x1 + "px, " + pd[i].y1 + "px)";
+			if (e.$limberGridViewItems[i]) {
+				e.$limberGridViewItems[i].style.transform =
+					"translate(" + pd[i].x1 + "px, " + pd[i].y1 + "px)";
+			}
 		}
 	}
 };

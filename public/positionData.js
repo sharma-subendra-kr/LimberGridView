@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-// const positionData = new Array(100).fill({});
+const positionData = new Array(1000).fill({});
 
 // eslint-disable-next-line no-unused-vars
-const positionData = [
+const positionDataa = [
 	// set 1
 	// {
 	// 	x: 50,

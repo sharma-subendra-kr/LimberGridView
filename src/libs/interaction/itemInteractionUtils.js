@@ -225,11 +225,13 @@ export const resetDemoUIChanges = (context) => {
 
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
-		e.$limberGridViewItems[
-			i
-		].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
-		e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
-		e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
+		if (e.$limberGridViewItems[i]) {
+			e.$limberGridViewItems[
+				i
+			].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
+			e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
+			e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
+		}
 	}
 };
 
@@ -537,12 +539,14 @@ export const positionArranged = (context, arranged) => {
 	const e = getElements(context);
 
 	for (const key in arranged) {
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+		if (e.$limberGridViewItems[key]) {
+			const item = arranged[key];
+			e.$limberGridViewItems[
+				key
+			].style.transform = `translate(${item.x}px, ${item.y}px)`;
 
-		e.$limberGridViewItems[key].style.width = `${item.width}px`;
-		e.$limberGridViewItems[key].style.height = `${item.height}px`;
+			e.$limberGridViewItems[key].style.width = `${item.width}px`;
+			e.$limberGridViewItems[key].style.height = `${item.height}px`;
+		}
 	}
 };
