@@ -50,7 +50,7 @@ import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";
 import getMessage from "../../store/constants/messages";
 import { isPointInsideRect } from "../rect/rectUtils";
-import { renderItem } from "../renderers/renderers";
+import { renderItem, mountItems } from "../renderers/renderers";
 import getUndoRedo from "../../store/variables/undoRedo";
 
 export const resizeItem = async function (index, x, y, width, height) {
@@ -247,6 +247,9 @@ export const moveItem = async function (index, toX, toY) {
 				e.$limberGridViewItems[index].style.transition = "";
 			}, publicConstants.ANIMATE_TIME);
 		}
+	} else {
+		// render the moved item
+		mountItems(this, [index]);
 	}
 
 	positionArranged(this, arranged);
