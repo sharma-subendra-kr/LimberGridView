@@ -26,7 +26,6 @@ Written by Subendra Kumar Sharma.
 import getOptions from "../../store/variables/options";
 import getElements, {
 	set$limberGridViewItems,
-	get$limberGridViewItems,
 } from "../../store/variables/elements";
 import {
 	getPositionData,
@@ -35,7 +34,6 @@ import {
 	setModifiedPositionData,
 	getCallbacks,
 	getRenderedItems,
-	setRenderedItems,
 } from "../../store/variables/essentials";
 import { isMobile } from "../utils/utils";
 import { sanitizeDimension } from "../utils/items";
