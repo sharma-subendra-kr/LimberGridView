@@ -207,17 +207,23 @@ export const renderItem = function (context, index) {
 };
 
 export const unmountItems = function (context, items) {
+	unInitializeEvents.call(context);
+
+	const filterItems = {};
 	const e = getElements(context);
-	for (const elem of e.$limberGridViewItems) {
+	const len = e.$limberGridViewItems.length;
+	for (let i = 0; i < len; i++) {
+		const elem = e.$limberGridViewItems[i];
 		const dataIndex = elem.getAttribute("data-index");
 		if (items[dataIndex]) {
+			filterItems[i] = true;
 			elem.remove();
 		}
 	}
 
 	set$limberGridViewItems(
 		context,
-		e.$limberGridViewItems.filter((o) => o)
+		e.$limberGridViewItems.filter((o, index) => !filterItems[index])
 	);
 };
 
@@ -228,8 +234,6 @@ export const mountItems = function (context, items) {
 	const callbacks = getCallbacks(context);
 	const e = getElements(context);
 
-	unInitializeEvents.call(context);
-
 	let classList = "limber-grid-view-item";
 	if (options.editable === true) {
 		classList = `limber-grid-view-item limber-grid-view-item-editable ${
@@ -238,6 +242,7 @@ export const mountItems = function (context, items) {
 				: ""
 		}`;
 	}
+
 	const len = items.length;
 	const nodes = new Array(len);
 	for (let i = 0; i < len; i++) {
