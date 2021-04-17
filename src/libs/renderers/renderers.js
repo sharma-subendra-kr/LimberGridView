@@ -462,7 +462,10 @@ export const removeItem = function (context, index) {
 		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
 	}
 
-	// don't remove from renderedItems here cuz next item will take the index
+	const renderedItems = getRenderedItems(context);
+	if (renderedItems.find((o) => o === index)) {
+		renderedItems.length = renderedItems.length - 1;
+	}
 
 	initializeEvents.call(context);
 };
