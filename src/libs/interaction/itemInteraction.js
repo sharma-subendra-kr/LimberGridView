@@ -97,8 +97,7 @@ export const resizeItem = async function (index, x, y, width, height) {
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
-	const renderedItemsMap = getRenderedItemsMap(this);
-	if (renderedItemsMap[index]) {
+	if (e.$limberGridViewItems[index]) {
 		e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
 		e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
 		e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
@@ -237,8 +236,7 @@ export const moveItem = async function (index, toX, toY) {
 	setPositionData(this, mpd);
 	getUndoRedo(this).push(mpd);
 
-	const renderedItemsMap = getRenderedItemsMap(this);
-	if (renderedItemsMap[index]) {
+	if (e.$limberGridViewItems[index]) {
 		e.$limberGridViewItems[
 			index
 		].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;

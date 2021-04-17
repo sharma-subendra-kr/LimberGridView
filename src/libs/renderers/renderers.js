@@ -95,6 +95,7 @@ export const render = function (context, scale = true) {
 	const renderedItems = getRenderedItems(context);
 	const renderedItemsLen = renderedItems.length;
 	const nodes = new Array(renderedItemsLen);
+	const allNodes = new Array(len);
 	let spd;
 
 	if (!isMobile(context)) {
@@ -117,6 +118,7 @@ export const render = function (context, scale = true) {
 			itemEl.style.height = `${pd[index].height}px`;
 
 			nodes[i] = itemEl;
+			allNodes[index] = itemEl;
 		}
 	} else {
 		const classList = "limber-grid-view-item limber-grid-view-item-mobile-view";
@@ -139,7 +141,9 @@ export const render = function (context, scale = true) {
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
-		e.$limberGridView.removeChild(e.$limberGridViewItems[i]);
+		if (e.$limberGridViewItems[i]) {
+			e.$limberGridView.removeChild(e.$limberGridViewItems[i]);
+		}
 	}
 
 	for (let i = 0; i < renderedItemsLen; i++) {
@@ -166,9 +170,7 @@ export const render = function (context, scale = true) {
 		}
 	}
 
-	set$limberGridViewItems(context, [
-		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
-	]);
+	set$limberGridViewItems(context, allNodes);
 
 	initializeEvents.call(context);
 
@@ -209,22 +211,17 @@ export const renderItem = function (context, index) {
 export const unmountItems = function (context, items) {
 	unInitializeEvents.call(context);
 
-	const filterItems = {};
+	const callbacks = getCallbacks(context);
 	const e = getElements(context);
-	const len = e.$limberGridViewItems.length;
-	for (let i = 0; i < len; i++) {
-		const elem = e.$limberGridViewItems[i];
-		const dataIndex = elem.getAttribute("data-index");
-		if (items[dataIndex]) {
-			filterItems[i] = true;
-			elem.remove();
-		}
-	}
 
-	set$limberGridViewItems(
-		context,
-		e.$limberGridViewItems.filter((o, index) => !filterItems[index])
-	);
+	for (const index in items) {
+		const elem = e.$limberGridViewItems[index];
+		if (callbacks.removePlugin) {
+			callbacks.removePlugin(e.$limberGridViewItems[index]);
+		}
+		elem.remove();
+		e.$limberGridViewItems[index] = undefined;
+	}
 };
 
 export const mountItems = function (context, items) {
@@ -255,6 +252,7 @@ export const mountItems = function (context, items) {
 		itemEl.style.height = `${pd[index].height}px`;
 
 		nodes[i] = itemEl;
+		e.$limberGridViewItems[index] = itemEl;
 	}
 
 	for (let i = 0; i < len; i++) {
@@ -273,11 +271,6 @@ export const mountItems = function (context, items) {
 	for (let i = 0; i < len; i++) {
 		e.$limberGridView.appendChild(nodes[i]);
 	}
-
-	set$limberGridViewItems(context, [
-		...get$limberGridViewItems(context),
-		...nodes,
-	]);
 
 	initializeEvents.call(context);
 };
@@ -400,9 +393,7 @@ export const addItem = async function (context, item) {
 
 		renderItemContent(context, renderData, itemEl);
 
-		set$limberGridViewItems(context, [
-			...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
-		]);
+		e.$limberGridViewItems.push(itemEl);
 
 		e.$limberGridView.scrollTo({
 			left: 0,
@@ -433,19 +424,19 @@ export const removeItem = function (context, index) {
 	getUndoRedo(context).reset();
 	getUndoRedo(context).push(pd);
 
-	if (callbacks.removePlugin) {
-		callbacks.removePlugin(e.$limberGridViewItems[index]);
+	if (e.$limberGridViewItems[index]) {
+		if (callbacks.removePlugin) {
+			callbacks.removePlugin(e.$limberGridViewItems[index]);
+		}
+
+		e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
+
+		if (callbacks.removeComplete) {
+			callbacks.removeComplete(index, e.$limberGridViewItems[index]);
+		}
 	}
 
-	e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
-
-	if (callbacks.removeComplete) {
-		callbacks.removeComplete(index, e.$limberGridViewItems[index]);
-	}
-
-	set$limberGridViewItems(context, [
-		...e.$limberGridView.getElementsByClassName("limber-grid-view-item"),
-	]);
+	e.$limberGridViewItems.splice(index, 1);
 
 	const len = pd.length;
 	for (let i = index; i < len; i++) {

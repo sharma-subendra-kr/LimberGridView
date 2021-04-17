@@ -223,11 +223,10 @@ export const getMoveModifiedItem = (toX, toY, item, MARGIN) => {
 export const resetDemoUIChanges = (context) => {
 	const pd = getPositionData(context);
 	const e = getElements(context);
-	const renderedItemsMap = getRenderedItemsMap(context);
 
 	const len = pd.length;
 	for (let i = 0; i < len; i++) {
-		if (renderedItemsMap[i]) {
+		if (e.$limberGridViewItems[i]) {
 			e.$limberGridViewItems[
 				i
 			].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
@@ -539,10 +538,9 @@ export const resizeSizeAdjust = (
 
 export const positionArranged = (context, arranged) => {
 	const e = getElements(context);
-	const renderedItemsMap = getRenderedItemsMap(context);
 
 	for (const key in arranged) {
-		if (renderedItemsMap[key]) {
+		if (e.$limberGridViewItems[key]) {
 			const item = arranged[key];
 			e.$limberGridViewItems[
 				key
