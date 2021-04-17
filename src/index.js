@@ -60,6 +60,8 @@ import {
 import {
 	instantiateIntersectionObserver,
 	intersectionObserverCallback,
+	onScroll,
+	onScrollCallback,
 } from "./libs/eventHandlerLib/intersectionObserver";
 
 import { fixTo } from "./libs/utils/utils";
@@ -72,7 +74,7 @@ import {
 	getPositionData,
 	setCallbacks,
 } from "./store/variables/essentials";
-import {
+import getElements, {
 	set$el,
 	get$pseudoContainer,
 	get$limberGridViewContainer,
@@ -93,6 +95,7 @@ import {
 import getUndoRedo from "./store/variables/undoRedo";
 import { resetDemoUIChanges } from "./libs/interaction/itemInteractionUtils";
 import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
+import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -351,6 +354,12 @@ function LimberGridView(options) {
 	instantiateResizeObserver.call(this);
 	instantiateIntersectionObserver.call(this);
 
+	const e = getElements(this);
+	e.$limberGridView.addEventListener(
+		"scroll",
+		getBindedFunctions(this).onScroll
+	);
+
 	setTimeout(
 		async function () {
 			await init(this, false, options.autoArrange);
@@ -426,6 +435,8 @@ LimberGridView.prototype.initializeStore = function () {
 				//
 				resizeObserverCallback: resizeObserverCallback.bind(this),
 				intersectionObserverCallback: intersectionObserverCallback.bind(this),
+				onScroll: onScroll.bind(this),
+				onScrollCallback: onScrollCallback.bind(this),
 			},
 			eventSpecific: {
 				itemInteraction: {

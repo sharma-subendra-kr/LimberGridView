@@ -37,10 +37,14 @@ import {
 	getIOTopHelperPos,
 	setIOBottomHelperPos,
 	getIOBottomHelperPos,
+	setOnScrolTimeout,
+	getOnScrolTimeout,
 } from "../../store/variables/essentials";
 import { getPrivateConstants } from "../../store/constants/privateConstants";
 import { getItemsInWorkSpace } from "../utils/items";
 import { mountItems, unmountItems } from "../renderers/renderers";
+import { doRectsOverlapOrTouch } from "../rect/rectUtils";
+import { fixTo } from "../utils/utils";
 
 export const instantiateIntersectionObserver = function () {
 	this.store.observer.intersectionObserver.intersectionObserver = new IntersectionObserver(
@@ -65,8 +69,6 @@ export const intersectionObserverCallback = function (entries, observer) {
 		return;
 	}
 
-	const privateConstants = getPrivateConstants(this);
-
 	const entry = entries[0];
 	if (entry.target.classList.contains("limber-grid-view-io-top-helper")) {
 		setIOBottomHelperPos(this, getIOTopHelperPos(this) + 1.5);
@@ -76,22 +78,28 @@ export const intersectionObserverCallback = function (entries, observer) {
 		setIOBottomHelperPos(this, getIOBottomHelperPos(this) + 1);
 	}
 
+	adjustItems(this);
+};
+
+export const adjustItems = function (context) {
+	const privateConstants = getPrivateConstants(context);
+
 	const renderSpace = {
 		x1: 0,
 		x2: privateConstants.WIDTH,
 		y1:
-			getIOTopHelperPos(this) * privateConstants.HEIGHT -
+			getIOTopHelperPos(context) * privateConstants.HEIGHT -
 			privateConstants.HEIGHT / 2,
 		y2:
-			getIOBottomHelperPos(this) * privateConstants.HEIGHT +
+			getIOBottomHelperPos(context) * privateConstants.HEIGHT +
 			privateConstants.HEIGHT / 2,
 	};
-	const renderedItems = getItemsInWorkSpace(this, renderSpace, true);
+	const renderedItems = getItemsInWorkSpace(context, renderSpace, true);
 	const renderedItemsMap = {};
 	for (const item of renderedItems) {
 		renderedItemsMap[item] = true;
 	}
-	const prevRenderedItems = getRenderedItems(this);
+	const prevRenderedItems = getRenderedItems(context);
 	const prevRenderedItemsMap = {};
 	for (const item of prevRenderedItems) {
 		prevRenderedItemsMap[item] = true;
@@ -110,15 +118,59 @@ export const intersectionObserverCallback = function (entries, observer) {
 		}
 	}
 
-	setRenderedItems(this, renderedItems);
-	setRenderedItemsMap(this, renderedItemsMap);
-	unmountItems(this, toUnmountItems);
-	mountItems(this, Object.keys(toMountItems));
+	setRenderedItems(context, renderedItems);
+	setRenderedItemsMap(context, renderedItemsMap);
+	unmountItems(context, toUnmountItems);
+	mountItems(context, Object.keys(toMountItems));
 
-	get$limberGridViewIOTopHelper(this).style.transform = `translate(0px, ${
-		getIOTopHelperPos(this) * privateConstants.HEIGHT
+	get$limberGridViewIOTopHelper(context).style.transform = `translate(0px, ${
+		getIOTopHelperPos(context) * privateConstants.HEIGHT
 	}px)`;
-	get$limberGridViewIOBottomHelper(this).style.transform = `translate(0px, ${
-		getIOBottomHelperPos(this) * privateConstants.HEIGHT
+	get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${
+		getIOBottomHelperPos(context) * privateConstants.HEIGHT
 	}px)`;
+};
+
+export const onScroll = function (event) {
+	clearTimeout(getOnScrolTimeout(this));
+	setOnScrolTimeout(
+		this,
+		setTimeout(getBindedFunctions(this).onScrollCallback, 1000)
+	);
+};
+
+export const onScrollCallback = function (event) {
+	const privateConstants = getPrivateConstants(this);
+	const $limberGridView = get$limberGridView(this);
+	const y1 = $limberGridView.scrollTop;
+	const screen = {
+		x1: 0,
+		x2: privateConstants.WIDTH,
+		y1: y1,
+		y2: y1 + privateConstants.HEIGHT,
+	};
+	const bounds = {
+		x1: 0,
+		x2: privateConstants.WIDTH,
+		y1: getIOTopHelperPos(this) * privateConstants.HEIGHT,
+		y2: getIOBottomHelperPos(this) * privateConstants.HEIGHT,
+	};
+
+	if (!doRectsOverlapOrTouch(screen, bounds)) {
+		const newBounds = { ...screen };
+		newBounds.y1 = screen.y1 - privateConstants.HEIGHT * 0.75;
+		let top = fixTo(newBounds.y1 / privateConstants.HEIGHT, 1);
+		if (top % 1 > 0.66) {
+			top = Math.ceil(top);
+		} else if (top % 1 < 0.33) {
+			top = Math.trunc(top);
+		} else {
+			top = Math.trunc(top) + 0.5;
+		}
+		const bottom = top + 2.5;
+		setIOTopHelperPos(this, top);
+		setIOBottomHelperPos(this, bottom);
+
+		adjustItems(this);
+	}
 };

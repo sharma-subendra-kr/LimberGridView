@@ -123,6 +123,14 @@ const getIOBottomHelperPos = function (context) {
 	return context.store.variables.essentials.ioBottomHelperPos;
 };
 
+const setOnScrolTimeout = function (context, onScrollTimeout) {
+	return (context.store.variables.essentials.onScrollTimeout = onScrollTimeout);
+};
+
+const getOnScrolTimeout = function (context) {
+	return context.store.variables.essentials.onScrollTimeout;
+};
+
 export default getEssentialVariables;
 export {
 	// setElementId,
@@ -148,4 +156,6 @@ export {
 	getIOTopHelperPos,
 	setIOBottomHelperPos,
 	getIOBottomHelperPos,
+	setOnScrolTimeout,
+	getOnScrolTimeout,
 };
