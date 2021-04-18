@@ -242,6 +242,10 @@ const main = function () {
 		$animationTime.innerHTML = `${time}, ${resizeCount}, ${count}`;
 	};
 
+	const getLogMessage = function (log) {
+		console.log(log);
+	};
+
 	const obj = {
 		el: "limber-grid-view-implement",
 		// editable: true,
@@ -264,6 +268,7 @@ const main = function () {
 			addComplete: addComplete,
 			removeComplete: removeComplete,
 			getArrangeTime: getArrangeTime,
+			getLogMessage: getLogMessage,
 		},
 		// "{"gridHeight":561,"gridWidth":960,"margin":5}"
 		// "{"gridHeight":482,"gridWidth":999,"margin":3.830521472392638}"

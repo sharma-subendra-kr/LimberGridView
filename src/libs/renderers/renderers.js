@@ -464,6 +464,7 @@ export const addItem = async function (context, item) {
 			callbacks.addComplete(index);
 		}
 	} catch (error) {
+		getCallbacks(this).getLogMessage({ type: "error", message: error });
 		console.error(error);
 	}
 

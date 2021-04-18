@@ -148,6 +148,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 			removePlugin: function(element){}
 
 			onItemClickCallback : function(event){},																// click callback for item
+			getLogMessage: function(log){},																					// get log message for error, info, and warnings
 		},
 		publicConstants: {
 			mobileAspectRatio : <value>, 																						// aspect ratio of for mobile devices
