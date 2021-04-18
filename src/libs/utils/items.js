@@ -26,7 +26,9 @@ Written by Subendra Kumar Sharma.
 import {
 	getPositionData,
 	getRenderedItems,
+	getSerializedPositionData,
 } from "../../store/variables/essentials";
+import { isMobile } from "./utils";
 
 export const makeItem = (item) => {
 	item.x1 = item.x;

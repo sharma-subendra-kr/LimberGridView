@@ -67,6 +67,28 @@ const getModifiedPositionData = function (context) {
 	return context.store.variables.essentials.modifiedPositionData;
 };
 
+const setSerializedPositionData = function (context, pd) {
+	const len = pd.length;
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = { ...pd[i] };
+		arr[i].index = i;
+	}
+
+	arr.sort((a, b) => {
+		if (a.y === b.y) {
+			return a.x - b.x;
+		}
+		return a.y - b.y;
+	});
+
+	context.store.variables.essentials.serializedPositionData = arr;
+};
+
+const getSerializedPositionData = function (context) {
+	return context.store.variables.essentials.serializedPositionData;
+};
+
 const setGridData = function (context, grid) {
 	context.store.variables.essentials.gridData = grid;
 };
@@ -142,6 +164,8 @@ export {
 	getPositionData,
 	setModifiedPositionData,
 	getModifiedPositionData,
+	setSerializedPositionData,
+	getSerializedPositionData,
 	setGridData,
 	getGridData,
 	setCallbacks,

@@ -28,15 +28,22 @@ import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getCallbacks,
 	setLimberGridViewBoundingClientRect,
+	getLimberGridViewBoundingClientRect,
+	setIOTopHelperPos,
+	setIOBottomHelperPos,
+	setRenderedItems,
 } from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
-import { get$limberGridView } from "../../store/variables/elements";
+import getElements, {
+	get$limberGridView,
+} from "../../store/variables/elements";
 import {
 	setIsResizeObserving,
 	getIsResizeObserving,
 } from "../../store/observer/resizeObserver";
+import { isMobile } from "../utils/utils";
 
 export const onItemClick = function (event) {
 	const callbacks = getCallbacks(this);
@@ -68,13 +75,32 @@ export const resizeObserverCallback = function () {
 	const publicConstants = getPublicConstants(this);
 	if (!getIsResizeObserving(this)) {
 		setIsResizeObserving(this, true);
+
 		setTimeout(async () => {
+			const prevBoundingClientRect = getLimberGridViewBoundingClientRect(this);
 			setLimberGridViewBoundingClientRect(
 				this,
 				getAllBoundingClientRectKeys(
 					get$limberGridView(this).getBoundingClientRect()
 				)
 			);
+
+			if (!isMobile(this) && isMobile(this, prevBoundingClientRect)) {
+				// switched to desktop view
+				setIOTopHelperPos(this, -1);
+				setIOBottomHelperPos(this, 1.5);
+				setRenderedItems(this, []);
+
+				// const e = getElements(this);
+				// const len = e.$limberGridViewItems.length;
+				// for (let i = 0; i < len; i++) {
+				// 	if (e.$limberGridViewItems[i]) {
+				// 		e.$limberGridViewItems[i].remove();
+				// 		e.$limberGridViewItems[i] = undefined;
+				// 	}
+				// }
+			}
+
 			await init(this, true, false);
 			render(this);
 			setIsResizeObserving(this, false);
