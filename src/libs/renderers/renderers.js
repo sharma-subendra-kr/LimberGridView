@@ -36,6 +36,7 @@ import {
 	getCallbacks,
 	getRenderedItems,
 	getSerializedPositionData,
+	setSerializedPositionData,
 } from "../../store/variables/essentials";
 import { isMobile } from "../utils/utils";
 import { sanitizeDimension } from "../utils/items";
@@ -353,6 +354,7 @@ export const addItem = async function (context, item) {
 				const mpd = getModifiedPositionData(context);
 				mpd.push(item);
 				setPositionData(context, mpd);
+				setSerializedPositionData(context, mpd);
 				getUndoRedo(context).reset();
 				getUndoRedo(context).push(mpd);
 			} else {
@@ -389,6 +391,7 @@ export const addItem = async function (context, item) {
 			await arrangeFromHeight(context, [mpd.length - 1], bottomY);
 			sanitizeDimension(mpd[mpd.length - 1]);
 			setPositionData(context, mpd);
+			setSerializedPositionData(context, mpd);
 			getUndoRedo(context).reset();
 			getUndoRedo(context).push(mpd);
 		} else {
@@ -442,10 +445,12 @@ export const addItem = async function (context, item) {
 			);
 		}
 
-		e.$limberGridView.appendChild(itemEl);
-		renderItemContent(context, renderData, itemEl);
-		e.$limberGridViewItems.push(itemEl);
-		getRenderedItems(context).push(index);
+		if (!isMobile(context)) {
+			e.$limberGridView.appendChild(itemEl);
+			renderItemContent(context, renderData, itemEl);
+			e.$limberGridViewItems.push(itemEl);
+			getRenderedItems(context).push(index);
+		}
 
 		if (!isMobile(context)) {
 			e.$limberGridView.scrollTo({
