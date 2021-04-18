@@ -145,9 +145,9 @@ export const intersectionObserverCallback = function (entries, observer) {
 			e.$limberGridView.scrollTo({
 				left: 0,
 				top:
-					e.$limberGridView.scrollHeight -
-					(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO) * 6,
-				behavior: "smooth",
+					(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO) *
+					toMountItems.length,
+				behavior: "auto",
 			});
 		}
 
