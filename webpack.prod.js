@@ -38,10 +38,10 @@ module.exports = merge(common, {
 	},
 	externals: {
 		rtreejs: {
-			commonjs: "RTreeJS",
-			commonjs2: "RTreeJS",
-			amd: "RTreeJS",
-			root: "RTreeJS",
+			commonjs: "rtreejs",
+			commonjs2: "rtreejs",
+			amd: "rtreejs",
+			root: "rtreejs",
 		},
 		Stack: {
 			commonjs: "Stack",

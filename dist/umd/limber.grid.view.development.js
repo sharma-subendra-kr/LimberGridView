@@ -23,13 +23,13 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("Stack"), require("RTreeJS"), require("UndoRedo"), require("ResizeObserver"));
+		module.exports = factory(require("Stack"), require("rtreejs"), require("UndoRedo"), require("ResizeObserver"));
 	else if(typeof define === 'function' && define.amd)
-		define(["Stack", "RTreeJS", "UndoRedo", "ResizeObserver"], factory);
+		define(["Stack", "rtreejs", "UndoRedo", "ResizeObserver"], factory);
 	else if(typeof exports === 'object')
-		exports["LimberGridView"] = factory(require("Stack"), require("RTreeJS"), require("UndoRedo"), require("ResizeObserver"));
+		exports["LimberGridView"] = factory(require("Stack"), require("rtreejs"), require("UndoRedo"), require("ResizeObserver"));
 	else
-		root["LimberGridView"] = factory(root["Stack"], root["RTreeJS"], root["UndoRedo"], root["ResizeObserver"]);
+		root["LimberGridView"] = factory(root["Stack"], root["rtreejs"], root["UndoRedo"], root["ResizeObserver"]);
 })(window, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__, __WEBPACK_EXTERNAL_MODULE__3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -161,8 +161,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__3__;
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: external {"commonjs":"RTreeJS","commonjs2":"RTreeJS","amd":"RTreeJS","root":"RTreeJS"}
-var external_commonjs_RTreeJS_commonjs2_RTreeJS_amd_RTreeJS_root_RTreeJS_ = __webpack_require__(1);
+// EXTERNAL MODULE: external {"commonjs":"rtreejs","commonjs2":"rtreejs","amd":"rtreejs","root":"rtreejs"}
+var external_commonjs_rtreejs_commonjs2_rtreejs_amd_rtreejs_root_rtreejs_ = __webpack_require__(1);
 
 // EXTERNAL MODULE: external {"commonjs":"Stack","commonjs2":"Stack","amd":"Stack","root":"Stack"}
 var external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_ = __webpack_require__(0);
@@ -7107,7 +7107,7 @@ LimberGridView.prototype.initializeStore = function () {
       },
       status: {},
       trees: {
-        rt: new external_commonjs_RTreeJS_commonjs2_RTreeJS_amd_RTreeJS_root_RTreeJS_["RTreeIterative"]({
+        rt: new external_commonjs_rtreejs_commonjs2_rtreejs_amd_rtreejs_root_rtreejs_["RTreeIterative"]({
           M: 4 // splitNode: "linear",
 
         })
