@@ -23,13 +23,13 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("Stack"), require("rtreejs"), require("UndoRedo"), require("ResizeObserver"));
+		module.exports = factory(require("Stack"), require("rtreejs"), require("undo-redo"), require("resize-observer-polyfill"));
 	else if(typeof define === 'function' && define.amd)
-		define(["Stack", "rtreejs", "UndoRedo", "ResizeObserver"], factory);
+		define(["Stack", "rtreejs", "undo-redo", "resize-observer-polyfill"], factory);
 	else if(typeof exports === 'object')
-		exports["LimberGridView"] = factory(require("Stack"), require("rtreejs"), require("UndoRedo"), require("ResizeObserver"));
+		exports["LimberGridView"] = factory(require("Stack"), require("rtreejs"), require("undo-redo"), require("resize-observer-polyfill"));
 	else
-		root["LimberGridView"] = factory(root["Stack"], root["rtreejs"], root["UndoRedo"], root["ResizeObserver"]);
+		root["LimberGridView"] = factory(root["Stack"], root["rtreejs"], root["undo-redo"], root["resize-observer-polyfill"]);
 })(window, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__, __WEBPACK_EXTERNAL_MODULE__3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -167,9 +167,9 @@ var external_commonjs_rtreejs_commonjs2_rtreejs_amd_rtreejs_root_rtreejs_ = __we
 // EXTERNAL MODULE: external {"commonjs":"Stack","commonjs2":"Stack","amd":"Stack","root":"Stack"}
 var external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_ = __webpack_require__(0);
 
-// EXTERNAL MODULE: external {"commonjs":"UndoRedo","commonjs2":"UndoRedo","amd":"UndoRedo","root":"UndoRedo"}
-var external_commonjs_UndoRedo_commonjs2_UndoRedo_amd_UndoRedo_root_UndoRedo_ = __webpack_require__(2);
-var external_commonjs_UndoRedo_commonjs2_UndoRedo_amd_UndoRedo_root_UndoRedo_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_UndoRedo_commonjs2_UndoRedo_amd_UndoRedo_root_UndoRedo_);
+// EXTERNAL MODULE: external {"commonjs":"undo-redo","commonjs2":"undo-redo","amd":"undo-redo","root":"undo-redo"}
+var external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_ = __webpack_require__(2);
+var external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_);
 
 // EXTERNAL MODULE: ./src/index.css
 var src = __webpack_require__(4);
@@ -6000,9 +6000,9 @@ const cutSpaceAllowCheckTimeOut = function (x, y, width, height) {
     e.$limberGridViewAddCutGuide.classList.add("limber-grid-view-add-cut-guide-allow");
   }
 };
-// EXTERNAL MODULE: external {"commonjs":"ResizeObserver","commonjs2":"ResizeObserver","amd":"ResizeObserver","root":"ResizeObserver"}
-var external_commonjs_ResizeObserver_commonjs2_ResizeObserver_amd_ResizeObserver_root_ResizeObserver_ = __webpack_require__(3);
-var external_commonjs_ResizeObserver_commonjs2_ResizeObserver_amd_ResizeObserver_root_ResizeObserver_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_ResizeObserver_commonjs2_ResizeObserver_amd_ResizeObserver_root_ResizeObserver_);
+// EXTERNAL MODULE: external {"commonjs":"resize-observer-polyfill","commonjs2":"resize-observer-polyfill","amd":"resize-observer-polyfill","root":"resize-observer-polyfill"}
+var external_commonjs_resize_observer_polyfill_commonjs2_resize_observer_polyfill_amd_resize_observer_polyfill_root_resize_observer_polyfill_ = __webpack_require__(3);
+var external_commonjs_resize_observer_polyfill_commonjs2_resize_observer_polyfill_amd_resize_observer_polyfill_root_resize_observer_polyfill_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_resize_observer_polyfill_commonjs2_resize_observer_polyfill_amd_resize_observer_polyfill_root_resize_observer_polyfill_);
 
 // CONCATENATED MODULE: ./src/store/flags/flagDetails.js
 /*
@@ -6421,7 +6421,7 @@ const onItemClick = function (event) {
 };
 const instantiateResizeObserver = function () {
   setLimberGridViewBoundingClientRect(this, getAllBoundingClientRectKeys(get$limberGridView(this).getBoundingClientRect()));
-  const ResizeObserver = window.ResizeObserver ? window.ResizeObserver : external_commonjs_ResizeObserver_commonjs2_ResizeObserver_amd_ResizeObserver_root_ResizeObserver_default.a;
+  const ResizeObserver = window.ResizeObserver ? window.ResizeObserver : external_commonjs_resize_observer_polyfill_commonjs2_resize_observer_polyfill_amd_resize_observer_polyfill_root_resize_observer_polyfill_default.a;
   this.store.observer.resizeObserver.resizeObserver = new ResizeObserver(getBindedFunctions(this).resizeObserverCallback);
   this.store.observer.resizeObserver.resizeObserver.observe(get$limberGridView(this));
 };
@@ -7116,7 +7116,7 @@ LimberGridView.prototype.initializeStore = function () {
         stack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"](),
         garbageStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]()
       },
-      undoRedo: new external_commonjs_UndoRedo_commonjs2_UndoRedo_amd_UndoRedo_root_UndoRedo_default.a()
+      undoRedo: new external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_default.a()
     },
     constants: {
       privateConstants: {
