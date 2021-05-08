@@ -26,7 +26,10 @@ Written by Subendra Kumar Sharma.
 import { adjustHeightAndScroll } from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
-import { getPositionData } from "../../store/variables/essentials";
+import {
+	getPositionData,
+	getCallbacks,
+} from "../../store/variables/essentials";
 import getElements from "../../store/variables/elements";
 import {
 	calculateMousePosOnDesk,
@@ -464,6 +467,7 @@ export const onItemMouseUp = async function (event) {
 				}
 			} catch (error) {
 				console.error(error);
+				getCallbacks(this).getLogMessage({ type: "error", message: error });
 				revertShowMoveOrResizeDemo(this);
 			}
 		} else {
@@ -484,6 +488,7 @@ export const onItemMouseUp = async function (event) {
 				);
 			} catch (error) {
 				console.error(error);
+				getCallbacks(this).getLogMessage({ type: "error", message: error });
 				revertShowMoveOrResizeDemo(this);
 			}
 		}
@@ -521,6 +526,7 @@ export const onItemTouchEnd = async function (event) {
 				}
 			} catch (error) {
 				console.error(error);
+				getCallbacks(this).getLogMessage({ type: "error", message: error });
 				revertShowMoveOrResizeDemo(this);
 			}
 		} else {
@@ -541,6 +547,7 @@ export const onItemTouchEnd = async function (event) {
 				);
 			} catch (error) {
 				console.error(error);
+				getCallbacks(this).getLogMessage({ type: "error", message: error });
 				revertShowMoveOrResizeDemo(this);
 			}
 		}
@@ -620,6 +627,7 @@ export const showMoveDemo = async function (index, mousePosition) {
 		}
 	} catch (error) {
 		console.error(error);
+		getCallbacks(this).getLogMessage({ type: "error", message: error });
 		e.$pseudoContainerItem.classList.remove(
 			"limber-grid-view-pseudo-container-item-move-allow"
 		);
@@ -646,6 +654,7 @@ export const showResizeDemo = async function (
 		);
 	} catch (error) {
 		console.error(error);
+		getCallbacks(this).getLogMessage({ type: "error", message: error });
 		e.$limberGridViewPseudoItem.classList.add(
 			"limber-grid-view-pseudo-item-resize-disallow"
 		);

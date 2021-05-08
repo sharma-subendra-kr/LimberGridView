@@ -25,17 +25,21 @@ Written by Subendra Kumar Sharma.
 
 import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 
-export const isMobile = function (context) {
+export const isMobile = function (context, boundingClientRect) {
 	const isMobileFunction = context.options.isMobileCheck;
 
 	if (isMobileFunction) {
-		return isMobileFunction(getLimberGridViewBoundingClientRect(context));
+		return isMobileFunction(
+			boundingClientRect || getLimberGridViewBoundingClientRect(context)
+		);
 	}
 
+	boundingClientRect =
+		boundingClientRect || getLimberGridViewBoundingClientRect(context);
+
 	return (
-		getLimberGridViewBoundingClientRect(context).width < 980 ||
-		(window.innerHeight > window.innerWidth &&
-			getLimberGridViewBoundingClientRect(context).width < 981)
+		boundingClientRect.width < 980 ||
+		(window.innerHeight > window.innerWidth && boundingClientRect.width < 981)
 	);
 };
 

@@ -31,11 +31,9 @@ import {
 	setModifiedPositionData,
 	setPseudoContainerId,
 	setRenderedItems,
-	// getRenderedItems,
-	// setIOTopHelperPos,
 	getIOTopHelperPos,
-	// setIOBottomHelperPos,
 	getIOBottomHelperPos,
+	setSerializedPositionData,
 } from "../store/variables/essentials";
 import getElements, {
 	set$body,
@@ -73,7 +71,7 @@ import getPublicConstants, {
 	setPublicConstantByName,
 } from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
-import { getRandomString } from "../libs/utils/utils";
+import { getRandomString, isMobile } from "../libs/utils/utils";
 import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 import { getItemsInWorkSpace } from "../libs/utils/items";
@@ -218,25 +216,35 @@ export const init = async function (context, isResize, autoArrange) {
 			privateConstants.WIDTH_SCALE_FACTOR
 	);
 
-	get$limberGridViewIOTopHelper(context).style.transform = `translate(0px, ${
-		getIOTopHelperPos(context) * privateConstants.HEIGHT
-	}px)`;
-	get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${
-		getIOBottomHelperPos(context) * privateConstants.HEIGHT
-	}px)`;
+	if (!isMobile(context)) {
+		get$limberGridViewIOTopHelper(context).style.transform = `translate(0px, ${
+			getIOTopHelperPos(context) * privateConstants.HEIGHT
+		}px)`;
+		get$limberGridViewIOBottomHelper(
+			context
+		).style.transform = `translate(0px, ${
+			getIOBottomHelperPos(context) * privateConstants.HEIGHT
+		}px)`;
 
-	const renderSpace = {
-		x1: 0,
-		x2: privateConstants.WIDTH,
-		y1:
-			getIOTopHelperPos(context) * privateConstants.HEIGHT -
-			privateConstants.HEIGHT / 2,
-		y2:
-			getIOBottomHelperPos(context) * privateConstants.HEIGHT +
-			privateConstants.HEIGHT / 2,
-	};
-
-	setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
+		const renderSpace = {
+			x1: 0,
+			x2: privateConstants.WIDTH,
+			y1:
+				getIOTopHelperPos(context) * privateConstants.HEIGHT -
+				privateConstants.HEIGHT / 2,
+			y2:
+				getIOBottomHelperPos(context) * privateConstants.HEIGHT +
+				privateConstants.HEIGHT / 2,
+		};
+		setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
+	} else {
+		get$limberGridViewIOTopHelper(
+			context
+		).style.transform = `translate(1px, 1px)`;
+		setSerializedPositionData(context, pd);
+		const arr = new Array(15).fill(0).map((o, index) => index);
+		setRenderedItems(context, arr);
+	}
 };
 
 export const initConstantsAndFlags = function (options) {
