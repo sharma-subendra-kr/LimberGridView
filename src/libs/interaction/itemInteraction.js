@@ -23,6 +23,7 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getResizeAffectedItems,
 	getMoveAffectedItems,
@@ -31,8 +32,11 @@ import {
 	resetDemoUIChanges,
 	movePointAdjust,
 	resizeSizeAdjust,
+	getMoveModifiedItem,
+	getResizeModifiedItem,
+	positionArranged,
 } from "./itemInteractionUtils";
-import { arrangeMove, arrangeResize } from "../arrange/arrange";
+import { arrangeMove } from "../arrange/arrange";
 import getPublicConstants from "../../store/constants/publicConstants";
 import {
 	getPositionData,
@@ -45,79 +49,100 @@ import getElements from "../../store/variables/elements";
 import { setStatus, getStatus } from "../../store/variables/status";
 import getMessage from "../../store/constants/messages";
 import { isPointInsideRect } from "../rect/rectUtils";
+import { renderItem, mountItems } from "../renderers/renderers";
+import getUndoRedo from "../../store/variables/undoRedo";
 
-export const resizeItem = async function (index, width, height) {
+export const resizeItem = async function (index, x, y, width, height) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedSize = getStatus(this, "resizeDemo");
+		x = adjustedSize?.x || x;
+		y = adjustedSize?.y || y;
 		height = adjustedSize?.height || height;
 		width = adjustedSize?.width || width;
 	}
 
-	resizeItemInitialChecks(this, index, width, height);
+	resizeItemInitialChecks(this, index, x, y, width, height);
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].width = width;
-	mpd[index].height = height;
 
-	const modifiedItem = {
-		x: pd[index].x,
-		y: pd[index].y,
-		width: width,
-		height: height,
-	};
+	const modifiedItem = getResizeModifiedItem(
+		x,
+		y,
+		width,
+		height,
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	let arranged;
-	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeResize(
-			this,
-			affectedItems,
-			modifiedItem.y + modifiedItem.height,
-			modifiedItem.x + modifiedItem.width
-		);
-	} else {
-		arranged = await arrangeMove(this, affectedItems);
-	}
+	let arranged, resized;
+	({ arranged, resized } = await arrangeMove(
+		this,
+		affectedItems,
+		y,
+		y + height
+	));
 
 	setPositionData(this, mpd);
+	getUndoRedo(this).push(mpd);
 
-	e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
-	e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
-
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+	if (e.$limberGridViewItems[index]) {
+		e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
+		e.$limberGridViewItems[index].style.width = `${mpd[index].width}px`;
+		e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
 	}
 
+	positionArranged(this, arranged);
+
 	if (callbacks.resizeComplete) {
-		callbacks.resizeComplete(index, width, height, arrangedArr);
+		callbacks.resizeComplete(index, width, height, Object.keys(arranged));
+	}
+
+	renderItem(this, index);
+	for (const key in resized) {
+		renderItem(this, key);
 	}
 };
 
-export const resizeItemDemo = async function (index, width, height) {
+export const resizeItemDemo = async function (
+	index,
+	x,
+	y,
+	width,
+	height,
+	forBottomRight
+) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
 	let adjustedSize;
 	if (publicConstants.LATCH_MOVED_ITEM) {
-		adjustedSize = resizeSizeAdjust(this, width, height, index);
+		adjustedSize = resizeSizeAdjust(
+			this,
+			x,
+			y,
+			width,
+			height,
+			index,
+			forBottomRight
+		);
 		setStatus(this, "resizeDemo", adjustedSize);
+		x = adjustedSize.x;
+		y = adjustedSize.y;
 		height = adjustedSize.height;
 		width = adjustedSize.width;
 	}
@@ -136,44 +161,28 @@ export const resizeItemDemo = async function (index, width, height) {
 		}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 	}
 
-	resizeItemInitialChecks(this, index, width, height);
+	resizeItemInitialChecks(this, index, x, y, width, height);
 
 	resetDemoUIChanges(this);
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].width = width;
-	mpd[index].height = height;
 
-	const modifiedItem = {
-		x: pd[index].x,
-		y: pd[index].y,
-		width: width,
-		height: height,
-	};
+	const modifiedItem = getResizeModifiedItem(
+		x,
+		y,
+		width,
+		height,
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
 	let arranged;
-	if (publicConstants.USE_VERTICAL_ARR_ON_RESIZE) {
-		arranged = await arrangeResize(
-			this,
-			affectedItems,
-			modifiedItem.y + modifiedItem.height,
-			modifiedItem.x + modifiedItem.width
-		);
-	} else {
-		arranged = await arrangeMove(this, affectedItems);
-	}
+	({ arranged } = await arrangeMove(this, affectedItems, y, y + height));
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
-	}
+	positionArranged(this, arranged);
 };
 
 export const moveItem = async function (index, toX, toY) {
@@ -181,6 +190,7 @@ export const moveItem = async function (index, toX, toY) {
 	const e = getElements(this);
 	const callbacks = getCallbacks(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 	if (publicConstants.LATCH_MOVED_ITEM) {
@@ -204,18 +214,18 @@ export const moveItem = async function (index, toX, toY) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].x = toX;
-	mpd[index].y = toY;
 
-	const modifiedItem = {
-		x: toX,
-		y: toY,
-		width: pd[index].width,
-		height: pd[index].height,
-	};
+	const modifiedItem = getMoveModifiedItem(
+		toX,
+		toY,
+		pd[index],
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeMove(
+	const { arranged, resized } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
@@ -223,30 +233,32 @@ export const moveItem = async function (index, toX, toY) {
 	);
 
 	setPositionData(this, mpd);
+	getUndoRedo(this).push(mpd);
 
-	e.$limberGridViewItems[
-		index
-	].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
-	if (!publicConstants.ANIMATE_MOVED_ITEM) {
-		// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
-		e.$limberGridViewItems[index].style.transition = "none";
-		setTimeout(() => {
-			e.$limberGridViewItems[index].style.transition = "";
-		}, publicConstants.ANIMATE_TIME);
-	}
-
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
+	if (e.$limberGridViewItems[index]) {
 		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
+			index
+		].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
+		if (!publicConstants.ANIMATE_MOVED_ITEM) {
+			// below two statements needs its own flag maybe "ANIMATE_MOVED_ITEM"
+			e.$limberGridViewItems[index].style.transition = "none";
+			setTimeout(() => {
+				e.$limberGridViewItems[index].style.transition = "";
+			}, publicConstants.ANIMATE_TIME);
+		}
+	} else {
+		// render the moved item
+		mountItems(this, [index]);
 	}
+
+	positionArranged(this, arranged);
 
 	if (callbacks.resizeComplete) {
-		callbacks.moveComplete(index, toX, toY, arrangedArr);
+		callbacks.moveComplete(index, toX, toY, Object.keys(arranged));
+	}
+
+	for (const key in resized) {
+		renderItem(this, key);
 	}
 };
 
@@ -254,6 +266,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
 
@@ -361,32 +374,23 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	setModifiedPositionData(this, pd);
 	const mpd = getModifiedPositionData(this);
-	mpd[index].x = toX;
-	mpd[index].y = toY;
 
-	const modifiedItem = {
-		x: toX,
-		y: toY,
-		width: pd[index].width,
-		height: pd[index].height,
-	};
+	const modifiedItem = getMoveModifiedItem(
+		toX,
+		toY,
+		pd[index],
+		privateConstants.MARGIN
+	);
+	mpd[index] = { ...modifiedItem };
+
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const arranged = await arrangeMove(
+	const { arranged } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
-		toY + pd[index].height,
-		true
+		toY + pd[index].height
 	);
 
-	const arrangedArr = Object.keys(arranged);
-	const len = arrangedArr.length;
-	for (let i = 0; i < len; i++) {
-		const key = arrangedArr[i];
-		const item = arranged[key];
-		e.$limberGridViewItems[
-			key
-		].style.transform = `translate(${item.x}px, ${item.y}px)`;
-	}
+	positionArranged(this, arranged);
 };

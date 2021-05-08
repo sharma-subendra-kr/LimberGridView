@@ -151,7 +151,7 @@ body {
 	width: 100%;
 	height: calc(100% - 100px);
 	overflow: hidden;
-	padding: 5px;
+	padding: 5px 0;
 }
 
 #limber-grid-view-implement .limber-grid-view-container .limber-grid-view {

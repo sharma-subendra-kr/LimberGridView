@@ -67,6 +67,28 @@ const getModifiedPositionData = function (context) {
 	return context.store.variables.essentials.modifiedPositionData;
 };
 
+const setSerializedPositionData = function (context, pd) {
+	const len = pd.length;
+	const arr = new Array(len);
+	for (let i = 0; i < len; i++) {
+		arr[i] = { ...pd[i] };
+		arr[i].index = i;
+	}
+
+	arr.sort((a, b) => {
+		if (a.y === b.y) {
+			return a.x - b.x;
+		}
+		return a.y - b.y;
+	});
+
+	context.store.variables.essentials.serializedPositionData = arr;
+};
+
+const getSerializedPositionData = function (context) {
+	return context.store.variables.essentials.serializedPositionData;
+};
+
 const setGridData = function (context, grid) {
 	context.store.variables.essentials.gridData = grid;
 };
@@ -83,6 +105,54 @@ const getCallbacks = function (context) {
 	return context.store.variables.essentials.callbacks;
 };
 
+const setLimberGridViewBoundingClientRect = function (context, value) {
+	context.store.variables.essentials.limberGridViewBoundingClientRect = value;
+};
+
+const getLimberGridViewBoundingClientRect = function (context) {
+	return context.store.variables.essentials.limberGridViewBoundingClientRect;
+};
+
+const setRenderedItems = function (context, renderedItems) {
+	context.store.variables.essentials.renderedItems = [...renderedItems];
+};
+
+const getRenderedItems = function (context) {
+	return context.store.variables.essentials.renderedItems;
+};
+
+const setRenderedItemsMap = function (context, renderedItemsMap) {
+	context.store.variables.essentials.renderedItemsMap = { ...renderedItemsMap };
+};
+
+const getRenderedItemsMap = function (context) {
+	return context.store.variables.essentials.renderedItemsMap;
+};
+
+const setIOTopHelperPos = function (context, position) {
+	context.store.variables.essentials.ioTopHelperPos = position;
+};
+
+const getIOTopHelperPos = function (context) {
+	return context.store.variables.essentials.ioTopHelperPos;
+};
+
+const setIOBottomHelperPos = function (context, position) {
+	context.store.variables.essentials.ioBottomHelperPos = position;
+};
+
+const getIOBottomHelperPos = function (context) {
+	return context.store.variables.essentials.ioBottomHelperPos;
+};
+
+const setOnScrolTimeout = function (context, onScrollTimeout) {
+	return (context.store.variables.essentials.onScrollTimeout = onScrollTimeout);
+};
+
+const getOnScrolTimeout = function (context) {
+	return context.store.variables.essentials.onScrollTimeout;
+};
+
 export default getEssentialVariables;
 export {
 	// setElementId,
@@ -94,8 +164,22 @@ export {
 	getPositionData,
 	setModifiedPositionData,
 	getModifiedPositionData,
+	setSerializedPositionData,
+	getSerializedPositionData,
 	setGridData,
 	getGridData,
 	setCallbacks,
 	getCallbacks,
+	setLimberGridViewBoundingClientRect,
+	getLimberGridViewBoundingClientRect,
+	setRenderedItems,
+	getRenderedItems,
+	setRenderedItemsMap,
+	getRenderedItemsMap,
+	setIOTopHelperPos,
+	getIOTopHelperPos,
+	setIOBottomHelperPos,
+	getIOBottomHelperPos,
+	setOnScrolTimeout,
+	getOnScrolTimeout,
 };

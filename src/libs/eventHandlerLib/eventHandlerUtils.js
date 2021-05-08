@@ -24,13 +24,14 @@ Written by Subendra Kumar Sharma.
 */
 
 import getElements from "../../store/variables/elements";
+import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
 
 export const calculateMousePosOnDesk = function (context, event) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const limberGridViewPosition = e.$limberGridView.getBoundingClientRect();
+	const limberGridViewPosition = getLimberGridViewBoundingClientRect(context);
 	if (
 		event.clientX >= limberGridViewPosition.left &&
 		event.clientX <=
@@ -53,12 +54,14 @@ export const calculateMousePosOnDesk = function (context, event) {
 			scrollTop;
 
 		if (mouseXOnLimberGridView < 0 || mouseYOnLimberGridView < 0) {
-			return false;
+			return;
 		}
-		return { x: mouseXOnLimberGridView, y: mouseYOnLimberGridView };
-	} else {
-		// mouse pointer NOT inside limberGridView
-		return false;
+		return {
+			x: mouseXOnLimberGridView,
+			y: mouseYOnLimberGridView,
+			offsetX: mouseXOnLimberGridView - scrollLeft,
+			offsetY: mouseYOnLimberGridView - scrollTop,
+		};
 	}
 };
 
@@ -66,7 +69,7 @@ export const calculateTouchPosOnDesk = function (context, event) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const limberGridViewPosition = e.$limberGridView.getBoundingClientRect();
+	const limberGridViewPosition = getLimberGridViewBoundingClientRect(context);
 	let touch;
 
 	if (event.type === "touchend") {
@@ -102,12 +105,14 @@ export const calculateTouchPosOnDesk = function (context, event) {
 			scrollTop;
 
 		if (touchXOnLimberGridView < 0 || touchYOnLimberGridView < 0) {
-			return false;
+			return;
 		}
-		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
-	} else {
-		// touch NOT inside limberGridView
-		return false;
+		return {
+			x: touchXOnLimberGridView,
+			y: touchYOnLimberGridView,
+			offsetX: touchXOnLimberGridView - scrollLeft,
+			offsetY: touchYOnLimberGridView - scrollTop,
+		};
 	}
 };
 
@@ -132,8 +137,5 @@ export const calculateTouchPosOnItem = function (context, event) {
 			event.touches[0].clientY - limberGridViewItemPosition.top;
 
 		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
-	} else {
-		// touch NOT inside limberGridViewItem
-		return false;
 	}
 };

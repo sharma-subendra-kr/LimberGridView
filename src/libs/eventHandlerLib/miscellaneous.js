@@ -23,36 +23,100 @@ Written by Subendra Kumar Sharma.
 
 */
 
+import ResizeObserverPolyfill from "resize-observer-polyfill";
 import getPublicConstants from "../../store/constants/publicConstants";
-import getOptions from "../../store/variables/options";
-import { getCallbacks } from "../../store/variables/essentials";
+import {
+	getCallbacks,
+	setLimberGridViewBoundingClientRect,
+	getLimberGridViewBoundingClientRect,
+	setIOTopHelperPos,
+	setIOBottomHelperPos,
+	setRenderedItems,
+} from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
-
-export const onWindowResize = function (event) {
-	const publicConstants = getPublicConstants(this);
-
-	setTimeout(
-		getBindedFunctions(this).onWindowResizeTimerCallback,
-		publicConstants.WINDOW_RESIZE_WAIT_TIME
-	);
-	window.removeEventListener("resize", getBindedFunctions(this).onWindowResize);
-};
-
-export const onWindowResizeTimerCallback = async function (event) {
-	await init(this, true, false);
-	render(this);
-
-	const options = getOptions(this);
-
-	if (options.reRenderOnResize !== false) {
-		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
-	}
-};
+import getElements, {
+	get$limberGridView,
+} from "../../store/variables/elements";
+import {
+	setIsResizeObserving,
+	getIsResizeObserving,
+} from "../../store/observer/resizeObserver";
+import { isMobile } from "../utils/utils";
 
 export const onItemClick = function (event) {
 	const callbacks = getCallbacks(this);
 
 	callbacks.onItemClickCallback(event);
+};
+
+export const instantiateResizeObserver = function () {
+	setLimberGridViewBoundingClientRect(
+		this,
+		getAllBoundingClientRectKeys(
+			get$limberGridView(this).getBoundingClientRect()
+		)
+	);
+
+	const ResizeObserver = window.ResizeObserver
+		? window.ResizeObserver
+		: ResizeObserverPolyfill;
+
+	this.store.observer.resizeObserver.resizeObserver = new ResizeObserver(
+		getBindedFunctions(this).resizeObserverCallback
+	);
+	this.store.observer.resizeObserver.resizeObserver.observe(
+		get$limberGridView(this)
+	);
+};
+
+export const resizeObserverCallback = function () {
+	const publicConstants = getPublicConstants(this);
+	if (!getIsResizeObserving(this)) {
+		setIsResizeObserving(this, true);
+
+		setTimeout(async () => {
+			const prevBoundingClientRect = getLimberGridViewBoundingClientRect(this);
+			setLimberGridViewBoundingClientRect(
+				this,
+				getAllBoundingClientRectKeys(
+					get$limberGridView(this).getBoundingClientRect()
+				)
+			);
+
+			if (!isMobile(this) && isMobile(this, prevBoundingClientRect)) {
+				// switched to desktop view
+				setIOTopHelperPos(this, -1);
+				setIOBottomHelperPos(this, 1.5);
+				setRenderedItems(this, []);
+
+				// const e = getElements(this);
+				// const len = e.$limberGridViewItems.length;
+				// for (let i = 0; i < len; i++) {
+				// 	if (e.$limberGridViewItems[i]) {
+				// 		e.$limberGridViewItems[i].remove();
+				// 		e.$limberGridViewItems[i] = undefined;
+				// 	}
+				// }
+			}
+
+			await init(this, true, false);
+			render(this);
+			setIsResizeObserving(this, false);
+		}, publicConstants.WINDOW_RESIZE_WAIT_TIME);
+	}
+};
+
+export const getAllBoundingClientRectKeys = function (rect) {
+	return {
+		x: rect.x,
+		y: rect.y,
+		width: rect.width,
+		height: rect.height,
+		top: rect.top,
+		right: rect.right,
+		bottom: rect.bottom,
+		left: rect.left,
+	};
 };

@@ -134,6 +134,22 @@ const get$limberGridViewCrossHairGuide = function (context) {
 	return context.store.variables.elements.$limberGridViewCrossHairGuide;
 };
 
+const set$limberGridViewIOTopHelper = function (context, elm) {
+	context.store.variables.elements.$limberGridViewIOTopHelper = elm;
+};
+
+const get$limberGridViewIOTopHelper = function (context) {
+	return context.store.variables.elements.$limberGridViewIOTopHelper;
+};
+
+const set$limberGridViewIOBottomHelper = function (context, elm) {
+	context.store.variables.elements.$limberGridViewIOBottomHelper = elm;
+};
+
+const get$limberGridViewIOBottomHelper = function (context) {
+	return context.store.variables.elements.$limberGridViewIOBottomHelper;
+};
+
 // Grid Elements ENDED
 
 // DEBUG Elements
@@ -240,6 +256,10 @@ export {
 	get$limberGridViewTouchHoldGuide,
 	set$limberGridViewCrossHairGuide,
 	get$limberGridViewCrossHairGuide,
+	set$limberGridViewIOTopHelper,
+	get$limberGridViewIOTopHelper,
+	set$limberGridViewIOBottomHelper,
+	get$limberGridViewIOBottomHelper,
 	// DEBUG Elements
 	set$limberGridViewDebugMergedTempRects,
 	get$limberGridViewDebugMergedTempRects,

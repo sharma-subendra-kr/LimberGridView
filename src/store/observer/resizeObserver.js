@@ -23,42 +23,10 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import {
-	makeItem,
-	enhanceItemHW,
-	isValidRect,
-	isValidRectHW,
-} from "../utils/items";
-import getPrivateConstants from "../../store/constants/privateConstants";
-import { getPositionData } from "../../store/variables/essentials";
-
-export const checkPositionData = (pd) => {
-	if (Array.isArray(pd)) {
-		const len = pd.length;
-		for (let i = 0; i < len; i++) {
-			if (isValidRect(pd[i])) {
-				enhanceItemHW(pd[i]);
-			} else if (isValidRectHW(pd[i])) {
-				makeItem(pd[i]);
-			} else {
-				return false;
-			}
-		}
-		return true;
-	}
-	return false;
+export const setIsResizeObserving = function (context, value) {
+	context.store.observer.resizeObserver.isResizeObserving = value;
 };
 
-export const getPdBottomMax = (context) => {
-	const pd = getPositionData(context);
-	const privateConstants = getPrivateConstants(context);
-
-	let max = privateConstants.MARGIN;
-	const len = pd.length;
-	for (let i = 0; i < len; i++) {
-		if (pd[i].mY2 > max) {
-			max = pd[i].mY2;
-		}
-	}
-	return max;
+export const getIsResizeObserving = function (context) {
+	return context.store.observer.resizeObserver.isResizeObserving;
 };
