@@ -255,7 +255,7 @@ export const printStackTopRect = (context, obj) => {
 
 	node.setAttribute("title", `${obj.id}`);
 
-	node.innerHTML = obj.id;
+	node.innerHTML = obj.id || "";
 	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
 	node.style.width = obj.x2 - obj.x1 + "px";
 	node.style.height = obj.y2 - obj.y1 + "px";
@@ -294,7 +294,7 @@ export const printStackTopAdjRect = (context, obj) => {
 
 	node.setAttribute("title", `${obj.id}`);
 
-	node.innerHTML = obj.id;
+	node.innerHTML = obj.id || "";
 	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
 	node.style.width = obj.x2 - obj.x1 + "px";
 	node.style.height = obj.y2 - obj.y1 + "px";
@@ -333,7 +333,7 @@ export const printMergedRect = (context, obj) => {
 
 	node.setAttribute("title", `${obj.id}`);
 
-	node.innerHTML = obj.id;
+	node.innerHTML = obj.id || "";
 	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
 	node.style.width = obj.x2 - obj.x1 + "px";
 	node.style.height = obj.y2 - obj.y1 + "px";
@@ -370,7 +370,7 @@ export const printAdjRect = (context, obj) => {
 
 	node.setAttribute("title", `${obj.id}`);
 
-	node.innerHTML = obj.id;
+	node.innerHTML = obj.id || "";
 	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
 	node.style.width = obj.x2 - obj.x1 + "px";
 	node.style.height = obj.y2 - obj.y1 + "px";

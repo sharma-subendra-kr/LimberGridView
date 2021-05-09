@@ -472,8 +472,8 @@ LimberGridView.prototype.initializeStore = function () {
 				}),
 			},
 			stacks: {
-				stack: new Stack(),
-				garbageStack: new Stack(),
+				stack: new Stack({ constructReverse: true }),
+				garbageStack: new Stack({ constructReverse: true }),
 			},
 			undoRedo: new UndoRedo(),
 		},
