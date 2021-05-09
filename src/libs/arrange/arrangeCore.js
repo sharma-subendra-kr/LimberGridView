@@ -212,8 +212,8 @@ export const sweepLineForFreeSpace = async (context, area, items, idCount) => {
 		}
 	}
 
-	// printUnmergedFreeRects(context, rt.getData());
-	// debugger;
+	await sleep(1000);
+	printUnmergedFreeRects(context, rt.getData());
 
 	return { rt };
 };
@@ -260,6 +260,9 @@ export const mergeFreeRectsCore = async (context, stack, rt, idCount) => {
 			rt.insert(top);
 		}
 	}
+
+	await sleep(1000);
+	printMergedFreeRects(context, rt.getData());
 };
 
 export const filterMergedFreeRects = (rt) => {
