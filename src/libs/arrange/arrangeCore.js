@@ -311,6 +311,10 @@ export const mergeFreeRects = async (
 	await mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
+	await sleep(1000);
+	printUnmergedFreeRects(context, []);
+	printMergedFreeRects(context, rt.getData());
+	await sleep(1000);
 	return { mergedRectsRt: rt };
 };
 

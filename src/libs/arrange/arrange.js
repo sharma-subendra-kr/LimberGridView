@@ -158,6 +158,7 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
+		printMergedFreeRects(context, []);
 		const { rt: freeRects } = await sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
