@@ -65,7 +65,6 @@
 		"webpack-notifier": "^1.13.0"
 	},
 	"dependencies": {
-		"IntervalTreeJS": "git+https://sharma-subendra-kr@github.com/sharma-subendra-kr/IntervalTreeJS.git#release-1.0.2-beta.1",
 		"Stack": "git+https://github.com/sharma-subendra-kr/Stack.git",
 		"resize-observer-polyfill": "^1.5.1",
 		"rtreejs": "github:sharma-subendra-kr/RTreeJS#quadratic-split-optimization-WIP-1",
