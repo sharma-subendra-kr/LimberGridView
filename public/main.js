@@ -246,6 +246,10 @@ const main = function () {
 		console.log(log);
 	};
 
+	const cutSpaceComplete = function (pd) {
+		console.log(pd);
+	};
+
 	const obj = {
 		el: "limber-grid-view-implement",
 		// editable: true,
@@ -267,6 +271,7 @@ const main = function () {
 			moveComplete: moveComplete,
 			addComplete: addComplete,
 			removeComplete: removeComplete,
+			cutSpaceComplete: cutSpaceComplete,
 			getArrangeTime: getArrangeTime,
 			getLogMessage: getLogMessage,
 		},

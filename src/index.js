@@ -144,6 +144,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 			removeComplete: function(index){}
 			moveComplete: function(index, toX, toY, arrangedIndices) {}
 			resizeComplete: function(index, width, height, arrangedIndices){}
+			cutSpaceComplete: function() {}
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 

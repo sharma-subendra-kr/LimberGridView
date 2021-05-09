@@ -40,6 +40,7 @@ import {
 } from "./initializers";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getDeskInteractionVars } from "../../store/variables/eventSpecific";
+import { getCallbacks } from "../../store/variables/essentials";
 import { addItem } from "../renderers/renderers";
 
 export const onDeskMouseDown = function (event) {
@@ -347,6 +348,7 @@ export const onDeskTouchMove = function (event) {
 export const onDeskMouseUp = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const callbacks = getCallbacks(this);
 
 	const dkiv = getDeskInteractionVars(this);
 
@@ -387,6 +389,9 @@ export const onDeskMouseUp = function (event) {
 			);
 			if (cutDetails) {
 				shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
+				if (callbacks.cutSpaceComplete) {
+					callbacks.cutSpaceComplete();
+				}
 			}
 		}
 	} else {
@@ -399,6 +404,7 @@ export const onDeskMouseUp = function (event) {
 export const onDeskTouchEnd = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const callbacks = getCallbacks(this);
 
 	const dkiv = getDeskInteractionVars(this);
 
@@ -439,6 +445,9 @@ export const onDeskTouchEnd = function (event) {
 			);
 			if (cutDetails) {
 				shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
+				if (callbacks.cutSpaceComplete) {
+					callbacks.cutSpaceComplete();
+				}
 			}
 		}
 	} else {
