@@ -7125,8 +7125,12 @@ LimberGridView.prototype.initializeStore = function () {
         })
       },
       stacks: {
-        stack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"](),
-        garbageStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]()
+        stack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]({
+          constructReverse: true
+        }),
+        garbageStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]({
+          constructReverse: true
+        })
       },
       undoRedo: new external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_default.a()
     },
