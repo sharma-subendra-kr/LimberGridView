@@ -5676,6 +5676,7 @@ Written by Subendra Kumar Sharma.
 
 
 
+
 const onDeskMouseDown = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
@@ -5883,6 +5884,7 @@ const onDeskTouchMove = function (event) {
 const onDeskMouseUp = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
+  const callbacks = getCallbacks(this);
   const dkiv = getDeskInteractionVars(this);
   clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
   clearTimeout(dkiv.longPressCheck);
@@ -5905,6 +5907,10 @@ const onDeskMouseUp = function (event) {
 
       if (cutDetails) {
         shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
+
+        if (callbacks.cutSpaceComplete) {
+          callbacks.cutSpaceComplete();
+        }
       }
     }
   } else {
@@ -5917,6 +5923,7 @@ const onDeskMouseUp = function (event) {
 const onDeskTouchEnd = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
+  const callbacks = getCallbacks(this);
   const dkiv = getDeskInteractionVars(this);
   clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
   clearTimeout(dkiv.longTouchCheck);
@@ -5939,6 +5946,10 @@ const onDeskTouchEnd = function (event) {
 
       if (cutDetails) {
         shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
+
+        if (callbacks.cutSpaceComplete) {
+          callbacks.cutSpaceComplete();
+        }
       }
     }
   } else {
@@ -6795,6 +6806,7 @@ Written by Subendra Kumar Sharma.
 			removeComplete: function(index){}
 			moveComplete: function(index, toX, toY, arrangedIndices) {}
 			resizeComplete: function(index, width, height, arrangedIndices){}
+			cutSpaceComplete: function() {}
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 
