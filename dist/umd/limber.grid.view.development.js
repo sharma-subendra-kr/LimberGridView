@@ -3622,7 +3622,8 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
     const {
       rt: freeRects
     } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, itemsInCombinedWorkSpace, idCount);
-    const freeRectsArr = freeRects.getData();
+    let freeRectsArr = freeRects.getData();
+    freeRectsArr = freeRectsArr.filter(r => r.x2 - r.x1 > 0.5 && r.y2 - r.y1 > 0.5);
     const {
       mergedRectsRt
     } = await mergeFreeRects(context, freeRectsArr, idCount);
