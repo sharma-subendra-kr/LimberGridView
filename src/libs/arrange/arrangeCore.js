@@ -228,7 +228,13 @@ export const mergeFreeRectsCore = async (context, stack, rt, idCount) => {
 		const top = stack.pop();
 		topFullMerged = false;
 
-		const results = rt.find(top, false, true, undefined, true);
+		const _top = {
+			x1: top.x1 - 0.5 >= 0 ? top.x1 - 0.5 : 0,
+			x2: top.x2 + 0.5,
+			y1: top.y1 - 0.5 >= 0 ? top.y1 - 0.5 : 0,
+			y2: top.y2 + 0.5,
+		};
+		const results = rt.find(_top, false, true, undefined, true);
 
 		const len = results?.length || 0;
 		if (len > 0) {
