@@ -168,9 +168,16 @@ export const arrangeMove = async (
 		await sleep(1000);
 		printStackTopRect(context);
 
-		const freeRectsArr = freeRects.getData();
+		let freeRectsArr = freeRects.getData();
+		freeRectsArr = freeRectsArr.filter(
+			(r) => r.x2 - r.x1 > 0.5 && r.y2 - r.y1 > 0.5
+		);
 
 		await sleep(1000);
+		printUnmergedFreeRects(context, freeRectsArr);
+		printMergedFreeRects(context, []);
+
+		await sleep(3000);
 		printUnmergedFreeRects(context, []);
 		printMergedFreeRects(context, []);
 

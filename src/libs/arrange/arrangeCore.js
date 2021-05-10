@@ -214,6 +214,7 @@ export const sweepLineForFreeSpace = async (context, area, items, idCount) => {
 
 	await sleep(1000);
 	printUnmergedFreeRects(context, rt.getData());
+	await sleep(3000);
 
 	return { rt };
 };
@@ -314,7 +315,7 @@ export const mergeFreeRects = async (
 	await sleep(1000);
 	printUnmergedFreeRects(context, []);
 	printMergedFreeRects(context, rt.getData());
-	await sleep(1000);
+	await sleep(3000);
 	return { mergedRectsRt: rt };
 };
 
