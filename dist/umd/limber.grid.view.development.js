@@ -3306,6 +3306,7 @@ const sweepLineForFreeSpace = async (context, area, items, idCount) => {
 
   await sleep(1000);
   printUnmergedFreeRects(context, rt.getData());
+  await sleep(3000);
   return {
     rt
   };
@@ -3398,7 +3399,7 @@ const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
   await sleep(1000);
   printUnmergedFreeRects(context, []);
   printMergedFreeRects(context, rt.getData());
-  await sleep(1000);
+  await sleep(3000);
   return {
     mergedRectsRt: rt
   };
@@ -3632,8 +3633,12 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
     } = await sweepLineForFreeSpace(context, combinedWorkSpaceRect, itemsInCombinedWorkSpace, idCount);
     await sleep(1000);
     printStackTopRect(context);
-    const freeRectsArr = freeRects.getData();
+    let freeRectsArr = freeRects.getData();
+    freeRectsArr = freeRectsArr.filter(r => r.x2 - r.x1 > 0.5 && r.y2 - r.y1 > 0.5);
     await sleep(1000);
+    printUnmergedFreeRects(context, freeRectsArr);
+    printMergedFreeRects(context, []);
+    await sleep(3000);
     printUnmergedFreeRects(context, []);
     printMergedFreeRects(context, []);
     const {
