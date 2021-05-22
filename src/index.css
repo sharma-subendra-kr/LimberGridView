@@ -89,7 +89,7 @@ Written by Subendra Kumar Sharma.
 	position: absolute;
 	z-index: 2000;
 
-	cursor: grab;
+	cursor: grabbing;
 }
 
 .limber-grid-view-item.limber-grid-view-item-editable:hover::before {
@@ -423,14 +423,14 @@ Written by Subendra Kumar Sharma.
 .limber-grid-view-io-top-helper {
 	position: absolute;
 	transform: translate(-1000px, -1000px);
-	width: 0px;
+	width: 1px;
 	height: 1px;
 }
 
 .limber-grid-view-io-bottom-helper {
 	position: absolute;
 	transform: translate(-1000px, -1000px);
-	width: 0px;
+	width: 1px;
 	height: 1px;
 }
 
