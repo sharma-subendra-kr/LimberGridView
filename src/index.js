@@ -653,7 +653,7 @@ LimberGridView.prototype.addItem = function (item) {
  * @param  {number} index Index of the item to be removed.
  */
 LimberGridView.prototype.removeItem = function (index) {
-	if (Number.isInteger(index)) {
+	if (Number.isInteger(parseInt(index))) {
 		_removeItem(this, index);
 	}
 };
