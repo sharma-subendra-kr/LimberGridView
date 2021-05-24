@@ -7364,7 +7364,7 @@ LimberGridView.prototype.addItem = function (item) {
 
 
 LimberGridView.prototype.removeItem = function (index) {
-  if (Number.isInteger(index)) {
+  if (Number.isInteger(parseInt(index))) {
     removeItem(this, index);
   }
 };
