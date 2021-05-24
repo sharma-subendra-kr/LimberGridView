@@ -4764,7 +4764,7 @@ const removeItem = function (context, index) {
 
   const renderedItems = getRenderedItems(context);
 
-  if (renderedItems.find(o => o === index) >= 0) {
+  if (renderedItems.find(o => o === parseInt(index)) >= 0) {
     const rmIdx = renderedItems.indexOf(index);
     const rmItem = renderedItems[rmIdx];
     renderedItems.splice(rmIdx, 1);
