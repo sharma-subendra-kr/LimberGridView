@@ -524,8 +524,8 @@ export const removeItem = function (context, index) {
 	}
 
 	const renderedItems = getRenderedItems(context);
-	if (renderedItems.find((o) => o === index)) {
-		renderedItems.length = renderedItems.length - 1;
+	if (renderedItems.find((o) => o === index) >= 0) {
+		renderedItems.splice(renderedItems.indexOf(index), 1);
 	}
 
 	initializeEvents.call(context);
