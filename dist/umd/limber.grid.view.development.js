@@ -4765,7 +4765,16 @@ const removeItem = function (context, index) {
   const renderedItems = getRenderedItems(context);
 
   if (renderedItems.find(o => o === index) >= 0) {
-    renderedItems.splice(renderedItems.indexOf(index), 1);
+    const rmIdx = renderedItems.indexOf(index);
+    const rmItem = renderedItems[rmIdx];
+    renderedItems.splice(rmIdx, 1);
+    const len = renderedItems.length;
+
+    for (let i = 0; i < len; i++) {
+      if (renderedItems[i] > rmItem) {
+        renderedItems[i]--;
+      }
+    }
   }
 
   initializeEvents.call(context);
