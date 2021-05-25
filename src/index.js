@@ -56,6 +56,7 @@ import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
 	instantiateResizeObserver,
 	resizeObserverCallback,
+	onItemClick,
 } from "./libs/eventHandlerLib/miscellaneous";
 import {
 	instantiateIntersectionObserver,
@@ -423,6 +424,7 @@ LimberGridView.prototype.initializeStore = function () {
 				onItemContextMenu: onItemContextMenu.bind(this),
 				onItemTouchContextMenu: onItemTouchContextMenu.bind(this),
 				onItemTouchCancel: onItemTouchCancel.bind(this),
+				onItemClick: onItemClick.bind(this),
 				// Desk
 				onDeskMouseDown: onDeskMouseDown.bind(this),
 				onDeskTouchStart: onDeskTouchStart.bind(this),

@@ -82,12 +82,12 @@ const main = function () {
 	function remove(event) {
 		const index = event.currentTarget.attributes["data-index"].value;
 
-		const indices = [index];
-		indices.sort(function (a, b) {
-			return Number(a) - Number(b);
-		});
+		// const indices = [index];
+		// indices.sort(function (a, b) {
+		// 	return Number(a) - Number(b);
+		// });
 
-		window.limberGridView.removeItems(indices);
+		window.limberGridView.removeItem(index);
 	}
 
 	function add(event) {
