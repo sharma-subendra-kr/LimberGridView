@@ -175,9 +175,9 @@ export const render = function (context, scale = true) {
 			renderItemContent(context, renderData, itemEl);
 		} else {
 			const renderData = callbacks.renderContent(
-				spd[i].index,
-				spd[i].width,
-				spd[i].height
+				spd[index].index,
+				spd[index].width,
+				spd[index].height
 			);
 			renderItemContent(context, renderData, itemEl);
 		}
@@ -486,8 +486,10 @@ export const removeItem = function (context, index) {
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
 	const pd = getPositionData(context);
+	const spd = getSerializedPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 	const publicConstants = getPublicConstants(context);
+	const renderedItems = getRenderedItems(context);
 
 	unInitializeEvents.call(context);
 
@@ -517,24 +519,6 @@ export const removeItem = function (context, index) {
 		}
 	}
 
-	for (let i = index; i < len; i++) {
-		if (!e.$limberGridViewItems[i]) {
-			continue;
-		}
-		let renderData;
-		if (!isMobile(context)) {
-			renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
-		} else {
-			renderData = callbacks.renderContent(
-				i,
-				privateConstants.WIDTH,
-				privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO
-			);
-		}
-		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
-	}
-
-	const renderedItems = getRenderedItems(context);
 	if (renderedItems.find((o) => o === parseInt(index)) >= 0) {
 		const rmIdx = renderedItems.indexOf(index);
 		const rmItem = renderedItems[rmIdx];
@@ -546,6 +530,24 @@ export const removeItem = function (context, index) {
 				renderedItems[i]--;
 			}
 		}
+	}
+
+	for (let i = 0; i < renderedItems.length; i++) {
+		const idx = renderedItems[i];
+		if (idx < index) {
+			continue;
+		}
+		let renderData;
+		if (!isMobile(context)) {
+			renderData = callbacks.renderContent(idx, pd[idx].width, pd[idx].height);
+		} else {
+			renderData = callbacks.renderContent(
+				spd[idx].index,
+				spd[idx].width,
+				spd[idx].height
+			);
+		}
+		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
 	}
 
 	if (isMobile(context)) {
