@@ -146,7 +146,8 @@ export const render = function (context, scale = true) {
 			context
 		).style.transform = `translate(0px, ${
 			(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO) * 15 +
-			privateConstants.MARGIN * 14
+			privateConstants.MARGIN * 14 -
+			50
 		}px)`;
 	}
 
@@ -245,6 +246,7 @@ export const mountItems = function (context, items, prepend = false) {
 	const pd = getPositionData(context);
 	const callbacks = getCallbacks(context);
 	const e = getElements(context);
+	const renderedItems = getRenderedItems(context);
 
 	let classList = "limber-grid-view-item";
 	if (options.editable === true) {
@@ -291,6 +293,15 @@ export const mountItems = function (context, items, prepend = false) {
 			nodes[i] = itemEl;
 			e.$limberGridViewItems[index] = itemEl;
 		}
+
+		get$limberGridViewIOBottomHelper(
+			context
+		).style.transform = `translate(0px, ${
+			(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO) *
+				renderedItems.length +
+			privateConstants.MARGIN * (renderedItems.length - 1) -
+			50
+		}px)`;
 	}
 
 	for (let i = 0; i < len; i++) {
@@ -535,6 +546,17 @@ export const removeItem = function (context, index) {
 				renderedItems[i]--;
 			}
 		}
+	}
+
+	if (isMobile(context)) {
+		get$limberGridViewIOBottomHelper(
+			context
+		).style.transform = `translate(0px, ${
+			(privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO) *
+				renderedItems.length +
+			privateConstants.MARGIN * (renderedItems.length - 1) -
+			50
+		}px)`;
 	}
 
 	initializeEvents.call(context);
