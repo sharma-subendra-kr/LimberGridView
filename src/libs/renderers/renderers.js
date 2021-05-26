@@ -523,6 +523,7 @@ export const removeItem = function (context, index) {
 		const rmIdx = renderedItems.indexOf(index);
 		const rmItem = renderedItems[rmIdx];
 		renderedItems.splice(rmIdx, 1);
+		spd.splice(rmIdx, 1);
 
 		const len = renderedItems.length;
 		for (let i = 0; i < len; i++) {
