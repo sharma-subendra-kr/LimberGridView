@@ -34,6 +34,7 @@ import {
 	getIOTopHelperPos,
 	getIOBottomHelperPos,
 	setSerializedPositionData,
+	getSerializedPositionData,
 } from "../store/variables/essentials";
 import getElements, {
 	set$body,
@@ -242,8 +243,13 @@ export const init = async function (context, isResize, autoArrange) {
 			context
 		).style.transform = `translate(1px, 1px)`;
 		setSerializedPositionData(context, pd);
-		const arr = new Array(15).fill(0).map((o, index) => index);
+		const spd = getSerializedPositionData(context);
+		const len = pd.length < 15 ? pd.length : 15;
+		const arr = new Array(len).fill(0).map((o, index) => index);
 		setRenderedItems(context, arr);
+		for (let i = 0; i < len; i++) {
+			spd[arr[i]].renderIndex = i;
+		}
 	}
 };
 

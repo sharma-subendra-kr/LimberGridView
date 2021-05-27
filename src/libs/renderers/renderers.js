@@ -483,6 +483,7 @@ export const addItem = async function (context, item) {
 };
 
 export const removeItem = function (context, index) {
+	index = parseInt(index);
 	const e = getElements(context);
 	const callbacks = getCallbacks(context);
 	const pd = getPositionData(context);
@@ -491,62 +492,96 @@ export const removeItem = function (context, index) {
 	const publicConstants = getPublicConstants(context);
 	const renderedItems = getRenderedItems(context);
 
+	let idx;
+	if (!isMobile(context)) {
+		idx = index;
+	} else {
+		idx = spd.findIndex((o) => o.index === index);
+	}
+	const rmIdx = renderedItems.findIndex((o) => o === idx);
+
+	if (rmIdx < 0) {
+		return;
+	}
+
 	unInitializeEvents.call(context);
 
-	pd.splice(index, 1);
-	getUndoRedo(context).reset();
-	getUndoRedo(context).push(pd);
-
-	if (e.$limberGridViewItems[index]) {
+	if (e.$limberGridViewItems[idx]) {
 		if (callbacks.removePlugin) {
-			callbacks.removePlugin(e.$limberGridViewItems[index]);
+			callbacks.removePlugin(e.$limberGridViewItems[idx]);
 		}
 
-		e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
+		e.$limberGridView.removeChild(e.$limberGridViewItems[idx]);
 
 		if (callbacks.removeComplete) {
-			callbacks.removeComplete(index, e.$limberGridViewItems[index]);
+			callbacks.removeComplete(index, e.$limberGridViewItems[idx]);
 		}
-		e.$limberGridViewItems[index] = undefined;
+		e.$limberGridViewItems[idx] = undefined;
 	}
-
-	e.$limberGridViewItems.splice(index, 1);
 
 	const len = pd.length;
-	for (let i = index; i < len; i++) {
-		if (e.$limberGridViewItems[i]) {
-			e.$limberGridViewItems[i].setAttribute("data-index", i);
+	if (!isMobile(context)) {
+		// * data-index update logic
+		// * this same logic cannot be applied when mobile version is rendered
+		for (let i = index + 1; i < len; i++) {
+			if (e.$limberGridViewItems[i]) {
+				e.$limberGridViewItems[i].setAttribute("data-index", i - 1);
+			}
 		}
-	}
-
-	if (renderedItems.find((o) => o === parseInt(index)) >= 0) {
-		const rmIdx = renderedItems.indexOf(index);
-		const rmItem = renderedItems[rmIdx];
-		renderedItems.splice(rmIdx, 1);
-		spd.splice(rmIdx, 1);
-
-		const len = renderedItems.length;
+	} else if (isMobile(context)) {
+		// * data-index update logic
+		// * first create a map to translate pd index to spd index
+		const map = {};
 		for (let i = 0; i < len; i++) {
-			if (renderedItems[i] > rmItem) {
-				renderedItems[i]--;
+			map[spd[i].index] = i;
+		}
+		for (let i = index + 1; i < len; i++) {
+			const mobileIndex = map[i];
+			if (e.$limberGridViewItems[mobileIndex]) {
+				e.$limberGridViewItems[mobileIndex].setAttribute("data-index", i - 1);
 			}
 		}
 	}
 
+	const riLen = renderedItems.length;
+	for (let i = 0; i < riLen; i++) {
+		if (renderedItems[i] > idx) {
+			renderedItems[i]--;
+		}
+	}
+
+	if (isMobile(context)) {
+		for (let i = 0; i < len; i++) {
+			if (spd[i].index > index) {
+				spd[i].index--;
+			}
+		}
+	}
+
+	e.$limberGridViewItems.splice(idx, 1);
+	renderedItems.splice(rmIdx, 1);
+	spd.splice(idx, 1);
+	pd.splice(index, 1);
+	getUndoRedo(context).reset();
+	getUndoRedo(context).push(pd);
+
 	for (let i = 0; i < renderedItems.length; i++) {
-		const idx = renderedItems[i];
-		if (idx < index) {
+		let currIdx = renderedItems[i];
+		let width = pd[currIdx].width;
+		let height = pd[currIdx].height;
+		if (isMobile(context)) {
+			width = spd[currIdx].width;
+			height = spd[currIdx].height;
+			currIdx = spd[currIdx].index;
+		}
+		if (currIdx < index) {
 			continue;
 		}
 		let renderData;
 		if (!isMobile(context)) {
-			renderData = callbacks.renderContent(idx, pd[idx].width, pd[idx].height);
+			renderData = callbacks.renderContent(currIdx, width, height);
 		} else {
-			renderData = callbacks.renderContent(
-				spd[idx].index,
-				spd[idx].width,
-				spd[idx].height
-			);
+			renderData = callbacks.renderContent(currIdx, width, height);
 		}
 		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
 	}
