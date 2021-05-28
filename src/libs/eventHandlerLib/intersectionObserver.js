@@ -39,6 +39,7 @@ import {
 	getIOBottomHelperPos,
 	setOnScrolTimeout,
 	getOnScrolTimeout,
+	getSerializedPositionData,
 } from "../../store/variables/essentials";
 import { getPrivateConstants } from "../../store/constants/privateConstants";
 import { getPublicConstants } from "../../store/constants/publicConstants";
@@ -74,6 +75,7 @@ export const intersectionObserverCallback = function (entries, observer) {
 	if (isMobile(this)) {
 		const renderedItems = getRenderedItems(this);
 		const len = getPositionData(this).length;
+		const spd = getSerializedPositionData(this);
 		let prepend = false;
 
 		let start;
@@ -111,9 +113,11 @@ export const intersectionObserverCallback = function (entries, observer) {
 		const renderedItemsMap = {};
 		const toUnmountItems = {};
 		const toMountItems = [];
+		let iter = 0;
 		for (let i = start; i <= end; i++) {
 			newRenderedItems.push(i);
 			newRenderedItemsMap[i] = true;
+			spd[i].renderIndex = iter++;
 		}
 
 		for (const item of renderedItems) {

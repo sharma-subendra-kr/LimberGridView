@@ -89,7 +89,7 @@ Written by Subendra Kumar Sharma.
 	position: absolute;
 	z-index: 2000;
 
-	cursor: grabbing;
+	cursor: grab;
 }
 
 .limber-grid-view-item.limber-grid-view-item-editable:hover::before {
