@@ -87,7 +87,7 @@ const main = function () {
 		// 	return Number(a) - Number(b);
 		// });
 
-		window.limberGridView.removeItem(index);
+		window.limberGridView.removeItem(Number(index));
 	}
 
 	function add(event) {
