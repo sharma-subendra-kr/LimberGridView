@@ -560,7 +560,7 @@ export const removeItem = function (context, index) {
 
 	e.$limberGridViewItems.splice(idx, 1);
 	renderedItems.splice(rmIdx, 1);
-	spd.splice(idx, 1);
+	if (isMobile(context)) spd.splice(idx, 1);
 	pd.splice(index, 1);
 	getUndoRedo(context).reset();
 	getUndoRedo(context).push(pd);
@@ -583,7 +583,11 @@ export const removeItem = function (context, index) {
 		} else {
 			renderData = callbacks.renderContent(currIdx, width, height);
 		}
-		renderItemContent(context, renderData, e.$limberGridViewItems[i]);
+		renderItemContent(
+			context,
+			renderData,
+			e.$limberGridViewItems[renderedItems[i]]
+		);
 	}
 
 	if (isMobile(context)) {
