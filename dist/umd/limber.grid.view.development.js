@@ -4739,21 +4739,6 @@ const removeItem = function (context, index) {
   }
 
   unInitializeEvents.call(context);
-
-  if (e.$limberGridViewItems[idx]) {
-    if (callbacks.removePlugin) {
-      callbacks.removePlugin(e.$limberGridViewItems[idx]);
-    }
-
-    e.$limberGridView.removeChild(e.$limberGridViewItems[idx]);
-
-    if (callbacks.removeComplete) {
-      callbacks.removeComplete(index, e.$limberGridViewItems[idx]);
-    }
-
-    e.$limberGridViewItems[idx] = undefined;
-  }
-
   const len = pd.length;
 
   if (!isMobile(context)) {
@@ -4796,14 +4781,28 @@ const removeItem = function (context, index) {
         spd[i].index--;
       }
     }
-  }
+  } // * splice begin
 
+
+  const elem = e.$limberGridViewItems[idx];
   e.$limberGridViewItems.splice(idx, 1);
   renderedItems.splice(rmIdx, 1);
   if (isMobile(context)) spd.splice(idx, 1);
   pd.splice(index, 1);
   undoRedo(context).reset();
-  undoRedo(context).push(pd);
+  undoRedo(context).push(pd); // * splice end
+  // * call callbacks begin
+
+  if (callbacks.removePlugin) {
+    callbacks.removePlugin(elem);
+  }
+
+  e.$limberGridView.removeChild(elem);
+
+  if (callbacks.removeComplete) {
+    callbacks.removeComplete(index, elem);
+  } // * call callbacks end
+
 
   for (let i = 0; i < renderedItems.length; i++) {
     let currIdx = renderedItems[i];
