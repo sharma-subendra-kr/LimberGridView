@@ -4442,7 +4442,7 @@ const render = function (context, scale = true) {
       allNodes[index] = itemEl;
     }
 
-    get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO * 15 + privateConstants.MARGIN * 14}px)`;
+    get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO * 15 + privateConstants.MARGIN * 14 - 50}px)`;
   }
 
   const itemsLen = e.$limberGridViewItems.length;
@@ -4466,7 +4466,7 @@ const render = function (context, scale = true) {
       const renderData = callbacks.renderContent(index, pd[index].width, pd[index].height);
       renderItemContent(context, renderData, itemEl);
     } else {
-      const renderData = callbacks.renderContent(spd[i].index, spd[i].width, spd[i].height);
+      const renderData = callbacks.renderContent(spd[index].index, spd[index].width, spd[index].height);
       renderItemContent(context, renderData, itemEl);
     }
   }
@@ -4524,6 +4524,7 @@ const mountItems = function (context, items, prepend = false) {
   const pd = getPositionData(context);
   const callbacks = getCallbacks(context);
   const e = variables_elements(context);
+  const renderedItems = getRenderedItems(context);
   let classList = "limber-grid-view-item";
 
   if (options.editable === true) {
@@ -4562,6 +4563,8 @@ const mountItems = function (context, items, prepend = false) {
       nodes[i] = itemEl;
       e.$limberGridViewItems[index] = itemEl;
     }
+
+    get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO * renderedItems.length + privateConstants.MARGIN * (renderedItems.length - 1) - 50}px)`;
   }
 
   for (let i = 0; i < len; i++) {
@@ -4713,68 +4716,123 @@ const addItem = async function (context, item) {
   initializeEvents.call(context);
 };
 const removeItem = function (context, index) {
+  index = parseInt(index);
   const e = variables_elements(context);
   const callbacks = getCallbacks(context);
   const pd = getPositionData(context);
+  const spd = getSerializedPositionData(context);
   const privateConstants = constants_privateConstants(context);
   const publicConstants = constants_publicConstants(context);
+  const renderedItems = getRenderedItems(context);
+  let idx;
+
+  if (!isMobile(context)) {
+    idx = index;
+  } else {
+    idx = spd.findIndex(o => o.index === index);
+  }
+
+  const rmIdx = renderedItems.findIndex(o => o === idx);
+
+  if (rmIdx < 0) {
+    return;
+  }
+
   unInitializeEvents.call(context);
+
+  if (e.$limberGridViewItems[idx]) {
+    if (callbacks.removePlugin) {
+      callbacks.removePlugin(e.$limberGridViewItems[idx]);
+    }
+
+    e.$limberGridView.removeChild(e.$limberGridViewItems[idx]);
+
+    if (callbacks.removeComplete) {
+      callbacks.removeComplete(index, e.$limberGridViewItems[idx]);
+    }
+
+    e.$limberGridViewItems[idx] = undefined;
+  }
+
+  const len = pd.length;
+
+  if (!isMobile(context)) {
+    // * data-index update logic
+    // * this same logic cannot be applied when mobile version is rendered
+    for (let i = index + 1; i < len; i++) {
+      if (e.$limberGridViewItems[i]) {
+        e.$limberGridViewItems[i].setAttribute("data-index", i - 1);
+      }
+    }
+  } else if (isMobile(context)) {
+    // * data-index update logic
+    // * first create a map to translate pd index to spd index
+    const map = {};
+
+    for (let i = 0; i < len; i++) {
+      map[spd[i].index] = i;
+    }
+
+    for (let i = index + 1; i < len; i++) {
+      const mobileIndex = map[i];
+
+      if (e.$limberGridViewItems[mobileIndex]) {
+        e.$limberGridViewItems[mobileIndex].setAttribute("data-index", i - 1);
+      }
+    }
+  }
+
+  const riLen = renderedItems.length;
+
+  for (let i = 0; i < riLen; i++) {
+    if (renderedItems[i] > idx) {
+      renderedItems[i]--;
+    }
+  }
+
+  if (isMobile(context)) {
+    for (let i = 0; i < len; i++) {
+      if (spd[i].index > index) {
+        spd[i].index--;
+      }
+    }
+  }
+
+  e.$limberGridViewItems.splice(idx, 1);
+  renderedItems.splice(rmIdx, 1);
+  if (isMobile(context)) spd.splice(idx, 1);
   pd.splice(index, 1);
   undoRedo(context).reset();
   undoRedo(context).push(pd);
 
-  if (e.$limberGridViewItems[index]) {
-    if (callbacks.removePlugin) {
-      callbacks.removePlugin(e.$limberGridViewItems[index]);
+  for (let i = 0; i < renderedItems.length; i++) {
+    let currIdx = renderedItems[i];
+    let width = pd[currIdx].width;
+    let height = pd[currIdx].height;
+
+    if (isMobile(context)) {
+      width = spd[currIdx].width;
+      height = spd[currIdx].height;
+      currIdx = spd[currIdx].index;
     }
 
-    e.$limberGridView.removeChild(e.$limberGridViewItems[index]);
-
-    if (callbacks.removeComplete) {
-      callbacks.removeComplete(index, e.$limberGridViewItems[index]);
-    }
-
-    e.$limberGridViewItems[index] = undefined;
-  }
-
-  e.$limberGridViewItems.splice(index, 1);
-  const len = pd.length;
-
-  for (let i = index; i < len; i++) {
-    if (e.$limberGridViewItems[i]) {
-      e.$limberGridViewItems[i].setAttribute("data-index", i);
-    }
-  }
-
-  for (let i = index; i < len; i++) {
-    if (!e.$limberGridViewItems[i]) {
+    if (currIdx < index) {
       continue;
     }
 
     let renderData;
 
     if (!isMobile(context)) {
-      renderData = callbacks.renderContent(i, pd[i].width, pd[i].height);
+      renderData = callbacks.renderContent(currIdx, width, height);
     } else {
-      renderData = callbacks.renderContent(i, privateConstants.WIDTH, privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO);
+      renderData = callbacks.renderContent(currIdx, width, height);
     }
 
-    renderItemContent(context, renderData, e.$limberGridViewItems[i]);
+    renderItemContent(context, renderData, e.$limberGridViewItems[renderedItems[i]]);
   }
 
-  const renderedItems = getRenderedItems(context);
-
-  if (renderedItems.find(o => o === parseInt(index)) >= 0) {
-    const rmIdx = renderedItems.indexOf(index);
-    const rmItem = renderedItems[rmIdx];
-    renderedItems.splice(rmIdx, 1);
-    const len = renderedItems.length;
-
-    for (let i = 0; i < len; i++) {
-      if (renderedItems[i] > rmItem) {
-        renderedItems[i]--;
-      }
-    }
+  if (isMobile(context)) {
+    get$limberGridViewIOBottomHelper(context).style.transform = `translate(0px, ${privateConstants.WIDTH / publicConstants.MOBILE_ASPECT_RATIO * renderedItems.length + privateConstants.MARGIN * (renderedItems.length - 1) - 50}px)`;
   }
 
   initializeEvents.call(context);
@@ -6239,8 +6297,14 @@ const init = async function (context, isResize, autoArrange) {
   } else {
     get$limberGridViewIOTopHelper(context).style.transform = `translate(1px, 1px)`;
     setSerializedPositionData(context, pd);
-    const arr = new Array(15).fill(0).map((o, index) => index);
+    const spd = getSerializedPositionData(context);
+    const len = pd.length < 15 ? pd.length : 15;
+    const arr = new Array(len).fill(0).map((o, index) => index);
     setRenderedItems(context, arr);
+
+    for (let i = 0; i < len; i++) {
+      spd[arr[i]].renderIndex = i;
+    }
   }
 };
 const initConstantsAndFlags = function (options) {
@@ -6598,6 +6662,7 @@ const intersectionObserverCallback = function (entries, observer) {
   if (isMobile(this)) {
     const renderedItems = getRenderedItems(this);
     const len = getPositionData(this).length;
+    const spd = getSerializedPositionData(this);
     let prepend = false;
     let start;
 
@@ -6641,10 +6706,12 @@ const intersectionObserverCallback = function (entries, observer) {
     const renderedItemsMap = {};
     const toUnmountItems = {};
     const toMountItems = [];
+    let iter = 0;
 
     for (let i = start; i <= end; i++) {
       newRenderedItems.push(i);
       newRenderedItemsMap[i] = true;
+      spd[i].renderIndex = iter++;
     }
 
     for (const item of renderedItems) {
@@ -7145,6 +7212,7 @@ LimberGridView.prototype.initializeStore = function () {
         onItemContextMenu: onItemContextMenu.bind(this),
         onItemTouchContextMenu: onItemTouchContextMenu.bind(this),
         onItemTouchCancel: onItemTouchCancel.bind(this),
+        onItemClick: onItemClick.bind(this),
         // Desk
         onDeskMouseDown: onDeskMouseDown.bind(this),
         onDeskTouchStart: onDeskTouchStart.bind(this),
