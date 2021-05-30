@@ -1,14 +1,40 @@
 # LimberGridView
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
-# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page)
-# [For api Reference and Documentation please read the Wiki Page.](https://github.com/sharma-subendra-kr/LimberGridView/wiki)
+# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/release-1.0.0-beta.3/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
+# [For API reference and documentation, please refer to the wiki page.](https://github.com/sharma-subendra-kr/LimberGridView/wiki)
 
-## LimberGridView 1.0.0-beta.2 is finally here!
+## Current version LimberGridView 1.0.0-beta.3.
 
-LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in raw JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
-Copyright © 2018-2020, Subendra Kumar Sharma. All Rights reserved.
+## This is a beta release. This version might be unstable.
+Although many issues were identified and resolved in this current release, you might sometimes encounter unusual behavior. Some of them are:
+
+* Item disappearing when right-clicked: This is a known issue, which happens very rarely. I am working on recreating it and fixing it.
+* Item overlapping: It has been worked on and fixed. I am further trying to recreate some instances, but so far, I haven't been successful, which is a positive sign.
+* Items not affected by a move or resize getting rearranged: Most instances were identified and resolved.  Because of how the entire thing works, we can still find some instances where items that are not affected are getting rearranged. It will be constantly worked on and improved. A stable version will be released with this issue because the occurrences are very low.
+
+### Improvements in the arrange algorithm are made in patches. I try to make sure it doesn't affect any APIs.
+
+## Features:
+* Built-in Intersection Observed
+* Built-in Resize Observer
+* Undo-Redo
+* Touch support for tablets
+* Mobile view
+* Plugins for React. LimberGridView has "renderPlugin" and "removePlugin", these are callbacks, that pass the element which is the item itself. ReactDOM.render and ReactDOM.unmountComponentAtNode should be called in "renderPlugin" and "removePlugin" respectively.
+
+### LimberGridView is free software (Free as in freedom, not the price). If you like to use this library on non-free software, you can get a proprietary license. To get a proprietary license, [pre-order now](https://limber.in/LimberGridView/buy).
+
+### To get tips on how to use LimberGridView, head over to this [link](https://limber.in/LimberGridView/howToUse).
+
+To see how LimberGridView works, head over to this [link](https://limber.in/LimberGridView/howItWorks).
+
+I do apologize for the poorly written documentation. I will be rewriting it when I get some time. If you encounter any problems, you can contact me by sending an email to _reach.subendra.kr@gmx.com_.
+
+## License
+Copyright © 2018-2021, Subendra Kumar Sharma. All rights reserved.
 
 This file is part of LimberGridView.
 
@@ -26,26 +52,3 @@ You should have received a copy of the GNU General Public License
 along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 
 Written by Subendra Kumar Sharma.
-
-### This is free software (Free as in freedom not the price). If you like to use this library on a non free software, you can get a proprietary license. To get a proprietary license contact _reach.subendra.kr@gmx.com_.
-
-## The is a beta release. This version is unstable.
-* **You might encounter unusual behaviour. Items overlapping while resizing or moving is fixed but due to some bug which I dont know of, you might encounter it sometimes (very rarely), this is a high priority bug but right now there are other very high priority optimizations pending.**
-
-* **The algorithm to position affected items will be updated in patches, there is a lot of room for improvement. This will not affect any APIs.**
-
-* **Non affected items are arranged most of the times which is not a great user experience, these are floating point errors, this is a high priority bug and will most probably be fixed in the next release. This may seem trivial but trust me its not. So the next release might take some time as I'm taking few months off this project.**
-
-###### Features ######
-* **renderPlugin and removePlugin, these callbacks help you to render and remove React JSX inside any item. (These might help in some other framework as well. I haven't used other frameworks and I'm not interested to learn all the latest and greatest framework everytime it comes out. Support will be provided only for the most popular frameworks and for frameworks that are not popular, support will be provided on request)**
-
-### If you want to donate to this project so I that can test on various other touch devices you can contact _reach.subendra.kr@gmx.com_.
-
-###### Features to watch out for in the next releases. ######
-* **Built in Intersection Observer**
-* **Undo and Redo**
-* **Improved Stability**
-
-Although I know most of the bugs which are not in the issues page, if you find a bug or an error, you can report it by sending an email to _reach.subendra.kr@gmx.com_.
-
-I'm writing the documentation and README page while I'm 5% awake, so please forgive me for the grammar.
