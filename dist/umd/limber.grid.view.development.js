@@ -1,8 +1,8 @@
 /** @license LimberGridView
  *
- * LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+ * LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
  *
- * Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+ * Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
  *
  * This file is part of LimberGridView.
  *
@@ -180,9 +180,9 @@ var src_0 = __webpack_require__(5);
 // CONCATENATED MODULE: ./src/store/constants/privateConstants.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -330,9 +330,9 @@ const getMinHeightAndWidth = function (context) {
 // CONCATENATED MODULE: ./src/store/constants/publicConstants.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -375,9 +375,9 @@ const getPublicConstantByName = function (context, name) {
 // CONCATENATED MODULE: ./src/store/variables/elements.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -603,9 +603,9 @@ const get$limberGridViewDebugMergedFreeRects = function (context) {
 // CONCATENATED MODULE: ./src/libs/utils/essentials.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -664,9 +664,9 @@ const adjustHeightAndScroll = function (context, yMouseOrTouchPosition, yMouseOr
 // CONCATENATED MODULE: ./src/store/variables/essentials.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -828,9 +828,9 @@ const getOnScrolTimeout = function (context) {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/eventHandlerUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -928,9 +928,9 @@ const calculateTouchPosOnItem = function (context, event) {
 // CONCATENATED MODULE: ./src/store/variables/options.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -964,9 +964,9 @@ const getOptions = function (context) {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/itemInteractionUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1185,9 +1185,9 @@ const unloadOnMoveState = context => {
 // CONCATENATED MODULE: ./src/libs/geometry/geometry.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1222,9 +1222,9 @@ const getMidPoint = (x1, y1, x2, y2) => {
 // CONCATENATED MODULE: ./src/libs/utils/utils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1276,9 +1276,9 @@ const sleep = ms => {
 // CONCATENATED MODULE: ./src/libs/utils/items.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1485,9 +1485,9 @@ const items_getRenderedItemsMap = context => {
 // CONCATENATED MODULE: ./src/libs/interaction/itemInteractionUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1941,9 +1941,9 @@ const positionArranged = (context, arranged) => {
 // CONCATENATED MODULE: ./src/libs/rect/rectUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2332,9 +2332,9 @@ const isRectLarger = (rectA, rectB) => {
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2789,9 +2789,9 @@ const cutSpaceAllowCheck = function (context, x, y, width, height) {
 // CONCATENATED MODULE: ./src/store/variables/trees.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2824,9 +2824,9 @@ const getTree = function (context, key) {
 // CONCATENATED MODULE: ./src/store/variables/stacks.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -2856,285 +2856,12 @@ const getStack = function (context, key) {
 
 
 /* harmony default export */ var stacks = (getStack);
-// CONCATENATED MODULE: ./src/libs/debug/debug.js
-/*
-
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
-
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-
-
-const printUnmergedFreeRects = (context, arr) => {
-  const e = variables_elements(context);
-  let len = e.$limberGridViewDebugUnmergedRects.length;
-
-  for (let i = 0; i < len; i++) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugUnmergedRects[i]);
-  }
-
-  set$limberGridViewDebugUnmergedRects(context, []); // USE it to hide items
-  // e.$limberGridView.innerHTML = "";
-
-  len = arr.length;
-  let html;
-  let node;
-
-  for (let i = 0; i < len; i++) {
-    node = document.createElement("div");
-    node.setAttribute("class", "limber-grid-view-debug-rect limber-grid-view-debug-unmerged-rect");
-    node.setAttribute("id", `limber-grid-view-debug-unmerged-rect-${arr[i].id}`);
-    node.setAttribute("tabindex", "-1");
-    node.setAttribute("title", `${arr[i].id}`);
-    node.innerHTML = arr[i].id;
-    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
-    node.style.width = arr[i].x2 - arr[i].x1 + "px";
-    node.style.height = arr[i].y2 - arr[i].y1 + "px";
-    e.$limberGridView.appendChild(node);
-  }
-
-  set$limberGridViewDebugUnmergedRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-unmerged-rect"));
-};
-const printMergedFreeRects = (context, arr) => {
-  const e = variables_elements(context);
-  let len = e.$limberGridViewDebugMergedFreeRects.length;
-
-  for (let i = 0; i < len; i++) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugMergedFreeRects[i]);
-  }
-
-  set$limberGridViewDebugMergedFreeRects(context, []); // USE it to hide items
-  // e.$limberGridView.innerHTML = "";
-
-  len = arr.length;
-  let html;
-  let node;
-
-  for (let i = 0; i < len; i++) {
-    node = document.createElement("div");
-    node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-merged-free-rect`);
-    node.setAttribute("id", `limber-grid-view-debug-merged-free-rect-${arr[i].id}`);
-    node.setAttribute("tabindex", -1);
-    node.setAttribute("title", `${arr[i].id}`);
-    node.innerHTML = arr[i].id;
-    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
-    node.style.width = arr[i].x2 - arr[i].x1 + "px";
-    node.style.height = arr[i].y2 - arr[i].y1 + "px";
-    e.$limberGridView.appendChild(node);
-  }
-
-  set$limberGridViewDebugMergedFreeRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-merged-free-rect"));
-};
-const printResultStackRects = (context, arr) => {
-  const e = variables_elements(context);
-  let len = e.$limberGridViewDebugResultStackRects.length;
-
-  for (let i = 0; i < len; i++) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugResultStackRects[i]);
-  }
-
-  set$limberGridViewDebugResultStackRects(context, []); // USE it to hide items
-  // e.$limberGridView.innerHTML = "";
-
-  len = arr.length;
-  let html;
-  let node;
-
-  for (let i = 0; i < len; i++) {
-    node = document.createElement("div");
-    node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-result-stack-rects`);
-    node.setAttribute("id", `limber-grid-view-debug-result-stack-rects-${arr[i].id}`);
-    node.setAttribute("tabindex", -1);
-    node.setAttribute("title", `${arr[i].id}`);
-    node.innerHTML = arr[i].id;
-    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
-    node.style.width = arr[i].x2 - arr[i].x1 + "px";
-    node.style.height = arr[i].y2 - arr[i].y1 + "px";
-    e.$limberGridView.appendChild(node);
-  }
-
-  set$limberGridViewDebugResultStackRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-result-stack-rects"));
-};
-const printStackRects = (context, arr) => {
-  const e = variables_elements(context);
-  let len = e.$limberGridViewDebugStackRects.length;
-
-  for (let i = 0; i < len; i++) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugStackRects[i]);
-  }
-
-  set$limberGridViewDebugStackRects(context, []); // USE it to hide items
-  // e.$limberGridView.innerHTML = "";
-
-  len = arr.length;
-  let html;
-  let node;
-
-  for (let i = 0; i < len; i++) {
-    node = document.createElement("div");
-    node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-stack-rects`);
-    node.setAttribute("id", `limber-grid-view-debug-stack-rects-${arr[i].id}`);
-    node.setAttribute("tabindex", -1);
-    node.setAttribute("title", `${arr[i].id}`);
-    node.innerHTML = arr[i].id;
-    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
-    node.style.width = arr[i].x2 - arr[i].x1 + "px";
-    node.style.height = arr[i].y2 - arr[i].y1 + "px";
-    e.$limberGridView.appendChild(node);
-  }
-
-  set$limberGridViewDebugStackRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-rects"));
-};
-const printMergedTempRects = (context, obj) => {
-  const e = variables_elements(context);
-  const node = document.createElement("div");
-  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-merged-temp-rects`);
-  node.setAttribute("id", `limber-grid-view-debug-merged-temp-rects-${obj.id}`);
-  node.setAttribute("tabindex", -1);
-  node.setAttribute("title", `${obj.id}`);
-  node.innerHTML = obj.id;
-  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
-  node.style.width = obj.x2 - obj.x1 + "px";
-  node.style.height = obj.y2 - obj.y1 + "px";
-  e.$limberGridView.appendChild(node);
-  set$limberGridViewDebugMergedTempRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-merged-temp-rects"));
-};
-const printStackTopRect = (context, obj) => {
-  const e = variables_elements(context);
-
-  if (!obj) {
-    if (e.$limberGridViewDebugStackTopRect) {
-      e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopRect);
-      set$limberGridViewDebugStackTopRect(context, undefined);
-    }
-
-    return;
-  }
-
-  if (e.$limberGridViewDebugStackTopRect) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopRect);
-  }
-
-  const node = document.createElement("div");
-  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-stack-top-rect`);
-  node.setAttribute("id", `limber-grid-view-debug-stack-top-rect`);
-  node.setAttribute("tabindex", -1);
-  node.setAttribute("title", `${obj.id}`);
-  node.innerHTML = obj.id;
-  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
-  node.style.width = obj.x2 - obj.x1 + "px";
-  node.style.height = obj.y2 - obj.y1 + "px";
-  e.$limberGridView.appendChild(node);
-  set$limberGridViewDebugStackTopRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-top-rect")[0]); // console.log(e.$limberGridViewDebugStackTopRect);
-};
-const printStackTopAdjRect = (context, obj) => {
-  const e = variables_elements(context);
-
-  if (!obj) {
-    if (e.$limberGridViewDebugStackTopAdjRect) {
-      e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopAdjRect);
-      set$limberGridViewDebugStackTopAdjRect(context, undefined);
-    }
-
-    return;
-  }
-
-  if (e.$limberGridViewDebugStackTopAdjRect) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopAdjRect);
-  }
-
-  const node = document.createElement("div");
-  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-stack-top-adj-rect`);
-  node.setAttribute("id", `limber-grid-view-debug-stack-top-adj-rect`);
-  node.setAttribute("tabindex", -1);
-  node.setAttribute("title", `${obj.id}`);
-  node.innerHTML = obj.id;
-  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
-  node.style.width = obj.x2 - obj.x1 + "px";
-  node.style.height = obj.y2 - obj.y1 + "px";
-  e.$limberGridView.appendChild(node);
-  set$limberGridViewDebugStackTopAdjRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-top-adj-rect")[0]); // console.log(e.$limberGridViewDebugStackTopAdjRect);
-};
-const printMergedRect = (context, obj) => {
-  const e = variables_elements(context);
-
-  if (!obj) {
-    if (e.$limberGridViewDebugMergedRect) {
-      e.$limberGridView.removeChild(e.$limberGridViewDebugMergedRect);
-      set$limberGridViewDebugMergedRect(context, undefined);
-    }
-
-    return;
-  }
-
-  if (e.$limberGridViewDebugMergedRect) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugMergedRect);
-  }
-
-  const node = document.createElement("div");
-  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-merged-rect limber-grid-view-debug-merged-rect-thick`);
-  node.setAttribute("id", `limber-grid-view-debug-merged-rect`);
-  node.setAttribute("tabindex", -1);
-  node.setAttribute("title", `${obj.id}`);
-  node.innerHTML = obj.id;
-  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
-  node.style.width = obj.x2 - obj.x1 + "px";
-  node.style.height = obj.y2 - obj.y1 + "px";
-  e.$limberGridView.appendChild(node);
-  set$limberGridViewDebugMergedRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-merged-rect")[0]); // console.log(e.$limberGridViewDebugMergedRect);
-};
-const printAdjRect = (context, obj) => {
-  const e = variables_elements(context);
-
-  if (!obj) {
-    if (e.$limberGridViewDebugAdjRect) {
-      e.$limberGridView.removeChild(e.$limberGridViewDebugAdjRect);
-      set$limberGridViewDebugAdjRect(context, undefined);
-    }
-
-    return;
-  }
-
-  if (e.$limberGridViewDebugAdjRect) {
-    e.$limberGridView.removeChild(e.$limberGridViewDebugAdjRect);
-  }
-
-  const node = document.createElement("div");
-  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-adj-rect`);
-  node.setAttribute("id", `limber-grid-view-debug-adj-rect`);
-  node.setAttribute("tabindex", -1);
-  node.setAttribute("title", `${obj.id}`);
-  node.innerHTML = obj.id;
-  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
-  node.style.width = obj.x2 - obj.x1 + "px";
-  node.style.height = obj.y2 - obj.y1 + "px";
-  e.$limberGridView.appendChild(node);
-  set$limberGridViewDebugAdjRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-adj-rect")[0]); // console.log(e.$limberGridViewDebugAdjRect);
-};
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeCore.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -3162,8 +2889,19 @@ Written by Subendra Kumar Sharma.
 
 
 
-
- // import { printNodeData } from "../debug/debugUtils";
+ // import {
+// 	sleep,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
+// } from "../debug/debug";
+// import { printNodeData } from "../debug/debugUtils";
 
 const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
   let topWSItems, bottomWSItems;
@@ -3520,9 +3258,9 @@ const arrange = async (context, itemsToArrange, mergedRectsRt, topWorkSpace, bot
 // CONCATENATED MODULE: ./src/libs/arrange/arrange.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -3993,9 +3731,9 @@ const autoArrangeGrid = async context => {
 // CONCATENATED MODULE: ./src/store/variables/status.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4028,9 +3766,9 @@ const getStatus = function (context, key) {
 // CONCATENATED MODULE: ./src/store/constants/messages.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4063,9 +3801,9 @@ const getMessage = function (context, key) {
 // CONCATENATED MODULE: ./src/store/variables/bindedFunctions.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4091,9 +3829,9 @@ const getBindedFunctions = context => {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/initializers.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4220,9 +3958,9 @@ const unInitializeItemTouchEvents = function () {
 // CONCATENATED MODULE: ./src/libs/renderers/rendererUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4281,9 +4019,9 @@ const getPdBottomMax = context => {
 // CONCATENATED MODULE: ./src/store/variables/undoRedo.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4311,9 +4049,9 @@ const getUndoRedo = function (context) {
 // CONCATENATED MODULE: ./src/libs/renderers/renderers.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4845,9 +4583,9 @@ const renderItemContent = (context, renderData, itemEl) => {
 // CONCATENATED MODULE: ./src/libs/interaction/itemInteraction.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5127,9 +4865,9 @@ const moveItemDemo = async function (index, toX, toY) {
 // CONCATENATED MODULE: ./src/store/variables/eventSpecific.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5164,9 +4902,9 @@ const setDeskInteractionVarsByName = function (context, name, value) {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/itemInteraction.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5647,9 +5385,9 @@ const revertShowMoveOrResizeDemo = resetDemoUIChanges;
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/deskInteractionUtils.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5716,9 +5454,9 @@ const unloadInitState = context => {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/deskInteraction.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6091,9 +5829,9 @@ var external_commonjs_resize_observer_polyfill_commonjs2_resize_observer_polyfil
 // CONCATENATED MODULE: ./src/store/flags/flagDetails.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6120,9 +5858,9 @@ const DESK_INTERACTION_MODE = {
 // CONCATENATED MODULE: ./src/initializers/initializers.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6394,7 +6132,7 @@ const initRender = function () {
     e.$body.appendChild(pseudoContainer);
   }
 
-  e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
+  e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2021 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
   set$limberGridViewContainer(this, e.$el.getElementsByClassName("limber-grid-view-container")[0]);
   set$limberGridView(this, e.$el.getElementsByClassName("limber-grid-view")[0]);
   const pseudoContainerItem = document.createElement("div");
@@ -6443,9 +6181,9 @@ const initRender = function () {
 // CONCATENATED MODULE: ./src/store/observer/resizeObserver.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6474,9 +6212,9 @@ const getIsResizeObserving = function (context) {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/miscellaneous.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6559,9 +6297,9 @@ const getAllBoundingClientRectKeys = function (rect) {
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/intersectionObserver.js
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6799,9 +6537,9 @@ const onScrollCallback = function (event) {
 // CONCATENATED MODULE: ./src/index.js
 /** @license LimberGridView
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
