@@ -34,7 +34,7 @@ To see how LimberGridView works, head over to this [link](https://limber.in/Limb
 I do apologize for the poorly written documentation. I will be rewriting it when I get some time. If you encounter any problems, you can contact me by sending an email to _reach.subendra.kr@gmx.com_.
 
 ## License
-Copyright © 2018-2021, Subendra Kumar Sharma. All Rights reserved.
+Copyright © 2018-2021, Subendra Kumar Sharma. All rights reserved.
 
 This file is part of LimberGridView.
 
