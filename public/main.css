@@ -20,6 +20,7 @@ body {
 
 	font-size: 25px;
 	font-family: "Helvetica";
+	display: flex;
 }
 
 .animation-body {
@@ -74,6 +75,10 @@ body {
 	top: 0;
 	left: 0;
 	/*animation: animated-box-keyframes 5000ms linear infinite;*/
+}
+
+.rtree-button {
+	margin-left: 0;
 }
 
 .limber-grid-controls {
@@ -146,7 +151,7 @@ body {
 	width: 100%;
 	height: calc(100% - 100px);
 	overflow: hidden;
-	padding: 5px;
+	padding: 5px 0;
 }
 
 #limber-grid-view-implement .limber-grid-view-container .limber-grid-view {
@@ -224,6 +229,10 @@ body {
 
 	padding-left: 15px;
 	padding-top: 2px;
+	user-select: none;
+}
+
+.item-layout > span {
 	user-select: none;
 }
 
@@ -330,4 +339,21 @@ body {
 	right: 0;
 	margin: auto;
 	position: absolute;
+}
+
+#rtree-debug-container {
+	z-index: 5000;
+	height: calc(100vh - 80px);
+	width: 100%;
+	top: 80px;
+	position: absolute;
+	background: white;
+	border: solid 1px black;
+	border-radius: 5px;
+	display: none;
+	overflow: auto;
+}
+
+.rtree-debug-container-active {
+	display: block !important;
 }

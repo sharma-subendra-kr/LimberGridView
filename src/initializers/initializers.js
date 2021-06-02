@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -30,6 +30,11 @@ import {
 	getModifiedPositionData,
 	setModifiedPositionData,
 	setPseudoContainerId,
+	setRenderedItems,
+	getIOTopHelperPos,
+	getIOBottomHelperPos,
+	setSerializedPositionData,
+	getSerializedPositionData,
 } from "../store/variables/essentials";
 import getElements, {
 	set$body,
@@ -43,6 +48,10 @@ import getElements, {
 	set$limberGridViewAddCutGuide,
 	set$limberGridViewTouchHoldGuide,
 	set$limberGridViewCrossHairGuide,
+	set$limberGridViewIOTopHelper,
+	get$limberGridViewIOTopHelper,
+	set$limberGridViewIOBottomHelper,
+	get$limberGridViewIOBottomHelper,
 } from "../store/variables/elements";
 import getPrivateConstants, {
 	setWidth,
@@ -63,9 +72,10 @@ import getPublicConstants, {
 	setPublicConstantByName,
 } from "../store/constants/publicConstants";
 import { checkPositionData } from "../libs/renderers/rendererUtils";
-import { getRandomString } from "../libs/utils/utils";
-import { arrangeFromHeight } from "../libs/arrange/arrange";
+import { getRandomString, isMobile } from "../libs/utils/utils";
+import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
+import { getItemsInWorkSpace } from "../libs/utils/items";
 
 export const init = async function (context, isResize, autoArrange) {
 	const e = getElements(context);
@@ -76,6 +86,8 @@ export const init = async function (context, isResize, autoArrange) {
 		// * 	autoArrange will be true only during the first render
 		// * 	this if block is always supposed to execute during the first render
 		// 		if autoArrange is true or invalid positionData is supplied
+		// *	below code is basically resetting everything to 1920*1080
+		// *	everything will be scaled to new height and width in render function
 		console.warn("Auto-arranging");
 
 		setModifiedPositionData(context, pd);
@@ -84,8 +96,14 @@ export const init = async function (context, isResize, autoArrange) {
 		const arr = new Array(len);
 		for (let i = 0; i < len; i++) {
 			arr[i] = i;
-			mpd[i].x = undefined;
-			mpd[i].y = undefined;
+
+			mpd[i].x1 = 0;
+			mpd[i].x2 = 0;
+			mpd[i].y1 = 0;
+			mpd[i].y2 = 0;
+
+			mpd[i].x = 0;
+			mpd[i].y = 0;
 			mpd[i].width =
 				mpd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
 				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
@@ -93,14 +111,17 @@ export const init = async function (context, isResize, autoArrange) {
 				mpd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
 				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
 
-			pd[i].x = undefined;
-			pd[i].y = undefined;
-			pd[i].width =
-				pd[i].width / privateConstants.WIDTH_SCALE_FACTOR ||
-				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
-			pd[i].height =
-				pd[i].height / privateConstants.WIDTH_SCALE_FACTOR ||
-				privateConstants.MIN_HEIGHT_AND_WIDTH * 2;
+			mpd[i].mX1 = 0;
+			mpd[i].mX2 = 0;
+			mpd[i].mY1 = 0;
+			mpd[i].mY2 = 0;
+
+			mpd[i].mX = 0;
+			mpd[i].mY = 0;
+			mpd[i].mWidth = mpd[i].width + privateConstants.MARGIN * 2;
+			mpd[i].mHeight = mpd[i].height + privateConstants.MARGIN * 2;
+
+			Object.assign(pd[i], mpd[i]);
 		}
 
 		setWidth(context, privateConstants.GRID_WIDTH);
@@ -109,7 +130,7 @@ export const init = async function (context, isResize, autoArrange) {
 		setWidthScaleFactor(context, 1);
 		setDefinedMinHeightAndWidth(context, privateConstants.MIN_HEIGHT_AND_WIDTH);
 
-		await arrangeFromHeight(context, arr, privateConstants.MARGIN);
+		await autoArrangeGrid(context);
 		setPositionData(context, mpd);
 	}
 
@@ -161,9 +182,16 @@ export const init = async function (context, isResize, autoArrange) {
 	);
 
 	if (isResize) {
-		// resiet item x, y, width, height; MARGIN, MIN_HEIGHT_AND_WIDTH
+		// *	reset item x, y, width, height, x1, x2, y1, y2; MARGIN, MIN_HEIGHT_AND_WIDTH
+		// *	below code is basically resetting everything to 1920*1080
+		// *	everything will be scaled to new height and width in render function
 		const len = pd.length;
 		for (let i = 0; i < len; i++) {
+			pd[i].x1 /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].x2 /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].y1 /= privateConstants.WIDTH_SCALE_FACTOR;
+			pd[i].y2 /= privateConstants.WIDTH_SCALE_FACTOR;
+
 			pd[i].x /= privateConstants.WIDTH_SCALE_FACTOR;
 			pd[i].y /= privateConstants.WIDTH_SCALE_FACTOR;
 			pd[i].width /= privateConstants.WIDTH_SCALE_FACTOR;
@@ -188,35 +216,64 @@ export const init = async function (context, isResize, autoArrange) {
 		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH *
 			privateConstants.WIDTH_SCALE_FACTOR
 	);
+
+	if (!isMobile(context)) {
+		get$limberGridViewIOTopHelper(context).style.transform = `translate(0px, ${
+			getIOTopHelperPos(context) * privateConstants.HEIGHT
+		}px)`;
+		get$limberGridViewIOBottomHelper(
+			context
+		).style.transform = `translate(0px, ${
+			getIOBottomHelperPos(context) * privateConstants.HEIGHT
+		}px)`;
+
+		const renderSpace = {
+			x1: 0,
+			x2: privateConstants.WIDTH,
+			y1:
+				getIOTopHelperPos(context) * privateConstants.HEIGHT -
+				privateConstants.HEIGHT / 2,
+			y2:
+				getIOBottomHelperPos(context) * privateConstants.HEIGHT +
+				privateConstants.HEIGHT / 2,
+		};
+		setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
+	} else {
+		get$limberGridViewIOTopHelper(
+			context
+		).style.transform = `translate(1px, 1px)`;
+		setSerializedPositionData(context, pd);
+		const spd = getSerializedPositionData(context);
+		const len = pd.length < 15 ? pd.length : 15;
+		const arr = new Array(len).fill(0).map((o, index) => index);
+		setRenderedItems(context, arr);
+		for (let i = 0; i < len; i++) {
+			spd[arr[i]].renderIndex = i;
+		}
+	}
 };
 
 export const initConstantsAndFlags = function (options) {
 	// Private Constants BEGIN
-	if (options?.gridData?.WIDTH && !isNaN(options.gridData.WIDTH)) {
+	if (typeof options?.gridData?.WIDTH === "number") {
 		setGridWidth(this, options.gridData.WIDTH);
 	}
 
-	if (options?.gridData?.HEIGHT && !isNaN(options.gridData.HEIGHT)) {
+	if (typeof options?.gridData?.HEIGHT === "number") {
 		setGridHeight(this, options.gridData.HEIGHT);
 	}
 
-	if (options?.gridData?.MARGIN && !isNaN(options.gridData.MARGIN)) {
+	if (typeof options?.gridData?.MARGIN === "number") {
 		setGridMargin(this, options.gridData.MARGIN);
 	}
 
-	if (
-		options?.gridData?.MIN_HEIGHT_AND_WIDTH &&
-		!isNaN(options.gridData.MIN_HEIGHT_AND_WIDTH)
-	) {
+	if (typeof options?.gridData?.MIN_HEIGHT_AND_WIDTH === "number") {
 		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
 	}
 	// Private Constants ENDED
 
 	// Public Constants BEGIN
-	if (
-		options?.publicConstants?.mobileAspectRatio &&
-		!isNaN(options.publicConstants.mobileAspectRatio)
-	) {
+	if (typeof options?.publicConstants?.mobileAspectRatio === "number") {
 		setPublicConstantByName(
 			this,
 			"MOBILE_ASPECT_RATIO",
@@ -224,10 +281,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.moveGuideRadius &&
-		!isNaN(options.publicConstants.moveGuideRadius)
-	) {
+	if (typeof options?.publicConstants?.moveGuideRadius === "number") {
 		setPublicConstantByName(
 			this,
 			"MOVE_GUIDE_RADIUS",
@@ -235,10 +289,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.resizeSquareGuideLength &&
-		!isNaN(options.publicConstants.resizeSquareGuideLength)
-	) {
+	if (typeof options?.publicConstants?.resizeSquareGuideLength === "number") {
 		setPublicConstantByName(
 			this,
 			"RESIZE_SQUARE_GUIDE_LENGTH",
@@ -247,8 +298,7 @@ export const initConstantsAndFlags = function (options) {
 	}
 
 	if (
-		options?.publicConstants?.resizeSquareBorderGuideWidth &&
-		!isNaN(options.publicConstants.resizeSquareBorderGuideWidth)
+		typeof options?.publicConstants?.resizeSquareBorderGuideWidth === "number"
 	) {
 		setPublicConstantByName(
 			this,
@@ -258,9 +308,16 @@ export const initConstantsAndFlags = function (options) {
 	}
 
 	if (
-		options?.publicConstants?.autoScrollDistance &&
-		!isNaN(options.publicConstants.autoScrollDistance)
+		typeof options?.publicConstants?.showBottomLeftResizeGuide === "boolean"
 	) {
+		setPublicConstantByName(
+			this,
+			"SHOW_BOTTOM_LEFT_RESIZE_GUIDE",
+			options.publicConstants.showBottomLeftResizeGuide
+		);
+	}
+
+	if (typeof options?.publicConstants?.autoScrollDistance === "number") {
 		setPublicConstantByName(
 			this,
 			"AUTO_SCROLL_DISTANCE",
@@ -268,10 +325,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.autoScrollPoint &&
-		!isNaN(options.publicConstants.autoScrollPoint)
-	) {
+	if (typeof options?.publicConstants?.autoScrollPoint === "number") {
 		setPublicConstantByName(
 			this,
 			"AUTO_SCROLL_POINT",
@@ -280,8 +334,7 @@ export const initConstantsAndFlags = function (options) {
 	}
 
 	if (
-		options?.publicConstants?.moveOrResizeHeightIncrements &&
-		!isNaN(options.publicConstants.moveOrResizeHeightIncrements)
+		typeof options?.publicConstants?.moveOrResizeHeightIncrements === "number"
 	) {
 		setPublicConstantByName(
 			this,
@@ -290,10 +343,15 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.mouseDownTime &&
-		!isNaN(options.publicConstants.mouseDownTime)
-	) {
+	if (typeof options?.publicConstants?.autoScrollForMouse === "boolean") {
+		setPublicConstantByName(
+			this,
+			"AUTO_SCROLL_FOR_MOUSE",
+			options.publicConstants.autoScrollForMouse
+		);
+	}
+
+	if (typeof options?.publicConstants?.mouseDownTime === "number") {
 		setPublicConstantByName(
 			this,
 			"MOUSE_DOWN_TIME",
@@ -301,10 +359,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.touchHoldTime &&
-		!isNaN(options.publicConstants.touchHoldTime)
-	) {
+	if (typeof options?.publicConstants?.touchHoldTime === "number") {
 		setPublicConstantByName(
 			this,
 			"TOUCH_HOLD_TIME",
@@ -312,10 +367,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.demoWaitTime &&
-		!isNaN(options.publicConstants.demoWaitTime)
-	) {
+	if (typeof options?.publicConstants?.demoWaitTime === "number") {
 		setPublicConstantByName(
 			this,
 			"DEMO_WAIT_TIME",
@@ -323,14 +375,19 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.windowResizeWaitTime &&
-		!isNaN(options.publicConstants.windowResizeWaitTime)
-	) {
+	if (typeof options?.publicConstants?.windowResizeWaitTime === "number") {
 		setPublicConstantByName(
 			this,
 			"WINDOW_RESIZE_WAIT_TIME",
 			options.publicConstants.windowResizeWaitTime
+		);
+	}
+
+	if (typeof options?.publicConstants?.autoScrollDelay === "number") {
+		setPublicConstantByName(
+			this,
+			"AUTO_SCROLL_DELAY",
+			options.publicConstants.autoScrollDelay
 		);
 	}
 
@@ -361,10 +418,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.animateTime &&
-		!isNaN(options.publicConstants.animateTime)
-	) {
+	if (typeof options?.publicConstants?.animateTime === "number") {
 		setPublicConstantByName(
 			this,
 			"ANIMATE_TIME",
@@ -372,10 +426,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.crossHairWidth &&
-		!isNaN(options.publicConstants.crossHairWidth)
-	) {
+	if (typeof options?.publicConstants?.crossHairWidth === "number") {
 		setPublicConstantByName(
 			this,
 			"CROSS_HAIR_WIDTH",
@@ -383,10 +434,7 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (
-		options?.publicConstants?.crossHairHeight &&
-		!isNaN(options.publicConstants.crossHairHeight)
-	) {
+	if (typeof options?.publicConstants?.crossHairHeight === "number") {
 		setPublicConstantByName(
 			this,
 			"CROSS_HAIR_HEIGHT",
@@ -394,22 +442,14 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	// if (
-	// 	options?.publicConstants?.useFastAlgorithm &&
-	// 	!isNaN(options.publicConstants.useFastAlgorithm)
-	// ) {
-	// 	setPublicConstantByName(
-	// 		this,
-	// 		"USE_FAST_ALGORITHM",
-	// 		options.publicConstants.useFastAlgorithm
-	// 	);
-	// }
-
-	if (typeof options?.publicConstants?.useVerticalArrOnResize === "boolean") {
+	if (
+		typeof options?.publicConstants?.shrinkToFit === "number" &&
+		options?.publicConstants?.shrinkToFit <= 10
+	) {
 		setPublicConstantByName(
 			this,
-			"USE_VERTICAL_ARR_ON_RESIZE",
-			options.publicConstants.useVerticalArrOnResize
+			"SHRINK_TO_FIT",
+			options.publicConstants.shrinkToFit
 		);
 	}
 
@@ -454,7 +494,7 @@ export const initRender = function () {
 		e.$body.appendChild(pseudoContainer);
 	}
 
-	e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2020 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
+	e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2021 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
 	set$limberGridViewContainer(
 		this,
 		e.$el.getElementsByClassName("limber-grid-view-container")[0]
@@ -470,6 +510,8 @@ export const initRender = function () {
 	limberGridViewTouchHoldGuide.innerHTML = "<div></div>";
 	const limberGridViewCrossHairGuide = document.createElement("div");
 	limberGridViewCrossHairGuide.innerHTML = `<hr></hr><hr></hr>`;
+	const limberGridViewIOTopHelper = document.createElement("div");
+	const limberGridViewIOBottomHelper = document.createElement("div");
 
 	pseudoContainerItem.setAttribute(
 		"class",
@@ -499,6 +541,14 @@ export const initRender = function () {
 	limberGridViewCrossHairGuide.style.transform = `translate(-${
 		publicConstants.CROSS_HAIR_WIDTH * 2
 	}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
+	limberGridViewIOTopHelper.setAttribute(
+		"class",
+		"limber-grid-view-io-top-helper"
+	);
+	limberGridViewIOBottomHelper.setAttribute(
+		"class",
+		"limber-grid-view-io-bottom-helper"
+	);
 
 	e.$pseudoContainer.appendChild(pseudoContainerItem);
 	e.$limberGridView.appendChild(limberGridViewPseudoItem);
@@ -507,6 +557,8 @@ export const initRender = function () {
 	e.$limberGridView.appendChild(limberGridViewAddCutGuide);
 	e.$limberGridView.appendChild(limberGridViewTouchHoldGuide);
 	e.$limberGridView.appendChild(limberGridViewCrossHairGuide);
+	e.$limberGridView.appendChild(limberGridViewIOTopHelper);
+	e.$limberGridView.appendChild(limberGridViewIOBottomHelper);
 
 	set$pseudoContainerItem(this, pseudoContainerItem);
 	set$limberGridViewPseudoItem(this, limberGridViewPseudoItem);
@@ -515,4 +567,6 @@ export const initRender = function () {
 	set$limberGridViewAddCutGuide(this, limberGridViewAddCutGuide);
 	set$limberGridViewTouchHoldGuide(this, limberGridViewTouchHoldGuide);
 	set$limberGridViewCrossHairGuide(this, limberGridViewCrossHairGuide);
+	set$limberGridViewIOTopHelper(this, limberGridViewIOTopHelper);
+	set$limberGridViewIOBottomHelper(this, limberGridViewIOBottomHelper);
 };

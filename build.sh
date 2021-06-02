@@ -19,7 +19,11 @@
 
 # Written by Subendra Kumar Sharma.
 
-export NODE_ENV="development"
-export PORT=3000
-export VERSION="1.0.0-beta.0"
+#!/bin/sh
+export NODE_ENV="production"
+echo "Building development version"
 export MINIMIZE=false
+npm run build
+echo "Building production version"
+export MINIMIZE=true
+npm run build

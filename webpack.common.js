@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -40,11 +40,13 @@ const webpackBannerPlugin = new Webpack.BannerPlugin({
 	banner: fs.readFileSync("./license_header", "utf8"),
 	raw: true,
 });
+const CleanTerminalPlugin = require("clean-terminal-webpack-plugin");
+const cleanTerminalPlugin = new CleanTerminalPlugin();
 
 module.exports = {
 	entry: __dirname + "/src/index.js",
 	optimization: {
-		minimize: process.env.MINIMIZE === "true" ? true : false,
+		minimize: process.env.MINIMIZE === "true",
 	},
 	output: {
 		publicPath: "assets",
@@ -87,7 +89,12 @@ module.exports = {
 			},
 		],
 	},
-	plugins: [miniCssExtractPlugin, webpackNotifierPlugin, webpackBannerPlugin],
+	plugins: [
+		miniCssExtractPlugin,
+		webpackNotifierPlugin,
+		webpackBannerPlugin,
+		cleanTerminalPlugin,
+	],
 	resolve: {
 		alias: {
 			src: path.resolve(__dirname, "src/"),

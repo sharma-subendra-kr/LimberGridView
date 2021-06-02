@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -33,56 +33,46 @@ export const adjustHeight = function (context, yMouseOrTouchPosition) {
 
 	const scrollHeight = e.$limberGridView.scrollHeight;
 	if (
-		scrollHeight - yMouseOrTouchPosition <=
+		scrollHeight - yMouseOrTouchPosition <
 		publicConstants.AUTO_SCROLL_POINT
 	) {
-		e.$limberGridViewHeightAdjustGuide.style.height =
-			yMouseOrTouchPosition +
-			publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS +
-			"px";
+		e.$limberGridViewHeightAdjustGuide.style.height = `${
+			scrollHeight + publicConstants.MOVE_OR_RESIZE_HEIGHT_INCREMENTS
+		}px`;
 	}
 };
 
-export const adjustScroll = function (
-	context,
-	limberGridViewOnVisibleAreaY,
-	limberGridViewHeightVisibleHeight
-) {
+export const adjustScroll = function (context, yMouseOrTouchPositionOffset) {
 	const e = getElements(context);
 	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const scrollTop = e.$limberGridView.scrollTop;
-	// var scrollLeft = this.$limberGridView[0].scrollLeft;
 	let programScrolled = false;
-	if (limberGridViewOnVisibleAreaY > 0) {
-		if (
-			limberGridViewHeightVisibleHeight - limberGridViewOnVisibleAreaY <
-			publicConstants.AUTO_SCROLL_POINT
-		) {
-			e.$limberGridView.scrollTop =
-				scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
-			programScrolled = true;
-		}
-		if (
-			limberGridViewOnVisibleAreaY < privateConstants.HEIGHT / 10 &&
-			scrollTop !== 0
-		) {
-			e.$limberGridView.scrollTop =
-				scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
-			programScrolled = true;
-		}
-	}
 
-	// if(limberGridViewOnVisibleAreaX > 0){
-	// 	if((limberGridViewWidthVisibleWidth - limberGridViewOnVisibleAreaX) < (this.WIDTH/10)){
-	// 		this.$limberGridView[0].scrollLeft = scrollLeft + 100;
-	// 		var programScrolled = true;
-	// 	}
-	// 	if((limberGridViewOnVisibleAreaX) < (this.WIDTH/10) && scrollLeft != 0){
-	// 		this.$limberGridView[0].scrollLeft = scrollLeft - 100;
-	// 		var programScrolled = true;
-	// 	}
-	// }
+	if (
+		privateConstants.HEIGHT - yMouseOrTouchPositionOffset <
+		publicConstants.AUTO_SCROLL_POINT
+	) {
+		e.$limberGridView.scrollTop =
+			scrollTop + publicConstants.AUTO_SCROLL_DISTANCE;
+		programScrolled = true;
+	} else if (yMouseOrTouchPositionOffset < publicConstants.AUTO_SCROLL_POINT) {
+		e.$limberGridView.scrollTop =
+			scrollTop - publicConstants.AUTO_SCROLL_DISTANCE;
+		programScrolled = true;
+	}
 	return programScrolled;
+};
+
+export const adjustHeightAndScroll = function (
+	context,
+	yMouseOrTouchPosition,
+	yMouseOrTouchPositionOffset,
+	autoScroll
+) {
+	adjustHeight(context, yMouseOrTouchPosition);
+	if (autoScroll) {
+		return adjustScroll(context, yMouseOrTouchPositionOffset);
+	}
 };

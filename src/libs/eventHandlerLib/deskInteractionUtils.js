@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -37,9 +37,11 @@ export const loadInitState = (context) => {
 
 	const len = e.$limberGridViewItems.length;
 	for (let i = 0; i < len; i++) {
-		e.$limberGridViewItems[i].classList.add(
-			"limber-grid-view-item-resizing-state"
-		);
+		if (e.$limberGridViewItems[i]) {
+			e.$limberGridViewItems[i].classList.add(
+				"limber-grid-view-item-resizing-state"
+			);
+		}
 	}
 
 	e.$limberGridViewPseudoItem.classList.add(
@@ -73,9 +75,11 @@ export const unloadInitState = (context) => {
 
 	const len = e.$limberGridViewItems.length;
 	for (var i = 0; i < len; i++) {
-		e.$limberGridViewItems[i].classList.remove(
-			"limber-grid-view-item-resizing-state"
-		);
+		if (e.$limberGridViewItems[i]) {
+			e.$limberGridViewItems[i].classList.remove(
+				"limber-grid-view-item-resizing-state"
+			);
+		}
 	}
 
 	e.$limberGridViewPseudoItem.classList.remove(
@@ -88,6 +92,7 @@ export const unloadInitState = (context) => {
 		"limber-grid-view-add-cut-guide-add-allow",
 		"limber-grid-view-add-cut-guide-add-disallow"
 	);
+	e.$limberGridViewAddCutGuide.style.transform = `translate(-1000px, -1000px)`;
 
 	e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
 	e.$limberGridViewHeightAdjustGuide.classList.remove(
@@ -97,4 +102,5 @@ export const unloadInitState = (context) => {
 	e.$limberGridViewTouchHoldGuide.classList.remove(
 		"limber-grid-view-touch-hold-guide-active"
 	);
+	e.$limberGridViewTouchHoldGuide.style.transform = `translate(-1000px, -1000px)`;
 };

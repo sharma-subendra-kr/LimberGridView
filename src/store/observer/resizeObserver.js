@@ -23,15 +23,10 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// SEE index.js for options format
-
-const setOptions = function (context, options) {
-	Object.assign(context.options, options);
+export const setIsResizeObserving = function (context, value) {
+	context.store.observer.resizeObserver.isResizeObserving = value;
 };
 
-const getOptions = function (context) {
-	return context.options;
+export const getIsResizeObserving = function (context) {
+	return context.store.observer.resizeObserver.isResizeObserving;
 };
-
-export default getOptions;
-export { setOptions, getOptions };

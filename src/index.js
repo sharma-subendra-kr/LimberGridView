@@ -1,8 +1,8 @@
 /** @license LimberGridView
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -23,8 +23,9 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { IntervalTreesIterative } from "IntervalTreeJS";
+import { RTreeIterative } from "rtreejs";
 import { ArrayStack as Stack } from "Stack";
+import UndoRedo from "undo-redo";
 
 import "./index.css";
 import "./index.scss";
@@ -51,10 +52,18 @@ import {
 	onDeskTouchContextMenu,
 	onDeskTouchCancel,
 } from "./libs/eventHandlerLib/deskInteraction";
+import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
-	onWindowResize,
-	onWindowResizeTimerCallback,
+	instantiateResizeObserver,
+	resizeObserverCallback,
+	onItemClick,
 } from "./libs/eventHandlerLib/miscellaneous";
+import {
+	instantiateIntersectionObserver,
+	intersectionObserverCallback,
+	onScroll,
+	onScrollCallback,
+} from "./libs/eventHandlerLib/intersectionObserver";
 
 import { fixTo } from "./libs/utils/utils";
 import { setPublicConstantByName } from "./store/constants/publicConstants";
@@ -66,9 +75,12 @@ import {
 	getPositionData,
 	setCallbacks,
 } from "./store/variables/essentials";
-import { set$el } from "./store/variables/elements";
+import getElements, {
+	set$el,
+	get$pseudoContainer,
+	get$limberGridViewContainer,
+} from "./store/variables/elements";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
-import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 import {
 	render,
@@ -81,8 +93,10 @@ import {
 	initConstantsAndFlags,
 	initRender,
 } from "./initializers/initializers";
-
-LimberGridView.prototype.constructor = LimberGridView;
+import getUndoRedo from "./store/variables/undoRedo";
+import { resetDemoUIChanges } from "./libs/interaction/itemInteractionUtils";
+import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
+import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -93,24 +107,26 @@ LimberGridView.prototype.constructor = LimberGridView;
 /*
 
 	const options = {
-		el : "#",																				// id of the parent element with #
-		editable : true, 																		// true/false (optional default true)
-		enableInteractiveAddAndCut : true,														// true/false (optional default true)
-		enableTouchInteraction : true,															// true/false (optional default true)
-		autoArrange : true,																		// true/false (compulsory if x and y not present else optional)
-		reRenderOnResize : true, 																// true/false (optional default true)
+		el : "#",																																	// id of the parent element with #
+		editable : true, 																													// true/false (optional default true)
+		enableInteractiveAddAndCut : true,																				// true/false (optional default true)
+		enableTouchInteraction : true,																						// true/false (optional default true)
+		autoArrange : true,																												// true/false (compulsory if x and y not present else optional)
+		reRenderOnResize : true, 																									// true/false (optional default true)
 		isMobileCheck: function
 		pseudoElementContainer: string or element
-		itemMouseDownMoveCheck: function 														// x clicked/touched, y clicked/touched, item, index
-		itemMouseDownResizeCheck: function 														// x clicked/touched, y clicked/touched, item, index
+		itemMouseDownMoveCheck: function 																					// x clicked/touched, y clicked/touched, item, index, event.target, which
+		itemMouseDownResizeCheck: function 																				// x clicked/touched, y clicked/touched, item, index, event.target, which
+	
+		getArrangeTime: function 																									// returns the total arrange time
 
 		gridData : {
-			WIDTH : 1920,																		// width of limberGridView
-			HEIGHT : 1080, 																		// height of limberGridView
-			MARGIN : 8, 																		// margin for items
-			MIN_HEIGHT_AND_WIDTH: 150 															// min height and width of items
+			WIDTH : 1920,																														// width of limberGridView
+			HEIGHT : 1080, 																													// height of limberGridView
+			MARGIN : 8, 																														// margin for items
+			MIN_HEIGHT_AND_WIDTH: 150 																							// min height and width of items
 		},
-		positionData: [																			// position Data
+		positionData: [																														// position Data
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 			{x : <value>, y : <value>, width : <value>, height : <value>},
 
@@ -123,37 +139,44 @@ LimberGridView.prototype.constructor = LimberGridView;
 			...
 		],
 		callbacks : {
-			renderComplete : function(){}, 															// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
+			renderComplete : function(){}, 																					// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
 			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
 			addComplete : function(index){}
 			removeComplete: function(index){}
 			moveComplete: function(index, toX, toY, arrangedIndices) {}
 			resizeComplete: function(index, width, height, arrangedIndices){}
+			cutSpaceComplete: function() {}
 			renderPlugin: function (renderData, element) {}
 			removePlugin: function(element){}
 
-			onItemClickCallback : function(event){},												// click callback for item
+			onItemClickCallback : function(event){},																// click callback for item
+			getLogMessage: function(log){},																					// get log message for error, info, and warnings
 		},
 		publicConstants: {
-			mobileAspectRatio : <value>, 															// aspect ratio of for mobile devices
+			mobileAspectRatio : <value>, 																						// aspect ratio of for mobile devices
 
 			moveGuideRadius: number,
 			resizeSquareGuideLength: number
 			resizeSquareGuideBorderWidth: number
+			showBottomLeftResizeGuide: boolean
 			autoScrollDistance: number
 			autoScrollPoint: number
 			moveOrResizeHeightIncrements: number
+			autoScrollForMouse: boolean
 
 			mouseDownTime: number
 			touchHoldTime: number
 			demoWaitTime: number
 			windowResizeWaitTime: number
+			autoScrollDelay: number
 
 			deskInteractionMode: "ADD"/"CUTSPACE"
 
 			latchMovedItem: boolean
 			animateMovedItem: boolean
 			animateTime: number
+
+			shrinkToFit: number
 		}
 	}
 	*/
@@ -315,6 +338,8 @@ function LimberGridView(options) {
 	setPositionData(this, options.positionData);
 	setCallbacks(this, options.callbacks);
 
+	getUndoRedo(this).push(getPositionData(this));
+
 	if (typeof options.el === "string") {
 		const el = document.getElementById(options.el);
 		if (!el) {
@@ -329,10 +354,14 @@ function LimberGridView(options) {
 
 	initConstantsAndFlags.call(this, options);
 	initRender.call(this);
+	instantiateResizeObserver.call(this);
+	instantiateIntersectionObserver.call(this);
 
-	if (this.options.reRenderOnResize === true) {
-		window.addEventListener("resize", getBindedFunctions(this).onWindowResize);
-	}
+	const e = getElements(this);
+	e.$limberGridView.addEventListener(
+		"scroll",
+		getBindedFunctions(this).onScroll
+	);
 
 	setTimeout(
 		async function () {
@@ -379,6 +408,9 @@ LimberGridView.prototype.initializeStore = function () {
 				pseudoContainerId: undefined,
 				positionData: [],
 				modifiedPositionData: [],
+				renderedItems: [],
+				ioTopHelperPos: -1,
+				ioBottomHelperPos: 1.5,
 				gridData: {},
 				callbacks: {},
 			},
@@ -392,6 +424,7 @@ LimberGridView.prototype.initializeStore = function () {
 				onItemContextMenu: onItemContextMenu.bind(this),
 				onItemTouchContextMenu: onItemTouchContextMenu.bind(this),
 				onItemTouchCancel: onItemTouchCancel.bind(this),
+				onItemClick: onItemClick.bind(this),
 				// Desk
 				onDeskMouseDown: onDeskMouseDown.bind(this),
 				onDeskTouchStart: onDeskTouchStart.bind(this),
@@ -404,8 +437,10 @@ LimberGridView.prototype.initializeStore = function () {
 				onDeskContextMenu: onDeskContextMenu.bind(this),
 
 				//
-				onWindowResize: onWindowResize.bind(this),
-				onWindowResizeTimerCallback: onWindowResizeTimerCallback.bind(this),
+				resizeObserverCallback: resizeObserverCallback.bind(this),
+				intersectionObserverCallback: intersectionObserverCallback.bind(this),
+				onScroll: onScroll.bind(this),
+				onScrollCallback: onScrollCallback.bind(this),
 			},
 			eventSpecific: {
 				itemInteraction: {
@@ -433,17 +468,16 @@ LimberGridView.prototype.initializeStore = function () {
 			},
 			status: {},
 			trees: {
-				it: new IntervalTreesIterative({
-					initialStackSize: 100,
-					initialQueueSize: 100,
+				rt: new RTreeIterative({
+					M: 4,
+					// splitNode: "linear",
 				}),
 			},
 			stacks: {
-				stack: new Stack(),
-				garbageStack: new Stack(),
-				resStack: new Stack(),
-				itemsToArrangeStack: new Stack(),
+				stack: new Stack({ constructReverse: true }),
+				garbageStack: new Stack({ constructReverse: true }),
 			},
+			undoRedo: new UndoRedo(),
 		},
 		constants: {
 			privateConstants: {
@@ -474,16 +508,19 @@ LimberGridView.prototype.initializeStore = function () {
 				MOVE_GUIDE_RADIUS: 10,
 				RESIZE_SQUARE_GUIDE_LENGTH: 10,
 				RESIZE_SQUARE_GUIDE_BORDER_WIDTH: 3,
+				SHOW_BOTTOM_LEFT_RESIZE_GUIDE: false,
 				AUTO_SCROLL_DISTANCE: 50,
 				AUTO_SCROLL_POINT: 50,
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
+				AUTO_SCROLL_FOR_MOUSE: false,
 
 				MOUSE_DOWN_TIME: 300,
 				TOUCH_HOLD_TIME: 300,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
+				AUTO_SCROLL_DELAY: 100,
 
-				DESK_INTERACTION_MODE: "ADD",
+				DESK_INTERACTION_MODE: "CUTSPACE",
 
 				LATCH_MOVED_ITEM: true,
 
@@ -495,13 +532,21 @@ LimberGridView.prototype.initializeStore = function () {
 				CROSS_HAIR_HEIGHT: 500,
 
 				// Algorithm
-				// USE_FAST_ALGORITHM: true,
-				USE_VERTICAL_ARR_ON_RESIZE: false,
+				SHRINK_TO_FIT: 10,
 			},
 			messages: {
 				latchedMoveDemo1:
 					"Move curser close to an adjacent item over this box to latch next to that item.",
 				latchedMoveDemo2: "Move curser over this box to latch on to this item.",
+			},
+		},
+		observer: {
+			resizeObserver: {
+				resizeObserver: undefined,
+				isResizeObserving: false,
+			},
+			intersectionObserver: {
+				intersectionObserver: undefined,
 			},
 		},
 	};
@@ -575,13 +620,13 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 
 /**
  * @method
- * @name LimberGridView#setUseVerticalArrOnResize
- * @description Call this function to change USE_VERTICAL_ARR_ON_RESIZE during runtime.
- * @param {boolean} flag Boolean true or false. To use or not to use vertical arrangements on resize.
+ * @name LimberGridView#setShrinkToFit
+ * @description Call this function to change SHRINK_TO_FIT during runtime.
+ * @param {number} Value indicates up to a certain percentage an item can be shrinked. Specify 0 if no shrink is desired.
  */
-LimberGridView.prototype.setUseVerticalArrOnResize = function (flag) {
-	if (typeof flag === "boolean") {
-		setPublicConstantByName(this, "USE_VERTICAL_ARR_ON_RESIZE", flag);
+LimberGridView.prototype.setShrinkToFit = function (value) {
+	if (typeof value === "number" && value <= 10) {
+		setPublicConstantByName(this, "SHRINK_TO_FIT", value);
 	}
 };
 
@@ -610,7 +655,7 @@ LimberGridView.prototype.addItem = function (item) {
  * @param  {number} index Index of the item to be removed.
  */
 LimberGridView.prototype.removeItem = function (index) {
-	if (Number.isInteger(index)) {
+	if (Number.isInteger(parseInt(index))) {
 		_removeItem(this, index);
 	}
 };
@@ -623,6 +668,99 @@ LimberGridView.prototype.removeItem = function (index) {
  */
 LimberGridView.prototype.setIsMobileCheck = function (f) {
 	this.options.isMobileCheck = f;
+};
+
+/**
+ * @method
+ * @name LimberGridView#undo
+ * @description undo previous move or drag
+ */
+LimberGridView.prototype.undo = function () {
+	const pd = getUndoRedo(this).undo();
+	if (pd) {
+		const rerenderItems = getItemsToRerenderOnUndoRedo(
+			getPositionData(this),
+			pd
+		);
+		setPositionData(this, pd);
+		resetDemoUIChanges(this);
+		for (const item in rerenderItems) {
+			this.renderItem(item);
+		}
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#redo
+ * @description redo move or drag
+ */
+LimberGridView.prototype.redo = function () {
+	const pd = getUndoRedo(this).redo();
+	if (pd) {
+		const rerenderItems = getItemsToRerenderOnUndoRedo(
+			getPositionData(this),
+			pd
+		);
+		setPositionData(this, pd);
+		resetDemoUIChanges(this);
+		for (const item in rerenderItems) {
+			this.renderItem(item);
+		}
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#isUndoAvailable
+ * @description returns true if undo is possible
+ */
+LimberGridView.prototype.isUndoAvailable = function () {
+	return getUndoRedo(this).isUndoAvailable();
+};
+
+/**
+ * @method
+ * @name LimberGridView#isRedoAvailable
+ * @description returns true if redo is possible
+ */
+LimberGridView.prototype.isRedoAvailable = function () {
+	return getUndoRedo(this).isRedoAvailable();
+};
+
+/**
+ * @method
+ * @name LimberGridView#setAutoScrollDelay
+ * @description set auto scroll delay for resize, move, add, cut in milliseconds
+ */
+LimberGridView.prototype.setAutoScrollDelay = function (value) {
+	if (typeof value === "number") {
+		setPublicConstantByName(this, "AUTO_SCROLL_DELAY", value);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#setAutoScrollForMouse
+ * @description set auto scroll for resize, move, add, cut
+ */
+LimberGridView.prototype.setAutoScrollForMouse = function (value) {
+	if (typeof value === "boolean") {
+		setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#destroy
+ * @description free event listeners and all other resources
+ */
+LimberGridView.prototype.destroy = function (value) {
+	unInitializeEvents.call(this);
+	const $pseudoContainer = get$pseudoContainer(this);
+	const $limberGridViewContainer = get$limberGridViewContainer(this);
+	$pseudoContainer.remove();
+	$limberGridViewContainer.remove();
 };
 
 export default LimberGridView;

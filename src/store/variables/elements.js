@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -134,6 +134,22 @@ const get$limberGridViewCrossHairGuide = function (context) {
 	return context.store.variables.elements.$limberGridViewCrossHairGuide;
 };
 
+const set$limberGridViewIOTopHelper = function (context, elm) {
+	context.store.variables.elements.$limberGridViewIOTopHelper = elm;
+};
+
+const get$limberGridViewIOTopHelper = function (context) {
+	return context.store.variables.elements.$limberGridViewIOTopHelper;
+};
+
+const set$limberGridViewIOBottomHelper = function (context, elm) {
+	context.store.variables.elements.$limberGridViewIOBottomHelper = elm;
+};
+
+const get$limberGridViewIOBottomHelper = function (context) {
+	return context.store.variables.elements.$limberGridViewIOBottomHelper;
+};
+
 // Grid Elements ENDED
 
 // DEBUG Elements
@@ -240,6 +256,10 @@ export {
 	get$limberGridViewTouchHoldGuide,
 	set$limberGridViewCrossHairGuide,
 	get$limberGridViewCrossHairGuide,
+	set$limberGridViewIOTopHelper,
+	get$limberGridViewIOTopHelper,
+	set$limberGridViewIOBottomHelper,
+	get$limberGridViewIOBottomHelper,
 	// DEBUG Elements
 	set$limberGridViewDebugMergedTempRects,
 	get$limberGridViewDebugMergedTempRects,

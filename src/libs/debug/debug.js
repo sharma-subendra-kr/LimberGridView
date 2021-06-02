@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -66,9 +66,9 @@ export const printUnmergedFreeRects = (context, arr) => {
 
 		node.setAttribute("title", `${arr[i].id}`);
 		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+		node.style.width = arr[i].x2 - arr[i].x1 + "px";
+		node.style.height = arr[i].y2 - arr[i].y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -108,9 +108,9 @@ export const printMergedFreeRects = (context, arr) => {
 		node.setAttribute("title", `${arr[i].id}`);
 
 		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+		node.style.width = arr[i].x2 - arr[i].x1 + "px";
+		node.style.height = arr[i].y2 - arr[i].y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -152,9 +152,9 @@ export const printResultStackRects = (context, arr) => {
 		node.setAttribute("title", `${arr[i].id}`);
 
 		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+		node.style.width = arr[i].x2 - arr[i].x1 + "px";
+		node.style.height = arr[i].y2 - arr[i].y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -193,9 +193,9 @@ export const printStackRects = (context, arr) => {
 		node.setAttribute("title", `${arr[i].id}`);
 
 		node.innerHTML = arr[i].id;
-		node.style.transform = `translate(${arr[i].rect.x}px, ${arr[i].rect.y}px)`;
-		node.style.width = arr[i].rect.width + "px";
-		node.style.height = arr[i].rect.height + "px";
+		node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+		node.style.width = arr[i].x2 - arr[i].x1 + "px";
+		node.style.height = arr[i].y2 - arr[i].y1 + "px";
 		e.$limberGridView.appendChild(node);
 	}
 
@@ -218,9 +218,9 @@ export const printMergedTempRects = (context, obj) => {
 	node.setAttribute("title", `${obj.id}`);
 
 	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+	node.style.width = obj.x2 - obj.x1 + "px";
+	node.style.height = obj.y2 - obj.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugMergedTempRects(
@@ -256,9 +256,9 @@ export const printStackTopRect = (context, obj) => {
 	node.setAttribute("title", `${obj.id}`);
 
 	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+	node.style.width = obj.x2 - obj.x1 + "px";
+	node.style.height = obj.y2 - obj.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugStackTopRect(
@@ -295,9 +295,9 @@ export const printStackTopAdjRect = (context, obj) => {
 	node.setAttribute("title", `${obj.id}`);
 
 	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+	node.style.width = obj.x2 - obj.x1 + "px";
+	node.style.height = obj.y2 - obj.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugStackTopAdjRect(
@@ -334,9 +334,9 @@ export const printMergedRect = (context, obj) => {
 	node.setAttribute("title", `${obj.id}`);
 
 	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+	node.style.width = obj.x2 - obj.x1 + "px";
+	node.style.height = obj.y2 - obj.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugMergedRect(
@@ -371,9 +371,9 @@ export const printAdjRect = (context, obj) => {
 	node.setAttribute("title", `${obj.id}`);
 
 	node.innerHTML = obj.id;
-	node.style.transform = `translate(${obj.rect.x}px, ${obj.rect.y}px)`;
-	node.style.width = obj.rect.width + "px";
-	node.style.height = obj.rect.height + "px";
+	node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+	node.style.width = obj.x2 - obj.x1 + "px";
+	node.style.height = obj.y2 - obj.y1 + "px";
 	e.$limberGridView.appendChild(node);
 
 	set$limberGridViewDebugAdjRect(

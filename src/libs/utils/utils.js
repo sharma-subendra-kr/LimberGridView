@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -23,28 +23,23 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const emptyObject = function (obj) {
-	const keys = Object.keys(obj);
-	const length = keys.length;
-	for (let i = 0; i < length; i++) {
-		delete obj[keys[i]];
-	}
-};
+import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 
-export const isMobile = function (context) {
+export const isMobile = function (context, boundingClientRect) {
 	const isMobileFunction = context.options.isMobileCheck;
 
 	if (isMobileFunction) {
-		return isMobileFunction();
+		return isMobileFunction(
+			boundingClientRect || getLimberGridViewBoundingClientRect(context)
+		);
 	}
 
+	boundingClientRect =
+		boundingClientRect || getLimberGridViewBoundingClientRect(context);
+
 	return (
-		window.matchMedia(
-			"only screen and (max-width: 980px) and (min-width : 1px) and (orientation: portrait)"
-		).matches ||
-		window.matchMedia(
-			"only screen and (max-width: 979px) and (min-width : 1px) and (orientation: landscape)"
-		).matches
+		boundingClientRect.width < 980 ||
+		(window.innerHeight > window.innerWidth && boundingClientRect.width < 981)
 	);
 };
 
@@ -60,15 +55,6 @@ export const getRandomString = (len = 22) => {
 		arr[i] = alpNum[Math.floor(Math.random() * 36)];
 	}
 	return arr.join("");
-};
-
-export const getItemDimenWithMargin = (MARGIN, item) => {
-	return {
-		x: item.x - MARGIN,
-		y: item.y - MARGIN,
-		width: item.width + MARGIN * 2,
-		height: item.height + MARGIN * 2,
-	};
 };
 
 export const sleep = (ms) => {

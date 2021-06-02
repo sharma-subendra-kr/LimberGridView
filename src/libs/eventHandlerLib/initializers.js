@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -43,11 +43,11 @@ export const initializeEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (options.editable === true) {
+	if (options.editable) {
 		if (!isMobile(this)) {
-			if (options.enableInteractiveAddAndCut !== false) {
+			if (options.enableInteractiveAddAndCut) {
 				e.$limberGridView.addEventListener("mousedown", bf.onDeskMouseDown);
-				if (options.enableTouchInteraction !== false) {
+				if (options.enableTouchInteraction) {
 					e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
 				}
 			}
@@ -55,12 +55,12 @@ export const initializeEvents = function () {
 
 		var len = e.$limberGridViewItems.length;
 		for (var i = 0; i < len; i++) {
-			if (!isMobile(this)) {
+			if (!isMobile(this) && e.$limberGridViewItems[i]) {
 				e.$limberGridViewItems[i].addEventListener(
 					"mousedown",
 					bf.onItemMouseDown
 				);
-				if (options.enableTouchInteraction !== false) {
+				if (options.enableTouchInteraction) {
 					e.$limberGridViewItems[i].addEventListener(
 						"touchstart",
 						bf.onItemTouchStart
@@ -68,7 +68,7 @@ export const initializeEvents = function () {
 				}
 			}
 
-			if (callbacks.onItemClickCallback) {
+			if (callbacks.onItemClickCallback && e.$limberGridViewItems[i]) {
 				e.$limberGridViewItems[i].addEventListener("click", bf.onItemClick);
 			}
 		}
@@ -81,15 +81,18 @@ export const unInitializeEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (options.editable === true) {
-		if (e.$limberGridView !== undefined) {
+	if (options.editable) {
+		if (e.$limberGridView) {
 			e.$limberGridView.removeEventListener("mousedown", bf.onDeskMouseDown);
 			e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
 		}
 
-		if (e.$limberGridViewItems !== undefined) {
+		if (e.$limberGridViewItems) {
 			const len = e.$limberGridViewItems.length;
 			for (let i = 0; i < len; i++) {
+				if (!e.$limberGridViewItems[i]) {
+					continue;
+				}
 				e.$limberGridViewItems[i].removeEventListener(
 					"mousedown",
 					bf.onItemMouseDown
@@ -110,9 +113,12 @@ export const initializeItemTouchEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (e.$limberGridViewItems !== undefined) {
+	if (e.$limberGridViewItems) {
 		const len = e.$limberGridViewItems.length;
 		for (let i = 0; i < len; i++) {
+			if (!e.$limberGridViewItems[i]) {
+				continue;
+			}
 			e.$limberGridViewItems[i].addEventListener(
 				"mousedown",
 				bf.onItemMouseDown
@@ -130,9 +136,12 @@ export const unInitializeItemTouchEvents = function () {
 
 	const bf = getBindedFunctions(this);
 
-	if (e.$limberGridViewItems !== undefined) {
+	if (e.$limberGridViewItems) {
 		const len = e.$limberGridViewItems.length;
 		for (let i = 0; i < len; i++) {
+			if (!e.$limberGridViewItems[i]) {
+				continue;
+			}
 			e.$limberGridViewItems[i].removeEventListener(
 				"mousedown",
 				bf.onItemMouseDown

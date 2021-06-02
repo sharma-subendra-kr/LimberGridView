@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -49,6 +49,9 @@ export const getUserActionData = (context, event) => {
 		Y = event.offsetY;
 	} else if (event.touches) {
 		touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
+		if (!touchPosOnLimberGridItem) {
+			return false;
+		}
 		radius = Math.sqrt(
 			Math.pow(0 - touchPosOnLimberGridItem.x, 2) +
 				Math.pow(0 - touchPosOnLimberGridItem.y, 2)
@@ -69,6 +72,17 @@ export const getUserActionData = (context, event) => {
 		width:
 			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
 			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
+		height:
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
+			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
+	};
+
+	const resizeUIBoxBL = {
+		x: -publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
+		y:
+			event.currentTarget.offsetHeight -
+			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
+		width: publicConstants.RESIZE_SQUARE_GUIDE_LENGTH,
 		height:
 			publicConstants.RESIZE_SQUARE_GUIDE_LENGTH +
 			publicConstants.RESIZE_SQUARE_GUIDE_BORDER_WIDTH,
@@ -108,12 +122,31 @@ export const getUserActionData = (context, event) => {
 			Y,
 			{ ...pd[itemIndex] },
 			itemIndex,
-			event.target
+			event.target,
+			"bottomRight"
 		)
 	) {
 		// call developer defined function to check if mousedown for RESIZE is in a valid place
 		return {
 			type: "resize",
+			itemIndex: event.currentTarget.attributes["data-index"].value,
+		};
+	}
+
+	if (
+		options.itemMouseDownResizeCheck &&
+		options.itemMouseDownResizeCheck(
+			X,
+			Y,
+			{ ...pd[itemIndex] },
+			itemIndex,
+			event.target,
+			"bottomLeft"
+		)
+	) {
+		// call developer defined function to check if mousedown for RESIZE is in a valid place
+		return {
+			type: "resizeBottomLeft",
 			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 	}
@@ -127,6 +160,19 @@ export const getUserActionData = (context, event) => {
 	) {
 		return {
 			type: "resize",
+			itemIndex: event.currentTarget.attributes["data-index"].value,
+		};
+	}
+
+	if (
+		X >= resizeUIBoxBL.x &&
+		X <= resizeUIBoxBL.width &&
+		Y >= resizeUIBoxBL.y &&
+		Y <= resizeUIBoxBL.y + resizeUIBoxBL.height &&
+		!options.itemMouseDownResizeCheck
+	) {
+		return {
+			type: "resizeBottomLeft",
 			itemIndex: event.currentTarget.attributes["data-index"].value,
 		};
 	}
@@ -159,6 +205,9 @@ export const loadResizingState = (context, userActionData) => {
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
+		if (!e.$limberGridViewItems[i]) {
+			continue;
+		}
 		e.$limberGridViewItems[i].classList.add(
 			"limber-grid-view-item-resizing-state"
 		);
@@ -179,12 +228,15 @@ export const unloadResizingState = (context, userActionData) => {
 	e.$limberGridViewPseudoItem.classList.remove(
 		"limber-grid-view-pseudo-item-active"
 	);
-	e.$limberGridViewPseudoItem.style.transform = `translate(0px, 0px)`;
+	e.$limberGridViewPseudoItem.style.transform = `translate(-1000px, -1000px)`;
 
 	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
 
 	const itemsLen = e.$limberGridViewItems.length;
 	for (let i = 0; i < itemsLen; i++) {
+		if (!e.$limberGridViewItems[i]) {
+			continue;
+		}
 		e.$limberGridViewItems[i].classList.remove(
 			"limber-grid-view-item-resizing-state"
 		);
@@ -206,9 +258,11 @@ export const loadMoveState = (context, userActionData, event) => {
 		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewItems[userActionData.itemIndex].classList.add(
-		"limber-grid-view-item-demo"
-	);
+	if (e.$limberGridViewItems[userActionData.itemIndex]) {
+		e.$limberGridViewItems[userActionData.itemIndex].classList.add(
+			"limber-grid-view-item-demo"
+		);
+	}
 
 	e.$pseudoContainerItem.classList.add(
 		"limber-grid-view-pseudo-container-item-active"
@@ -234,9 +288,11 @@ export const unloadMoveState = (context, userActionData) => {
 		"limber-grid-view-height-adjust-guide-active"
 	);
 
-	e.$limberGridViewItems[userActionData.itemIndex].classList.remove(
-		"limber-grid-view-item-demo"
-	);
+	if (e.$limberGridViewItems[userActionData.itemIndex]) {
+		e.$limberGridViewItems[userActionData.itemIndex].classList.remove(
+			"limber-grid-view-item-demo"
+		);
+	}
 
 	e.$pseudoContainerItem.classList.remove(
 		"limber-grid-view-pseudo-container-item-active"
@@ -245,7 +301,7 @@ export const unloadMoveState = (context, userActionData) => {
 	e.$pseudoContainerItem.style.width = "0px";
 	e.$pseudoContainerItem.style.height = "0px";
 
-	e.$pseudoContainerItem.style.transform = `translate(0px, 0px)`;
+	e.$pseudoContainerItem.style.transform = `translate(-1000px, -1000px)`;
 
 	e.$body.classList.remove("limber-grid-view-body-tag-state-editing");
 
@@ -286,4 +342,5 @@ export const unloadOnMoveState = (context) => {
 	e.$limberGridViewMoveGuide.classList.remove(
 		"limber-grid-view-move-guide-active"
 	);
+	e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
 };

@@ -23,15 +23,8 @@ Written by Subendra Kumar Sharma.
 
 */
 
-// SEE index.js for options format
-
-const setOptions = function (context, options) {
-	Object.assign(context.options, options);
+const getUndoRedo = function (context) {
+	return context.store.variables.undoRedo;
 };
 
-const getOptions = function (context) {
-	return context.options;
-};
-
-export default getOptions;
-export { setOptions, getOptions };
+export default getUndoRedo;

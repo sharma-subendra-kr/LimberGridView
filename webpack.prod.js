@@ -1,8 +1,8 @@
 /*
 
-LimberGridView, a powerful JavaScript Libary that gives you movable, resizable(any size) and auto-arranging grids.
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -37,17 +37,29 @@ module.exports = merge(common, {
 				: "limber.grid.view.development.js",
 	},
 	externals: {
-		IntervalTreeJS: {
-			commonjs: "IntervalTreeJS",
-			commonjs2: "IntervalTreeJS",
-			amd: "IntervalTreeJS",
-			root: "IntervalTreeJS",
+		rtreejs: {
+			commonjs: "rtreejs",
+			commonjs2: "rtreejs",
+			amd: "rtreejs",
+			root: "rtreejs",
 		},
 		Stack: {
 			commonjs: "Stack",
 			commonjs2: "Stack",
 			amd: "Stack",
 			root: "Stack",
+		},
+		"undo-redo": {
+			commonjs: "undo-redo",
+			commonjs2: "undo-redo",
+			amd: "undo-redo",
+			root: "undo-redo",
+		},
+		"resize-observer-polyfill": {
+			commonjs: "resize-observer-polyfill",
+			commonjs2: "resize-observer-polyfill",
+			amd: "resize-observer-polyfill",
+			root: "resize-observer-polyfill",
 		},
 	},
 });
