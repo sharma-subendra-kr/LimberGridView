@@ -22,6 +22,9 @@ Although many issues were identified and resolved in this current release, you m
 * Items not affected by a move or resize getting rearranged: Most instances were identified and resolved.  Because of how the entire thing works, we can still find some instances where items that are not affected are getting rearranged. It will be constantly worked on and improved. A stable version will be released with this issue because the occurrences are very low.
 * Scrolling: There is a bug that breaks the scrolling behavior in ios devices while in mobile view. The fix is planned for the next release.
 
+
+### Due to substantial changes to the way LimberGridView works in version 1.0.0-beta.3, all previous versions are abandoned, removed from tags, their dependencies made private so that no one can use them.
+
 ### Improvements in the arrange algorithm are made in patches. I try to make sure it doesn't affect any APIs.
 
 ## Features:
