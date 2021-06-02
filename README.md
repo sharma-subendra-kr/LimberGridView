@@ -20,6 +20,7 @@ Although many issues were identified and resolved in this current release, you m
 * Item disappearing when right-clicked: This is a known issue, which happens very rarely. I am working on recreating it and fixing it.
 * Item overlapping: It has been worked on and fixed. I am further trying to recreate some instances, but so far, I haven't been successful, which is a positive sign.
 * Items not affected by a move or resize getting rearranged: Most instances were identified and resolved.  Because of how the entire thing works, we can still find some instances where items that are not affected are getting rearranged. It will be constantly worked on and improved. A stable version will be released with this issue because the occurrences are very low.
+* Scrolling: There is a bug that breaks the scrolling behavior in ios devices while in mobile view. The fix is planned for the next release.
 
 ### Improvements in the arrange algorithm are made in patches. I try to make sure it doesn't affect any APIs.
 
@@ -38,6 +39,9 @@ Although many issues were identified and resolved in this current release, you m
 To see how LimberGridView works, head over to this [link](https://limber.in/LimberGridView/howItWorks).
 
 I do apologize for the poorly written documentation. I will be rewriting it when I get some time. If you encounter any problems, you can contact me by sending an email to _reach.subendra.kr@gmx.com_.
+
+### Contributing
+Due to problems that may arise while licensing the commercial license, contributions are not welcome.
 
 ## License
 Copyright © 2018-2021, Subendra Kumar Sharma. All rights reserved.
