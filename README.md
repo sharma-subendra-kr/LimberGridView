@@ -10,6 +10,46 @@
 
 LimberGridView will be available on npmjs.com soon.
 
+## Instantiate
+```
+/*
+	el is an element with fixed height and width where LimberGridView is rendered
+	
+	positionData is an array with position data in format 
+	[{x1: number, x2: number, y1: number, y2: number}, ....]
+	OR
+	[{x: number, y: number, width: number, height: number}, ....]
+	OR
+	[{}, {}, {}, ....] // here squares are rendered
+	
+	Please read the wiki for details about all the callbacks
+*/
+const limberGridView = new LimberGridView({
+	el: el.current,
+	itemMouseDownMoveCheck: itemMouseDownMoveCheck,
+	callbacks: {
+		renderContent: renderContent,
+		renderComplete: renderComplete,
+		resizeComplete: resizeComplete,
+		moveComplete: moveComplete,
+		addComplete: addComplete,
+		removeComplete: removeComplete,
+		cutSpaceComplete: cutSpaceComplete,
+		renderPlugin: renderPlugin,
+		removePlugin: removePlugin,
+		getArrangeTime: getArrangeTime,
+		getLogMessage: getLogMessage,
+	},
+	publicConstants: {
+		showBottomLeftResizeGuide: true,
+		autoScrollForMouse: true,
+		deskInteractionMode: deskInteractionMode,
+		latchMovedItem: latch,
+	},
+	positionData: positionData,
+});
+```
+
 ## Current version LimberGridView 1.0.0-beta.3.
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
