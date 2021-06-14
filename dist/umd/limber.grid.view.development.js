@@ -4325,6 +4325,17 @@ const addItem = async function (context, item) {
 
   try {
     if (item.x && item.y && item.width && item.height) {
+      makeItem(item);
+      Object.assign(item, {
+        mX: item.x - privateConstants.MARGIN,
+        mY: item.y - privateConstants.MARGIN,
+        mWidth: item.width + privateConstants.MARGIN * 2,
+        mHeight: item.height + privateConstants.MARGIN * 2,
+        mX1: item.x1 - privateConstants.MARGIN,
+        mY1: item.y1 - privateConstants.MARGIN,
+        mX2: item.x2 + privateConstants.MARGIN,
+        mY2: item.y2 + privateConstants.MARGIN
+      });
       let allow = false;
       allow = addItemAllowCheck(context, item.x, item.y, item.width, item.height);
 
