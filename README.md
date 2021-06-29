@@ -50,7 +50,7 @@ const limberGridView = new LimberGridView({
 });
 ```
 
-## Current version LimberGridView 1.0.0-beta.3.
+## Current version LimberGridView 1.0.0-beta.4.
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
@@ -60,7 +60,8 @@ Although many issues were identified and resolved in this current release, you m
 * Item disappearing when right-clicked: This is a known issue, which happens very rarely. I am working on recreating it and fixing it.
 * Item overlapping: It has been worked on and fixed. I am further trying to recreate some instances, but so far, I haven't been successful, which is a positive sign.
 * Items not affected by a move or resize getting rearranged: Most instances were identified and resolved.  Because of how the entire thing works, we can still find some instances where items that are not affected are getting rearranged. It will be constantly worked on and improved. A stable version will be released with this issue because the occurrences are very low.
-* Scrolling: There is a bug that breaks the scrolling behavior in ios devices while in mobile view. The fix is planned for the next release.
+* **Scrolling: There is a bug that breaks the scrolling behavior in ios devices while in mobile view. The fix is planned for the upcoming release.**
+* **Scrolling: While on interactive view. If there are large, completely unused spaces in-between items, then the scroll freezes.**
 
 
 ### Due to substantial changes to the way LimberGridView works in version 1.0.0-beta.3, all previous versions are abandoned, removed from tags, their dependencies made private so that no one can use them.
