@@ -421,6 +421,10 @@ export const resizeSizeAdjust = (
 		) {
 			height = bl.y - trpt.y;
 
+			if (forBottomRight && bl.x - brpt.x <= AXIS_DISTANCE_THRESHOLD) {
+				width = bl.x - privateConstants.MARGIN * 2 - blpt.x;
+			}
+
 			rdistance = brptTobl;
 			isToAdjPresent = true;
 			toAdjIndex = i;
@@ -436,6 +440,11 @@ export const resizeSizeAdjust = (
 			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
 		) {
 			height = br.y - tlpt.y;
+
+			if (!forBottomRight && blpt.x - br.x <= AXIS_DISTANCE_THRESHOLD) {
+				x = br.x + privateConstants.MARGIN * 2;
+				width = brpt.x - x;
+			}
 
 			ldistance = blptTobr;
 			isToAdjPresent = true;
