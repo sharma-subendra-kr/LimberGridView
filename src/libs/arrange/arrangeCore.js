@@ -200,6 +200,9 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 
 			dLen = diff.length;
 			for (let k = 0; k < dLen; k++) {
+				if (diff[k].x2 - diff[k].x1 <= 0.5 || diff[k].y2 - diff[k].y1 <= 0.5) {
+					continue;
+				}
 				diff[k].id = idCount.idCount++;
 				rt.insert(diff[k]);
 			}

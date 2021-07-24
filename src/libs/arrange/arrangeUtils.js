@@ -405,11 +405,12 @@ export const getSizeTest = (
 	const m1Hypo = match1.width * match1.width + match1.height * match1.height;
 	const m2Hypo = match2.width * match2.width + match2.height * match2.height;
 
-	if (m1Hypo < m2Hypo && match1.width !== 0) {
-		return match1.width > 0 ? match1 : undefined;
-	} else {
-		return match2.width > 0 ? match2 : undefined;
+	if ((m1Hypo < m2Hypo || m2Hypo === 0) && match1.width > 0) {
+		return match1;
+	} else if (match2.width > 0) {
+		return match2;
 	}
+	return undefined;
 };
 
 export const getDistanceForTest = (suspect, rect) => {

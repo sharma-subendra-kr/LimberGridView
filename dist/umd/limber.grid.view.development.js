@@ -1848,6 +1848,11 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
 
     if (brptTobl < rdistance && brptTobl < ldistance && brpt.x < bl.x && Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
       height = bl.y - trpt.y;
+
+      if (forBottomRight && bl.x - brpt.x <= AXIS_DISTANCE_THRESHOLD) {
+        width = bl.x - privateConstants.MARGIN * 2 - blpt.x;
+      }
+
       rdistance = brptTobl;
       isToAdjPresent = true;
       toAdjIndex = i;
@@ -1857,6 +1862,12 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
 
     if (blptTobr < ldistance && blptTobr < rdistance && blpt.x > br.x && Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
       height = br.y - tlpt.y;
+
+      if (!forBottomRight && blpt.x - br.x <= AXIS_DISTANCE_THRESHOLD) {
+        x = br.x + privateConstants.MARGIN * 2;
+        width = brpt.x - x;
+      }
+
       ldistance = blptTobr;
       isToAdjPresent = true;
       toAdjIndex = i;
@@ -2651,11 +2662,13 @@ const getSizeTest = (suspect, rect, MARGIN, DEFINED_MIN_HEIGHT_AND_WIDTH, SHRINK
   const m1Hypo = match1.width * match1.width + match1.height * match1.height;
   const m2Hypo = match2.width * match2.width + match2.height * match2.height;
 
-  if (m1Hypo < m2Hypo && match1.width !== 0) {
-    return match1.width > 0 ? match1 : undefined;
-  } else {
-    return match2.width > 0 ? match2 : undefined;
+  if ((m1Hypo < m2Hypo || m2Hypo === 0) && match1.width > 0) {
+    return match1;
+  } else if (match2.width > 0) {
+    return match2;
   }
+
+  return undefined;
 };
 const getDistanceForTest = (suspect, rect) => {
   return getHypotenuseSquared(suspect.x1, suspect.y1, rect.mX1, rect.mY1);
@@ -3031,6 +3044,10 @@ const sweepLineForFreeSpace = (context, area, items, idCount) => {
       dLen = diff.length;
 
       for (let k = 0; k < dLen; k++) {
+        if (diff[k].x2 - diff[k].x1 <= 0.5 || diff[k].y2 - diff[k].y1 <= 0.5) {
+          continue;
+        }
+
         diff[k].id = idCount.idCount++;
         rt.insert(diff[k]);
       }
@@ -3285,15 +3302,15 @@ Written by Subendra Kumar Sharma.
 
 
  // import {
-// printUnmergedFreeRects,
-// printMergedFreeRects,
-// printResultStackRects,
-// printStackRects,
-// printMergedTempRects,
-// printStackTopRect,
-// printStackTopAdjRect,
-// printMergedRect,
-// printAdjRect,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
 // } from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
@@ -3370,7 +3387,9 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
     freeRectsArr = freeRectsArr.filter(r => r.x2 - r.x1 > 0.5 && r.y2 - r.y1 > 0.5);
     const {
       mergedRectsRt
-    } = await mergeFreeRects(context, freeRectsArr, idCount);
+    } = await mergeFreeRects(context, freeRectsArr, idCount); // debugger;
+    // printMergedFreeRects(context, mergedRectsRt.getData());
+
     const {
       arranged: _arranged,
       itemsInBottomWorkSpace: _itemsInBottomWorkSpace,
@@ -3431,6 +3450,7 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
   console.log("p1: ", p1);
   console.log("p2: ", p2);
   console.log("workSpaceResizeCount", workSpaceResizeCount);
+  console.log("itemsToArrange", iToALen);
   console.log("arrange total: ", p2 - p1);
 
   if ((_context$options$call = context.options.callbacks) !== null && _context$options$call !== void 0 && _context$options$call.getArrangeTime) {

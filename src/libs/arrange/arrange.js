@@ -42,15 +42,15 @@ import {
 import { sanitizeDimension } from "../utils/items";
 
 // import {
-// printUnmergedFreeRects,
-// printMergedFreeRects,
-// printResultStackRects,
-// printStackRects,
-// printMergedTempRects,
-// printStackTopRect,
-// printStackTopAdjRect,
-// printMergedRect,
-// printAdjRect,
+// 	printUnmergedFreeRects,
+// 	printMergedFreeRects,
+// 	printResultStackRects,
+// 	printStackRects,
+// 	printMergedTempRects,
+// 	printStackTopRect,
+// 	printStackTopAdjRect,
+// 	printMergedRect,
+// 	printAdjRect,
 // } from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
@@ -180,6 +180,8 @@ export const arrangeMove = async (
 			freeRectsArr,
 			idCount
 		);
+		// debugger;
+		// printMergedFreeRects(context, mergedRectsRt.getData());
 
 		const {
 			arranged: _arranged,
@@ -253,6 +255,7 @@ export const arrangeMove = async (
 	console.log("p1: ", p1);
 	console.log("p2: ", p2);
 	console.log("workSpaceResizeCount", workSpaceResizeCount);
+	console.log("itemsToArrange", iToALen);
 	console.log("arrange total: ", p2 - p1);
 
 	if (context.options.callbacks?.getArrangeTime) {
