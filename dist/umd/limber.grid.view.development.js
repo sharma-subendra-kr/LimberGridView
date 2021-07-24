@@ -1786,8 +1786,8 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
   const pd = getPositionData(context);
   const privateConstants = constants_privateConstants(context); // const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
 
-  const DISTANCE_THRESHOLD = privateConstants.MIN_HEIGHT_AND_WIDTH / 2;
-  const AXIS_DISTANCE_THRESHOLD = privateConstants.MIN_HEIGHT_AND_WIDTH / 10;
+  const DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 2;
+  const AXIS_DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
   const len = pd.length;
   const tlpt = {
     x: x,
@@ -1844,7 +1844,7 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
     trptTobr = getDistanceBetnPts(br, trpt);
     brptTotr = getDistanceBetnPts(tr, brpt);
     blptTotl = getDistanceBetnPts(tl, blpt);
-    tlptTobl = getDistanceBetnPts(bl, tlpt);
+    tlptTobl = getDistanceBetnPts(bl, tlpt); // affected bottom to adjacent bottom
 
     if (brptTobl < rdistance && brptTobl < ldistance && brpt.x < bl.x && Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
       height = bl.y - trpt.y;
@@ -1873,7 +1873,8 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
       toAdjIndex = i;
       hToAdjDirection = "left";
       hLatchPoint = br;
-    }
+    } // affected top to adjacent bottom
+
 
     if (trptTobr < tdistance && trptTobr < bdistance && trptTobr <= DISTANCE_THRESHOLD && Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
       width = br.x - tlpt.x;
@@ -1884,15 +1885,6 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
       wLatchPoint = br;
     }
 
-    if (brptTotr < bdistance && brptTotr < tdistance && brptTotr <= DISTANCE_THRESHOLD && Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
-      width = tr.x - blpt.x;
-      bdistance = brptTotr;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      wToAdjDirection = "bottom";
-      wLatchPoint = tr;
-    }
-
     if (tlptTobl < tdistance && tlptTobl < bdistance && tlptTobl <= DISTANCE_THRESHOLD && Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD && !forBottomRight) {
       width = trpt.x - bl.x;
       x = bl.x;
@@ -1901,11 +1893,31 @@ const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) =
       toAdjIndex = i;
       wToAdjDirection = "top";
       wLatchPoint = bl;
+    } // affected bottom to adjacent top
+
+
+    if (brptTotr < bdistance && brptTotr < tdistance && brptTotr <= DISTANCE_THRESHOLD && Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
+      width = tr.x - blpt.x;
+
+      if (forBottomRight && tr.y > brpt.y && tr.y - brpt.y <= AXIS_DISTANCE_THRESHOLD) {
+        height = tr.y - privateConstants.MARGIN * 2 - trpt.y;
+      }
+
+      bdistance = brptTotr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "bottom";
+      wLatchPoint = tr;
     }
 
     if (blptTotl < bdistance && blptTotl < tdistance && blptTotl <= DISTANCE_THRESHOLD && Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD && !forBottomRight) {
       width = brpt.x - tl.x;
       x = tl.x;
+
+      if (!forBottomRight && tl.y > blpt.y && tl.y - blpt.y <= AXIS_DISTANCE_THRESHOLD) {
+        height = tl.y - privateConstants.MARGIN * 2 - tlpt.y;
+      }
+
       bdistance = blptTotl;
       isToAdjPresent = true;
       toAdjIndex = i;
