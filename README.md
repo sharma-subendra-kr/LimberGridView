@@ -6,9 +6,7 @@
 
 ## Installation
 
-```npm install https://github.com/sharma-subendra-kr/LimberGridView```
-
-LimberGridView will be available on npmjs.com soon.
+```npm install @sharma-subendra-kr/limber-grid-view```
 
 ## Instantiate
 ```
