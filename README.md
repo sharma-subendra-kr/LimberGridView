@@ -1,7 +1,7 @@
 # LimberGridView
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
-# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/release-1.0.0-beta.3/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
+# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/release-1.0.0-beta.6/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
 # [For API reference and documentation, please refer to the wiki page.](https://github.com/sharma-subendra-kr/LimberGridView/wiki)
 
 ## Installation
@@ -48,7 +48,7 @@ const limberGridView = new LimberGridView({
 });
 ```
 
-## Current version LimberGridView 1.0.0-beta.6.
+## Current version LimberGridView 1.0.0-beta.7.
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
