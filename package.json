@@ -1,6 +1,6 @@
 {
   "name": "@sharma-subendra-kr/limber-grid-view",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "description": "LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.",
   "main": "dist/index.js",
   "scripts": {
