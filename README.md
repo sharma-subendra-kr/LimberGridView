@@ -13,6 +13,8 @@
 // Import CSS as per your directory structure
 import "../node_modules/@sharma-subendra-kr/limber-grid-view/dist/index.css";
 
+import LimberGridView from "@sharma-subendra-kr/limber-grid-view";
+
 /*
 	el is an element with fixed height and width where LimberGridView is rendered
 	
