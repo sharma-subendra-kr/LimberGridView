@@ -13,6 +13,8 @@
 // Import CSS as per your directory structure
 import "../node_modules/@sharma-subendra-kr/limber-grid-view/dist/index.css";
 
+import LimberGridView from "@sharma-subendra-kr/limber-grid-view";
+
 /*
 	el is an element with fixed height and width where LimberGridView is rendered
 	
@@ -51,7 +53,7 @@ const limberGridView = new LimberGridView({
 });
 ```
 
-## Current version LimberGridView 1.0.0-beta.8.
+## Current version LimberGridView 1.0.0-beta.9.
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
