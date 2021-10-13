@@ -40,8 +40,12 @@ import {
 } from "./initializers";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getDeskInteractionVars } from "../../store/variables/eventSpecific";
-import { getCallbacks } from "../../store/variables/essentials";
+import {
+	getCallbacks,
+	getPositionData,
+} from "../../store/variables/essentials";
 import { addItem } from "../renderers/renderers";
+import getUndoRedo from "../../store/variables/undoRedo";
 
 export const onDeskMouseDown = function (event) {
 	const e = getElements(this);
@@ -352,6 +356,7 @@ export const onDeskMouseUp = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
+	const pd = getPositionData(this);
 
 	const dkiv = getDeskInteractionVars(this);
 
@@ -392,6 +397,7 @@ export const onDeskMouseUp = function (event) {
 			);
 			if (cutDetails) {
 				shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
+				getUndoRedo(this).push(pd);
 				if (callbacks.cutSpaceComplete) {
 					callbacks.cutSpaceComplete();
 				}
@@ -408,6 +414,7 @@ export const onDeskTouchEnd = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
+	const pd = getPositionData(this);
 
 	const dkiv = getDeskInteractionVars(this);
 
@@ -448,6 +455,7 @@ export const onDeskTouchEnd = function (event) {
 			);
 			if (cutDetails) {
 				shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
+				getUndoRedo(this).push(pd);
 				if (callbacks.cutSpaceComplete) {
 					callbacks.cutSpaceComplete();
 				}
