@@ -301,13 +301,6 @@ lm      |   |               |   |      rm
 		}
 	}
 
-	// for (const rect of rects) {
-	// 	rect.x = rect.x1;
-	// 	rect.y = rect.y1;
-	// 	rect.width = rect.x2 - rect.x1;
-	// 	rect.height = rect.y2 - rect.y1;
-	// }
-
 	return rects;
 };
 
@@ -358,7 +351,6 @@ const verticalSubtract = (rectA, rectB) => {
 	let result;
 	if (rectA.y1 === rectB.y1) {
 		// Case I
-		// result = { tl: rectB.bl, tr: rectB.br, br: rectA.br, bl: rectA.bl };
 		result = { x1: rectA.x1, x2: rectA.x2, y1: rectB.y2, y2: rectA.y2 };
 	} else if (rectA.y2 === rectB.y2) {
 		// Case II
@@ -427,13 +419,6 @@ export const mergeRects = (rectA, rectB) => {
 	}
 
 	result.length = count;
-
-	// for (const rect of result) {
-	// 	rect.x = rect.x1;
-	// 	rect.y = rect.y1;
-	// 	rect.width = rect.x2 - rect.x1;
-	// 	rect.height = rect.y2 - rect.y1;
-	// }
 
 	return result;
 };
