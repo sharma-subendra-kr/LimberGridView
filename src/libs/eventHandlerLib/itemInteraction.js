@@ -443,6 +443,10 @@ export const onItemTouchMove = function (event) {
 };
 
 export const onItemMouseUp = async function (event) {
+	if (event.button !== 0) {
+		return;
+	}
+
 	const iiv = getItemInteractionVars(this);
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
@@ -599,12 +603,10 @@ export const onItemContextMenu = function (event) {
 
 	event.preventDefault();
 	event.stopPropagation();
-	return false;
 };
 
 export const onItemTouchContextMenu = function (event) {
 	onItemContextMenu.call(this, event);
-	return false;
 };
 
 export const onItemTouchCancel = function (event) {

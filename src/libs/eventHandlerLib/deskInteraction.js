@@ -346,6 +346,9 @@ export const onDeskTouchMove = function (event) {
 };
 
 export const onDeskMouseUp = function (event) {
+	if (event.button !== 0) {
+		return;
+	}
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
@@ -465,7 +468,6 @@ export const onDeskTouchCancel = function (event) {
 
 export const onDeskTouchContextMenu = function (event) {
 	event.preventDefault();
-	return false;
 };
 
 export const onDeskContextMenu = function (event) {
@@ -497,7 +499,6 @@ export const onDeskContextMenu = function (event) {
 		event.preventDefault();
 		event.stopPropagation();
 	}
-	return false;
 };
 
 export const addItemAllowCheckTimeOut = function (x, y, width, height) {

@@ -153,3 +153,33 @@ export const unInitializeItemTouchEvents = function () {
 		}
 	}
 };
+
+export const initializeDeskEditableListeners = function () {
+	const options = getOptions(this);
+	const e = getElements(this);
+	const bf = getBindedFunctions(this);
+
+	if (options.editable) {
+		if (!isMobile(this)) {
+			if (options.enableInteractiveAddAndCut) {
+				e.$limberGridView.addEventListener("mousedown", bf.onDeskMouseDown);
+				if (options.enableTouchInteraction) {
+					e.$limberGridView.addEventListener("touchstart", bf.onDeskTouchStart);
+				}
+			}
+		}
+	}
+};
+
+export const unInitializeDeskEditableListeners = function () {
+	const options = getOptions(this);
+	const e = getElements(this);
+	const bf = getBindedFunctions(this);
+
+	if (options.editable) {
+		if (e.$limberGridView) {
+			e.$limberGridView.removeEventListener("mousedown", bf.onDeskMouseDown);
+			e.$limberGridView.removeEventListener("touchstart", bf.onDeskTouchStart);
+		}
+	}
+};
