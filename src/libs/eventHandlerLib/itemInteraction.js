@@ -599,10 +599,12 @@ export const onItemContextMenu = function (event) {
 
 	event.preventDefault();
 	event.stopPropagation();
+	return false;
 };
 
 export const onItemTouchContextMenu = function (event) {
 	onItemContextMenu.call(this, event);
+	return false;
 };
 
 export const onItemTouchCancel = function (event) {

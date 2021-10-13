@@ -465,6 +465,7 @@ export const onDeskTouchCancel = function (event) {
 
 export const onDeskTouchContextMenu = function (event) {
 	event.preventDefault();
+	return false;
 };
 
 export const onDeskContextMenu = function (event) {
@@ -496,6 +497,7 @@ export const onDeskContextMenu = function (event) {
 		event.preventDefault();
 		event.stopPropagation();
 	}
+	return false;
 };
 
 export const addItemAllowCheckTimeOut = function (x, y, width, height) {
