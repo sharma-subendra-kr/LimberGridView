@@ -209,7 +209,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * Callback that returns true when the screen size is of a mobile device. It receives boundingClientRect of LimberGridView as an argument.
  * @callback options~isMobileCheck
  * @param {object} boundingClientRect boundingClientRect of LimberGridView.
- * @returns {boolean} Returns true if the screen matches media queries for a mobile screen.
+ * @returns {boolean} Returns true when the screen size is of a mobile device.
  */
 
 /**
