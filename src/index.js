@@ -195,23 +195,23 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {boolean} enableTouchInteraction If enabled user can use touch interaction on items on desk and on the desk. Default is true.
  * @property {boolean} autoArrange If enabled first render is autoarranged. Autoarrange also happens when a faulty data is received during window resize.
  * @property {boolean} reRenderOnResize If enabled rerender on window resize. Passing false is dangerous. Default is true.
- * @property {isMobileCheck} callback A callback that returns a boolean which tells that the screen is or is not a mobile screen
+ * @property {options~isMobileCheck} isMobileCheck A callback that returns a boolean which tells that the screen is or is not a mobile screen
  * @property {(string|object)} pseudoElementContainer The id of the element or the element where the pseudo elements are rendered that appear during moving.
- * @property {itemMouseDownMoveCheck} callback A callback function to tell whether the mouse down event has occured at a desired location on the item for move event.
- * @property {itemMouseDownResizeCheck} callback A callback function to tell whether the mouse down event has occured at a desired location on the item for resize event.
- * @property {object} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
- * @property {object[]} positionData input position data of items to render.
- * @property {object} callbacks An object containing various callbacks.
- * @property {object} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
+ * @property {options~itemMouseDownMoveCheck} itemMouseDownMoveCheck A callback function to tell whether the mouse down event has occured at a desired location on the item for move event.
+ * @property {options~itemMouseDownResizeCheck} itemMouseDownResizeCheck A callback function to tell whether the mouse down event has occured at a desired location on the item for resize event.
+ * @property {gridData} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
+ * @property {positionData} positionData input position data of items to render.
+ * @property {callbacks} callbacks An object containing various callbacks.
+ * @property {publicConstants} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
  */
 
 /**
- * @callback isMobileCheck
+ * @callback options~isMobileCheck
  * @returns {boolean} Returns true if the screen matches media queries for a mobile screen.
  */
 
 /**
- * @callback itemMouseDownMoveCheck
+ * @callback options~itemMouseDownMoveCheck
  * @param {Number} x point along the x axis axis where the mouse down happened on the item
  * @param {Number} y point along the y axis axis where the mouse down happened on the item
  * @param {object} positionData object for the item.
@@ -221,7 +221,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback itemMouseDownResizeCheck
+ * @callback options~itemMouseDownResizeCheck
  * @param {Number} x point along the x axis axis where the mouse down happened on the item
  * @param {Number} y point along the y axis axis where the mouse down happened on the item
  * @param {object} positionData object for the item.
@@ -231,7 +231,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {object} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
+ * @typedef {options~gridData} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
  * @property {number} WIDTH Width of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1920.
  * @property {number} HEIGHT Height of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1080.
  * @property {number} MARGIN Margin or the items maintained by Arrange Engine. It is scaled internally as per the device size for visual consistency. Default value is 8.
@@ -239,7 +239,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {object[]} positionData Array of Position Data of the items on grid. These are scaled during the runtime. Use getGridData function to get data to store on the database which is scaled accorging to gridData.
+ * @typedef {options~positionData[]} positionData Array of Position Data of the items on grid. These are scaled during the runtime. Use getGridData function to get data to store on the database which is scaled accorging to gridData.
  * @property {number} x positon of item along the x axis.
  * @property {number} y positon of item along the y axis.
  * @property {number} width Width of the item.
@@ -247,24 +247,24 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {object} callbacks Object containing all the callbacks
- * @property {renderComplete} callback Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
- * @property {renderContent} callback Callback function called to get the contents to attach to the item as children.
- * @property {addComplete} callback Callback function called when addition of an item is complete.
- * @property {removeComplete} callback Callback function called when removing of item is complete.
- * @property {moveComplete} callback Callback function called when moving of item is complete.
- * @property {resizeComplete} callback Callback function called when resizing of item is complete.
- * @property {renderPlugin} callback Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
- * @property {removePlugin} callback Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @typedef {options~callbacks} callbacks Object containing all the callbacks
+ * @property {callbacks~renderComplete} callback Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
+ * @property {callbacks~renderContent} callback Callback function called to get the contents to attach to the item as children.
+ * @property {callbacks~addComplete} callback Callback function called when addition of an item is complete.
+ * @property {callbacks~removeComplete} callback Callback function called when removing of item is complete.
+ * @property {callbacks~moveComplete} callback Callback function called when moving of item is complete.
+ * @property {callbacks~resizeComplete} callback Callback function called when resizing of item is complete.
+ * @property {callbacks~renderPlugin} callback Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
+ * @property {callbacks~removePlugin} callback Callback function called before the item is removed from the DOM. Also before removeComplete.
  */
 
 /**
- * @callback renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
+ * @callback callbacks~renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
  * @param {(undefined|number)} index Index is the index of the item rendered or undefined if the item was rendered by the constructor or on resize.
  */
 
 /**
- * @callback renderContent Callback function called to get the contents to attach to the item as children. This also called for all the items whose indices are affected due to removal of any item. In such a case it is called after removeComplete.
+ * @callback callbacks~renderContent Callback function called to get the contents to attach to the item as children. This also called for all the items whose indices are affected due to removal of any item. In such a case it is called after removeComplete.
  * @param {number} index Index of the item.
  * @param {number} width Width of the item.
  * @param {number} height Height of the item.
@@ -273,17 +273,17 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback addComplete Callback function called when addition of an item is complete.
+ * @callback callbacks~addComplete Callback function called when addition of an item is complete.
  * @param {number} index Index of the item added.
  */
 
 /**
- * @callback removeComplete Callback function called when removing of item is complete.
+ * @callback callbacks~removeComplete Callback function called when removing of item is complete.
  * @param {number} index Index of the item removed.
  */
 
 /**
- * @callback moveComplete Callback function called when moving of item is complete.
+ * @callback callbacks~moveComplete Callback function called when moving of item is complete.
  * @param {number} index Index of the item moved.
  * @param {number} toX Position along the x axis where the item is moved.
  * @param {number} toY Position along the y axis where the item is moved.
@@ -291,7 +291,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback resizeComplete Callback function called when resizing of item is complete.
+ * @callback callbacks~resizeComplete Callback function called when resizing of item is complete.
  * @param {number} index Index of the resized item.
  * @param {number} width Width of the item resized.
  * @param {number} height Height of the item resized.
@@ -299,18 +299,18 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback renderPlugin Callback function called after renderContent and before renderComplete and addComplete. Also after removeComplete for items whose indices are affected due to removeal of any item. On this callback you can render React JSX.
+ * @callback callbacks~renderPlugin Callback function called after renderContent and before renderComplete and addComplete. Also after removeComplete for items whose indices are affected due to removeal of any item. On this callback you can render React JSX.
  * @param {object} renderData Data received from renderContent callback.
  * @param {Element} element Element object of the item that is being rendered.
  */
 
 /**
- * @callback removePlugin Callback function called just before the item is removed from the DOM. Also before removeComplete. This is called so that necessary clean up can be performed by frameworks like react.
+ * @callback callbacks~removePlugin Callback function called just before the item is removed from the DOM. Also before removeComplete. This is called so that necessary clean up can be performed by frameworks like react.
  * @param {Element} element Element which is going to be removed.
  */
 
 /**
- * @typedef {object} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
+ * @typedef {options~publicConstants} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
  * @property {number} mobileAspectRatio A nummber denoting the aspect ratio of each item for mobile view e.g. 5:4. Default value is 5/4.
  * @property {number} moveGuideRadius Radius of the Move guide radius a pseudo element at the top left corner of the item. You can remove move guide for a customized look and feel. Default value is 10.
  * @property {number} resizeSquareGuideLength Length of the square that is rendered at the bottom right corner of the item as a pseudo element. Default value is 10.
@@ -331,6 +331,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 /**
  * @class
  * @name LimberGridView
+ * @param {options} options
  */
 function LimberGridView(options) {
 	this.initializeStore();

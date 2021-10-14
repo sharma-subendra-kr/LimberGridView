@@ -1,0 +1,67 @@
+{
+  "plugins": ["plugins/markdown"],
+  "recurseDepth": 0,
+  "source": {
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_",
+    "include": ["src/index.js"],
+    "exclude": ["node_modules"]
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": false
+    }
+  },
+  "opts": {
+    "template": "node_modules/docdash",
+    "encoding": "utf8",
+    "destination": "./jsdoc/"
+  },
+  "docdash": {
+    "static": [true],
+    "sort": [false],
+    "sectionOrder": [
+      "Classes",
+      "Modules",
+      "Externals",
+      "Events",
+      "Namespaces",
+      "Mixins",
+      "Tutorials",
+      "Interfaces"
+    ],
+    "disqus": "",
+    "openGraph": {
+      "title": "",
+      "type": "website",
+      "image": "",
+      "site_name": "",
+      "url": ""
+    },
+    "meta": {
+      "title": "",
+      "description": "",
+      "keyword": ""
+    },
+    "search": [true],
+    "commonNav": [false],
+    "collapse": [true],
+    "wrap": [true],
+    "typedefs": [true],
+    "navLevel": [1],
+    "private": [true],
+    "removeQuotes": ["none"],
+    "scripts": [],
+    "menu": {},
+    "scopeInOutputPath": [true],
+    "nameInOutputPath": [true],
+    "versionInOutputPath": [true]
+  }
+}
