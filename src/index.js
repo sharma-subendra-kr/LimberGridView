@@ -106,80 +106,80 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 /*
 
-	const options = {
-		el : "#",																																	// id of the parent element with #
-		editable : true, 																													// true/false (optional default true)
-		enableInteractiveAddAndCut : true,																				// true/false (optional default true)
-		enableTouchInteraction : true,																						// true/false (optional default true)
-		autoArrange : true,																												// true/false (compulsory if x and y not present else optional)
-		reRenderOnResize : true, 																									// true/false (optional default true)
-		isMobileCheck: function
-		pseudoElementContainer: string or element
-		itemMouseDownMoveCheck: function 																					// x clicked/touched, y clicked/touched, item, index, event.target, which
-		itemMouseDownResizeCheck: function 																				// x clicked/touched, y clicked/touched, item, index, event.target, which
-	
-		getArrangeTime: function 																									// returns the total arrange time
+  const options = {
+    el : "#",                                                                  // id of the parent element with #
+    editable : true,                                                           // true/false (optional default true)
+    enableInteractiveAddAndCut : true,                                        // true/false (optional default true)
+    enableTouchInteraction : true,                                            // true/false (optional default true)
+    autoArrange : true,                                                        // true/false (compulsory if x and y not present else optional)
+    reRenderOnResize : true,                                                   // true/false (optional default true)
+    isMobileCheck: function
+    pseudoElementContainer: string or element
+    itemMouseDownMoveCheck: function                                           // x clicked/touched, y clicked/touched, item, index, event.target, which
+    itemMouseDownResizeCheck: function                                         // x clicked/touched, y clicked/touched, item, index, event.target, which
+  
+    getArrangeTime: function                                                   // returns the total arrange time
 
-		gridData : {
-			WIDTH : 1920,																														// width of limberGridView
-			HEIGHT : 1080, 																													// height of limberGridView
-			MARGIN : 8, 																														// margin for items
-			MIN_HEIGHT_AND_WIDTH: 150 																							// min height and width of items
-		},
-		positionData: [																														// position Data
-			{x : <value>, y : <value>, width : <value>, height : <value>},
-			{x : <value>, y : <value>, width : <value>, height : <value>},
+    gridData : {
+      WIDTH : 1920,                                                            // width of limberGridView
+      HEIGHT : 1080,                                                           // height of limberGridView
+      MARGIN : 8,                                                             // margin for items
+      MIN_HEIGHT_AND_WIDTH: 150                                               // min height and width of items
+    },
+    positionData: [                                                            // position Data
+      {x : <value>, y : <value>, width : <value>, height : <value>},
+      {x : <value>, y : <value>, width : <value>, height : <value>},
 
-			OR (if autoArrange set to true)
+      OR (if autoArrange set to true)
 
-			{width : <value>, height : <value>},
-			{width : <value>, height : <value>},
-			...,
-			...,
-			...
-		],
-		callbacks : {
-			renderComplete : function(){}, 																					// callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
-			renderContent : function(index, width, height, type){},									// callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
-			addComplete : function(index){}
-			removeComplete: function(index){}
-			moveComplete: function(index, toX, toY, arrangedIndices) {}
-			resizeComplete: function(index, width, height, arrangedIndices){}
-			cutSpaceComplete: function() {}
-			renderPlugin: function (renderData, element) {}
-			removePlugin: function(element){}
+      {width : <value>, height : <value>},
+      {width : <value>, height : <value>},
+      ...,
+      ...,
+      ...
+    ],
+    callbacks : {
+      renderComplete : function(){},                                           // callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
+      renderContent : function(index, width, height, type){},                  // callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
+      addComplete : function(index){}
+      removeComplete: function(index){}
+      moveComplete: function(index, toX, toY, arrangedIndices) {}
+      resizeComplete: function(index, width, height, arrangedIndices){}
+      cutSpaceComplete: function() {}
+      renderPlugin: function (renderData, element) {}
+      removePlugin: function(element){}
 
-			onItemClickCallback : function(event){},																// click callback for item
-			getLogMessage: function(log){},																					// get log message for error, info, and warnings
-		},
-		publicConstants: {
-			mobileAspectRatio : <value>, 																						// aspect ratio of for mobile devices
+      onItemClickCallback : function(event){},                                // click callback for item
+      getLogMessage: function(log){},                                          // get log message for error, info, and warnings
+    },
+    publicConstants: {
+      mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
 
-			moveGuideRadius: number,
-			resizeSquareGuideLength: number
-			resizeSquareGuideBorderWidth: number
-			showBottomLeftResizeGuide: boolean
-			autoScrollDistance: number
-			autoScrollPoint: number
-			moveOrResizeHeightIncrements: number
-			autoScrollForMouse: boolean
+      moveGuideRadius: number,
+      resizeSquareGuideLength: number
+      resizeSquareGuideBorderWidth: number
+      showBottomLeftResizeGuide: boolean
+      autoScrollDistance: number
+      autoScrollPoint: number
+      moveOrResizeHeightIncrements: number
+      autoScrollForMouse: boolean
 
-			mouseDownTime: number
-			touchHoldTime: number
-			demoWaitTime: number
-			windowResizeWaitTime: number
-			autoScrollDelay: number
+      mouseDownTime: number
+      touchHoldTime: number
+      demoWaitTime: number
+      windowResizeWaitTime: number
+      autoScrollDelay: number
 
-			deskInteractionMode: "ADD"/"CUTSPACE"
+      deskInteractionMode: "ADD"/"CUTSPACE"
 
-			latchMovedItem: boolean
-			animateMovedItem: boolean
-			animateTime: number
+      latchMovedItem: boolean
+      animateMovedItem: boolean
+      animateTime: number
 
-			shrinkToFit: number
-		}
-	}
-	*/
+      shrinkToFit: number
+    }
+  }
+  */
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -188,29 +188,32 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 // ----------------------------------------------------------------------------------------- //
 
 /**
- * @typedef {object} options Parameters to constructor function
- * @property {(string|object)} el id of the container or element object
- * @property {boolean} editable If enabled user can resize, move, cut space, interactivelu add on the desk. Default is true.
- * @property {boolean} enableInteractiveAddAndCut If enabled user can add and cut space on the desk. Default is true.
- * @property {boolean} enableTouchInteraction If enabled user can use touch interaction on items on desk and on the desk. Default is true.
- * @property {boolean} autoArrange If enabled first render is autoarranged. Autoarrange also happens when a faulty data is received during window resize.
- * @property {boolean} reRenderOnResize If enabled rerender on window resize. Passing false is dangerous. Default is true.
- * @property {options~isMobileCheck} isMobileCheck A callback that returns a boolean which tells that the screen is or is not a mobile screen
- * @property {(string|object)} pseudoElementContainer The id of the element or the element where the pseudo elements are rendered that appear during moving.
- * @property {options~itemMouseDownMoveCheck} itemMouseDownMoveCheck A callback function to tell whether the mouse down event has occured at a desired location on the item for move event.
- * @property {options~itemMouseDownResizeCheck} itemMouseDownResizeCheck A callback function to tell whether the mouse down event has occured at a desired location on the item for resize event.
- * @property {gridData} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
- * @property {positionData} positionData input position data of items to render.
+ * @typedef {object} options Parameters to the constructor.
+ * @property {(string|object)} el Id of the container or element.
+ * @property {boolean} editable If enabled, users can resize, move, cut space, interactively add items on the desk. Default is true.
+ * @property {boolean} enableInteractiveAddAndCut If enabled, users can add and cut space on the desk. Default is true.
+ * @property {boolean} enableTouchInteraction If enabled, users can use touch to interact with items on the desk and with the desk also. Default is true.
+ * @property {boolean} autoArrange If enabled, the first render is auto arranged. Auto arrange also happens when invalid data is received.
+ * @property {boolean} reRenderOnResize If enabled, re-renders on window resize. Passing false is dangerous. Default is true.
+ * @property {options~isMobileCheck} isMobileCheck Callback that returns true when the screen size is of a mobile device. It receives boundingClientRect of LimberGridView as an argument.
+ * @property {(string|object)} pseudoElementContainer The id of the element or the element where the pseudo-elements are rendered that appear during moving.
+ * @property {options~itemMouseDownMoveCheck} itemMouseDownMoveCheck Callback function to check whether the mouse down event occurred at a desired area on the item for move event.
+ * @property {options~itemMouseDownResizeCheck} itemMouseDownResizeCheck Callback function to check whether the mouse down event occurred at a desired area on the item for resize event.
+ * @property {gridData} gridData Actual grid height and width. Output from function getGridData is scaled as per the dimensions defined here. Warning: Keys here to be set only once during the application development lifecycle. Changes, later on, are dangerous and will result in unwanted behavior. There is no actual need to change this. Custom values, if used, must be passed every time for instantiation.
+ * @property {positionData} positionData An array of Position data of items. It can be in two-point form i.e. top-left and bottom-right coordinate ({x1: 100, y1: 100, x2: 300, y2: 300}) or in dimension form with height and width ({x: 100, y: 100, width: 200, height: 200}). Position data are scaled during the runtime according to the screen size. Use the function getGridData to get position data to store for persistence which is scaled according to gridData.
  * @property {callbacks} callbacks An object containing various callbacks.
- * @property {publicConstants} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
+ * @property {publicConstants} publicConstants Constants that you can change or set at any point in time to get the desired behavior.
  */
 
 /**
+ * Callback that returns true when the screen size is of a mobile device. It receives boundingClientRect of LimberGridView as an argument.
  * @callback options~isMobileCheck
+ * @param {object} boundingClientRect boundingClientRect of LimberGridView.
  * @returns {boolean} Returns true if the screen matches media queries for a mobile screen.
  */
 
 /**
+ * Callback function to check whether the mouse down event occurred at a desired area on the item for move event.
  * @callback options~itemMouseDownMoveCheck
  * @param {Number} x point along the x axis axis where the mouse down happened on the item
  * @param {Number} y point along the y axis axis where the mouse down happened on the item
@@ -221,6 +224,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
+ * Callback function to check whether the mouse down event occurred at a desired area on the item for resize event.
  * @callback options~itemMouseDownResizeCheck
  * @param {Number} x point along the x axis axis where the mouse down happened on the item
  * @param {Number} y point along the y axis axis where the mouse down happened on the item
@@ -231,7 +235,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {options~gridData} gridData Warning: Keys here to be set only once during the application development lifecycle. Changes later on are dangerous and will result in unwanted behaviour. Output from function getGridData are scaled as per the dimensions defined here. If custom values are used then they should be passed everytime a new instance is created.
+ * @typedef {options~gridData} gridData Actual grid height and width. Output from function getGridData is scaled as per the dimensions defined here. Warning: Keys here to be set only once during the application development lifecycle. Changes, later on, are dangerous and will result in unwanted behavior. There is no actual need to change this. Custom values, if used, must be passed every time for instantiation.
  * @property {number} WIDTH Width of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1920.
  * @property {number} HEIGHT Height of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1080.
  * @property {number} MARGIN Margin or the items maintained by Arrange Engine. It is scaled internally as per the device size for visual consistency. Default value is 8.
@@ -239,7 +243,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {options~positionData[]} positionData Array of Position Data of the items on grid. These are scaled during the runtime. Use getGridData function to get data to store on the database which is scaled accorging to gridData.
+ * @typedef {options~positionData[]} positionData An array of Position data of items. It can be in two-point form i.e. top-left and bottom-right coordinate ({x1: 100, y1: 100, x2: 300, y2: 300}) or in dimension form with height and width ({x: 100, y: 100, width: 200, height: 200}). Position data are scaled during the runtime according to the screen size. Use the function getGridData to get position data to store for persistence which is scaled according to gridData.
  * @property {number} x positon of item along the x axis.
  * @property {number} y positon of item along the y axis.
  * @property {number} width Width of the item.
@@ -247,7 +251,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {options~callbacks} callbacks Object containing all the callbacks
+ * @typedef {options~callbacks} callbacks An object containing various callbacks.
  * @property {callbacks~renderComplete} callback Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
  * @property {callbacks~renderContent} callback Callback function called to get the contents to attach to the item as children.
  * @property {callbacks~addComplete} callback Callback function called when addition of an item is complete.
@@ -310,7 +314,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @typedef {options~publicConstants} publicConstants Constants which you can change or set at any point of time to get the desired behaviour.
+ * @typedef {options~publicConstants} publicConstants Constants that you can change or set at any point in time to get the desired behavior.
  * @property {number} mobileAspectRatio A nummber denoting the aspect ratio of each item for mobile view e.g. 5:4. Default value is 5/4.
  * @property {number} moveGuideRadius Radius of the Move guide radius a pseudo element at the top left corner of the item. You can remove move guide for a customized look and feel. Default value is 10.
  * @property {number} resizeSquareGuideLength Length of the square that is rendered at the bottom right corner of the item as a pseudo element. Default value is 10.
