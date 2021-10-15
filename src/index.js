@@ -267,12 +267,15 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback callbacks~renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * @callback callbacks~renderComplete
  * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
+ * @returns {undefined}
  */
 
 /**
- * @callback callbacks~renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
+ * Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
+ * @callback callbacks~renderContent
  * @param {number} index Index of the item.
  * @param {number} width Width of the item.
  * @param {number} height Height of the item.
@@ -281,19 +284,22 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback callbacks~addComplete The callback function, called after the creation of an item is complete.
+ * The callback function, called after the creation of an item is complete.
+ * @callback callbacks~addComplete
  * @param {number} index Index of the item added.
  * @returns {undefined}
  */
 
 /**
- * @callback callbacks~removeComplete The callback function, called when the removal of an item is complete.
+ * The callback function, called when the removal of an item is complete.
+ * @callback callbacks~removeComplete
  * @param {number} index Index of the item removed.
  * @returns {undefined}
  */
 
 /**
- * @callback callbacks~moveComplete The callback function, called when moving an item is complete.
+ * The callback function, called when moving an item is complete.
+ * @callback callbacks~moveComplete
  * @param {number} index Index of the item moved.
  * @param {number} toX The distance along the x-axis where the user placed the item.
  * @param {number} toY The distance along the y-axis where the user placed the item.
@@ -302,7 +308,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback callbacks~resizeComplete The callback function, called when resizing of an item is complete.
+ * The callback function, called when resizing of an item is complete.
+ * @callback callbacks~resizeComplete
  * @param {number} index Index of the item resized.
  * @param {number} width Width of the item resized.
  * @param {number} height The height of the item resized.
@@ -311,14 +318,16 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback callbacks~renderPlugin The callback function, called after renderContent and before renderComplete and addComplete. It is also called, after removeComplete for items whose indices are affected due to the removal of any item. In the function body of renderPlugin, you can render your React JSX using 'ReactDOM.render'.
+ * The callback function, called after renderContent and before renderComplete and addComplete. It is also called, after removeComplete for items whose indices are affected due to the removal of any item. In the function body of renderPlugin, you can render your React JSX using 'ReactDOM.render'.
+ * @callback callbacks~renderPlugin
  * @param {object} renderData Data received from renderContent callback.
  * @param {Element} element The instance of an element inside which the content is to be rendered.
  * @returns {undefined}
  */
 
 /**
- * @callback callbacks~removePlugin The callback function, called just before the item is removed from the DOM and before removeComplete. In the function body of removePlugin, necessary clean-up can be performed by frameworks like react (e.g. calling 'ReactDOM.unmountComponentAtNode').
+ * The callback function, called just before the item is removed from the DOM and before removeComplete. In the function body of removePlugin, necessary clean-up can be performed by frameworks like react (e.g. calling 'ReactDOM.unmountComponentAtNode').
+ * @callback callbacks~removePlugin
  * @param {Element} element The instance of an element which is going to be removed from the DOM.
  * @returns {undefined}
  */
