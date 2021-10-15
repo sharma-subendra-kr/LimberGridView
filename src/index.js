@@ -281,40 +281,46 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback callbacks~addComplete Callback function called when addition of an item is complete.
+ * @callback callbacks~addComplete The callback function, called after the creation of an item is complete.
  * @param {number} index Index of the item added.
+ * @returns {undefined}
  */
 
 /**
- * @callback callbacks~removeComplete Callback function called when removing of item is complete.
+ * @callback callbacks~removeComplete The callback function, called when the removal of an item is complete.
  * @param {number} index Index of the item removed.
+ * @returns {undefined}
  */
 
 /**
- * @callback callbacks~moveComplete Callback function called when moving of item is complete.
+ * @callback callbacks~moveComplete The callback function, called when moving an item is complete.
  * @param {number} index Index of the item moved.
- * @param {number} toX Position along the x axis where the item is moved.
- * @param {number} toY Position along the y axis where the item is moved.
- * @param {number[]} arrangedIndices Indices of the arranged items.
+ * @param {number} toX The distance along the x-axis where the user placed the item.
+ * @param {number} toY The distance along the y-axis where the user placed the item.
+ * @param {number[]} arrangedIndices An array of indices of the arranged items.
+ * @returns {undefined}
  */
 
 /**
- * @callback callbacks~resizeComplete Callback function called when resizing of item is complete.
- * @param {number} index Index of the resized item.
+ * @callback callbacks~resizeComplete The callback function, called when resizing of an item is complete.
+ * @param {number} index Index of the item resized.
  * @param {number} width Width of the item resized.
- * @param {number} height Height of the item resized.
- * @param {number[]} arrangedIndices Indices of the arranged items.
+ * @param {number} height The height of the item resized.
+ * @param {number[]} arrangedIndices An array of indices of the arranged items.
+ * @returns {undefined}
  */
 
 /**
- * @callback callbacks~renderPlugin Callback function called after renderContent and before renderComplete and addComplete. Also after removeComplete for items whose indices are affected due to removeal of any item. On this callback you can render React JSX.
+ * @callback callbacks~renderPlugin The callback function, called after renderContent and before renderComplete and addComplete. It is also called, after removeComplete for items whose indices are affected due to the removal of any item. In the function body of renderPlugin, you can render your React JSX using 'ReactDOM.render'.
  * @param {object} renderData Data received from renderContent callback.
- * @param {Element} element Element object of the item that is being rendered.
+ * @param {Element} element The instance of an element inside which the content is to be rendered.
+ * @returns {undefined}
  */
 
 /**
- * @callback callbacks~removePlugin Callback function called just before the item is removed from the DOM. Also before removeComplete. This is called so that necessary clean up can be performed by frameworks like react.
- * @param {Element} element Element which is going to be removed.
+ * @callback callbacks~removePlugin The callback function, called just before the item is removed from the DOM and before removeComplete. In the function body of removePlugin, necessary clean-up can be performed by frameworks like react (e.g. calling 'ReactDOM.unmountComponentAtNode').
+ * @param {Element} element The instance of an element which is going to be removed from the DOM.
+ * @returns {undefined}
  */
 
 /**
