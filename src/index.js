@@ -338,17 +338,21 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {number} moveGuideRadius The radius of the default move guide. Move guide is a pseudo-element at the top-left corner of every item. You can remove the move guide for a customized look and feel. The default value is 10.
  * @property {number} resizeSquareGuideLength The length of the square rendered at the bottom-right corner of every item as a pseudo-element. The default value is 10.
  * @property {number} resizeSquareGuideBorderWidth The width of the border of the square rendered at the bottom-right corner of the item as a pseudo-element. The default value is 3.
+ * @property {boolean} showBottomLeftResizeGuide When this flag is true, resize guide is activated on the bottom-left corner also. Enabling this flag will cause the default move guide to be disabled and custom move behavior has to be defined.
  * @property {number} autoScrollDistance The number by which the desk is scrolled automatically on resize events and move events when auto-scroll is enabled. Auto-scroll is enabled by default for touch events. The default value is 50.
  * @property {number} autoScrollPoint The distance above the bottom or below the top at which scroll happens when auto-scroll is enabled. The default value is 50.
  * @property {number} moveOrResizeHeightIncrements A number by which the height of the grid view is increased while moving, resizing, adding, or cutting space when you reach the bottom when auto-scroll is enabled. The default value is 50.
+ * @property {boolean} autoScrollForMouse Setting this to true will enable auto-scroll for the move, resize, add, and cut-space events for mouse-based operations.
  * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 500ms.
  * @property {number} touchHoldTime The time to wait before initiating the move, resize, add, or cut-space routines after the tap-hold event. The default value is 300ms.
  * @property {number} demoWaitTime The time to wait before a demo for the resize or move event is initiated. Warning, a very low demo wait time will cause unwanted behavior as the algorithm needs some time for calculations. The default is 500ms.
- * @property {number} windowResizeTimeTime The time to wait before initiating window resize routines. The default value is 1000ms.
- * @property {string} deskInteraction The flag tells whether the user wants to add an item or cut space by mouse or touch interaction. Values can be ADD or CUTSPACE. The default value is ADD.
+ * @property {number} windowResizeWaitTime The time to wait before initiating window resize routines. The default value is 1000ms.
+ * @property {number} autoScrollDelay The time to wait before the next scroll during a move, resize, add, or cut-space operation.
+ * @property {string} deskInteractionMode The flag tells whether the user wants to add an item or cut space by mouse or touch interaction. Values can be ADD or CUTSPACE. The default value is ADD.
  * @property {boolean} latchMovedItem To enable or disable latch mode. The default value is true.
  * @property {boolean} animateMovedItem The flag tells whether to animate or not to animate the moved item. The default value is false.
- * @property {numer} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
+ * @property {number} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
+ * @property {number} shrinkToFit LimberGridView will shrink items by the percentage value specified while trying to arrange affected items.
  */
 
 /**
@@ -580,8 +584,9 @@ LimberGridView.prototype.initializeStore = function () {
 /**
  * @method
  * @name LimberGridView#renderItem
- * @description Call this function to forcefully re-render the contents of the item. Internally calls renderContent. Must be called inside resizeComplete
- * @param  {number} index Index of item to force re-render.
+ * @description Call this function to forcefully re-render the contents of the item.
+ * @param  {number} index Index of the item to force re-render.
+ * @returns {undefined}
  */
 LimberGridView.prototype.renderItem = function (index) {
 	_renderItem(this, index);
@@ -591,7 +596,7 @@ LimberGridView.prototype.renderItem = function (index) {
  * @method
  * @name LimberGridView#getGridData
  * @description Call this function to get positionData scaled according to gridData.
- * @return {object} Object containing gridData and positionData.
+ * @return {object} Returns an object containing gridData and positionData.
  */
 LimberGridView.prototype.getGridData = function () {
 	const privateConstants = getPrivateConstants(this);
@@ -622,8 +627,9 @@ LimberGridView.prototype.getGridData = function () {
 /**
  * @method
  * @name LimberGridView#setDeskInteractMode
- * @description Call this function to change DESK_INTERACTION_MODE during runtime.
- * @param {string} flag String "ADD" or "CUTSPACE"
+ * @description Call this function to change the publicConstant, deskInteractionMode during runtime.
+ * @param {string} flag A string with the value "ADD" or "CUTSPACE".
+ * @returns {undefined}
  */
 LimberGridView.prototype.setDeskInteractMode = function (flag) {
 	if (DESK_INTERACTION_MODE[flag]) {
@@ -634,8 +640,9 @@ LimberGridView.prototype.setDeskInteractMode = function (flag) {
 /**
  * @method
  * @name LimberGridView#setLatchMovedItem
- * @description Call this function to change LATCH_MOVED_ITEM during runtime.
- * @param {boolean} flag Boolean true or false. To latch or not to latch.
+ * @description Call this function to change the publicConstant, latchMovedItem during runtime.
+ * @param {boolean} flag A boolean flag.
+ * @returns {undefined}
  */
 LimberGridView.prototype.setLatchMovedItem = function (flag) {
 	if (typeof flag === "boolean") {
@@ -646,8 +653,9 @@ LimberGridView.prototype.setLatchMovedItem = function (flag) {
 /**
  * @method
  * @name LimberGridView#setShrinkToFit
- * @description Call this function to change SHRINK_TO_FIT during runtime.
- * @param {number} Value indicates up to a certain percentage an item can be shrinked. Specify 0 if no shrink is desired.
+ * @description Call this function to change the publicConstant, shrinkToFit during runtime.
+ * @param {number} value Specifies the percentage value up to which items might be shrunk while arranging. Specify 0 not to shrink.
+ * @returns {undefined}
  */
 LimberGridView.prototype.setShrinkToFit = function (value) {
 	if (typeof value === "number" && value <= 10) {
@@ -659,7 +667,8 @@ LimberGridView.prototype.setShrinkToFit = function (value) {
  * @method
  * @name LimberGridView#addItem
  * @description Call this function to add an item.
- * @param {object} item Object with optional properties width and height.
+ * @param {object} item An object with mandatory properties 'height' and 'width' and optional properties x and y.
+ * @returns {undefined}
  */
 LimberGridView.prototype.addItem = function (item) {
 	if (!item) {
@@ -676,8 +685,9 @@ LimberGridView.prototype.addItem = function (item) {
 /**
  * @method
  * @name LimberGridView#removeItem
- * @description Call this function to remove an item with the index.
- * @param  {number} index Index of the item to be removed.
+ * @description Call this function to remove an item.
+ * @param  {number} index The index of the item to be removed.
+ * @returns {undefined}
  */
 LimberGridView.prototype.removeItem = function (index) {
 	if (Number.isInteger(parseInt(index))) {
@@ -688,8 +698,9 @@ LimberGridView.prototype.removeItem = function (index) {
 /**
  * @method
  * @name LimberGridView#setIsMobileCheck
- * @description Set isMobileCheck callback function during runtime
- * @param {isMobileCheck} f isMobileCheck callback to check if the screen is a mobile device screen.
+ * @description Call this function to set isMobileCheck callback during runtime.
+ * @param {isMobileCheck} func func is isMobileCheck callback to check if the screen is of a mobile device.
+ * @returns {undefined}
  */
 LimberGridView.prototype.setIsMobileCheck = function (f) {
 	this.options.isMobileCheck = f;
@@ -698,7 +709,8 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
 /**
  * @method
  * @name LimberGridView#undo
- * @description undo previous move or drag
+ * @description Undo the previous move or resize.
+ * @returns {undefined}
  */
 LimberGridView.prototype.undo = function () {
 	const pd = getUndoRedo(this).undo();
@@ -718,7 +730,8 @@ LimberGridView.prototype.undo = function () {
 /**
  * @method
  * @name LimberGridView#redo
- * @description redo move or drag
+ * @description Redo the next move or resize.
+ * @returns {undefined}
  */
 LimberGridView.prototype.redo = function () {
 	const pd = getUndoRedo(this).redo();
@@ -738,7 +751,8 @@ LimberGridView.prototype.redo = function () {
 /**
  * @method
  * @name LimberGridView#isUndoAvailable
- * @description returns true if undo is possible
+ * @description Returns true when undo operation is possible.
+ * @returns {boolean}
  */
 LimberGridView.prototype.isUndoAvailable = function () {
 	return getUndoRedo(this).isUndoAvailable();
@@ -747,7 +761,8 @@ LimberGridView.prototype.isUndoAvailable = function () {
 /**
  * @method
  * @name LimberGridView#isRedoAvailable
- * @description returns true if redo is possible
+ * @description Returns true when a redo operation is possible.
+ * @returns {boolean}
  */
 LimberGridView.prototype.isRedoAvailable = function () {
 	return getUndoRedo(this).isRedoAvailable();
@@ -756,7 +771,9 @@ LimberGridView.prototype.isRedoAvailable = function () {
 /**
  * @method
  * @name LimberGridView#setAutoScrollDelay
- * @description set auto scroll delay for resize, move, add, cut in milliseconds
+ * @description Call this function to change the publicConstant, autoScrollDelay during runtime.
+ * @param {number} value Delay in milliseconds.
+ * @returns {undefined}
  */
 LimberGridView.prototype.setAutoScrollDelay = function (value) {
 	if (typeof value === "number") {
@@ -767,7 +784,9 @@ LimberGridView.prototype.setAutoScrollDelay = function (value) {
 /**
  * @method
  * @name LimberGridView#setAutoScrollForMouse
- * @description set auto scroll for resize, move, add, cut
+ * @description Call this function to change the publicConstant, autoScrollForMouse during runtime.
+ * @param {boolean} flag A boolean flag.
+ * @returns {undefined}
  */
 LimberGridView.prototype.setAutoScrollForMouse = function (value) {
 	if (typeof value === "boolean") {
@@ -778,7 +797,8 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
 /**
  * @method
  * @name LimberGridView#destroy
- * @description free event listeners and all other resources
+ * @description Free event listeners and all other resources like DOM elements.
+ * @returns {undefined}
  */
 LimberGridView.prototype.destroy = function (value) {
 	unInitializeEvents.call(this);
