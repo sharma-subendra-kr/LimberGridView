@@ -215,51 +215,55 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 /**
  * Callback function to check whether the mouse down event occurred at a desired area on the item for move event.
  * @callback options~itemMouseDownMoveCheck
- * @param {Number} x point along the x axis axis where the mouse down happened on the item
- * @param {Number} y point along the y axis axis where the mouse down happened on the item
- * @param {object} positionData object for the item.
- * @param {number} index Index of the item in positionData array.
- * @param {object} target target element where the mouse down happened.
- * @returns {boolean} Returns true if the mouse down happened at a desired location on the item for move event.
+ * @param {Number} x The distance along the x-axis of the item, the mouse-down event was triggered.
+ * @param {Number} y The distance along the y-axis of the item, the mouse-down event was triggered.
+ * @param {object} positionData Position data of the item.
+ * @param {number} index Index of the item in the position data array.
+ * @param {object} target Target element where mouse down event was triggered.
+ * @returns {boolean} Returns true if the mouse down event got triggered at the desired area on the item for move event.
  */
 
 /**
  * Callback function to check whether the mouse down event occurred at a desired area on the item for resize event.
  * @callback options~itemMouseDownResizeCheck
- * @param {Number} x point along the x axis axis where the mouse down happened on the item
- * @param {Number} y point along the y axis axis where the mouse down happened on the item
- * @param {object} positionData object for the item.
+ * @param {Number} x The distance along the x-axis of the item, the mouse-down event was triggered.
+ * @param {Number} y The distance along the y-axis of the item, the mouse-down event was triggered.
+ * @param {object} positionData Position data of the item.
  * @param {number} index Index of the item in positionData array.
- * @param {object} target target element where the mouse down happened.
- * @returns {boolean} Returns true if the mouse down happened at a desired location on the item for resize event.
+ * @param {object} target Target element where mouse down event was triggered.
+ * @returns {boolean} Returns true if the mouse down event got triggered at the desired area on the item for resize event.
  */
 
 /**
  * @typedef {options~gridData} gridData Actual grid height and width. Output from function getGridData is scaled as per the dimensions defined here. Warning: Keys here to be set only once during the application development lifecycle. Changes, later on, are dangerous and will result in unwanted behavior. There is no actual need to change this. Custom values, if used, must be passed every time for instantiation.
- * @property {number} WIDTH Width of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1920.
- * @property {number} HEIGHT Height of the Grid. It is scaled internally as per the device size for visual consistency. Default value is 1080.
- * @property {number} MARGIN Margin or the items maintained by Arrange Engine. It is scaled internally as per the device size for visual consistency. Default value is 8.
- * @property {number} MIN_HEIGHT_AND_WIDTH Min height and width of the items. It is scaled internally as per the device size for visual consistency. A lower number affects the performance of the arrange algorithm. Default value is 150.
+ * @property {number} WIDTH Width of the Grid. It is scaled internally as per the device screen size for visual consistency. The default value is 1920.
+ * @property {number} Height of the Grid. It is scaled internally as per the device screen size for visual consistency. The default value is 1080.
+ * @property {number} MARGIN The margin for the items. It is scaled internally as per the device screen size for visual consistency. The default value is 8.
+ * @property {number} MIN_HEIGHT_AND_WIDTH The minimum value for height and width for any item. It is scaled internally as per the device screen size for visual consistency. The default value is 150.
  */
 
 /**
  * @typedef {options~positionData[]} positionData An array of Position data of items. It can be in two-point form i.e. top-left and bottom-right coordinate ({x1: 100, y1: 100, x2: 300, y2: 300}) or in dimension form with height and width ({x: 100, y: 100, width: 200, height: 200}). Position data are scaled during the runtime according to the screen size. Use the function getGridData to get position data to store for persistence which is scaled according to gridData.
- * @property {number} x positon of item along the x axis.
- * @property {number} y positon of item along the y axis.
+ * @property {number} x Distance of item along the x-axis.
+ * @property {number} y Distance of item along the y-axis.
  * @property {number} width Width of the item.
  * @property {number} height Height of the item.
+ * @property {number} x1 Distance of item along the x-axis for the top-left corner.
+ * @property {number} y1 Distance of item along the y-axis for the top-left corner.
+ * @property {number} x2 Distance of item along the x-axis for the bottom-right corner.
+ * @property {number} x2 Distance of item along the y-axis for the bottom-right corner.
  */
 
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
- * @property {callbacks~renderComplete} callback Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
- * @property {callbacks~renderContent} callback Callback function called to get the contents to attach to the item as children.
- * @property {callbacks~addComplete} callback Callback function called when addition of an item is complete.
- * @property {callbacks~removeComplete} callback Callback function called when removing of item is complete.
- * @property {callbacks~moveComplete} callback Callback function called when moving of item is complete.
- * @property {callbacks~resizeComplete} callback Callback function called when resizing of item is complete.
- * @property {callbacks~renderPlugin} callback Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
- * @property {callbacks~removePlugin} callback Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~renderComplete} renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
+ * @property {callbacks~renderContent} renderContent Callback function called to get the contents to attach to the item as children.
+ * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
+ * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
+ * @property {callbacks~moveComplete} moveComplete Callback function called when moving of item is complete.
+ * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
+ * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
+ * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
  */
 
 /**
