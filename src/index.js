@@ -256,8 +256,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
- * @property {callbacks~renderComplete} renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
- * @property {callbacks~renderContent} renderContent Callback function called to get the contents to attach to the item as children.
+ * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * @property {callbacks~renderContent} renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
  * @property {callbacks~moveComplete} moveComplete Callback function called when moving of item is complete.
@@ -267,17 +267,17 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
- * @callback callbacks~renderComplete Callback function called after rendering of all the items or a single item are complete. This is not called after re-rendering of items whose indices are affected due to removal of any item.
- * @param {(undefined|number)} index Index is the index of the item rendered or undefined if the item was rendered by the constructor or on resize.
+ * @callback callbacks~renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
  */
 
 /**
- * @callback callbacks~renderContent Callback function called to get the contents to attach to the item as children. This also called for all the items whose indices are affected due to removal of any item. In such a case it is called after removeComplete.
+ * @callback callbacks~renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @param {number} index Index of the item.
  * @param {number} width Width of the item.
  * @param {number} height Height of the item.
- * @param {(undefined|string)} type Type is undefined for all occurances except when item is freshly added.
- * @returns {(string|Element|object)} String representing DOM elements. Instance of an Element. Any object.
+ * @param {(undefined|string)} type Type is undefined for all occurrences. An exception to this case is when an item is created by the user using add APIs. In this case, the type is a string, and the value is 'isAdd'.
+ * @returns {(string|Element|object)} Should return a string representing DOM element or an instance of DOM element or an object. When an object is returned, renderPlugin gets triggered.
  */
 
 /**
