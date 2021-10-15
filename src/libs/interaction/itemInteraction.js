@@ -253,7 +253,7 @@ export const moveItem = async function (index, toX, toY) {
 
 	positionArranged(this, arranged);
 
-	if (callbacks.resizeComplete) {
+	if (callbacks.moveComplete) {
 		callbacks.moveComplete(index, toX, toY, Object.keys(arranged));
 	}
 

@@ -354,6 +354,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 /**
  * @class
  * @name LimberGridView
+ * @description Constructor
  * @param {options} options
  */
 function LimberGridView(options) {
