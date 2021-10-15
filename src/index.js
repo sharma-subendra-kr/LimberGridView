@@ -345,10 +345,10 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {number} touchHoldTime The time to wait before initiating the move, resize, add, or cut-space routines after the tap-hold event. The default value is 300ms.
  * @property {number} demoWaitTime The time to wait before a demo for the resize or move event is initiated. Warning, a very low demo wait time will cause unwanted behavior as the algorithm needs some time for calculations. The default is 500ms.
  * @property {number} windowResizeTimeTime The time to wait before initiating window resize routines. The default value is 1000ms.
- * @property {string} deskInteraction Flag which tells whether the user wants to add an item or cut space by mouse or touch interaction. Default value is ADD.
- * @property {boolean} latchMovedItem To latch or not to latch on to other items when overlapped while dragging to move an item. Default value is true.
- * @property {boolean} animateMovedItem Wether to animate or not to animate the moved item. Default value is false.
- * @property {numer} animateTime Time to wait before re-activating animate to the moved item. Re-activating means the moved item should animate if other items are moved resized later. This flag might have some more features later on. Default value is 250ms.
+ * @property {string} deskInteraction The flag tells whether the user wants to add an item or cut space by mouse or touch interaction. Values can be ADD or CUTSPACE. The default value is ADD.
+ * @property {boolean} latchMovedItem To enable or disable latch mode. The default value is true.
+ * @property {boolean} animateMovedItem The flag tells whether to animate or not to animate the moved item. The default value is false.
+ * @property {numer} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
  */
 
 /**
