@@ -349,18 +349,28 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	};
 };
 
-export const latchTopLeftToCorner = (context, toX, toY, index) => {
+export const latchTopLeftToCorner = (
+	context,
+	toX,
+	toY,
+	index,
+	latchEdgeThreshold
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const LATCH_EDGE_THRESHOLD =
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
 	let inside;
-	let tr, bl, trd, bld;
+	let tr, bl, br, trd, bld, trdEdge, bldEdge;
 	let minTrd = Number.MAX_SAFE_INTEGER;
 	let minBld = Number.MAX_SAFE_INTEGER;
+	let minTrdEgde = Number.MAX_SAFE_INTEGER;
+	let minBldEgde = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
 	let isToAdjPresent = false;
 	let toAdjIndex;
@@ -383,6 +393,8 @@ export const latchTopLeftToCorner = (context, toX, toY, index) => {
 
 		trd = getDistanceBetnPts(tr, pt);
 		bld = getDistanceBetnPts(bl, pt);
+		trdEdge = pt.x - tr.x;
+		bldEdge = pt.y - bl.y;
 
 		if (trd < minTrd && trd < minBld && pt.x >= tr.x && trd <= THRESHOLD) {
 			if (
@@ -393,6 +405,27 @@ export const latchTopLeftToCorner = (context, toX, toY, index) => {
 				toYAdj = tr.y + privateConstants.MARGIN;
 
 				minTrd = trd;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
+			}
+		}
+
+		if (
+			trdEdge < minTrdEdge &&
+			trdEdge < minBldEdge &&
+			pt.y >= tr.y &&
+			pt.y <= br.y &&
+			trdEdge <= LATCH_EDGE_THRESHOLD
+		) {
+			if (
+				tr.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH - privateConstants.MARGIN
+			) {
+				toXAdj = tr.x + privateConstants.MARGIN;
+				toYAdj = pt.y + privateConstants.MARGIN;
+
+				minTrdEdge = trdEdge;
 				isToAdjPresent = true;
 				toAdjIndex = i;
 				toAdjDirection = "right";
@@ -413,21 +446,52 @@ export const latchTopLeftToCorner = (context, toX, toY, index) => {
 				toAdjDirection = "bottom";
 			}
 		}
+
+		if (
+			bldEdge < minBldEdge &&
+			bldEdge < minTrdEdge &&
+			pt.x >= bl.x &&
+			pt.x <= br.x &&
+			bldEdge <= LATCH_EDGE_THRESHOLD
+		) {
+			if (
+				pt.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH - privateConstants.MARGIN
+			) {
+				toXAdj = pt.x + privateConstants.MARGIN;
+				toYAdj = bl.y + privateConstants.MARGIN;
+
+				minBldEdge = bldEdge;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
+			}
+		}
 	}
 };
 
-export const latchTopRightToCorner = (context, toX, toY, index) => {
+export const latchTopRightToCorner = (
+	context,
+	toX,
+	toY,
+	index,
+	latchEdgeThreshold
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const LATCH_EDGE_THRESHOLD =
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY };
 	let inside;
-	let tl, br, tld, brd;
+	let tl, br, bl, tld, brd, tldEdge, brdEdge;
 	let minTld = Number.MAX_SAFE_INTEGER;
 	let minBrd = Number.MAX_SAFE_INTEGER;
+	let minTldEdge = Number.MAX_SAFE_INTEGER;
+	let minBrdEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
 	let isToAdjPresent = false;
 	let toAdjIndex;
@@ -483,18 +547,28 @@ export const latchTopRightToCorner = (context, toX, toY, index) => {
 	}
 };
 
-export const latchBottomLeftToCorner = (context, toX, toY, index) => {
+export const latchBottomLeftToCorner = (
+	context,
+	toX,
+	toY,
+	index,
+	latchEdgeThreshold
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const LATCH_EDGE_THRESHOLD =
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY + pd[index].height };
 	let inside;
-	let tl, br, tld, brd;
+	let tl, br, tr, tld, brd, tldEdge, brdEdge;
 	let minTld = Number.MAX_SAFE_INTEGER;
 	let minBrd = Number.MAX_SAFE_INTEGER;
+	let minTldEdge = Number.MAX_SAFE_INTEGER;
+	let minBrdEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
 	let isToAdjPresent = false;
 	let toAdjIndex;
@@ -554,18 +628,28 @@ export const latchBottomLeftToCorner = (context, toX, toY, index) => {
 	}
 };
 
-export const latchBottomRightToCorner = (context, toX, toY, index) => {
+export const latchBottomRightToCorner = (
+	context,
+	toX,
+	toY,
+	index,
+	latchEdgeThreshold
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const LATCH_EDGE_THRESHOLD =
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY + pd[index].height };
 	let inside;
-	let tr, bl, trd, bld;
+	let tr, bl, tl, trd, bld, trdEdge, bldEdge;
 	let minTrd = Number.MAX_SAFE_INTEGER;
 	let minBld = Number.MAX_SAFE_INTEGER;
+	let minTrdEdge = Number.MAX_SAFE_INTEGER;
+	let minBldEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj;
 	let isToAdjPresent = false;
 	let toAdjIndex;
