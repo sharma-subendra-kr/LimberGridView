@@ -254,8 +254,8 @@ export const latchTopRightToCorner = (
 			brdEdge < minTldEdge &&
 			brdEdge < minBrdEdge &&
 			pt.y >= br.y &&
-			pt.x >= br.x &&
-			pt.x <= bl.x &&
+			pt.x <= br.x &&
+			pt.x >= bl.x &&
 			brd <= LATCH_EDGE_THRESHOLD
 		) {
 			if (pt.x - pd[index].width >= privateConstants.MARGIN) {
