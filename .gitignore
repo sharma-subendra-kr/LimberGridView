@@ -22,3 +22,5 @@
 node_modules*
 public/assets/
 LimberGridView.sublime-workspace
+jsdoc
+jsdocToMarkdown

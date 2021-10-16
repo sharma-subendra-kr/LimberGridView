@@ -1,6 +1,6 @@
 {
   "name": "@sharma-subendra-kr/limber-grid-view",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "description": "LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,9 @@
     "lint:fix": "prettier --write **/*.{js,css,scss,json} && eslint --fix \"**/*.js\"",
     "prettier:fix": "prettier --write **/*.{js,css,scss,json}",
     "eslint:fix": "eslint --fix \"**/*.js\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "gen-doc": "rm -r ./jsdoc/* && jsdoc -c jsDocConf.json",
+    "gen-markdown-doc": "jsdoc2md ./src/index.js > ./jsdocToMarkdown/docs.md"
   },
   "repository": {
     "type": "git",
@@ -33,6 +35,7 @@
     "babel-loader": "^8.2.2",
     "clean-terminal-webpack-plugin": "^3.0.0",
     "css-loader": "^2.1.1",
+    "docdash": "^1.2.0",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^14.1.1",

@@ -443,6 +443,10 @@ export const onItemTouchMove = function (event) {
 };
 
 export const onItemMouseUp = async function (event) {
+	if (event.button !== 0) {
+		return;
+	}
+
 	const iiv = getItemInteractionVars(this);
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
