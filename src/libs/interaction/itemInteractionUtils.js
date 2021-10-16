@@ -379,6 +379,7 @@ export const latchTopLeftToCorner = (context, toX, toY, index) => {
 
 		tr = { x: pd[i].mX2, y: pd[i].mY1 };
 		bl = { x: pd[i].mX1, y: pd[i].mY2 };
+		br = { x: pd[i].mX2, y: pd[i].mY2 };
 
 		trd = getDistanceBetnPts(tr, pt);
 		bld = getDistanceBetnPts(bl, pt);
@@ -445,6 +446,7 @@ export const latchTopRightToCorner = (context, toX, toY, index) => {
 
 		tl = { x: pd[i].mX1, y: pd[i].mY1 };
 		br = { x: pd[i].mX2, y: pd[i].mY2 };
+		bl = { x: pd[i].mX1, y: pd[i].mY2 };
 
 		tld = getDistanceBetnPts(tl, pt);
 		brd = getDistanceBetnPts(br, pt);
@@ -511,6 +513,7 @@ export const latchBottomLeftToCorner = (context, toX, toY, index) => {
 
 		tl = { x: pd[i].mX1, y: pd[i].mY1 };
 		br = { x: pd[i].mX2, y: pd[i].mY2 };
+		tr = { x: pd[i].mX2, y: pd[i].mY1 };
 
 		tld = getDistanceBetnPts(tl, pt);
 		brd = getDistanceBetnPts(br, pt);
@@ -581,6 +584,7 @@ export const latchBottomRightToCorner = (context, toX, toY, index) => {
 
 		tr = { x: pd[i].mX2, y: pd[i].mY1 };
 		bl = { x: pd[i].mX1, y: pd[i].mY2 };
+		tl = { x: pd[i].mX1, y: pd[i].mY1 };
 
 		trd = getDistanceBetnPts(tr, pt);
 		bld = getDistanceBetnPts(bl, pt);
