@@ -239,7 +239,6 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	// const THRESHOLD = privateConstants.WIDTH / 4;
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 
 	const len = pd.length;
@@ -260,6 +259,7 @@ export const movePointAdjust = (context, toX, toY, index) => {
 			toX = pd[inside].x;
 			toY = pd[inside].y;
 			// break;
+			console.log(pd[inside]);
 		}
 
 		if (i === index) {
@@ -347,6 +347,284 @@ export const movePointAdjust = (context, toX, toY, index) => {
 		toAdjIndex,
 		toAdjDirection,
 	};
+};
+
+export const latchTopLeftToCorner = (context, toX, toY, index) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
+	const len = pd.length;
+	const pt = { x: toX, y: toY };
+	let inside;
+	let tr, bl, trd, bld;
+	let minTrd = Number.MAX_SAFE_INTEGER;
+	let minBld = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+
+	for (let i = 0; i < len; i++) {
+		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+			inside = i;
+			toX = pd[inside].x;
+			toY = pd[inside].y;
+		}
+
+		if (i === index) {
+			continue;
+		}
+
+		tr = { x: pd[i].mX2, y: pd[i].mY1 };
+		bl = { x: pd[i].mX1, y: pd[i].mY2 };
+
+		trd = getDistanceBetnPts(tr, pt);
+		bld = getDistanceBetnPts(bl, pt);
+
+		if (trd < minTrd && trd < minBld && pt.x > tr.x && trd <= THRESHOLD) {
+			if (
+				tr.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH - privateConstants.MARGIN
+			) {
+				toXAdj = tr.x + privateConstants.MARGIN;
+				toYAdj = tr.y + privateConstants.MARGIN;
+
+				minTrd = trd;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
+			}
+		}
+
+		if (
+			bld < minBld &&
+			bld < minTrd &&
+			pt.y >= bl.y &&
+			pt.x >= bl.x &&
+			bld <= THRESHOLD
+		) {
+			if (
+				bl.x + privateConstants.MARGIN + pd[index].width <
+				privateConstants.WIDTH - privateConstants.MARGIN
+			) {
+				toXAdj = bl.x + privateConstants.MARGIN;
+				toYAdj = bl.y + privateConstants.MARGIN;
+
+				minBld = bld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
+			}
+		}
+	}
+};
+
+export const latchTopRightToCorner = (context, toX, toY, index) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
+	const len = pd.length;
+	const pt = { x: toX + pd[index].width, y: toY };
+	let inside;
+	let tl, br, tld, brd;
+	let minTld = Number.MAX_SAFE_INTEGER;
+	let minBrd = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+
+	for (let i = 0; i < len; i++) {
+		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+			inside = i;
+			toX = pd[inside].x;
+			toY = pd[inside].y;
+		}
+
+		if (i === index) {
+			continue;
+		}
+
+		tl = { x: pd[i].mX1, y: pd[i].mY1 };
+		br = { x: pd[i].mX2, y: pd[i].mY2 };
+
+		tld = getDistanceBetnPts(tl, pt);
+		brd = getDistanceBetnPts(br, pt);
+
+		if (tld < minTld && tld < minBrd && pt.x <= tl.x && tld <= THRESHOLD) {
+			if (
+				tl.x - privateConstants.MARGIN - pd[index].width >=
+				privateConstants.MARGIN
+			) {
+				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+				toYAdj = tl.y + privateConstants.MARGIN;
+
+				minTld = tld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
+			}
+		}
+
+		if (brd < minTld && brd < minBrd && pt.y >= br.y && brd <= THRESHOLD) {
+			if (
+				br.x - privateConstants.MARGIN - pd[index].width >=
+				privateConstants.MARGIN
+			) {
+				toXAdj = br.x - privateConstants.MARGIN - pd[index].width;
+				toYAdj = br.y + privateConstants.MARGIN;
+
+				minBrd = brd;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
+			}
+		}
+	}
+};
+
+export const latchBottomLeftToCorner = (context, toX, toY, index) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
+	const len = pd.length;
+	const pt = { x: toX, y: toY + pd[index].height };
+	let inside;
+	let tl, br, tld, brd;
+	let minTld = Number.MAX_SAFE_INTEGER;
+	let minBrd = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+
+	for (let i = 0; i < len; i++) {
+		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+			inside = i;
+			toX = pd[inside].x;
+			toY = pd[inside].y;
+		}
+
+		if (i === index) {
+			continue;
+		}
+
+		tl = { x: pd[i].mX1, y: pd[i].mY1 };
+		br = { x: pd[i].mX2, y: pd[i].mY2 };
+
+		tld = getDistanceBetnPts(tl, pt);
+		brd = getDistanceBetnPts(br, pt);
+
+		if (tld < minTld && tld < minBrd && pt.y <= tl.y && tld <= THRESHOLD) {
+			if (
+				tl.x - privateConstants.MARGIN - pd[index].width >=
+					privateConstants.MARGIN &&
+				tl.y - privateConstants.MARGIN - pd[index].height >=
+					privateConstants.MARGIN
+			) {
+				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+				toYAdj = tl.y + privateConstants.MARGIN;
+
+				minTld = tld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
+			}
+		}
+
+		if (brd < minTld && brd < minBrd && pt.x >= br.x && brd <= THRESHOLD) {
+			if (
+				br.x + privateConstants.MARGIN + pd[index].width <=
+					privateConstants.WIDTH - privateConstants.MARGIN &&
+				br.y - privateConstants.MARGIN - pd[index].height >=
+					privateConstants.MARGIN
+			) {
+				toXAdj = br.x + privateConstants.MARGIN;
+				toYAdj = br.y - privateConstants.MARGIN - pd[index].height;
+
+				minBrd = brd;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
+			}
+		}
+	}
+};
+
+export const latchBottomRightToCorner = (context, toX, toY, index) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
+	const len = pd.length;
+	const pt = { x: toX + pd[index].width, y: toY + pd[index].height };
+	let inside;
+	let tr, bl, trd, bld;
+	let minTrd = Number.MAX_SAFE_INTEGER;
+	let minBld = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let toAdjDirection;
+
+	for (let i = 0; i < len; i++) {
+		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+			inside = i;
+			toX = pd[inside].x;
+			toY = pd[inside].y;
+		}
+
+		if (i === index) {
+			continue;
+		}
+
+		tr = { x: pd[i].mX2, y: pd[i].mY1 };
+		bl = { x: pd[i].mX1, y: pd[i].mY2 };
+
+		trd = getDistanceBetnPts(tr, pt);
+		bld = getDistanceBetnPts(bl, pt);
+
+		if (trd < minTrd && trd < minBld && pt.y <= tr.y && trd <= THRESHOLD) {
+			if (
+				tr.y - privateConstants.MARGIN - pd[index].height >=
+					privateConstants.MARGIN &&
+				tr.x - privateConstants.MARGIN - pd[index].width >=
+					privateConstants.MARGIN
+			) {
+				toXAdj = tr.x - privateConstants.MARGIN - pd[index].width;
+				toYAdj = tr.y - privateConstants.MARGIN - pd[index].height;
+
+				minTrd = trd;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "right";
+			}
+		}
+
+		if (bld < minTrd && bld < minBld && pt.x <= bl.x && bld <= THRESHOLD) {
+			if (
+				bl.x - privateConstants.MARGIN - pd[index].width >=
+					privateConstants.MARGIN &&
+				bl.y - privateConstants.MARGIN - pd[index].height >=
+					privateConstants.MARGIN
+			) {
+				toXAdj = bl.x - privateConstants.MARGIN - pd[index].width;
+				toYAdj = bl.y - privateConstants.MARGIN - pd[index].height;
+
+				minBld = bld;
+				isToAdjPresent = true;
+				toAdjIndex = i;
+				toAdjDirection = "bottom";
+			}
+		}
+	}
 };
 
 export const resizeSizeAdjust = (
@@ -563,6 +841,10 @@ export const resizeSizeAdjust = (
 		latchPoint,
 	};
 };
+
+export const resizeBottomLeftAdjust = () => {};
+
+export const resizeBottomRightAdjust = () => {};
 
 export const positionArranged = (context, arranged) => {
 	const e = getElements(context);
