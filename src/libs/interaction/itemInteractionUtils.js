@@ -383,7 +383,7 @@ export const latchTopLeftToCorner = (context, toX, toY, index) => {
 		trd = getDistanceBetnPts(tr, pt);
 		bld = getDistanceBetnPts(bl, pt);
 
-		if (trd < minTrd && trd < minBld && pt.x > tr.x && trd <= THRESHOLD) {
+		if (trd < minTrd && trd < minBld && pt.x >= tr.x && trd <= THRESHOLD) {
 			if (
 				tr.x + privateConstants.MARGIN + pd[index].width <
 				privateConstants.WIDTH - privateConstants.MARGIN
@@ -398,13 +398,7 @@ export const latchTopLeftToCorner = (context, toX, toY, index) => {
 			}
 		}
 
-		if (
-			bld < minBld &&
-			bld < minTrd &&
-			pt.y >= bl.y &&
-			pt.x >= bl.x &&
-			bld <= THRESHOLD
-		) {
+		if (bld < minBld && bld < minTrd && pt.y >= bl.y && bld <= THRESHOLD) {
 			if (
 				bl.x + privateConstants.MARGIN + pd[index].width <
 				privateConstants.WIDTH - privateConstants.MARGIN
