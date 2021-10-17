@@ -34,7 +34,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 8;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
@@ -170,7 +170,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY };
@@ -303,7 +303,7 @@ export const latchBottomLeft = (
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY + pd[index].height };
@@ -447,7 +447,7 @@ export const latchBottomRight = (
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY + pd[index].height };

@@ -274,7 +274,7 @@ export const moveItemDemo = async function (index, toX, toY) {
 		};
 		setStatus(this, "moveDemo", moveDemo);
 
-		if (moveDemo?.overlappedItemIndex) {
+		if (moveDemo.overlappedItemIndex) {
 			if (moveDemo.overlappedItemIndex === index) {
 				if (!moveDemo.sameIndexOverlap) {
 					moveDemo.sameIndexOverlap = 0;
@@ -283,6 +283,8 @@ export const moveItemDemo = async function (index, toX, toY) {
 			} else {
 				moveDemo.sameIndexOverlap = 1;
 			}
+		} else {
+			moveDemo.sameIndexOverlap = 0;
 		}
 
 		if (
