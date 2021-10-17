@@ -48,12 +48,9 @@ export const latchTopLeftToCorner = (
 	let tr, bl, br, trd, bld, trdEdge, bldEdge;
 	let minTrd = Number.MAX_SAFE_INTEGER;
 	let minBld = Number.MAX_SAFE_INTEGER;
-	let minTrdEgde = Number.MAX_SAFE_INTEGER;
-	let minBldEgde = Number.MAX_SAFE_INTEGER;
-	let toXAdj, toYAdj;
-	let isToAdjPresent = false;
-	let toAdjIndex;
-	let toAdjDirection;
+	let minTrdEdge = Number.MAX_SAFE_INTEGER;
+	let minBldEdge = Number.MAX_SAFE_INTEGER;
+	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
@@ -84,9 +81,6 @@ export const latchTopLeftToCorner = (
 				toYAdj = tr.y + privateConstants.MARGIN;
 
 				minTrd = trd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -102,13 +96,10 @@ export const latchTopLeftToCorner = (
 				tr.x + privateConstants.MARGIN + pd[index].width <=
 				privateConstants.WIDTH - privateConstants.MARGIN
 			) {
-				toXAdj = tr.x + privateConstants.MARGIN;
-				toYAdj = pt.y;
+				toXAdjEdge = tr.x + privateConstants.MARGIN;
+				toYAdjEdge = pt.y;
 
 				minTrdEdge = trdEdge;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -121,9 +112,6 @@ export const latchTopLeftToCorner = (
 				toYAdj = bl.y + privateConstants.MARGIN;
 
 				minBld = bld;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
 			}
 		}
 
@@ -139,16 +127,27 @@ export const latchTopLeftToCorner = (
 				pt.x + pd[index].width <
 				privateConstants.WIDTH - privateConstants.MARGIN
 			) {
-				toXAdj = pt.x;
-				toYAdj = bl.y + privateConstants.MARGIN;
+				toXAdjEdge = pt.x;
+				toYAdjEdge = bl.y + privateConstants.MARGIN;
 
 				minBldEdge = bldEdge;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
 			}
 		}
 	}
+
+	return {
+		overlappedItemIndex: inside,
+		pointLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdj, toY: toYAdj },
+			distance: Math.min(minTrd, minBld),
+		},
+		edgeLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			distance: Math.min(minTrdEdge, minBldEdge),
+		},
+	};
 };
 
 export const latchTopRightToCorner = (
@@ -172,10 +171,7 @@ export const latchTopRightToCorner = (
 	let minBrd = Number.MAX_SAFE_INTEGER;
 	let minTldEdge = Number.MAX_SAFE_INTEGER;
 	let minBrdEdge = Number.MAX_SAFE_INTEGER;
-	let toXAdj, toYAdj;
-	let isToAdjPresent = false;
-	let toAdjIndex;
-	let toAdjDirection;
+	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -200,9 +196,6 @@ export const latchTopRightToCorner = (
 				toYAdj = tl.y + privateConstants.MARGIN;
 
 				minTld = tld;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -218,13 +211,10 @@ export const latchTopRightToCorner = (
 				tl.x - privateConstants.MARGIN - pd[index].width >=
 				privateConstants.MARGIN
 			) {
-				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
-				toYAdj = pt.y;
+				toXAdjEdge = tl.x - privateConstants.MARGIN - pd[index].width;
+				toYAdjEdge = pt.y;
 
 				minTldEdge = tldEdge;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -237,9 +227,6 @@ export const latchTopRightToCorner = (
 				toYAdj = br.y + privateConstants.MARGIN;
 
 				minBrd = brd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
 			}
 		}
 
@@ -252,16 +239,26 @@ export const latchTopRightToCorner = (
 			brd <= LATCH_EDGE_THRESHOLD
 		) {
 			if (pt.x - pd[index].width >= privateConstants.MARGIN) {
-				toXAdj = pt.x - pd[index].width;
-				toYAdj = br.y + privateConstants.MARGIN;
+				toXAdjEdge = pt.x - pd[index].width;
+				toYAdjEdge = br.y + privateConstants.MARGIN;
 
-				minBrd = brd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
+				minBrdEdge = brdEdge;
 			}
 		}
 	}
+
+	return {
+		pointLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdj, toY: toYAdj },
+			distance: Math.min(minTld, minBrd),
+		},
+		edgeLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			distance: Math.min(minTldEdge, minBrdEdge),
+		},
+	};
 };
 
 export const latchBottomLeftToCorner = (
@@ -285,10 +282,7 @@ export const latchBottomLeftToCorner = (
 	let minBrd = Number.MAX_SAFE_INTEGER;
 	let minTldEdge = Number.MAX_SAFE_INTEGER;
 	let minBrdEdge = Number.MAX_SAFE_INTEGER;
-	let toXAdj, toYAdj;
-	let isToAdjPresent = false;
-	let toAdjIndex;
-	let toAdjDirection;
+	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -316,9 +310,6 @@ export const latchBottomLeftToCorner = (
 				toYAdj = tl.y - privateConstants.MARGIN - pd[index].height;
 
 				minTld = tld;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -336,13 +327,10 @@ export const latchBottomLeftToCorner = (
 				tl.y - privateConstants.MARGIN - pd[index].height >=
 					privateConstants.MARGIN
 			) {
-				toXAdj = pt.x;
-				toYAdj = tl.y - privateConstants.MARGIN - pd[index].height;
+				toXAdjEdge = pt.x;
+				toYAdjEdge = tl.y - privateConstants.MARGIN - pd[index].height;
 
-				minTldEdgeEdge = tldEdge;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
+				minTldEdge = tldEdge;
 			}
 		}
 
@@ -357,9 +345,6 @@ export const latchBottomLeftToCorner = (
 				toYAdj = br.y - privateConstants.MARGIN - pd[index].height;
 
 				minBrd = brd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
 			}
 		}
 
@@ -376,16 +361,26 @@ export const latchBottomLeftToCorner = (
 					privateConstants.WIDTH - privateConstants.MARGIN &&
 				pt.y - pd[index].height >= privateConstants.MARGIN
 			) {
-				toXAdj = br.x + privateConstants.MARGIN;
-				toYAdj = pt.y - pd[index].height;
+				toXAdjEdge = br.x + privateConstants.MARGIN;
+				toYAdjEdge = pt.y - pd[index].height;
 
-				minBrd = brd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
+				minBrdEdge = brdEdge;
 			}
 		}
 	}
+
+	return {
+		pointLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdj, toY: toYAdj },
+			distance: Math.min(minTld, minBrd),
+		},
+		edgeLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			distance: Math.min(minTldEdge, minBrdEdge),
+		},
+	};
 };
 
 export const latchBottomRightToCorner = (
@@ -409,10 +404,7 @@ export const latchBottomRightToCorner = (
 	let minBld = Number.MAX_SAFE_INTEGER;
 	let minTrdEdge = Number.MAX_SAFE_INTEGER;
 	let minBldEdge = Number.MAX_SAFE_INTEGER;
-	let toXAdj, toYAdj;
-	let isToAdjPresent = false;
-	let toAdjIndex;
-	let toAdjDirection;
+	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -437,9 +429,6 @@ export const latchBottomRightToCorner = (
 				toYAdj = tr.y - privateConstants.MARGIN - pd[index].height;
 
 				minTrd = trd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -456,13 +445,10 @@ export const latchBottomRightToCorner = (
 					privateConstants.MARGIN &&
 				pt.x - pd[index].width >= privateConstants.MARGIN
 			) {
-				toXAdj = pt.x - pd[index].width;
-				toYAdj = tr.y - privateConstants.MARGIN - pd[index].height;
+				toXAdjEdge = pt.x - pd[index].width;
+				toYAdjEdge = tr.y - privateConstants.MARGIN - pd[index].height;
 
 				minTrdEdge = trdEdge;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
 			}
 		}
 
@@ -477,9 +463,6 @@ export const latchBottomRightToCorner = (
 				toYAdj = bl.y - privateConstants.MARGIN - pd[index].height;
 
 				minBld = bld;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
 			}
 		}
 
@@ -496,14 +479,24 @@ export const latchBottomRightToCorner = (
 					privateConstants.MARGIN &&
 				pt.y - pd[index].height >= privateConstants.MARGIN
 			) {
-				toXAdj = bl.x - privateConstants.MARGIN - pd[index].width;
-				toYAdj = pt.y - pd[index].height;
+				toXAdjEdge = bl.x - privateConstants.MARGIN - pd[index].width;
+				toYAdjEdge = pt.y - pd[index].height;
 
 				minBldEdge = bldEdge;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
 			}
 		}
 	}
+
+	return {
+		pointLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdj, toY: toYAdj },
+			distance: Math.min(minTrd, minBld),
+		},
+		edgeLatch: {
+			to: { toX, toY },
+			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			distance: Math.min(minTrdEdge, minBldEdge),
+		},
+	};
 };
