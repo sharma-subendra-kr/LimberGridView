@@ -28,19 +28,13 @@ import { getPositionData } from "../../store/variables/essentials";
 import { getDistanceBetnPts } from "../geometry/geometry";
 import { isPointInsideOrTouchRectWithMargin } from "../utils/items";
 
-export const latchTopLeftToCorner = (
-	context,
-	toX,
-	toY,
-	index,
-	latchEdgeThreshold
-) => {
+export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
@@ -55,8 +49,8 @@ export const latchTopLeftToCorner = (
 	for (let i = 0; i < len; i++) {
 		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
 			inside = i;
-			toX = pd[inside].x;
-			toY = pd[inside].y;
+			// toX = pd[inside].x;
+			// toY = pd[inside].y;
 		}
 
 		if (i === index) {
@@ -137,7 +131,7 @@ export const latchTopLeftToCorner = (
 
 	return {
 		overlappedItemIndex: inside,
-		pointLatch: {
+		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTrd, minBld),
@@ -150,19 +144,13 @@ export const latchTopLeftToCorner = (
 	};
 };
 
-export const latchTopRightToCorner = (
-	context,
-	toX,
-	toY,
-	index,
-	latchEdgeThreshold
-) => {
+export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY };
@@ -248,7 +236,7 @@ export const latchTopRightToCorner = (
 	}
 
 	return {
-		pointLatch: {
+		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTld, minBrd),
@@ -261,7 +249,7 @@ export const latchTopRightToCorner = (
 	};
 };
 
-export const latchBottomLeftToCorner = (
+export const latchBottomLeft = (
 	context,
 	toX,
 	toY,
@@ -273,7 +261,7 @@ export const latchBottomLeftToCorner = (
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY + pd[index].height };
@@ -370,7 +358,7 @@ export const latchBottomLeftToCorner = (
 	}
 
 	return {
-		pointLatch: {
+		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTld, minBrd),
@@ -383,7 +371,7 @@ export const latchBottomLeftToCorner = (
 	};
 };
 
-export const latchBottomRightToCorner = (
+export const latchBottomRight = (
 	context,
 	toX,
 	toY,
@@ -395,7 +383,7 @@ export const latchBottomRightToCorner = (
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY + pd[index].height };
@@ -488,7 +476,7 @@ export const latchBottomRightToCorner = (
 	}
 
 	return {
-		pointLatch: {
+		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTrd, minBld),

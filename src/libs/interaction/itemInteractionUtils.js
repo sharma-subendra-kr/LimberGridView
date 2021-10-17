@@ -34,6 +34,12 @@ import {
 	doRectsOverlapWithMargin,
 	isPointInsideOrTouchRectWithMargin,
 } from "../utils/items";
+import {
+	latchTopLeft,
+	latchTopRight,
+	latchBottomLeft,
+	latchBottomRight,
+} from "./itemInteractionLatch";
 
 export const getResizeAffectedItems = (context, item, index) => {
 	const pd = getPositionData(context);
@@ -235,118 +241,153 @@ export const resetDemoUIChanges = (context) => {
 	}
 };
 
+// export const movePointAdjust = (context, toX, toY, index) => {
+// 	const pd = getPositionData(context);
+// 	const privateConstants = getPrivateConstants(context);
+
+// 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+
+// 	const len = pd.length;
+// 	const pt = { x: toX, y: toY };
+// 	let inside;
+// 	let tl, tr, bl, tld, trd, bld;
+// 	let ldistance = Number.MAX_SAFE_INTEGER;
+// 	let rdistance = Number.MAX_SAFE_INTEGER;
+// 	let bdistance = Number.MAX_SAFE_INTEGER;
+// 	let toXAdj, toYAdj;
+// 	let isToAdjPresent = false;
+// 	let toAdjIndex;
+// 	let toAdjDirection;
+
+// 	for (let i = 0; i < len; i++) {
+// 		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+// 			inside = i;
+// 			toX = pd[inside].x;
+// 			toY = pd[inside].y;
+// 			// break;
+// 			console.log(pd[inside]);
+// 		}
+
+// 		if (i === index) {
+// 			continue;
+// 		}
+
+// 		tl = { x: pd[i].mX1, y: pd[i].mY1 };
+// 		tr = { x: pd[i].mX2, y: pd[i].mY1 };
+// 		bl = { x: pd[i].mX1, y: pd[i].mY2 };
+
+// 		tld = getDistanceBetnPts(tl, pt);
+// 		trd = getDistanceBetnPts(tr, pt);
+// 		bld = getDistanceBetnPts(bl, pt);
+
+// 		if (
+// 			tld < ldistance &&
+// 			tld < rdistance &&
+// 			tld < bdistance &&
+// 			pt.x < tl.x &&
+// 			tld <= THRESHOLD
+// 		) {
+// 			if (
+// 				tl.x - privateConstants.MARGIN - pd[index].width >=
+// 				privateConstants.MARGIN
+// 			) {
+// 				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+// 				toYAdj = tl.y + privateConstants.MARGIN;
+
+// 				ldistance = tld;
+// 				isToAdjPresent = true;
+// 				toAdjIndex = i;
+// 				toAdjDirection = "left";
+// 			}
+// 		}
+
+// 		if (
+// 			trd < rdistance &&
+// 			trd < ldistance &&
+// 			trd < bdistance &&
+// 			pt.x > tr.x &&
+// 			trd <= THRESHOLD
+// 		) {
+// 			if (
+// 				tr.x + privateConstants.MARGIN + pd[index].width <
+// 				privateConstants.WIDTH
+// 			) {
+// 				toXAdj = tr.x + privateConstants.MARGIN;
+// 				toYAdj = tr.y + privateConstants.MARGIN;
+
+// 				rdistance = trd;
+// 				isToAdjPresent = true;
+// 				toAdjIndex = i;
+// 				toAdjDirection = "right";
+// 			}
+// 		}
+
+// 		if (
+// 			bld < bdistance &&
+// 			bld < ldistance &&
+// 			bld < rdistance &&
+// 			pt.y >= bl.y &&
+// 			pt.x >= bl.x &&
+// 			bld <= THRESHOLD
+// 		) {
+// 			if (
+// 				tl.x + privateConstants.MARGIN + pd[index].width <
+// 				privateConstants.WIDTH
+// 			) {
+// 				toXAdj = tl.x + privateConstants.MARGIN;
+// 				toYAdj = bl.y + privateConstants.MARGIN;
+
+// 				bdistance = bld;
+// 				isToAdjPresent = true;
+// 				toAdjIndex = i;
+// 				toAdjDirection = "bottom";
+// 			}
+// 		}
+// 	}
+
+// 	return {
+// 		to: { toX, toY },
+// 		toAdj: { toX: toXAdj, toY: toYAdj },
+// 		overlappedItemIndex: inside,
+// 		isToAdjPresent,
+// 		toAdjIndex,
+// 		toAdjDirection,
+// 	};
+// };
+
 export const movePointAdjust = (context, toX, toY, index) => {
-	const pd = getPositionData(context);
-	const privateConstants = getPrivateConstants(context);
+	const topLeftLatch = latchTopLeft(context, toX, toY, index);
+	const topRightLatch = latchTopRight(context, toX, toY, index);
+	const bottomLeftLatch = latchBottomLeft(context, toX, toY, index);
+	const bottomRightLatch = latchBottomRight(context, toX, toY, index);
 
-	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const latch = [
+		topLeftLatch,
+		topRightLatch,
+		bottomLeftLatch,
+		bottomRightLatch,
+	];
 
-	const len = pd.length;
-	const pt = { x: toX, y: toY };
-	let inside;
-	let tl, tr, bl, tld, trd, bld;
-	let ldistance = Number.MAX_SAFE_INTEGER;
-	let rdistance = Number.MAX_SAFE_INTEGER;
-	let bdistance = Number.MAX_SAFE_INTEGER;
-	let toXAdj, toYAdj;
-	let isToAdjPresent = false;
-	let toAdjIndex;
-	let toAdjDirection;
-
-	for (let i = 0; i < len; i++) {
-		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
-			inside = i;
-			toX = pd[inside].x;
-			toY = pd[inside].y;
-			// break;
-			console.log(pd[inside]);
+	let cornerLatch;
+	let edgeLatch;
+	for (const item of latch) {
+		if (!cornerLatch || item.cornerLatch.distance < cornerLatch.distance) {
+			cornerLatch = item.cornerLatch;
 		}
-
-		if (i === index) {
-			continue;
-		}
-
-		tl = { x: pd[i].mX1, y: pd[i].mY1 };
-		tr = { x: pd[i].mX2, y: pd[i].mY1 };
-		bl = { x: pd[i].mX1, y: pd[i].mY2 };
-
-		tld = getDistanceBetnPts(tl, pt);
-		trd = getDistanceBetnPts(tr, pt);
-		bld = getDistanceBetnPts(bl, pt);
-
-		if (
-			tld < ldistance &&
-			tld < rdistance &&
-			tld < bdistance &&
-			pt.x < tl.x &&
-			tld <= THRESHOLD
-		) {
-			if (
-				tl.x - privateConstants.MARGIN - pd[index].width >=
-				privateConstants.MARGIN
-			) {
-				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
-				toYAdj = tl.y + privateConstants.MARGIN;
-
-				ldistance = tld;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "left";
-			}
-		}
-
-		if (
-			trd < rdistance &&
-			trd < ldistance &&
-			trd < bdistance &&
-			pt.x > tr.x &&
-			trd <= THRESHOLD
-		) {
-			if (
-				tr.x + privateConstants.MARGIN + pd[index].width <
-				privateConstants.WIDTH
-			) {
-				toXAdj = tr.x + privateConstants.MARGIN;
-				toYAdj = tr.y + privateConstants.MARGIN;
-
-				rdistance = trd;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "right";
-			}
-		}
-
-		if (
-			bld < bdistance &&
-			bld < ldistance &&
-			bld < rdistance &&
-			pt.y >= bl.y &&
-			pt.x >= bl.x &&
-			bld <= THRESHOLD
-		) {
-			if (
-				tl.x + privateConstants.MARGIN + pd[index].width <
-				privateConstants.WIDTH
-			) {
-				toXAdj = tl.x + privateConstants.MARGIN;
-				toYAdj = bl.y + privateConstants.MARGIN;
-
-				bdistance = bld;
-				isToAdjPresent = true;
-				toAdjIndex = i;
-				toAdjDirection = "bottom";
-			}
+		if (!edgeLatch || item.edgeLatch.distance < edgeLatch.distance) {
+			edgeLatch = item.edgeLatch;
 		}
 	}
 
-	return {
-		to: { toX, toY },
-		toAdj: { toX: toXAdj, toY: toYAdj },
-		overlappedItemIndex: inside,
-		isToAdjPresent,
-		toAdjIndex,
-		toAdjDirection,
-	};
+	let optimalLatch;
+	if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
+		optimalLatch = edgeLatch;
+	} else {
+		optimalLatch = cornerLatch;
+	}
+	optimalLatch.overlappedItemIndex = topLeftLatch.overlappedItemIndex;
+
+	return optimalLatch;
 };
 
 export const resizeSizeAdjust = (

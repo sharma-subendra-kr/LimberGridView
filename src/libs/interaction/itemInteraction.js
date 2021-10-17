@@ -197,16 +197,9 @@ export const moveItem = async function (index, toX, toY) {
 		// change toX & toY to top left of the overlapping item
 
 		const moveDemo = getStatus(this, "moveDemo");
-		if (moveDemo?.latchingAdjacent) {
-			toX = moveDemo.adjustedPt.toAdj.toX;
-			toY = moveDemo.adjustedPt.toAdj.toY;
-		} else if (moveDemo) {
-			toX = moveDemo.adjustedPt.to.toX;
-			toY = moveDemo.adjustedPt.to.toY;
-		} else {
-			const adjustedPt = movePointAdjust(this, toX, toY, index);
-			toX = adjustedPt.to.toX;
-			toY = adjustedPt.to.toY;
+		if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
+			toX = moveDemo.toAdj.toX;
+			toY = moveDemo.toAdj.toY;
 		}
 	}
 
@@ -263,6 +256,7 @@ export const moveItem = async function (index, toX, toY) {
 };
 
 export const moveItemDemo = async function (index, toX, toY) {
+	debugger;
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
@@ -274,87 +268,58 @@ export const moveItemDemo = async function (index, toX, toY) {
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedPt = movePointAdjust(this, toX, toY, index);
 		let moveDemo = getStatus(this, "moveDemo");
-		// let adjustedPt;
-		if (
-			!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex) &&
-			isPointInsideRect(pd[moveDemo.adjustedPt.overlappedItemIndex], {
-				x: toX,
-				y: toY,
-			})
-		) {
-			moveDemo = {
-				...moveDemo,
-				adjustedPt,
-			};
-			let latchingAdjacent = false;
+		moveDemo = {
+			...moveDemo,
+			...adjustedPt,
+		};
+		setStatus(this, "moveDemo", moveDemo);
 
-			if (!moveDemo.latchingAdjacent && moveDemo.adjustedPt.isToAdjPresent) {
-				toX = moveDemo.adjustedPt.toAdj.toX;
-				toY = moveDemo.adjustedPt.toAdj.toY;
-				latchingAdjacent = true;
+		if (moveDemo?.overlappedItemIndex) {
+			if (moveDemo.overlappedItemIndex === index) {
+				if (!moveDemo.sameIndexOverlap) {
+					moveDemo.sameIndexOverlap = 0;
+				}
+				moveDemo.sameIndexOverlap++;
 			} else {
-				toX = moveDemo.adjustedPt.to.toX;
-				toY = moveDemo.adjustedPt.to.toY;
+				moveDemo.sameIndexOverlap = 1;
 			}
-
-			setStatus(this, "moveDemo", {
-				...moveDemo,
-				latchingAdjacent,
-			});
-		} else {
-			let latchingAdjacent = false;
-			if (
-				!isNaN(adjustedPt.overlappedItemIndex) ||
-				!adjustedPt.isToAdjPresent
-			) {
-				toX = adjustedPt.to.toX;
-				toY = adjustedPt.to.toY;
-			} else {
-				toX = adjustedPt.toAdj.toX;
-				toY = adjustedPt.toAdj.toY;
-				latchingAdjacent = true;
-			}
-
-			setStatus(this, "moveDemo", {
-				adjustedPt: adjustedPt,
-				latchingAdjacent,
-			});
 		}
 
-		moveDemo = getStatus(this, "moveDemo");
+		if (
+			!isNaN(moveDemo.overlappedItemIndex) &&
+			moveDemo.sameIndexOverlap === 1
+		) {
+			moveDemo.toAdj = {
+				toX: pd[moveDemo.overlappedItemIndex].x1,
+				toY: pd[moveDemo.overlappedItemIndex].y1,
+			};
+		}
 
-		if (!isNaN(moveDemo?.adjustedPt?.overlappedItemIndex)) {
+		if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
+			toX = moveDemo.toAdj.toX;
+			toY = moveDemo.toAdj.toY;
+		}
+
+		if (moveDemo.sameIndexOverlap === 1) {
 			e.$limberGridViewMoveGuide.style.transform =
 				"translate(" +
-				pd[moveDemo.adjustedPt.overlappedItemIndex].x +
+				pd[moveDemo.overlappedItemIndex].x +
 				"px, " +
-				pd[moveDemo.adjustedPt.overlappedItemIndex].y +
+				pd[moveDemo.overlappedItemIndex].y +
 				"px)";
 			e.$limberGridViewMoveGuide.style.width =
-				pd[moveDemo.adjustedPt.overlappedItemIndex].width + "px";
+				pd[moveDemo.overlappedItemIndex].width + "px";
 			e.$limberGridViewMoveGuide.style.height =
-				pd[moveDemo.adjustedPt.overlappedItemIndex].height + "px";
+				pd[moveDemo.overlappedItemIndex].height + "px";
 			e.$limberGridViewMoveGuide.classList.add(
 				"limber-grid-view-move-guide-active"
 			);
-
-			if (moveDemo.latchingAdjacent) {
-				// show text
-
-				e.$limberGridViewMoveGuide.innerHTML = getMessage(
-					this,
-					"latchedMoveDemo2"
-				);
-			} else {
-				// show text
-				e.$limberGridViewMoveGuide.innerHTML = getMessage(
-					this,
-					"latchedMoveDemo1"
-				);
-			}
 		}
 
-		if (moveDemo.latchingAdjacent) {
+		if (
+			moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER &&
+			moveDemo.sameIndexOverlap !== 1
+		) {
 			// show cross hair
 			e.$limberGridViewCrossHairGuide.style.transform = `translate(${
 				toX - publicConstants.CROSS_HAIR_WIDTH / 2
