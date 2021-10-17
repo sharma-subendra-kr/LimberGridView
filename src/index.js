@@ -543,7 +543,7 @@ LimberGridView.prototype.initializeStore = function () {
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
 				AUTO_SCROLL_FOR_MOUSE: false,
 
-				MOUSE_DOWN_TIME: 300,
+				MOUSE_DOWN_TIME: 0,
 				TOUCH_HOLD_TIME: 300,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,

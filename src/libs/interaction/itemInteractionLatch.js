@@ -45,12 +45,11 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 	let minTrdEdge = Number.MAX_SAFE_INTEGER;
 	let minBldEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+	let latchCornerIndex, latchEdgeIndex;
 
 	for (let i = 0; i < len; i++) {
 		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
 			inside = i;
-			// toX = pd[inside].x;
-			// toY = pd[inside].y;
 		}
 
 		if (i === index) {
@@ -75,6 +74,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdj = tr.y + privateConstants.MARGIN;
 
 				minTrd = trd;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -94,6 +94,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdjEdge = pt.y;
 
 				minTrdEdge = trdEdge;
+				latchEdgeIndex = i;
 			}
 		}
 
@@ -106,6 +107,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdj = bl.y + privateConstants.MARGIN;
 
 				minBld = bld;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -125,6 +127,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdjEdge = bl.y + privateConstants.MARGIN;
 
 				minBldEdge = bldEdge;
+				latchEdgeIndex = i;
 			}
 		}
 	}
@@ -141,6 +144,8 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTrdEdge, minBldEdge),
 		},
+		latchCornerIndex,
+		latchEdgeIndex,
 	};
 };
 
@@ -160,6 +165,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 	let minTldEdge = Number.MAX_SAFE_INTEGER;
 	let minBrdEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+	let latchCornerIndex, latchEdgeIndex;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -184,6 +190,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdj = tl.y + privateConstants.MARGIN;
 
 				minTld = tld;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -203,6 +210,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdjEdge = pt.y;
 
 				minTldEdge = tldEdge;
+				latchEdgeIndex = i;
 			}
 		}
 
@@ -215,6 +223,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdj = br.y + privateConstants.MARGIN;
 
 				minBrd = brd;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -231,6 +240,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdjEdge = br.y + privateConstants.MARGIN;
 
 				minBrdEdge = brdEdge;
+				latchEdgeIndex = i;
 			}
 		}
 	}
@@ -246,6 +256,8 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTldEdge, minBrdEdge),
 		},
+		latchCornerIndex,
+		latchEdgeIndex,
 	};
 };
 
@@ -271,6 +283,7 @@ export const latchBottomLeft = (
 	let minTldEdge = Number.MAX_SAFE_INTEGER;
 	let minBrdEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+	let latchCornerIndex, latchEdgeIndex;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -298,6 +311,7 @@ export const latchBottomLeft = (
 				toYAdj = tl.y - privateConstants.MARGIN - pd[index].height;
 
 				minTld = tld;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -319,6 +333,7 @@ export const latchBottomLeft = (
 				toYAdjEdge = tl.y - privateConstants.MARGIN - pd[index].height;
 
 				minTldEdge = tldEdge;
+				latchEdgeIndex = i;
 			}
 		}
 
@@ -333,6 +348,7 @@ export const latchBottomLeft = (
 				toYAdj = br.y - privateConstants.MARGIN - pd[index].height;
 
 				minBrd = brd;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -353,6 +369,7 @@ export const latchBottomLeft = (
 				toYAdjEdge = pt.y - pd[index].height;
 
 				minBrdEdge = brdEdge;
+				latchEdgeIndex = i;
 			}
 		}
 	}
@@ -368,6 +385,8 @@ export const latchBottomLeft = (
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTldEdge, minBrdEdge),
 		},
+		latchCornerIndex,
+		latchEdgeIndex,
 	};
 };
 
@@ -393,6 +412,7 @@ export const latchBottomRight = (
 	let minTrdEdge = Number.MAX_SAFE_INTEGER;
 	let minBldEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+	let latchCornerIndex, latchEdgeIndex;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -417,6 +437,7 @@ export const latchBottomRight = (
 				toYAdj = tr.y - privateConstants.MARGIN - pd[index].height;
 
 				minTrd = trd;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -437,6 +458,7 @@ export const latchBottomRight = (
 				toYAdjEdge = tr.y - privateConstants.MARGIN - pd[index].height;
 
 				minTrdEdge = trdEdge;
+				latchEdgeIndex = i;
 			}
 		}
 
@@ -451,6 +473,7 @@ export const latchBottomRight = (
 				toYAdj = bl.y - privateConstants.MARGIN - pd[index].height;
 
 				minBld = bld;
+				latchCornerIndex = i;
 			}
 		}
 
@@ -471,6 +494,7 @@ export const latchBottomRight = (
 				toYAdjEdge = pt.y - pd[index].height;
 
 				minBldEdge = bldEdge;
+				latchEdgeIndex = i;
 			}
 		}
 	}
@@ -486,5 +510,7 @@ export const latchBottomRight = (
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTrdEdge, minBldEdge),
 		},
+		latchCornerIndex,
+		latchEdgeIndex,
 	};
 };
