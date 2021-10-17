@@ -38,6 +38,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 	const CANCEL_LATCH_EDGE_THRESHOLD =
 		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 4;
 
+	const item = { ...pd[index] };
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
 	let inside;
@@ -70,7 +71,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 
 		if (trd < minTrd && trd < minBld && pt.x >= tr.x && trd <= THRESHOLD) {
 			if (
-				tr.x + privateConstants.MARGIN + pd[index].width <=
+				tr.x + privateConstants.MARGIN + item.width <=
 				privateConstants.WIDTH - privateConstants.MARGIN
 			) {
 				toXAdj = tr.x + privateConstants.MARGIN;
@@ -94,7 +95,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 			trdEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				tr.x + privateConstants.MARGIN + pd[index].width <=
+				tr.x + privateConstants.MARGIN + item.width <=
 				privateConstants.WIDTH - privateConstants.MARGIN
 			) {
 				toXAdjEdge = tr.x + privateConstants.MARGIN;
@@ -110,7 +111,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 
 		if (bld < minBld && bld < minTrd && pt.y >= bl.y && bld <= THRESHOLD) {
 			if (
-				bl.x + privateConstants.MARGIN + pd[index].width <
+				bl.x + privateConstants.MARGIN + item.width <
 				privateConstants.WIDTH - privateConstants.MARGIN
 			) {
 				toXAdj = bl.x + privateConstants.MARGIN;
@@ -134,7 +135,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 			bldEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				pt.x + pd[index].width <
+				pt.x + item.width <
 				privateConstants.WIDTH - privateConstants.MARGIN
 			) {
 				toXAdjEdge = pt.x;
@@ -178,8 +179,9 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 	const CANCEL_LATCH_EDGE_THRESHOLD =
 		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 4;
 
+	const item = { ...pd[index] };
 	const len = pd.length;
-	const pt = { x: toX + pd[index].width, y: toY };
+	const pt = { x: toX + item.width, y: toY };
 	let tl, br, bl, tld, brd, tldEdge, brdEdge;
 	let minTld = Number.MAX_SAFE_INTEGER;
 	let minBrd = Number.MAX_SAFE_INTEGER;
@@ -205,10 +207,10 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 
 		if (tld < minTld && tld < minBrd && pt.x <= tl.x && tld <= THRESHOLD) {
 			if (
-				tl.x - privateConstants.MARGIN - pd[index].width >=
+				tl.x - privateConstants.MARGIN - item.width >=
 				privateConstants.MARGIN
 			) {
-				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+				toXAdj = tl.x - privateConstants.MARGIN - item.width;
 				toYAdj = tl.y + privateConstants.MARGIN;
 
 				chX = tl.x - privateConstants.MARGIN;
@@ -229,10 +231,10 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			tldEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				tl.x - privateConstants.MARGIN - pd[index].width >=
+				tl.x - privateConstants.MARGIN - item.width >=
 				privateConstants.MARGIN
 			) {
-				toXAdjEdge = tl.x - privateConstants.MARGIN - pd[index].width;
+				toXAdjEdge = tl.x - privateConstants.MARGIN - item.width;
 				toYAdjEdge = pt.y;
 
 				chXEdge = tl.x - privateConstants.MARGIN;
@@ -245,10 +247,10 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 
 		if (brd < minTld && brd < minBrd && pt.y >= br.y && brd <= THRESHOLD) {
 			if (
-				br.x - privateConstants.MARGIN - pd[index].width >=
+				br.x - privateConstants.MARGIN - item.width >=
 				privateConstants.MARGIN
 			) {
-				toXAdj = br.x - privateConstants.MARGIN - pd[index].width;
+				toXAdj = br.x - privateConstants.MARGIN - item.width;
 				toYAdj = br.y + privateConstants.MARGIN;
 
 				chX = br.x - privateConstants.MARGIN;
@@ -268,8 +270,8 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			bl.x - pt.x > CANCEL_LATCH_EDGE_THRESHOLD &&
 			brdEdge <= LATCH_EDGE_THRESHOLD
 		) {
-			if (pt.x - pd[index].width >= privateConstants.MARGIN) {
-				toXAdjEdge = pt.x - pd[index].width;
+			if (pt.x - item.width >= privateConstants.MARGIN) {
+				toXAdjEdge = pt.x - item.width;
 				toYAdjEdge = br.y + privateConstants.MARGIN;
 
 				chXEdge = pt.x;
