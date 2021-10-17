@@ -167,7 +167,6 @@ export const latchTopRightToCorner = (
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY };
-	let inside;
 	let tl, br, bl, tld, brd, tldEdge, brdEdge;
 	let minTld = Number.MAX_SAFE_INTEGER;
 	let minBrd = Number.MAX_SAFE_INTEGER;
@@ -179,12 +178,6 @@ export const latchTopRightToCorner = (
 	let toAdjDirection;
 
 	for (let i = 0; i < len; i++) {
-		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
-			inside = i;
-			toX = pd[inside].x;
-			toY = pd[inside].y;
-		}
-
 		if (i === index) {
 			continue;
 		}
@@ -287,7 +280,6 @@ export const latchBottomLeftToCorner = (
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY + pd[index].height };
-	let inside;
 	let tl, br, tr, tld, brd, tldEdge, brdEdge;
 	let minTld = Number.MAX_SAFE_INTEGER;
 	let minBrd = Number.MAX_SAFE_INTEGER;
@@ -299,12 +291,6 @@ export const latchBottomLeftToCorner = (
 	let toAdjDirection;
 
 	for (let i = 0; i < len; i++) {
-		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
-			inside = i;
-			toX = pd[inside].x;
-			toY = pd[inside].y;
-		}
-
 		if (i === index) {
 			continue;
 		}
@@ -418,7 +404,6 @@ export const latchBottomRightToCorner = (
 
 	const len = pd.length;
 	const pt = { x: toX + pd[index].width, y: toY + pd[index].height };
-	let inside;
 	let tr, bl, tl, trd, bld, trdEdge, bldEdge;
 	let minTrd = Number.MAX_SAFE_INTEGER;
 	let minBld = Number.MAX_SAFE_INTEGER;
@@ -430,12 +415,6 @@ export const latchBottomRightToCorner = (
 	let toAdjDirection;
 
 	for (let i = 0; i < len; i++) {
-		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
-			inside = i;
-			toX = pd[inside].x;
-			toY = pd[inside].y;
-		}
-
 		if (i === index) {
 			continue;
 		}
