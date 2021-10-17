@@ -410,10 +410,8 @@ export const resizeSizeAdjust = (
 		index,
 		forBottomRight
 	);
-	console.log("adjustToCorners", adjustToCorners);
 
 	if (!adjustToCorners.isToAdjPresent) {
-		const pd = getPositionData(context);
 		const bottomLeftLatch = latchBottomLeft(
 			context,
 			x,
@@ -430,14 +428,30 @@ export const resizeSizeAdjust = (
 			width,
 			height
 		);
+
+		let edgeLatch;
+		if (forBottomRight) {
+			edgeLatch = bottomRightLatch.edgeLatch;
+			if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
+				adjustToCorners.isToAdjPresent = true;
+				adjustToCorners.width = edgeLatch.ch.x - x;
+				adjustToCorners.height = edgeLatch.ch.y - y;
+				adjustToCorners.latchPoint = edgeLatch.ch;
+			}
+		} else {
+			edgeLatch = bottomLeftLatch.edgeLatch;
+			if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
+				adjustToCorners.isToAdjPresent = true;
+				adjustToCorners.x = edgeLatch.ch.x;
+				adjustToCorners.width = x + width - edgeLatch.ch.x;
+				adjustToCorners.height = edgeLatch.ch.y - y;
+				adjustToCorners.latchPoint = edgeLatch.ch;
+			}
+		}
 	}
 
 	return adjustToCorners;
 };
-
-export const resizeBottomLeftAdjust = () => {};
-
-export const resizeBottomRightAdjust = () => {};
 
 export const positionArranged = (context, arranged) => {
 	const e = getElements(context);

@@ -308,6 +308,8 @@ export const latchBottomLeft = (
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
 	const item = { ...pd[index] };
+	item.width = width || item.width;
+	item.height = height || item.height;
 	const len = pd.length;
 	const pt = { x: toX, y: toY + item.height };
 	let tl, br, tr, tld, brd, tldEdge, brdEdge;
@@ -451,6 +453,8 @@ export const latchBottomRight = (
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
 	const item = { ...pd[index] };
+	item.width = width || item.width;
+	item.height = height || item.height;
 	const len = pd.length;
 	const pt = { x: toX + item.width, y: toY + item.height };
 	let tr, bl, tl, trd, bld, trdEdge, bldEdge;
