@@ -383,16 +383,11 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
 		// edgelatch
 		optimalLatch = edgeLatch;
-		// optimalLatch = cornerLatch;
 	} else {
 		// cornerLatch
 		optimalLatch = cornerLatch;
-		// optimalLatch = edgeLatch;
 	}
 	optimalLatch.overlappedItemIndex = topLeftLatch.overlappedItemIndex;
-	console.log("optimalLatch", optimalLatch);
-	console.log("optimalLatch.latchEdgeIndex", optimalLatch.latchEdgeIndex);
-	console.log("optimalLatch.latchCornerIndex", optimalLatch.latchCornerIndex);
 	return optimalLatch;
 };
 
