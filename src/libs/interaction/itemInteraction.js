@@ -295,9 +295,12 @@ export const moveItemDemo = async function (index, toX, toY) {
 			};
 		}
 
+		let chX, chY;
 		if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
 			toX = moveDemo.toAdj.toX;
 			toY = moveDemo.toAdj.toY;
+			chX = moveDemo.ch.x;
+			chY = moveDemo.ch.y;
 		}
 
 		if (moveDemo.sameIndexOverlap === 1) {
@@ -322,8 +325,8 @@ export const moveItemDemo = async function (index, toX, toY) {
 		) {
 			// show cross hair
 			e.$limberGridViewCrossHairGuide.style.transform = `translate(${
-				toX - publicConstants.CROSS_HAIR_WIDTH / 2
-			}px, ${toY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
+				chX - publicConstants.CROSS_HAIR_WIDTH / 2
+			}px, ${chY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
 		} else {
 			// hide cross hair
 			e.$limberGridViewCrossHairGuide.style.transform = `translate(-${
