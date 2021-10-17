@@ -74,6 +74,9 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 				toXAdj = tr.x + privateConstants.MARGIN;
 				toYAdj = tr.y + privateConstants.MARGIN;
 
+				// chX=;
+				// chY=;
+
 				minTrd = trd;
 				latchCornerIndex = i;
 			}
@@ -94,6 +97,9 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 				toXAdjEdge = tr.x + privateConstants.MARGIN;
 				toYAdjEdge = pt.y;
 
+				// chXEdge=;
+				// chYEdge=;
+
 				minTrdEdge = trdEdge;
 				latchEdgeIndex = i;
 			}
@@ -106,6 +112,9 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 			) {
 				toXAdj = bl.x + privateConstants.MARGIN;
 				toYAdj = bl.y + privateConstants.MARGIN;
+
+				// chX=;
+				// chY=;
 
 				minBld = bld;
 				latchCornerIndex = i;
@@ -126,6 +135,9 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 			) {
 				toXAdjEdge = pt.x;
 				toYAdjEdge = bl.y + privateConstants.MARGIN;
+
+				// chXEdge=;
+				// chYEdge=;
 
 				minBldEdge = bldEdge;
 				latchEdgeIndex = i;
@@ -193,6 +205,9 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
 				toYAdj = tl.y + privateConstants.MARGIN;
 
+				// chX=;
+				// chY=;
+
 				minTld = tld;
 				latchCornerIndex = i;
 			}
@@ -213,6 +228,9 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toXAdjEdge = tl.x - privateConstants.MARGIN - pd[index].width;
 				toYAdjEdge = pt.y;
 
+				// chXEdge=;
+				// chYEdge=;
+
 				minTldEdge = tldEdge;
 				latchEdgeIndex = i;
 			}
@@ -225,6 +243,9 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			) {
 				toXAdj = br.x - privateConstants.MARGIN - pd[index].width;
 				toYAdj = br.y + privateConstants.MARGIN;
+
+				// chX=;
+				// chY=;
 
 				minBrd = brd;
 				latchCornerIndex = i;
@@ -242,6 +263,9 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			if (pt.x - pd[index].width >= privateConstants.MARGIN) {
 				toXAdjEdge = pt.x - pd[index].width;
 				toYAdjEdge = br.y + privateConstants.MARGIN;
+
+				// chXEdge=;
+				// chYEdge=;
 
 				minBrdEdge = brdEdge;
 				latchEdgeIndex = i;
@@ -317,6 +341,9 @@ export const latchBottomLeft = (
 				toXAdj = tl.x + privateConstants.MARGIN;
 				toYAdj = tl.y - privateConstants.MARGIN - pd[index].height;
 
+				// chX=;
+				// chY=;
+
 				minTld = tld;
 				latchCornerIndex = i;
 			}
@@ -339,6 +366,9 @@ export const latchBottomLeft = (
 				toXAdjEdge = pt.x;
 				toYAdjEdge = tl.y - privateConstants.MARGIN - pd[index].height;
 
+				// chXEdge=;
+				// chYEdge=;
+
 				minTldEdge = tldEdge;
 				latchEdgeIndex = i;
 			}
@@ -353,6 +383,9 @@ export const latchBottomLeft = (
 			) {
 				toXAdj = br.x + privateConstants.MARGIN;
 				toYAdj = br.y - privateConstants.MARGIN - pd[index].height;
+
+				// chX=;
+				// chY=;
 
 				minBrd = brd;
 				latchCornerIndex = i;
@@ -374,6 +407,9 @@ export const latchBottomLeft = (
 			) {
 				toXAdjEdge = br.x + privateConstants.MARGIN;
 				toYAdjEdge = pt.y - pd[index].height;
+
+				// chXEdge=;
+				// chYEdge=;
 
 				minBrdEdge = brdEdge;
 				latchEdgeIndex = i;
@@ -448,6 +484,9 @@ export const latchBottomRight = (
 				toXAdj = tr.x - privateConstants.MARGIN - pd[index].width;
 				toYAdj = tr.y - privateConstants.MARGIN - pd[index].height;
 
+				// chX=;
+				// chY=;
+
 				minTrd = trd;
 				latchCornerIndex = i;
 			}
@@ -469,6 +508,9 @@ export const latchBottomRight = (
 				toXAdjEdge = pt.x - pd[index].width;
 				toYAdjEdge = tr.y - privateConstants.MARGIN - pd[index].height;
 
+				// chXEdge=;
+				// chYEdge=;
+
 				minTrdEdge = trdEdge;
 				latchEdgeIndex = i;
 			}
@@ -483,6 +525,9 @@ export const latchBottomRight = (
 			) {
 				toXAdj = bl.x - privateConstants.MARGIN - pd[index].width;
 				toYAdj = bl.y - privateConstants.MARGIN - pd[index].height;
+
+				// chX=;
+				// chY=;
 
 				minBld = bld;
 				latchCornerIndex = i;
@@ -504,6 +549,9 @@ export const latchBottomRight = (
 			) {
 				toXAdjEdge = bl.x - privateConstants.MARGIN - pd[index].width;
 				toYAdjEdge = pt.y - pd[index].height;
+
+				// chXEdge=;
+				// chYEdge=;
 
 				minBldEdge = bldEdge;
 				latchEdgeIndex = i;
