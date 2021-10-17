@@ -46,6 +46,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 	let minBldEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 	let latchCornerIndex, latchEdgeIndex;
+	let chX, chY, chXEdge, chYEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
@@ -137,12 +138,14 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
+			ch: { x: chX, y: chY },
 			distance: Math.min(minTrd, minBld),
 			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			ch: { x: chXEdge, y: chYEdge },
 			distance: Math.min(minTrdEdge, minBldEdge),
 			latchEdgeIndex,
 		},
@@ -166,6 +169,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 	let minBrdEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 	let latchCornerIndex, latchEdgeIndex;
+	let chX, chY, chXEdge, chYEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -249,12 +253,14 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
+			ch: { x: chX, y: chY },
 			distance: Math.min(minTld, minBrd),
 			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			ch: { x: chXEdge, y: chYEdge },
 			distance: Math.min(minTldEdge, minBrdEdge),
 			latchEdgeIndex,
 		},
@@ -284,6 +290,7 @@ export const latchBottomLeft = (
 	let minBrdEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 	let latchCornerIndex, latchEdgeIndex;
+	let chX, chY, chXEdge, chYEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -378,12 +385,14 @@ export const latchBottomLeft = (
 		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
+			ch: { x: chX, y: chY },
 			distance: Math.min(minTld, minBrd),
 			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			ch: { x: chXEdge, y: chYEdge },
 			distance: Math.min(minTldEdge, minBrdEdge),
 			latchEdgeIndex,
 		},
@@ -413,6 +422,7 @@ export const latchBottomRight = (
 	let minBldEdge = Number.MAX_SAFE_INTEGER;
 	let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
 	let latchCornerIndex, latchEdgeIndex;
+	let chX, chY, chXEdge, chYEdge;
 
 	for (let i = 0; i < len; i++) {
 		if (i === index) {
@@ -505,12 +515,14 @@ export const latchBottomRight = (
 		cornerLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
+			ch: { x: chX, y: chY },
 			distance: Math.min(minTrd, minBld),
 			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
+			ch: { x: chXEdge, y: chYEdge },
 			distance: Math.min(minTrdEdge, minBldEdge),
 			latchEdgeIndex,
 		},
