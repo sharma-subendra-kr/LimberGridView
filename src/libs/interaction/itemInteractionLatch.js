@@ -358,7 +358,7 @@ export const latchBottomLeft = (
 			pt.x >= br.x &&
 			pt.y >= tr.y &&
 			pt.y <= br.y &&
-			brdEdge <= THRESHOLD
+			brdEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
 				br.x + privateConstants.MARGIN + pd[index].width <=

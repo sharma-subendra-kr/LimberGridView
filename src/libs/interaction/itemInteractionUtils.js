@@ -382,8 +382,8 @@ export const movePointAdjust = (context, toX, toY, index) => {
 	let optimalLatch;
 	if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
 		// edgelatch
-		// optimalLatch = edgeLatch;
-		optimalLatch = cornerLatch;
+		optimalLatch = edgeLatch;
+		// optimalLatch = cornerLatch;
 	} else {
 		// cornerLatch
 		optimalLatch = cornerLatch;
