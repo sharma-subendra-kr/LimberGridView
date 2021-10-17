@@ -256,7 +256,6 @@ export const moveItem = async function (index, toX, toY) {
 };
 
 export const moveItemDemo = async function (index, toX, toY) {
-	debugger;
 	const pd = getPositionData(this);
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
