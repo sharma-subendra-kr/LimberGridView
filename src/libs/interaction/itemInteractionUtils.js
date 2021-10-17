@@ -39,6 +39,7 @@ import {
 	latchTopRight,
 	latchBottomLeft,
 	latchBottomRight,
+	resizeSizeAdjustToCorners,
 } from "./itemInteractionLatch";
 
 export const getResizeAffectedItems = (context, item, index) => {
@@ -400,210 +401,38 @@ export const resizeSizeAdjust = (
 	index,
 	forBottomRight
 ) => {
-	const pd = getPositionData(context);
-	const privateConstants = getPrivateConstants(context);
-
-	// const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
-	const DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 2;
-	const AXIS_DISTANCE_THRESHOLD =
-		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
-
-	const len = pd.length;
-	const tlpt = { x: x, y: y };
-	const trpt = { x: x + width, y: y };
-	const brpt = { x: x + width, y: y + height };
-	const blpt = { x: x, y: y + height };
-
-	let tl,
-		bl,
-		br,
-		tr,
-		blptTobr,
-		brptTobl,
-		trptTobr,
-		brptTotr,
-		blptTotl,
-		tlptTobl;
-	let ldistance = Number.MAX_SAFE_INTEGER;
-	let rdistance = Number.MAX_SAFE_INTEGER;
-	let tdistance = Number.MAX_SAFE_INTEGER;
-	let bdistance = Number.MAX_SAFE_INTEGER;
-	let isToAdjPresent = false;
-	let toAdjIndex;
-	let hToAdjDirection;
-	let wToAdjDirection;
-	let hLatchPoint;
-	let wLatchPoint;
-	let latchPoint;
-
-	for (let i = 0; i < len; i++) {
-		if (i === index) {
-			continue;
-		}
-
-		tl = { x: pd[i].x1, y: pd[i].y1 };
-		bl = { x: pd[i].x1, y: pd[i].y2 };
-		br = { x: pd[i].x2, y: pd[i].y2 };
-		tr = { x: pd[i].x2, y: pd[i].y1 };
-
-		brptTobl = getDistanceBetnPts(bl, brpt);
-		blptTobr = getDistanceBetnPts(br, blpt);
-
-		trptTobr = getDistanceBetnPts(br, trpt);
-		brptTotr = getDistanceBetnPts(tr, brpt);
-
-		blptTotl = getDistanceBetnPts(tl, blpt);
-		tlptTobl = getDistanceBetnPts(bl, tlpt);
-
-		// affected bottom to adjacent bottom
-		if (
-			brptTobl < rdistance &&
-			brptTobl < ldistance &&
-			brpt.x < bl.x &&
-			Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD &&
-			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
-		) {
-			height = bl.y - trpt.y;
-
-			if (forBottomRight && bl.x - brpt.x <= AXIS_DISTANCE_THRESHOLD) {
-				width = bl.x - privateConstants.MARGIN * 2 - blpt.x;
-			}
-
-			rdistance = brptTobl;
-			isToAdjPresent = true;
-			toAdjIndex = i;
-			hToAdjDirection = "right";
-			hLatchPoint = bl;
-		}
-
-		if (
-			blptTobr < ldistance &&
-			blptTobr < rdistance &&
-			blpt.x > br.x &&
-			Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD &&
-			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
-		) {
-			height = br.y - tlpt.y;
-
-			if (!forBottomRight && blpt.x - br.x <= AXIS_DISTANCE_THRESHOLD) {
-				x = br.x + privateConstants.MARGIN * 2;
-				width = brpt.x - x;
-			}
-
-			ldistance = blptTobr;
-			isToAdjPresent = true;
-			toAdjIndex = i;
-			hToAdjDirection = "left";
-			hLatchPoint = br;
-		}
-
-		// affected top to adjacent bottom
-		if (
-			trptTobr < tdistance &&
-			trptTobr < bdistance &&
-			trptTobr <= DISTANCE_THRESHOLD &&
-			Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD &&
-			forBottomRight
-		) {
-			width = br.x - tlpt.x;
-
-			tdistance = trptTobr;
-			isToAdjPresent = true;
-			toAdjIndex = i;
-			wToAdjDirection = "top";
-			wLatchPoint = br;
-		}
-
-		if (
-			tlptTobl < tdistance &&
-			tlptTobl < bdistance &&
-			tlptTobl <= DISTANCE_THRESHOLD &&
-			Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD &&
-			!forBottomRight
-		) {
-			width = trpt.x - bl.x;
-			x = bl.x;
-
-			tdistance = tlptTobl;
-			isToAdjPresent = true;
-			toAdjIndex = i;
-			wToAdjDirection = "top";
-			wLatchPoint = bl;
-		}
-
-		// affected bottom to adjacent top
-		if (
-			brptTotr < bdistance &&
-			brptTotr < tdistance &&
-			brptTotr <= DISTANCE_THRESHOLD &&
-			Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD &&
-			forBottomRight
-		) {
-			width = tr.x - blpt.x;
-
-			if (
-				forBottomRight &&
-				tr.y > brpt.y &&
-				tr.y - brpt.y <= AXIS_DISTANCE_THRESHOLD
-			) {
-				height = tr.y - privateConstants.MARGIN * 2 - trpt.y;
-			}
-
-			bdistance = brptTotr;
-			isToAdjPresent = true;
-			toAdjIndex = i;
-			wToAdjDirection = "bottom";
-			wLatchPoint = tr;
-		}
-
-		if (
-			blptTotl < bdistance &&
-			blptTotl < tdistance &&
-			blptTotl <= DISTANCE_THRESHOLD &&
-			Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD &&
-			!forBottomRight
-		) {
-			width = brpt.x - tl.x;
-			x = tl.x;
-
-			if (
-				!forBottomRight &&
-				tl.y > blpt.y &&
-				tl.y - blpt.y <= AXIS_DISTANCE_THRESHOLD
-			) {
-				height = tl.y - privateConstants.MARGIN * 2 - tlpt.y;
-			}
-
-			bdistance = blptTotl;
-			isToAdjPresent = true;
-			toAdjIndex = i;
-			wToAdjDirection = "bottom";
-			wLatchPoint = tl;
-		}
-	}
-
-	if (hLatchPoint && wLatchPoint) {
-		latchPoint = {
-			x: wLatchPoint.x,
-			y: hLatchPoint.y,
-		};
-	} else if (hLatchPoint) {
-		latchPoint = hLatchPoint;
-	} else if (wLatchPoint) {
-		latchPoint = wLatchPoint;
-	}
-
-	return {
-		x: x,
-		y: y,
-		height,
+	const adjustToCorners = resizeSizeAdjustToCorners(
+		context,
+		x,
+		y,
 		width,
-		isToAdjPresent,
-		toAdjIndex,
-		hToAdjDirection,
-		wToAdjDirection,
-		latchPoint,
-	};
+		height,
+		index,
+		forBottomRight
+	);
+	console.log("adjustToCorners", adjustToCorners);
+
+	if (!adjustToCorners.isToAdjPresent) {
+		const pd = getPositionData(context);
+		const bottomLeftLatch = latchBottomLeft(
+			context,
+			x,
+			y,
+			index,
+			width,
+			height
+		);
+		const bottomRightLatch = latchBottomRight(
+			context,
+			x,
+			y,
+			index,
+			width,
+			height
+		);
+	}
+
+	return adjustToCorners;
 };
 
 export const resizeBottomLeftAdjust = () => {};

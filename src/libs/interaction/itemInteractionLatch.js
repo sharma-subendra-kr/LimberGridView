@@ -296,6 +296,8 @@ export const latchBottomLeft = (
 	toX,
 	toY,
 	index,
+	width,
+	height,
 	latchEdgeThreshold
 ) => {
 	const pd = getPositionData(context);
@@ -305,8 +307,9 @@ export const latchBottomLeft = (
 	const LATCH_EDGE_THRESHOLD =
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
+	const item = { ...pd[index] };
 	const len = pd.length;
-	const pt = { x: toX, y: toY + pd[index].height };
+	const pt = { x: toX, y: toY + item.height };
 	let tl, br, tr, tld, brd, tldEdge, brdEdge;
 	let minTld = Number.MAX_SAFE_INTEGER;
 	let minBrd = Number.MAX_SAFE_INTEGER;
@@ -333,13 +336,12 @@ export const latchBottomLeft = (
 
 		if (tld < minTld && tld < minBrd && pt.y <= tl.y && tld <= THRESHOLD) {
 			if (
-				tl.x + privateConstants.MARGIN + pd[index].width <=
+				tl.x + privateConstants.MARGIN + item.width <=
 					privateConstants.WIDTH - privateConstants.MARGIN &&
-				tl.y - privateConstants.MARGIN - pd[index].height >=
-					privateConstants.MARGIN
+				tl.y - privateConstants.MARGIN - item.height >= privateConstants.MARGIN
 			) {
 				toXAdj = tl.x + privateConstants.MARGIN;
-				toYAdj = tl.y - privateConstants.MARGIN - pd[index].height;
+				toYAdj = tl.y - privateConstants.MARGIN - item.height;
 
 				chX = toXAdj;
 				chY = tl.y - privateConstants.MARGIN;
@@ -358,13 +360,11 @@ export const latchBottomLeft = (
 			tldEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				pt.x + pd[index].width <=
-					privateConstants.WIDTH - privateConstants.MARGIN &&
-				tl.y - privateConstants.MARGIN - pd[index].height >=
-					privateConstants.MARGIN
+				pt.x + item.width <= privateConstants.WIDTH - privateConstants.MARGIN &&
+				tl.y - privateConstants.MARGIN - item.height >= privateConstants.MARGIN
 			) {
 				toXAdjEdge = pt.x;
-				toYAdjEdge = tl.y - privateConstants.MARGIN - pd[index].height;
+				toYAdjEdge = tl.y - privateConstants.MARGIN - item.height;
 
 				chXEdge = toXAdjEdge;
 				chYEdge = tl.y - privateConstants.MARGIN;
@@ -376,13 +376,12 @@ export const latchBottomLeft = (
 
 		if (brd < minTld && brd < minBrd && pt.x >= br.x && brd <= THRESHOLD) {
 			if (
-				br.x + privateConstants.MARGIN + pd[index].width <=
+				br.x + privateConstants.MARGIN + item.width <=
 					privateConstants.WIDTH - privateConstants.MARGIN &&
-				br.y - privateConstants.MARGIN - pd[index].height >=
-					privateConstants.MARGIN
+				br.y - privateConstants.MARGIN - item.height >= privateConstants.MARGIN
 			) {
 				toXAdj = br.x + privateConstants.MARGIN;
-				toYAdj = br.y - privateConstants.MARGIN - pd[index].height;
+				toYAdj = br.y - privateConstants.MARGIN - item.height;
 
 				chX = toXAdj;
 				chY = br.y - privateConstants.MARGIN;
@@ -401,12 +400,12 @@ export const latchBottomLeft = (
 			brdEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				br.x + privateConstants.MARGIN + pd[index].width <=
+				br.x + privateConstants.MARGIN + item.width <=
 					privateConstants.WIDTH - privateConstants.MARGIN &&
-				pt.y - pd[index].height >= privateConstants.MARGIN
+				pt.y - item.height >= privateConstants.MARGIN
 			) {
 				toXAdjEdge = br.x + privateConstants.MARGIN;
-				toYAdjEdge = pt.y - pd[index].height;
+				toYAdjEdge = pt.y - item.height;
 
 				chXEdge = toXAdjEdge;
 				chYEdge = pt.y;
@@ -440,6 +439,8 @@ export const latchBottomRight = (
 	toX,
 	toY,
 	index,
+	width,
+	height,
 	latchEdgeThreshold
 ) => {
 	const pd = getPositionData(context);
@@ -449,8 +450,9 @@ export const latchBottomRight = (
 	const LATCH_EDGE_THRESHOLD =
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
+	const item = { ...pd[index] };
 	const len = pd.length;
-	const pt = { x: toX + pd[index].width, y: toY + pd[index].height };
+	const pt = { x: toX + item.width, y: toY + item.height };
 	let tr, bl, tl, trd, bld, trdEdge, bldEdge;
 	let minTrd = Number.MAX_SAFE_INTEGER;
 	let minBld = Number.MAX_SAFE_INTEGER;
@@ -476,13 +478,12 @@ export const latchBottomRight = (
 
 		if (trd < minTrd && trd < minBld && pt.y <= tr.y && trd <= THRESHOLD) {
 			if (
-				tr.y - privateConstants.MARGIN - pd[index].height >=
+				tr.y - privateConstants.MARGIN - item.height >=
 					privateConstants.MARGIN &&
-				tr.x - privateConstants.MARGIN - pd[index].width >=
-					privateConstants.MARGIN
+				tr.x - privateConstants.MARGIN - item.width >= privateConstants.MARGIN
 			) {
-				toXAdj = tr.x - privateConstants.MARGIN - pd[index].width;
-				toYAdj = tr.y - privateConstants.MARGIN - pd[index].height;
+				toXAdj = tr.x - privateConstants.MARGIN - item.width;
+				toYAdj = tr.y - privateConstants.MARGIN - item.height;
 
 				chX = tr.x - privateConstants.MARGIN;
 				chY = tr.y - privateConstants.MARGIN;
@@ -501,12 +502,12 @@ export const latchBottomRight = (
 			trd <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				tr.y - privateConstants.MARGIN - pd[index].height >=
+				tr.y - privateConstants.MARGIN - item.height >=
 					privateConstants.MARGIN &&
-				pt.x - pd[index].width >= privateConstants.MARGIN
+				pt.x - item.width >= privateConstants.MARGIN
 			) {
-				toXAdjEdge = pt.x - pd[index].width;
-				toYAdjEdge = tr.y - privateConstants.MARGIN - pd[index].height;
+				toXAdjEdge = pt.x - item.width;
+				toYAdjEdge = tr.y - privateConstants.MARGIN - item.height;
 
 				chXEdge = pt.x;
 				chYEdge = tr.y - privateConstants.MARGIN;
@@ -518,13 +519,12 @@ export const latchBottomRight = (
 
 		if (bld < minTrd && bld < minBld && pt.x <= bl.x && bld <= THRESHOLD) {
 			if (
-				bl.x - privateConstants.MARGIN - pd[index].width >=
+				bl.x - privateConstants.MARGIN - item.width >=
 					privateConstants.MARGIN &&
-				bl.y - privateConstants.MARGIN - pd[index].height >=
-					privateConstants.MARGIN
+				bl.y - privateConstants.MARGIN - item.height >= privateConstants.MARGIN
 			) {
-				toXAdj = bl.x - privateConstants.MARGIN - pd[index].width;
-				toYAdj = bl.y - privateConstants.MARGIN - pd[index].height;
+				toXAdj = bl.x - privateConstants.MARGIN - item.width;
+				toYAdj = bl.y - privateConstants.MARGIN - item.height;
 
 				chX = bl.x - privateConstants.MARGIN;
 				chY = bl.y - privateConstants.MARGIN;
@@ -543,12 +543,12 @@ export const latchBottomRight = (
 			bldEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
-				bl.x - privateConstants.MARGIN - pd[index].width >=
+				bl.x - privateConstants.MARGIN - item.width >=
 					privateConstants.MARGIN &&
-				pt.y - pd[index].height >= privateConstants.MARGIN
+				pt.y - item.height >= privateConstants.MARGIN
 			) {
-				toXAdjEdge = bl.x - privateConstants.MARGIN - pd[index].width;
-				toYAdjEdge = pt.y - pd[index].height;
+				toXAdjEdge = bl.x - privateConstants.MARGIN - item.width;
+				toYAdjEdge = pt.y - item.height;
 
 				chXEdge = bl.x - privateConstants.MARGIN;
 				chYEdge = pt.y;
@@ -574,5 +574,220 @@ export const latchBottomRight = (
 			distance: Math.min(minTrdEdge, minBldEdge),
 			latchEdgeIndex,
 		},
+	};
+};
+
+export const resizeSizeAdjustToCorners = (
+	context,
+	x,
+	y,
+	width,
+	height,
+	index,
+	forBottomRight
+) => {
+	const pd = getPositionData(context);
+	const privateConstants = getPrivateConstants(context);
+
+	// const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
+	const DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 2;
+	const AXIS_DISTANCE_THRESHOLD =
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
+
+	const len = pd.length;
+	const tlpt = { x: x, y: y };
+	const trpt = { x: x + width, y: y };
+	const brpt = { x: x + width, y: y + height };
+	const blpt = { x: x, y: y + height };
+
+	let tl,
+		bl,
+		br,
+		tr,
+		blptTobr,
+		brptTobl,
+		trptTobr,
+		brptTotr,
+		blptTotl,
+		tlptTobl;
+	let ldistance = Number.MAX_SAFE_INTEGER;
+	let rdistance = Number.MAX_SAFE_INTEGER;
+	let tdistance = Number.MAX_SAFE_INTEGER;
+	let bdistance = Number.MAX_SAFE_INTEGER;
+	let isToAdjPresent = false;
+	let toAdjIndex;
+	let hToAdjDirection;
+	let wToAdjDirection;
+	let hLatchPoint;
+	let wLatchPoint;
+	let latchPoint;
+
+	for (let i = 0; i < len; i++) {
+		if (i === index) {
+			continue;
+		}
+
+		tl = { x: pd[i].x1, y: pd[i].y1 };
+		bl = { x: pd[i].x1, y: pd[i].y2 };
+		br = { x: pd[i].x2, y: pd[i].y2 };
+		tr = { x: pd[i].x2, y: pd[i].y1 };
+
+		brptTobl = getDistanceBetnPts(bl, brpt);
+		blptTobr = getDistanceBetnPts(br, blpt);
+
+		trptTobr = getDistanceBetnPts(br, trpt);
+		brptTotr = getDistanceBetnPts(tr, brpt);
+
+		blptTotl = getDistanceBetnPts(tl, blpt);
+		tlptTobl = getDistanceBetnPts(bl, tlpt);
+
+		// affected bottom to adjacent bottom
+		if (
+			brptTobl < rdistance &&
+			brptTobl < ldistance &&
+			brpt.x < bl.x &&
+			Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD &&
+			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
+		) {
+			height = bl.y - trpt.y;
+
+			if (forBottomRight && bl.x - brpt.x <= AXIS_DISTANCE_THRESHOLD) {
+				width = bl.x - privateConstants.MARGIN * 2 - blpt.x;
+			}
+
+			rdistance = brptTobl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			hToAdjDirection = "right";
+			hLatchPoint = bl;
+		}
+
+		if (
+			blptTobr < ldistance &&
+			blptTobr < rdistance &&
+			blpt.x > br.x &&
+			Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD &&
+			brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH
+		) {
+			height = br.y - tlpt.y;
+
+			if (!forBottomRight && blpt.x - br.x <= AXIS_DISTANCE_THRESHOLD) {
+				x = br.x + privateConstants.MARGIN * 2;
+				width = brpt.x - x;
+			}
+
+			ldistance = blptTobr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			hToAdjDirection = "left";
+			hLatchPoint = br;
+		}
+
+		// affected top to adjacent bottom
+		if (
+			trptTobr < tdistance &&
+			trptTobr < bdistance &&
+			trptTobr <= DISTANCE_THRESHOLD &&
+			Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD &&
+			forBottomRight
+		) {
+			width = br.x - tlpt.x;
+
+			tdistance = trptTobr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "top";
+			wLatchPoint = br;
+		}
+
+		if (
+			tlptTobl < tdistance &&
+			tlptTobl < bdistance &&
+			tlptTobl <= DISTANCE_THRESHOLD &&
+			Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD &&
+			!forBottomRight
+		) {
+			width = trpt.x - bl.x;
+			x = bl.x;
+
+			tdistance = tlptTobl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "top";
+			wLatchPoint = bl;
+		}
+
+		// affected bottom to adjacent top
+		if (
+			brptTotr < bdistance &&
+			brptTotr < tdistance &&
+			brptTotr <= DISTANCE_THRESHOLD &&
+			Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD &&
+			forBottomRight
+		) {
+			width = tr.x - blpt.x;
+
+			if (
+				forBottomRight &&
+				tr.y > brpt.y &&
+				tr.y - brpt.y <= AXIS_DISTANCE_THRESHOLD
+			) {
+				height = tr.y - privateConstants.MARGIN * 2 - trpt.y;
+			}
+
+			bdistance = brptTotr;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "bottom";
+			wLatchPoint = tr;
+		}
+
+		if (
+			blptTotl < bdistance &&
+			blptTotl < tdistance &&
+			blptTotl <= DISTANCE_THRESHOLD &&
+			Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD &&
+			!forBottomRight
+		) {
+			width = brpt.x - tl.x;
+			x = tl.x;
+
+			if (
+				!forBottomRight &&
+				tl.y > blpt.y &&
+				tl.y - blpt.y <= AXIS_DISTANCE_THRESHOLD
+			) {
+				height = tl.y - privateConstants.MARGIN * 2 - tlpt.y;
+			}
+
+			bdistance = blptTotl;
+			isToAdjPresent = true;
+			toAdjIndex = i;
+			wToAdjDirection = "bottom";
+			wLatchPoint = tl;
+		}
+	}
+
+	if (hLatchPoint && wLatchPoint) {
+		latchPoint = {
+			x: wLatchPoint.x,
+			y: hLatchPoint.y,
+		};
+	} else if (hLatchPoint) {
+		latchPoint = hLatchPoint;
+	} else if (wLatchPoint) {
+		latchPoint = wLatchPoint;
+	}
+
+	return {
+		x: x,
+		y: y,
+		height,
+		width,
+		isToAdjPresent,
+		toAdjIndex,
+		hToAdjDirection,
+		wToAdjDirection,
+		latchPoint,
 	};
 };
