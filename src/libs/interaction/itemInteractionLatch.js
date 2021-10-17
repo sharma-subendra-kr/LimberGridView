@@ -503,7 +503,7 @@ export const latchBottomRight = (
 			pt.y <= tr.y &&
 			pt.x >= tl.x &&
 			pt.x <= tr.x &&
-			trd <= LATCH_EDGE_THRESHOLD
+			trdEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
 				tr.y - privateConstants.MARGIN - item.height >=
