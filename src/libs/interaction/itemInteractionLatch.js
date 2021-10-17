@@ -34,7 +34,7 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 
 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
-		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
+		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 8;
 
 	const len = pd.length;
 	const pt = { x: toX, y: toY };
@@ -138,14 +138,14 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTrd, minBld),
+			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTrdEdge, minBldEdge),
+			latchEdgeIndex,
 		},
-		latchCornerIndex,
-		latchEdgeIndex,
 	};
 };
 
@@ -233,7 +233,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			pt.y >= br.y &&
 			pt.x <= br.x &&
 			pt.x >= bl.x &&
-			brd <= LATCH_EDGE_THRESHOLD
+			brdEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (pt.x - pd[index].width >= privateConstants.MARGIN) {
 				toXAdjEdge = pt.x - pd[index].width;
@@ -250,14 +250,14 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTld, minBrd),
+			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTldEdge, minBrdEdge),
+			latchEdgeIndex,
 		},
-		latchCornerIndex,
-		latchEdgeIndex,
 	};
 };
 
@@ -321,7 +321,7 @@ export const latchBottomLeft = (
 			pt.y <= tl.y &&
 			pt.x >= tl.x &&
 			pt.x <= tr.x &&
-			tld <= LATCH_EDGE_THRESHOLD
+			tldEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
 				pt.x + pd[index].width <=
@@ -358,7 +358,7 @@ export const latchBottomLeft = (
 			pt.x >= br.x &&
 			pt.y >= tr.y &&
 			pt.y <= br.y &&
-			brd <= THRESHOLD
+			brdEdge <= THRESHOLD
 		) {
 			if (
 				br.x + privateConstants.MARGIN + pd[index].width <=
@@ -379,14 +379,14 @@ export const latchBottomLeft = (
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTld, minBrd),
+			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTldEdge, minBrdEdge),
+			latchEdgeIndex,
 		},
-		latchCornerIndex,
-		latchEdgeIndex,
 	};
 };
 
@@ -425,6 +425,8 @@ export const latchBottomRight = (
 
 		trd = getDistanceBetnPts(tr, pt);
 		bld = getDistanceBetnPts(bl, pt);
+		trdEdge = tr.y - pt.y;
+		bldEdge = bl.x - pt.x;
 
 		if (trd < minTrd && trd < minBld && pt.y <= tr.y && trd <= THRESHOLD) {
 			if (
@@ -483,7 +485,7 @@ export const latchBottomRight = (
 			pt.x <= bl.x &&
 			pt.y >= tl.y &&
 			pt.y <= bl.y &&
-			bld <= LATCH_EDGE_THRESHOLD
+			bldEdge <= LATCH_EDGE_THRESHOLD
 		) {
 			if (
 				bl.x - privateConstants.MARGIN - pd[index].width >=
@@ -504,13 +506,13 @@ export const latchBottomRight = (
 			to: { toX, toY },
 			toAdj: { toX: toXAdj, toY: toYAdj },
 			distance: Math.min(minTrd, minBld),
+			latchCornerIndex,
 		},
 		edgeLatch: {
 			to: { toX, toY },
 			toAdj: { toX: toXAdjEdge, toY: toYAdjEdge },
 			distance: Math.min(minTrdEdge, minBldEdge),
+			latchEdgeIndex,
 		},
-		latchCornerIndex,
-		latchEdgeIndex,
 	};
 };
