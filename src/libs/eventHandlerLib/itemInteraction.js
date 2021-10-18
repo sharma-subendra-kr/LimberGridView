@@ -214,17 +214,18 @@ export const onItemMouseMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+			let yMousePosition;
 			if (callbacks.offsetMovePseudoElement && mousePositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
 					mousePositionOnLimberGrid.x,
 					mousePositionOnLimberGrid.y,
 					getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex])
 				);
+				yMousePosition = mousePositionOnLimberGrid.y;
 				mousePositionOnLimberGrid.x = off.x;
 				mousePositionOnLimberGrid.y = off.y;
 			}
 			if (mousePositionOnLimberGrid) {
-				const yMousePosition = mousePositionOnLimberGrid.y;
 				if (!iiv.isScrolling) {
 					iiv.isScrolling = true;
 					setTimeout(() => {
@@ -345,17 +346,18 @@ export const onItemTouchMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+			let yTouchPosition;
 			if (callbacks.offsetMovePseudoElement && touchPositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
 					touchPositionOnLimberGrid.x,
 					touchPositionOnLimberGrid.y,
 					getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex])
 				);
+				yTouchPosition = touchPositionOnLimberGrid.y;
 				touchPositionOnLimberGrid.x = off.x;
 				touchPositionOnLimberGrid.y = off.y;
 			}
 			if (touchPositionOnLimberGrid) {
-				const yTouchPosition = touchPositionOnLimberGrid.y;
 				let programScrolled;
 				if (!iiv.isScrolling) {
 					iiv.isScrolling = true;
