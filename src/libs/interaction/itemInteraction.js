@@ -262,6 +262,8 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	index = parseInt(index);
 
+	moveItemInitialChecks(this, index, toX, toY);
+
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedPt = movePointAdjust(this, toX, toY, index);
 		let moveDemo = getStatus(this, "moveDemo");
