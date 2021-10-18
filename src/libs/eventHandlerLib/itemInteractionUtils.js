@@ -317,6 +317,7 @@ export const loadOnMoveState = (context, userActionData, event, type) => {
 		e.$limberGridViewMoveGuide.classList.remove(
 			"limber-grid-view-move-guide-active"
 		);
+		e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
 
 		e.$pseudoContainerItem.classList.remove(
 			"limber-grid-view-pseudo-container-item-move-allow",

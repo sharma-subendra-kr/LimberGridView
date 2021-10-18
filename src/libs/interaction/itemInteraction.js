@@ -193,10 +193,9 @@ export const moveItem = async function (index, toX, toY) {
 	const privateConstants = getPrivateConstants(this);
 
 	index = parseInt(index);
-	if (publicConstants.LATCH_MOVED_ITEM) {
-		// change toX & toY to top left of the overlapping item
 
-		const moveDemo = getStatus(this, "moveDemo");
+	const moveDemo = getStatus(this, "moveDemo");
+	if (publicConstants.LATCH_MOVED_ITEM && moveDemo) {
 		if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
 			toX = moveDemo.toAdj.toX;
 			toY = moveDemo.toAdj.toY;
@@ -263,7 +262,6 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	index = parseInt(index);
 
-	//
 	if (publicConstants.LATCH_MOVED_ITEM) {
 		const adjustedPt = movePointAdjust(this, toX, toY, index);
 		let moveDemo = getStatus(this, "moveDemo");
@@ -273,8 +271,8 @@ export const moveItemDemo = async function (index, toX, toY) {
 		};
 		setStatus(this, "moveDemo", moveDemo);
 
-		if (moveDemo.overlappedItemIndex) {
-			if (moveDemo.overlappedItemIndex === index) {
+		if (!isNaN(moveDemo.overlappedItemIndex)) {
+			if (moveDemo.overlappedItemIndex === adjustedPt.overlappedItemIndex) {
 				if (!moveDemo.sameIndexOverlap) {
 					moveDemo.sameIndexOverlap = 0;
 				}
@@ -335,7 +333,6 @@ export const moveItemDemo = async function (index, toX, toY) {
 			}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
 		}
 	}
-	//
 
 	moveItemInitialChecks(this, index, toX, toY);
 

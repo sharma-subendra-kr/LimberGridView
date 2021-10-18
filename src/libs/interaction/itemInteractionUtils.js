@@ -357,20 +357,74 @@ export const resetDemoUIChanges = (context) => {
 // };
 
 export const movePointAdjust = (context, toX, toY, index) => {
-	const topLeftLatch = latchTopLeft(context, toX, toY, index);
-	const topRightLatch = latchTopRight(context, toX, toY, index);
-	const bottomLeftLatch = latchBottomLeft(context, toX, toY, index);
-	const bottomRightLatch = latchBottomRight(context, toX, toY, index);
-
-	const latch = [
-		topLeftLatch,
-		topRightLatch,
-		bottomLeftLatch,
-		bottomRightLatch,
-	];
+	const privateConstants = getPrivateConstants(context);
+	const INITIAL_CORNER_LATCH_THRESHOLD =
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 4.5 +
+		privateConstants.MARGIN;
 
 	let cornerLatch;
 	let edgeLatch;
+
+	let topLeftLatch = latchTopLeft(
+		context,
+		toX,
+		toY,
+		index,
+		undefined,
+		INITIAL_CORNER_LATCH_THRESHOLD
+	);
+	let topRightLatch = latchTopRight(
+		context,
+		toX,
+		toY,
+		index,
+		undefined,
+		INITIAL_CORNER_LATCH_THRESHOLD
+	);
+	let bottomLeftLatch = latchBottomLeft(
+		context,
+		toX,
+		toY,
+		index,
+		undefined,
+		undefined,
+		undefined,
+		INITIAL_CORNER_LATCH_THRESHOLD
+	);
+	let bottomRightLatch = latchBottomRight(
+		context,
+		toX,
+		toY,
+		index,
+		undefined,
+		undefined,
+		undefined,
+		INITIAL_CORNER_LATCH_THRESHOLD
+	);
+
+	let latch = [topLeftLatch, topRightLatch, bottomLeftLatch, bottomRightLatch];
+
+	for (const item of latch) {
+		if (!cornerLatch || item.cornerLatch.distance < cornerLatch.distance) {
+			cornerLatch = item.cornerLatch;
+		}
+	}
+
+	if (
+		!isNaN(cornerLatch.toAdj.toX) &&
+		cornerLatch.toAdj.toX !== Number.MAX_SAFE_INTEGER
+	) {
+		cornerLatch.overlappedItemIndex = topLeftLatch.overlappedItemIndex;
+		return cornerLatch;
+	}
+
+	topLeftLatch = latchTopLeft(context, toX, toY, index);
+	topRightLatch = latchTopRight(context, toX, toY, index);
+	bottomLeftLatch = latchBottomLeft(context, toX, toY, index);
+	bottomRightLatch = latchBottomRight(context, toX, toY, index);
+
+	latch = [topLeftLatch, topRightLatch, bottomLeftLatch, bottomRightLatch];
+
 	for (const item of latch) {
 		if (!cornerLatch || item.cornerLatch.distance < cornerLatch.distance) {
 			cornerLatch = item.cornerLatch;

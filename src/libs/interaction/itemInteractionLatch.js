@@ -28,11 +28,19 @@ import { getPositionData } from "../../store/variables/essentials";
 import { getDistanceBetnPts } from "../geometry/geometry";
 import { isPointInsideOrTouchRectWithMargin } from "../utils/items";
 
-export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
+export const latchTopLeft = (
+	context,
+	toX,
+	toY,
+	index,
+	latchEdgeThreshold,
+	latchCornerThreshold
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const THRESHOLD =
+		latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
@@ -165,11 +173,19 @@ export const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold) => {
 	};
 };
 
-export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
+export const latchTopRight = (
+	context,
+	toX,
+	toY,
+	index,
+	latchEdgeThreshold,
+	latchCornerThreshold
+) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const THRESHOLD =
+		latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
@@ -208,7 +224,7 @@ export const latchTopRight = (context, toX, toY, index, latchEdgeThreshold) => {
 				toYAdj = tl.y + privateConstants.MARGIN;
 
 				chX = tl.x - privateConstants.MARGIN;
-				chY = tl.y - privateConstants.MARGIN;
+				chY = tl.y + privateConstants.MARGIN;
 
 				minTld = tld;
 				latchCornerIndex = i;
@@ -300,12 +316,14 @@ export const latchBottomLeft = (
 	index,
 	width,
 	height,
-	latchEdgeThreshold
+	latchEdgeThreshold,
+	latchCornerThreshold
 ) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const THRESHOLD =
+		latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
@@ -445,12 +463,14 @@ export const latchBottomRight = (
 	index,
 	width,
 	height,
-	latchEdgeThreshold
+	latchEdgeThreshold,
+	latchCornerThreshold
 ) => {
 	const pd = getPositionData(context);
 	const privateConstants = getPrivateConstants(context);
 
-	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+	const THRESHOLD =
+		latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
 	const LATCH_EDGE_THRESHOLD =
 		latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
 
