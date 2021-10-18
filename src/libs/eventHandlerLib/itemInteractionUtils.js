@@ -25,7 +25,10 @@ Written by Subendra Kumar Sharma.
 
 import getElements from "../../store/variables/elements";
 import getOptions from "../../store/variables/options";
-import { getPositionData } from "../../store/variables/essentials";
+import {
+	getPositionData,
+	getCallbacks,
+} from "../../store/variables/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import { calculateTouchPosOnItem } from "./eventHandlerUtils";
 
@@ -250,6 +253,7 @@ export const unloadResizingState = (context, userActionData) => {
 export const loadMoveState = (context, userActionData, event) => {
 	const e = getElements(context);
 	const pd = getPositionData(context);
+	const callbacks = getCallbacks(context);
 
 	const item = pd[userActionData.itemIndex];
 
@@ -271,11 +275,24 @@ export const loadMoveState = (context, userActionData, event) => {
 	e.$pseudoContainerItem.style.width = item.width + "px";
 	e.$pseudoContainerItem.style.height = item.height + "px";
 
+	let pageX, pageY;
 	if (!event.touches) {
-		e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+		pageX = event.pageX;
+		pageY = event.pageY;
 	} else if (event.touches) {
-		e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+		pageX = event.touches[0].pageX;
+		pageY = event.touches[0].pageY;
 	}
+	if (callbacks.offsetMovePseudoElement) {
+		const off = callbacks.offsetMovePseudoElement(
+			pageX,
+			pageY,
+			getOffsetCallbackArgs(item)
+		);
+		pageX = off.x;
+		pageY = off.y;
+	}
+	e.$pseudoContainerItem.style.transform = `translate(${pageX}px, ${pageY}px)`;
 
 	e.$body.classList.add("limber-grid-view-body-tag-state-editing");
 };
@@ -312,6 +329,10 @@ export const unloadMoveState = (context, userActionData) => {
 
 export const loadOnMoveState = (context, userActionData, event, type) => {
 	const e = getElements(context);
+	const pd = getPositionData(context);
+	const callbacks = getCallbacks(context);
+
+	const item = pd[userActionData.itemIndex];
 
 	if (type === "move") {
 		e.$limberGridViewMoveGuide.classList.remove(
@@ -324,11 +345,24 @@ export const loadOnMoveState = (context, userActionData, event, type) => {
 			"limber-grid-view-pseudo-container-item-move-disallow"
 		);
 
+		let pageX, pageY;
 		if (!event.touches) {
-			e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+			pageX = event.pageX;
+			pageY = event.pageY;
 		} else if (event.touches) {
-			e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+			pageX = event.touches[0].pageX;
+			pageY = event.touches[0].pageY;
 		}
+		if (callbacks.offsetMovePseudoElement) {
+			const off = callbacks.offsetMovePseudoElement(
+				pageX,
+				pageY,
+				getOffsetCallbackArgs(item)
+			);
+			pageX = off.x;
+			pageY = off.y;
+		}
+		e.$pseudoContainerItem.style.transform = `translate(${pageX}px, ${pageY}px)`;
 	} else if (type === "resize") {
 		e.$limberGridViewPseudoItem.classList.remove(
 			"limber-grid-view-pseudo-item-resize-allow",
@@ -344,4 +378,13 @@ export const unloadOnMoveState = (context) => {
 		"limber-grid-view-move-guide-active"
 	);
 	e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
+};
+
+export const getOffsetCallbackArgs = (item) => {
+	return {
+		x1: item.x1,
+		y1: item.y1,
+		x2: item.x2,
+		y2: item.y2,
+	};
 };

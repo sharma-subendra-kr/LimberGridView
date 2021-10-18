@@ -44,6 +44,7 @@ import {
 	unloadMoveState,
 	loadOnMoveState,
 	unloadOnMoveState,
+	getOffsetCallbackArgs,
 } from "./itemInteractionUtils.js";
 import {
 	moveItem,
@@ -201,6 +202,8 @@ export const onItemMouseMove = function (event) {
 	const e = getElements(this);
 	const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
+	const callbacks = getCallbacks(this);
+	const pd = getPositionData(this);
 
 	const iiv = getItemInteractionVars(this);
 
@@ -211,6 +214,15 @@ export const onItemMouseMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+			if (callbacks.offsetMovePseudoElement) {
+				const off = callbacks.offsetMovePseudoElement(
+					mousePositionOnLimberGrid.x,
+					mousePositionOnLimberGrid.y,
+					getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex])
+				);
+				mousePositionOnLimberGrid.x = off.x;
+				mousePositionOnLimberGrid.y = off.y;
+			}
 			if (mousePositionOnLimberGrid) {
 				const yMousePosition = mousePositionOnLimberGrid.y;
 				if (!iiv.isScrolling) {
@@ -321,6 +333,8 @@ export const onItemTouchMove = function (event) {
 	const e = getElements(this);
 	// const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
+	const callbacks = getCallbacks(this);
+	const pd = getPositionData(this);
 
 	const iiv = getItemInteractionVars(this);
 
@@ -331,6 +345,15 @@ export const onItemTouchMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+			if (callbacks.offsetMovePseudoElement) {
+				const off = callbacks.offsetMovePseudoElement(
+					touchPositionOnLimberGrid.x,
+					touchPositionOnLimberGrid.y,
+					getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex])
+				);
+				touchPositionOnLimberGrid.x = off.x;
+				touchPositionOnLimberGrid.y = off.y;
+			}
 			if (touchPositionOnLimberGrid) {
 				const yTouchPosition = touchPositionOnLimberGrid.y;
 				let programScrolled;
@@ -448,6 +471,8 @@ export const onItemMouseUp = async function (event) {
 	}
 
 	const iiv = getItemInteractionVars(this);
+	const callbacks = getCallbacks(this);
+	const pd = getPositionData(this);
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
@@ -455,6 +480,15 @@ export const onItemMouseUp = async function (event) {
 	if (iiv.mouseDownTimerComplete === true) {
 		if (iiv.userActionData.type === "move") {
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+			if (callbacks.offsetMovePseudoElement) {
+				const off = callbacks.offsetMovePseudoElement(
+					mousePositionOnLimberGrid.x,
+					mousePositionOnLimberGrid.y,
+					getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex])
+				);
+				mousePositionOnLimberGrid.x = off.x;
+				mousePositionOnLimberGrid.y = off.y;
+			}
 			var updatedCoordinates = {};
 			try {
 				if (mousePositionOnLimberGrid) {
@@ -507,6 +541,8 @@ export const onItemMouseUp = async function (event) {
 
 export const onItemTouchEnd = async function (event) {
 	const iiv = getItemInteractionVars(this);
+	const callbacks = getCallbacks(this);
+	const pd = getPositionData(this);
 
 	clearTimeout(iiv.showMoveDemoTimeOutVariable);
 	clearTimeout(iiv.showResizeDemoTimeOutVariable);
@@ -514,6 +550,16 @@ export const onItemTouchEnd = async function (event) {
 	if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
 		if (iiv.userActionData.type === "move") {
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+			if (callbacks.offsetMovePseudoElement) {
+				const off = callbacks.offsetMovePseudoElement(
+					touchPositionOnLimberGrid.x,
+					touchPositionOnLimberGrid.y,
+					getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex])
+				);
+				touchPositionOnLimberGrid.x = off.x;
+				touchPositionOnLimberGrid.y = off.y;
+			}
+
 			var updatedCoordinates = {};
 			try {
 				if (touchPositionOnLimberGrid) {

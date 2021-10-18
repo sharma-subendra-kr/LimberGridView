@@ -250,6 +250,13 @@ const main = function () {
 		console.log(pd);
 	};
 
+	const offsetMovePseudoElement = function (x, y, item) {
+		return {
+			x: x - (item.x2 - item.x1) / 2,
+			y: y - (item.y2 - item.y1) / 2,
+		};
+	};
+
 	const obj = {
 		el: "limber-grid-view-implement",
 		// editable: true,
@@ -274,6 +281,7 @@ const main = function () {
 			cutSpaceComplete: cutSpaceComplete,
 			getArrangeTime: getArrangeTime,
 			getLogMessage: getLogMessage,
+			offsetMovePseudoElement: offsetMovePseudoElement,
 		},
 		// "{"gridHeight":561,"gridWidth":960,"margin":5}"
 		// "{"gridHeight":482,"gridWidth":999,"margin":3.830521472392638}"
