@@ -214,7 +214,7 @@ export const onItemMouseMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
-			if (callbacks.offsetMovePseudoElement) {
+			if (callbacks.offsetMovePseudoElement && mousePositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
 					mousePositionOnLimberGrid.x,
 					mousePositionOnLimberGrid.y,
@@ -345,7 +345,7 @@ export const onItemTouchMove = function (event) {
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
-			if (callbacks.offsetMovePseudoElement) {
+			if (callbacks.offsetMovePseudoElement && touchPositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
 					touchPositionOnLimberGrid.x,
 					touchPositionOnLimberGrid.y,
@@ -480,7 +480,7 @@ export const onItemMouseUp = async function (event) {
 	if (iiv.mouseDownTimerComplete === true) {
 		if (iiv.userActionData.type === "move") {
 			const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
-			if (callbacks.offsetMovePseudoElement) {
+			if (callbacks.offsetMovePseudoElement && mousePositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
 					mousePositionOnLimberGrid.x,
 					mousePositionOnLimberGrid.y,
@@ -550,7 +550,7 @@ export const onItemTouchEnd = async function (event) {
 	if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
 		if (iiv.userActionData.type === "move") {
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
-			if (callbacks.offsetMovePseudoElement) {
+			if (callbacks.offsetMovePseudoElement && touchPositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
 					touchPositionOnLimberGrid.x,
 					touchPositionOnLimberGrid.y,
