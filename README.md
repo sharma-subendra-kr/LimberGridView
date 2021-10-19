@@ -53,7 +53,7 @@ const limberGridView = new LimberGridView({
 });
 ```
 
-## Current version LimberGridView 1.0.0-beta.10.
+## Current version LimberGridView 1.0.0-beta.11.
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
@@ -85,6 +85,7 @@ Although many issues were identified and resolved in this current release, you m
 
 To see how LimberGridView works, head over to this [link](https://limber.in/LimberGridView/howItWorks).
 
+### Contact
 If you encounter any problems, you can contact me by emailing me to the email address mentioned on any file on the license header.
 
 ### Contributing
