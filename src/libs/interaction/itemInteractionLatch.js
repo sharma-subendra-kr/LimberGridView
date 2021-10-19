@@ -26,7 +26,7 @@ Written by Subendra Kumar Sharma.
 import getPrivateConstants from "../../store/constants/privateConstants";
 import { getPositionData } from "../../store/variables/essentials";
 import { getDistanceBetnPts } from "../geometry/geometry";
-import { isPointInsideOrTouchRectWithMargin } from "../utils/items";
+import { isPointInsideRect } from "../rect/rectUtils";
 
 export const latchTopLeft = (
 	context,
@@ -58,7 +58,7 @@ export const latchTopLeft = (
 	let chX, chY, chXEdge, chYEdge;
 
 	for (let i = 0; i < len; i++) {
-		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+		if (isPointInsideRect(pd[i], pt)) {
 			inside = i;
 		}
 
