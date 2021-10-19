@@ -10,7 +10,7 @@
 
 
 
-.custom-layout{display:-ms-flexbox;display:flex;background-color:white;-ms-flex-direction:column;flex-direction:column;height:100%;border-radius:10px;overflow:hidden}.custom-layout .custom-layout-header{display:-ms-flexbox;display:flex;height:30px;white-space:nowrap}.custom-layout .custom-layout-header .custom-layout-header-title{-ms-flex:1;flex:1;padding:7px 14px;font-size:14px;overflow:hidden;text-overflow:ellipsis;cursor:grabbing}.custom-layout .custom-layout-body{-ms-flex:1;flex:1}
+.custom-layout{display:-ms-flexbox;display:flex;background-color:white;-ms-flex-direction:column;flex-direction:column;height:100%;border-radius:10px;overflow:hidden}.custom-layout .custom-layout-header{display:-ms-flexbox;display:flex;height:30px;white-space:nowrap}.custom-layout .custom-layout-header .MuiSvgIcon-root{margin:3px 5px;cursor:grabbing}.custom-layout .custom-layout-header .custom-layout-header-title{-ms-flex:1;flex:1;padding:7px 14px;padding-left:0px;font-size:14px;overflow:hidden;text-overflow:ellipsis;cursor:grabbing}.custom-layout .custom-layout-body{-ms-flex:1;flex:1}
 
 .lgv-customized-view-container{height:100%;padding:0px}.lgv-customized-view-container .limber-grid-view{padding:0px}.lgv-customized-view-container .limber-grid-view-item{border-radius:10px}
 
