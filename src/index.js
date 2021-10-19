@@ -117,8 +117,6 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
     pseudoElementContainer: string or element
     itemMouseDownMoveCheck: function                                           // x clicked/touched, y clicked/touched, item, index, event.target, which
     itemMouseDownResizeCheck: function                                         // x clicked/touched, y clicked/touched, item, index, event.target, which
-  
-    getArrangeTime: function                                                   // returns the total arrange time
 
     gridData : {
       WIDTH : 1920,                                                            // width of limberGridView
@@ -151,6 +149,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
       onItemClickCallback : function(event){},                                // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
+      getArrangeTime: function() {}
+      offsetMovePseudoElement: function() {}
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -264,6 +264,9 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
  * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
  * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~getLogMessage} getLogMessage The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
+ * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
+ * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
  */
 
 /**
@@ -330,6 +333,31 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @callback callbacks~removePlugin
  * @param {Element} element The instance of an element which is going to be removed from the DOM.
  * @returns {undefined}
+ */
+
+/**
+ * The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
+ * @callback callbacks~getLogMessage
+ * @param {object} log Returns an object with keys type and message.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
+ * @callback callbacks~getArrangeTime
+ * @param {number} time The time taken for all arrangement jobs to complete.
+ * @param {number} resizeCount The number of items resized.
+ * @param {number} count The number of rectangles processed internally.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
+ * @callback callbacks~offsetMovePseudoElement
+ * @param {number} x The distance along the x-axis where the user placed the cursor or touched the surface.
+ * @param {number} y The distance along the y-axis where the user placed the cursor or touched the surface.
+ * @param {object} item An item object in the two-point form.
+ * @returns {object} An object with keys x and y. It represents the translated top-left point of the move pseudo-element.
  */
 
 /**
