@@ -1125,6 +1125,7 @@ const unloadResizingState = (context, userActionData) => {
 const loadMoveState = (context, userActionData, event) => {
   const e = variables_elements(context);
   const pd = getPositionData(context);
+  const callbacks = getCallbacks(context);
   const item = pd[userActionData.itemIndex];
   e.$limberGridViewHeightAdjustGuide.style.height = 0 + "px";
   e.$limberGridViewHeightAdjustGuide.classList.add("limber-grid-view-height-adjust-guide-active");
@@ -1136,13 +1137,23 @@ const loadMoveState = (context, userActionData, event) => {
   e.$pseudoContainerItem.classList.add("limber-grid-view-pseudo-container-item-active");
   e.$pseudoContainerItem.style.width = item.width + "px";
   e.$pseudoContainerItem.style.height = item.height + "px";
+  let pageX, pageY;
 
   if (!event.touches) {
-    e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+    pageX = event.pageX;
+    pageY = event.pageY;
   } else if (event.touches) {
-    e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+    pageX = event.touches[0].pageX;
+    pageY = event.touches[0].pageY;
   }
 
+  if (callbacks.offsetMovePseudoElement) {
+    const off = callbacks.offsetMovePseudoElement(pageX, pageY, getOffsetCallbackArgs(item));
+    pageX = off.x;
+    pageY = off.y;
+  }
+
+  e.$pseudoContainerItem.style.transform = `translate(${pageX}px, ${pageY}px)`;
   e.$body.classList.add("limber-grid-view-body-tag-state-editing");
 };
 const unloadMoveState = (context, userActionData) => {
@@ -1163,16 +1174,31 @@ const unloadMoveState = (context, userActionData) => {
 };
 const loadOnMoveState = (context, userActionData, event, type) => {
   const e = variables_elements(context);
+  const pd = getPositionData(context);
+  const callbacks = getCallbacks(context);
+  const item = pd[userActionData.itemIndex];
 
   if (type === "move") {
     e.$limberGridViewMoveGuide.classList.remove("limber-grid-view-move-guide-active");
+    e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
     e.$pseudoContainerItem.classList.remove("limber-grid-view-pseudo-container-item-move-allow", "limber-grid-view-pseudo-container-item-move-disallow");
+    let pageX, pageY;
 
     if (!event.touches) {
-      e.$pseudoContainerItem.style.transform = `translate(${event.pageX}px, ${event.pageY}px)`;
+      pageX = event.pageX;
+      pageY = event.pageY;
     } else if (event.touches) {
-      e.$pseudoContainerItem.style.transform = `translate(${event.touches[0].pageX}px, ${event.touches[0].pageY}px)`;
+      pageX = event.touches[0].pageX;
+      pageY = event.touches[0].pageY;
     }
+
+    if (callbacks.offsetMovePseudoElement) {
+      const off = callbacks.offsetMovePseudoElement(pageX, pageY, getOffsetCallbackArgs(item));
+      pageX = off.x;
+      pageY = off.y;
+    }
+
+    e.$pseudoContainerItem.style.transform = `translate(${pageX}px, ${pageY}px)`;
   } else if (type === "resize") {
     e.$limberGridViewPseudoItem.classList.remove("limber-grid-view-pseudo-item-resize-allow", "limber-grid-view-pseudo-item-resize-disallow");
   }
@@ -1181,6 +1207,14 @@ const unloadOnMoveState = context => {
   const e = variables_elements(context);
   e.$limberGridViewMoveGuide.classList.remove("limber-grid-view-move-guide-active");
   e.$limberGridViewMoveGuide.style.transform = `translate(-1000px, -1000px)`;
+};
+const getOffsetCallbackArgs = item => {
+  return {
+    x1: item.x1,
+    y1: item.y1,
+    x2: item.x2,
+    y2: item.y2
+  };
 };
 // CONCATENATED MODULE: ./src/libs/geometry/geometry.js
 /*
@@ -1481,485 +1515,6 @@ const items_getRenderedItemsMap = context => {
   }
 
   return renderedItemsMap;
-};
-// CONCATENATED MODULE: ./src/libs/interaction/itemInteractionUtils.js
-/*
-
-LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
-
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-
-
-
-
-
-const getResizeAffectedItems = (context, item, index) => {
-  const pd = getPositionData(context);
-  const mpd = getModifiedPositionData(context);
-  const len = pd.length;
-  const affectedArr = new Array(len);
-  let count = 0;
-
-  for (let i = 0; i < len; i++) {
-    if (doRectsOverlapWithMargin(item, pd[i]) && i !== index) {
-      affectedArr[count++] = i;
-      mpd[i].x1 = undefined;
-      mpd[i].y1 = undefined;
-      mpd[i].x2 = undefined;
-      mpd[i].y2 = undefined;
-      mpd[i].mX1 = undefined;
-      mpd[i].mY1 = undefined;
-      mpd[i].mX2 = undefined;
-      mpd[i].mY2 = undefined;
-      mpd[i].x = undefined;
-      mpd[i].y = undefined;
-      mpd[i].mX = undefined;
-      mpd[i].mY = undefined;
-    }
-  }
-
-  affectedArr[count++] = index;
-  affectedArr.length = count;
-  return affectedArr;
-};
-const getMoveAffectedItems = (context, item, index) => {
-  const pd = getPositionData(context);
-  const mpd = getModifiedPositionData(context);
-  const len = pd.length;
-  const affectedArr = new Array(len);
-  let count = 0;
-
-  for (let i = 0; i < len; i++) {
-    if (doRectsOverlapWithMargin(item, pd[i]) && i !== index) {
-      affectedArr[count++] = i;
-      mpd[i].x1 = undefined;
-      mpd[i].y1 = undefined;
-      mpd[i].x2 = undefined;
-      mpd[i].y2 = undefined;
-      mpd[i].mX1 = undefined;
-      mpd[i].mY1 = undefined;
-      mpd[i].mX2 = undefined;
-      mpd[i].mY2 = undefined;
-      mpd[i].x = undefined;
-      mpd[i].y = undefined;
-      mpd[i].mX = undefined;
-      mpd[i].mY = undefined;
-    }
-  }
-
-  affectedArr[count++] = index;
-  affectedArr.length = count;
-  return affectedArr;
-};
-const resizeItemInitialChecks = (context, index, x, y, width, height) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-
-  if (index < 0 || index >= pd.length) {
-    // invalid index
-    throw "Index out of bounds.";
-  }
-
-  if (typeof x !== "number" || typeof y !== "number") {
-    throw "x or y is not a number.";
-  }
-
-  if (x < privateConstants.MARGIN || y < privateConstants.MARGIN) {
-    // falls outside
-    throw "Left edges falls outside the grid area.";
-  }
-
-  if (typeof width !== "number" || typeof height !== "number") {
-    throw "Width or Height is not a number.";
-  }
-
-  if (x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
-    // falls outside
-    throw "Right edges falls outside the grid area.";
-  }
-
-  if (width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH || height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
-    // very small. TO DO: let the developers decide the smallest item size but can't be less than 150
-    throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
-  }
-
-  if (height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT) {
-    throw "Height cannot be greater than height of container.";
-  }
-
-  return true;
-};
-const moveItemInitialChecks = (context, index, toX, toY) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context);
-
-  if (index < 0 || index >= pd.length) {
-    // invalid index
-    throw "Index out of bounds.";
-  }
-
-  if (typeof toX !== "number" || typeof toY !== "number") {
-    throw "toX or toY is not a number.";
-  }
-
-  if (toX < privateConstants.MARGIN || toY < privateConstants.MARGIN) {
-    // falls outside
-    throw "Left edges falls outside the grid area.";
-  }
-
-  if (toX + pd[index].width + privateConstants.MARGIN > privateConstants.WIDTH) {
-    // falls outside
-    throw "Right edges falls outside the grid area.";
-  }
-
-  return true;
-};
-const getResizeModifiedItem = (toX, toY, width, height, MARGIN) => {
-  return {
-    x: toX,
-    y: toY,
-    width: width,
-    height: height,
-    mX: toX - MARGIN,
-    mY: toY - MARGIN,
-    mWidth: width + MARGIN * 2,
-    mHeight: height + MARGIN * 2,
-    x1: toX,
-    y1: toY,
-    x2: toX + width,
-    y2: toY + height,
-    mX1: toX - MARGIN,
-    mY1: toY - MARGIN,
-    mX2: toX + width + MARGIN,
-    mY2: toY + height + MARGIN
-  };
-};
-const getMoveModifiedItem = (toX, toY, item, MARGIN) => {
-  return {
-    x: toX,
-    y: toY,
-    width: item.width,
-    height: item.height,
-    mX: toX - MARGIN,
-    mY: toY - MARGIN,
-    mWidth: item.width + MARGIN * 2,
-    mHeight: item.height + MARGIN * 2,
-    x1: toX,
-    y1: toY,
-    x2: toX + item.width,
-    y2: toY + item.height,
-    mX1: toX - MARGIN,
-    mY1: toY - MARGIN,
-    mX2: toX + item.width + MARGIN,
-    mY2: toY + item.height + MARGIN
-  };
-};
-const resetDemoUIChanges = context => {
-  const pd = getPositionData(context);
-  const e = variables_elements(context);
-  const len = pd.length;
-
-  for (let i = 0; i < len; i++) {
-    if (e.$limberGridViewItems[i]) {
-      e.$limberGridViewItems[i].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
-      e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
-      e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
-    }
-  }
-};
-const movePointAdjust = (context, toX, toY, index) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context); // const THRESHOLD = privateConstants.WIDTH / 4;
-
-  const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
-  const len = pd.length;
-  const pt = {
-    x: toX,
-    y: toY
-  };
-  let inside;
-  let tl, tr, bl, tld, trd, bld;
-  let ldistance = Number.MAX_SAFE_INTEGER;
-  let rdistance = Number.MAX_SAFE_INTEGER;
-  let bdistance = Number.MAX_SAFE_INTEGER;
-  let toXAdj, toYAdj;
-  let isToAdjPresent = false;
-  let toAdjIndex;
-  let toAdjDirection;
-
-  for (let i = 0; i < len; i++) {
-    if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
-      inside = i;
-      toX = pd[inside].x;
-      toY = pd[inside].y; // break;
-    }
-
-    if (i === index) {
-      continue;
-    }
-
-    tl = {
-      x: pd[i].mX1,
-      y: pd[i].mY1
-    };
-    tr = {
-      x: pd[i].mX2,
-      y: pd[i].mY1
-    };
-    bl = {
-      x: pd[i].mX1,
-      y: pd[i].mY2
-    };
-    tld = getDistanceBetnPts(tl, pt);
-    trd = getDistanceBetnPts(tr, pt);
-    bld = getDistanceBetnPts(bl, pt);
-
-    if (tld < ldistance && tld < rdistance && tld < bdistance && pt.x < tl.x && tld <= THRESHOLD) {
-      if (tl.x - privateConstants.MARGIN - pd[index].width >= privateConstants.MARGIN) {
-        toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
-        toYAdj = tl.y + privateConstants.MARGIN;
-        ldistance = tld;
-        isToAdjPresent = true;
-        toAdjIndex = i;
-        toAdjDirection = "left";
-      }
-    }
-
-    if (trd < rdistance && trd < ldistance && trd < bdistance && pt.x > tr.x && trd <= THRESHOLD) {
-      if (tr.x + privateConstants.MARGIN + pd[index].width < privateConstants.WIDTH) {
-        toXAdj = tr.x + privateConstants.MARGIN;
-        toYAdj = tr.y + privateConstants.MARGIN;
-        rdistance = trd;
-        isToAdjPresent = true;
-        toAdjIndex = i;
-        toAdjDirection = "right";
-      }
-    }
-
-    if (bld < bdistance && bld < ldistance && bld < rdistance && pt.y >= bl.y && pt.x >= bl.x && bld <= THRESHOLD) {
-      if (tl.x + privateConstants.MARGIN + pd[index].width < privateConstants.WIDTH) {
-        toXAdj = tl.x + privateConstants.MARGIN;
-        toYAdj = bl.y + privateConstants.MARGIN;
-        bdistance = bld;
-        isToAdjPresent = true;
-        toAdjIndex = i;
-        toAdjDirection = "bottom";
-      }
-    }
-  }
-
-  return {
-    to: {
-      toX,
-      toY
-    },
-    toAdj: {
-      toX: toXAdj,
-      toY: toYAdj
-    },
-    overlappedItemIndex: inside,
-    isToAdjPresent,
-    toAdjIndex,
-    toAdjDirection
-  };
-};
-const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) => {
-  const pd = getPositionData(context);
-  const privateConstants = constants_privateConstants(context); // const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
-
-  const DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 2;
-  const AXIS_DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
-  const len = pd.length;
-  const tlpt = {
-    x: x,
-    y: y
-  };
-  const trpt = {
-    x: x + width,
-    y: y
-  };
-  const brpt = {
-    x: x + width,
-    y: y + height
-  };
-  const blpt = {
-    x: x,
-    y: y + height
-  };
-  let tl, bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr, blptTotl, tlptTobl;
-  let ldistance = Number.MAX_SAFE_INTEGER;
-  let rdistance = Number.MAX_SAFE_INTEGER;
-  let tdistance = Number.MAX_SAFE_INTEGER;
-  let bdistance = Number.MAX_SAFE_INTEGER;
-  let isToAdjPresent = false;
-  let toAdjIndex;
-  let hToAdjDirection;
-  let wToAdjDirection;
-  let hLatchPoint;
-  let wLatchPoint;
-  let latchPoint;
-
-  for (let i = 0; i < len; i++) {
-    if (i === index) {
-      continue;
-    }
-
-    tl = {
-      x: pd[i].x1,
-      y: pd[i].y1
-    };
-    bl = {
-      x: pd[i].x1,
-      y: pd[i].y2
-    };
-    br = {
-      x: pd[i].x2,
-      y: pd[i].y2
-    };
-    tr = {
-      x: pd[i].x2,
-      y: pd[i].y1
-    };
-    brptTobl = getDistanceBetnPts(bl, brpt);
-    blptTobr = getDistanceBetnPts(br, blpt);
-    trptTobr = getDistanceBetnPts(br, trpt);
-    brptTotr = getDistanceBetnPts(tr, brpt);
-    blptTotl = getDistanceBetnPts(tl, blpt);
-    tlptTobl = getDistanceBetnPts(bl, tlpt); // affected bottom to adjacent bottom
-
-    if (brptTobl < rdistance && brptTobl < ldistance && brpt.x < bl.x && Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
-      height = bl.y - trpt.y;
-
-      if (forBottomRight && bl.x - brpt.x <= AXIS_DISTANCE_THRESHOLD) {
-        width = bl.x - privateConstants.MARGIN * 2 - blpt.x;
-      }
-
-      rdistance = brptTobl;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      hToAdjDirection = "right";
-      hLatchPoint = bl;
-    }
-
-    if (blptTobr < ldistance && blptTobr < rdistance && blpt.x > br.x && Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
-      height = br.y - tlpt.y;
-
-      if (!forBottomRight && blpt.x - br.x <= AXIS_DISTANCE_THRESHOLD) {
-        x = br.x + privateConstants.MARGIN * 2;
-        width = brpt.x - x;
-      }
-
-      ldistance = blptTobr;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      hToAdjDirection = "left";
-      hLatchPoint = br;
-    } // affected top to adjacent bottom
-
-
-    if (trptTobr < tdistance && trptTobr < bdistance && trptTobr <= DISTANCE_THRESHOLD && Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
-      width = br.x - tlpt.x;
-      tdistance = trptTobr;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      wToAdjDirection = "top";
-      wLatchPoint = br;
-    }
-
-    if (tlptTobl < tdistance && tlptTobl < bdistance && tlptTobl <= DISTANCE_THRESHOLD && Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD && !forBottomRight) {
-      width = trpt.x - bl.x;
-      x = bl.x;
-      tdistance = tlptTobl;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      wToAdjDirection = "top";
-      wLatchPoint = bl;
-    } // affected bottom to adjacent top
-
-
-    if (brptTotr < bdistance && brptTotr < tdistance && brptTotr <= DISTANCE_THRESHOLD && Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
-      width = tr.x - blpt.x;
-
-      if (forBottomRight && tr.y > brpt.y && tr.y - brpt.y <= AXIS_DISTANCE_THRESHOLD) {
-        height = tr.y - privateConstants.MARGIN * 2 - trpt.y;
-      }
-
-      bdistance = brptTotr;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      wToAdjDirection = "bottom";
-      wLatchPoint = tr;
-    }
-
-    if (blptTotl < bdistance && blptTotl < tdistance && blptTotl <= DISTANCE_THRESHOLD && Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD && !forBottomRight) {
-      width = brpt.x - tl.x;
-      x = tl.x;
-
-      if (!forBottomRight && tl.y > blpt.y && tl.y - blpt.y <= AXIS_DISTANCE_THRESHOLD) {
-        height = tl.y - privateConstants.MARGIN * 2 - tlpt.y;
-      }
-
-      bdistance = blptTotl;
-      isToAdjPresent = true;
-      toAdjIndex = i;
-      wToAdjDirection = "bottom";
-      wLatchPoint = tl;
-    }
-  }
-
-  if (hLatchPoint && wLatchPoint) {
-    latchPoint = {
-      x: wLatchPoint.x,
-      y: hLatchPoint.y
-    };
-  } else if (hLatchPoint) {
-    latchPoint = hLatchPoint;
-  } else if (wLatchPoint) {
-    latchPoint = wLatchPoint;
-  }
-
-  return {
-    x: x,
-    y: y,
-    height,
-    width,
-    isToAdjPresent,
-    toAdjIndex,
-    hToAdjDirection,
-    wToAdjDirection,
-    latchPoint
-  };
-};
-const positionArranged = (context, arranged) => {
-  const e = variables_elements(context);
-
-  for (const key in arranged) {
-    if (e.$limberGridViewItems[key]) {
-      const item = arranged[key];
-      e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
-      e.$limberGridViewItems[key].style.width = `${item.width}px`;
-      e.$limberGridViewItems[key].style.height = `${item.height}px`;
-    }
-  }
 };
 // CONCATENATED MODULE: ./src/libs/rect/rectUtils.js
 /*
@@ -2337,6 +1892,1104 @@ const isRectLarger = (rectA, rectB) => {
 
   if (ah > bh) {
     return true;
+  }
+};
+// CONCATENATED MODULE: ./src/libs/interaction/itemInteractionLatch.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+
+const latchTopLeft = (context, toX, toY, index, latchEdgeThreshold, latchCornerThreshold) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const THRESHOLD = latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+  const LATCH_EDGE_THRESHOLD = latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
+  const item = { ...pd[index]
+  };
+  const len = pd.length;
+  const pt = {
+    x: toX,
+    y: toY
+  };
+  let inside;
+  let tr, bl, br, trd, bld, trdEdge, bldEdge;
+  let minTrd = Number.MAX_SAFE_INTEGER;
+  let minBld = Number.MAX_SAFE_INTEGER;
+  let minTrdEdge = Number.MAX_SAFE_INTEGER;
+  let minBldEdge = Number.MAX_SAFE_INTEGER;
+  let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+  let latchCornerIndex, latchEdgeIndex;
+  let chX, chY, chXEdge, chYEdge;
+
+  for (let i = 0; i < len; i++) {
+    if (isPointInsideRect(pd[i], pt)) {
+      inside = i;
+    }
+
+    if (i === index) {
+      continue;
+    }
+
+    tr = {
+      x: pd[i].x2,
+      y: pd[i].y1
+    };
+    bl = {
+      x: pd[i].x1,
+      y: pd[i].y2
+    };
+    br = {
+      x: pd[i].x2,
+      y: pd[i].y2
+    };
+    trd = getDistanceBetnPts(tr, pt);
+    bld = getDistanceBetnPts(bl, pt);
+    trdEdge = pt.x - tr.x;
+    bldEdge = pt.y - bl.y;
+
+    if (trd < minTrd && trd < minBld && pt.x >= tr.x && trd <= THRESHOLD) {
+      if (tr.x + privateConstants.MARGIN * 2 + item.width <= privateConstants.WIDTH - privateConstants.MARGIN) {
+        toXAdj = tr.x + privateConstants.MARGIN * 2;
+        toYAdj = tr.y;
+        chX = toXAdj;
+        chY = toYAdj;
+        minTrd = trd;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (trdEdge < minTrdEdge && trdEdge < minBldEdge && pt.x >= tr.x && pt.y >= tr.y && pt.y <= br.y && trdEdge <= LATCH_EDGE_THRESHOLD) {
+      if (tr.x + privateConstants.MARGIN * 2 + item.width <= privateConstants.WIDTH - privateConstants.MARGIN) {
+        toXAdjEdge = tr.x + privateConstants.MARGIN * 2;
+        toYAdjEdge = pt.y;
+        chXEdge = toXAdjEdge;
+        chYEdge = toYAdjEdge;
+        minTrdEdge = trdEdge;
+        latchEdgeIndex = i;
+      }
+    }
+
+    if (bld < minBld && bld < minTrd && pt.y >= bl.y && bld <= THRESHOLD) {
+      if (bl.x + item.width < privateConstants.WIDTH - privateConstants.MARGIN) {
+        toXAdj = bl.x;
+        toYAdj = bl.y + privateConstants.MARGIN * 2;
+        chX = toXAdj;
+        chY = toYAdj;
+        minBld = bld;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (bldEdge < minBldEdge && bldEdge < minTrdEdge && pt.y >= bl.y && pt.x >= bl.x && pt.x <= br.x && bldEdge <= LATCH_EDGE_THRESHOLD) {
+      if (pt.x + item.width < privateConstants.WIDTH - privateConstants.MARGIN) {
+        toXAdjEdge = pt.x;
+        toYAdjEdge = bl.y + privateConstants.MARGIN * 2;
+        chXEdge = toXAdjEdge;
+        chYEdge = toYAdjEdge;
+        minBldEdge = bldEdge;
+        latchEdgeIndex = i;
+      }
+    }
+  }
+
+  return {
+    overlappedItemIndex: inside,
+    cornerLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdj,
+        toY: toYAdj
+      },
+      ch: {
+        x: chX,
+        y: chY
+      },
+      distance: Math.min(minTrd, minBld),
+      latchCornerIndex
+    },
+    edgeLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdjEdge,
+        toY: toYAdjEdge
+      },
+      ch: {
+        x: chXEdge,
+        y: chYEdge
+      },
+      distance: Math.min(minTrdEdge, minBldEdge),
+      latchEdgeIndex
+    }
+  };
+};
+const latchTopRight = (context, toX, toY, index, latchEdgeThreshold, latchCornerThreshold) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const THRESHOLD = latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+  const LATCH_EDGE_THRESHOLD = latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
+  const item = { ...pd[index]
+  };
+  const len = pd.length;
+  const pt = {
+    x: toX + item.width,
+    y: toY
+  };
+  let tl, br, bl, tld, brd, tldEdge, brdEdge;
+  let minTld = Number.MAX_SAFE_INTEGER;
+  let minBrd = Number.MAX_SAFE_INTEGER;
+  let minTldEdge = Number.MAX_SAFE_INTEGER;
+  let minBrdEdge = Number.MAX_SAFE_INTEGER;
+  let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+  let latchCornerIndex, latchEdgeIndex;
+  let chX, chY, chXEdge, chYEdge;
+
+  for (let i = 0; i < len; i++) {
+    if (i === index) {
+      continue;
+    }
+
+    tl = {
+      x: pd[i].x1,
+      y: pd[i].y1
+    };
+    br = {
+      x: pd[i].x2,
+      y: pd[i].y2
+    };
+    bl = {
+      x: pd[i].x1,
+      y: pd[i].y2
+    };
+    tld = getDistanceBetnPts(tl, pt);
+    brd = getDistanceBetnPts(br, pt);
+    tldEdge = tl.x - pt.x;
+    brdEdge = pt.y - br.y;
+
+    if (tld < minTld && tld < minBrd && pt.x <= tl.x && tld <= THRESHOLD) {
+      if (tl.x - privateConstants.MARGIN * 2 - item.width >= privateConstants.MARGIN) {
+        toXAdj = tl.x - privateConstants.MARGIN * 2 - item.width;
+        toYAdj = tl.y;
+        chX = tl.x - privateConstants.MARGIN * 2;
+        chY = tl.y;
+        minTld = tld;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (tldEdge < minTldEdge && tldEdge < minBrdEdge && pt.x <= tl.x && pt.y >= tl.y && pt.y <= bl.y && tldEdge <= LATCH_EDGE_THRESHOLD) {
+      if (tl.x - privateConstants.MARGIN * 2 - item.width >= privateConstants.MARGIN) {
+        toXAdjEdge = tl.x - privateConstants.MARGIN * 2 - item.width;
+        toYAdjEdge = pt.y;
+        chXEdge = tl.x - privateConstants.MARGIN * 2;
+        chYEdge = toYAdjEdge;
+        minTldEdge = tldEdge;
+        latchEdgeIndex = i;
+      }
+    }
+
+    if (brd < minTld && brd < minBrd && pt.y >= br.y && brd <= THRESHOLD) {
+      if (br.x - item.width >= privateConstants.MARGIN) {
+        toXAdj = br.x - item.width;
+        toYAdj = br.y + privateConstants.MARGIN * 2;
+        chX = br.x;
+        chY = toYAdj;
+        minBrd = brd;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (brdEdge < minTldEdge && brdEdge < minBrdEdge && pt.y >= br.y && pt.x <= br.x && pt.x >= bl.x && brdEdge <= LATCH_EDGE_THRESHOLD) {
+      if (pt.x - item.width >= privateConstants.MARGIN) {
+        toXAdjEdge = pt.x - item.width;
+        toYAdjEdge = br.y + privateConstants.MARGIN * 2;
+        chXEdge = pt.x;
+        chYEdge = toYAdjEdge;
+        minBrdEdge = brdEdge;
+        latchEdgeIndex = i;
+      }
+    }
+  }
+
+  return {
+    cornerLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdj,
+        toY: toYAdj
+      },
+      ch: {
+        x: chX,
+        y: chY
+      },
+      distance: Math.min(minTld, minBrd),
+      latchCornerIndex
+    },
+    edgeLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdjEdge,
+        toY: toYAdjEdge
+      },
+      ch: {
+        x: chXEdge,
+        y: chYEdge
+      },
+      distance: Math.min(minTldEdge, minBrdEdge),
+      latchEdgeIndex
+    }
+  };
+};
+const latchBottomLeft = (context, toX, toY, index, width, height, latchEdgeThreshold, latchCornerThreshold) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const THRESHOLD = latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+  const LATCH_EDGE_THRESHOLD = latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
+  const item = { ...pd[index]
+  };
+  item.width = width || item.width;
+  item.height = height || item.height;
+  const len = pd.length;
+  const pt = {
+    x: toX,
+    y: toY + item.height
+  };
+  let tl, br, tr, tld, brd, tldEdge, brdEdge;
+  let minTld = Number.MAX_SAFE_INTEGER;
+  let minBrd = Number.MAX_SAFE_INTEGER;
+  let minTldEdge = Number.MAX_SAFE_INTEGER;
+  let minBrdEdge = Number.MAX_SAFE_INTEGER;
+  let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+  let latchCornerIndex, latchEdgeIndex;
+  let chX, chY, chXEdge, chYEdge;
+
+  for (let i = 0; i < len; i++) {
+    if (i === index) {
+      continue;
+    }
+
+    tl = {
+      x: pd[i].x1,
+      y: pd[i].y1
+    };
+    br = {
+      x: pd[i].x2,
+      y: pd[i].y2
+    };
+    tr = {
+      x: pd[i].x2,
+      y: pd[i].y1
+    };
+    tld = getDistanceBetnPts(tl, pt);
+    brd = getDistanceBetnPts(br, pt);
+    tldEdge = tl.y - pt.y;
+    brdEdge = pt.x - br.x;
+
+    if (tld < minTld && tld < minBrd && pt.y <= tl.y && tld <= THRESHOLD) {
+      if (tl.x + item.width <= privateConstants.WIDTH - privateConstants.MARGIN && tl.y - privateConstants.MARGIN * 2 - item.height >= privateConstants.MARGIN) {
+        toXAdj = tl.x;
+        toYAdj = tl.y - privateConstants.MARGIN * 2 - item.height;
+        chX = toXAdj;
+        chY = tl.y - privateConstants.MARGIN * 2;
+        minTld = tld;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (tldEdge < minTldEdge && tldEdge < minBrdEdge && pt.y <= tl.y && pt.x >= tl.x && pt.x <= tr.x && tldEdge <= LATCH_EDGE_THRESHOLD) {
+      if (pt.x + item.width <= privateConstants.WIDTH - privateConstants.MARGIN && tl.y - privateConstants.MARGIN * 2 - item.height >= privateConstants.MARGIN) {
+        toXAdjEdge = pt.x;
+        toYAdjEdge = tl.y - privateConstants.MARGIN * 2 - item.height;
+        chXEdge = toXAdjEdge;
+        chYEdge = tl.y - privateConstants.MARGIN * 2;
+        minTldEdge = tldEdge;
+        latchEdgeIndex = i;
+      }
+    }
+
+    if (brd < minTld && brd < minBrd && pt.x >= br.x && brd <= THRESHOLD) {
+      if (br.x + privateConstants.MARGIN * 2 + item.width <= privateConstants.WIDTH - privateConstants.MARGIN && br.y - item.height >= privateConstants.MARGIN) {
+        toXAdj = br.x + privateConstants.MARGIN * 2;
+        toYAdj = br.y - item.height;
+        chX = toXAdj;
+        chY = br.y;
+        minBrd = brd;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (brdEdge < minTldEdge && brdEdge < minBrdEdge && pt.x >= br.x && pt.y >= tr.y && pt.y <= br.y && brdEdge <= LATCH_EDGE_THRESHOLD) {
+      if (br.x + privateConstants.MARGIN * 2 + item.width <= privateConstants.WIDTH - privateConstants.MARGIN && pt.y - item.height >= privateConstants.MARGIN) {
+        toXAdjEdge = br.x + privateConstants.MARGIN * 2;
+        toYAdjEdge = pt.y - item.height;
+        chXEdge = toXAdjEdge;
+        chYEdge = pt.y;
+        minBrdEdge = brdEdge;
+        latchEdgeIndex = i;
+      }
+    }
+  }
+
+  return {
+    cornerLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdj,
+        toY: toYAdj
+      },
+      ch: {
+        x: chX,
+        y: chY
+      },
+      distance: Math.min(minTld, minBrd),
+      latchCornerIndex
+    },
+    edgeLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdjEdge,
+        toY: toYAdjEdge
+      },
+      ch: {
+        x: chXEdge,
+        y: chYEdge
+      },
+      distance: Math.min(minTldEdge, minBrdEdge),
+      latchEdgeIndex
+    }
+  };
+};
+const latchBottomRight = (context, toX, toY, index, width, height, latchEdgeThreshold, latchCornerThreshold) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+  const THRESHOLD = latchCornerThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+  const LATCH_EDGE_THRESHOLD = latchEdgeThreshold || privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 5;
+  const item = { ...pd[index]
+  };
+  item.width = width || item.width;
+  item.height = height || item.height;
+  const len = pd.length;
+  const pt = {
+    x: toX + item.width,
+    y: toY + item.height
+  };
+  let tr, bl, tl, trd, bld, trdEdge, bldEdge;
+  let minTrd = Number.MAX_SAFE_INTEGER;
+  let minBld = Number.MAX_SAFE_INTEGER;
+  let minTrdEdge = Number.MAX_SAFE_INTEGER;
+  let minBldEdge = Number.MAX_SAFE_INTEGER;
+  let toXAdj, toYAdj, toXAdjEdge, toYAdjEdge;
+  let latchCornerIndex, latchEdgeIndex;
+  let chX, chY, chXEdge, chYEdge;
+
+  for (let i = 0; i < len; i++) {
+    if (i === index) {
+      continue;
+    }
+
+    tr = {
+      x: pd[i].x2,
+      y: pd[i].y1
+    };
+    bl = {
+      x: pd[i].x1,
+      y: pd[i].y2
+    };
+    tl = {
+      x: pd[i].x1,
+      y: pd[i].y1
+    };
+    trd = getDistanceBetnPts(tr, pt);
+    bld = getDistanceBetnPts(bl, pt);
+    trdEdge = tr.y - pt.y;
+    bldEdge = bl.x - pt.x;
+
+    if (trd < minTrd && trd < minBld && pt.y <= tr.y && trd <= THRESHOLD) {
+      if (tr.y - privateConstants.MARGIN * 2 - item.height >= privateConstants.MARGIN && tr.x - item.width >= privateConstants.MARGIN) {
+        toXAdj = tr.x - item.width;
+        toYAdj = tr.y - privateConstants.MARGIN * 2 - item.height;
+        chX = tr.x;
+        chY = tr.y - privateConstants.MARGIN * 2;
+        minTrd = trd;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (trdEdge < minTrdEdge && trdEdge < minBldEdge && pt.y <= tr.y && pt.x >= tl.x && pt.x <= tr.x && trdEdge <= LATCH_EDGE_THRESHOLD) {
+      if (tr.y - privateConstants.MARGIN * 2 - item.height >= privateConstants.MARGIN && pt.x - item.width >= privateConstants.MARGIN) {
+        toXAdjEdge = pt.x - item.width;
+        toYAdjEdge = tr.y - privateConstants.MARGIN * 2 - item.height;
+        chXEdge = pt.x;
+        chYEdge = tr.y - privateConstants.MARGIN * 2;
+        minTrdEdge = trdEdge;
+        latchEdgeIndex = i;
+      }
+    }
+
+    if (bld < minTrd && bld < minBld && pt.x <= bl.x && bld <= THRESHOLD) {
+      if (bl.x - privateConstants.MARGIN * 2 - item.width >= privateConstants.MARGIN && bl.y - item.height >= privateConstants.MARGIN) {
+        toXAdj = bl.x - privateConstants.MARGIN * 2 - item.width;
+        toYAdj = bl.y - item.height;
+        chX = bl.x - privateConstants.MARGIN * 2;
+        chY = bl.y;
+        minBld = bld;
+        latchCornerIndex = i;
+      }
+    }
+
+    if (bldEdge < minTrdEdge && bldEdge < minBldEdge && pt.x <= bl.x && pt.y >= tl.y && pt.y <= bl.y && bldEdge <= LATCH_EDGE_THRESHOLD) {
+      if (bl.x - privateConstants.MARGIN * 2 - item.width >= privateConstants.MARGIN && pt.y - item.height >= privateConstants.MARGIN) {
+        toXAdjEdge = bl.x - privateConstants.MARGIN * 2 - item.width;
+        toYAdjEdge = pt.y - item.height;
+        chXEdge = bl.x - privateConstants.MARGIN * 2;
+        chYEdge = pt.y;
+        minBldEdge = bldEdge;
+        latchEdgeIndex = i;
+      }
+    }
+  }
+
+  return {
+    cornerLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdj,
+        toY: toYAdj
+      },
+      ch: {
+        x: chX,
+        y: chY
+      },
+      distance: Math.min(minTrd, minBld),
+      latchCornerIndex
+    },
+    edgeLatch: {
+      to: {
+        toX,
+        toY
+      },
+      toAdj: {
+        toX: toXAdjEdge,
+        toY: toYAdjEdge
+      },
+      ch: {
+        x: chXEdge,
+        y: chYEdge
+      },
+      distance: Math.min(minTrdEdge, minBldEdge),
+      latchEdgeIndex
+    }
+  };
+};
+const resizeSizeAdjustToCorners = (context, x, y, width, height, index, forBottomRight) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context); // const DISTANCE_THRESHOLD = privateConstants.WIDTH / 4;
+
+  const DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 2;
+  const AXIS_DISTANCE_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 10;
+  const len = pd.length;
+  const tlpt = {
+    x: x,
+    y: y
+  };
+  const trpt = {
+    x: x + width,
+    y: y
+  };
+  const brpt = {
+    x: x + width,
+    y: y + height
+  };
+  const blpt = {
+    x: x,
+    y: y + height
+  };
+  let tl, bl, br, tr, blptTobr, brptTobl, trptTobr, brptTotr, blptTotl, tlptTobl;
+  let ldistance = Number.MAX_SAFE_INTEGER;
+  let rdistance = Number.MAX_SAFE_INTEGER;
+  let tdistance = Number.MAX_SAFE_INTEGER;
+  let bdistance = Number.MAX_SAFE_INTEGER;
+  let isToAdjPresent = false;
+  let toAdjIndex;
+  let hToAdjDirection;
+  let wToAdjDirection;
+  let hLatchPoint;
+  let wLatchPoint;
+  let latchPoint;
+
+  for (let i = 0; i < len; i++) {
+    if (i === index) {
+      continue;
+    }
+
+    tl = {
+      x: pd[i].x1,
+      y: pd[i].y1
+    };
+    bl = {
+      x: pd[i].x1,
+      y: pd[i].y2
+    };
+    br = {
+      x: pd[i].x2,
+      y: pd[i].y2
+    };
+    tr = {
+      x: pd[i].x2,
+      y: pd[i].y1
+    };
+    brptTobl = getDistanceBetnPts(bl, brpt);
+    blptTobr = getDistanceBetnPts(br, blpt);
+    trptTobr = getDistanceBetnPts(br, trpt);
+    brptTotr = getDistanceBetnPts(tr, brpt);
+    blptTotl = getDistanceBetnPts(tl, blpt);
+    tlptTobl = getDistanceBetnPts(bl, tlpt); // affected bottom to adjacent bottom
+
+    if (brptTobl < rdistance && brptTobl < ldistance && brpt.x < bl.x && Math.abs(brpt.y - bl.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
+      height = bl.y - trpt.y;
+
+      if (forBottomRight && bl.x - brpt.x <= AXIS_DISTANCE_THRESHOLD) {
+        width = bl.x - privateConstants.MARGIN * 2 - blpt.x;
+      }
+
+      rdistance = brptTobl;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      hToAdjDirection = "right";
+      hLatchPoint = bl;
+    }
+
+    if (blptTobr < ldistance && blptTobr < rdistance && blpt.x > br.x && Math.abs(blpt.y - br.y) <= AXIS_DISTANCE_THRESHOLD && brpt.x + privateConstants.MARGIN <= privateConstants.WIDTH) {
+      height = br.y - tlpt.y;
+
+      if (!forBottomRight && blpt.x - br.x <= AXIS_DISTANCE_THRESHOLD) {
+        x = br.x + privateConstants.MARGIN * 2;
+        width = brpt.x - x;
+      }
+
+      ldistance = blptTobr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      hToAdjDirection = "left";
+      hLatchPoint = br;
+    } // affected top to adjacent bottom
+
+
+    if (trptTobr < tdistance && trptTobr < bdistance && trptTobr <= DISTANCE_THRESHOLD && Math.abs(trpt.x - br.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
+      width = br.x - tlpt.x;
+      tdistance = trptTobr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "top";
+      wLatchPoint = br;
+    }
+
+    if (tlptTobl < tdistance && tlptTobl < bdistance && tlptTobl <= DISTANCE_THRESHOLD && Math.abs(tlpt.x - bl.x) <= AXIS_DISTANCE_THRESHOLD && !forBottomRight) {
+      width = trpt.x - bl.x;
+      x = bl.x;
+      tdistance = tlptTobl;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "top";
+      wLatchPoint = bl;
+    } // affected bottom to adjacent top
+
+
+    if (brptTotr < bdistance && brptTotr < tdistance && brptTotr <= DISTANCE_THRESHOLD && Math.abs(brpt.x - tr.x) <= AXIS_DISTANCE_THRESHOLD && forBottomRight) {
+      width = tr.x - blpt.x;
+
+      if (forBottomRight && tr.y > brpt.y && tr.y - brpt.y <= AXIS_DISTANCE_THRESHOLD) {
+        height = tr.y - privateConstants.MARGIN * 2 - trpt.y;
+      }
+
+      bdistance = brptTotr;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "bottom";
+      wLatchPoint = tr;
+    }
+
+    if (blptTotl < bdistance && blptTotl < tdistance && blptTotl <= DISTANCE_THRESHOLD && Math.abs(blpt.x - tl.x) <= AXIS_DISTANCE_THRESHOLD && !forBottomRight) {
+      width = brpt.x - tl.x;
+      x = tl.x;
+
+      if (!forBottomRight && tl.y > blpt.y && tl.y - blpt.y <= AXIS_DISTANCE_THRESHOLD) {
+        height = tl.y - privateConstants.MARGIN * 2 - tlpt.y;
+      }
+
+      bdistance = blptTotl;
+      isToAdjPresent = true;
+      toAdjIndex = i;
+      wToAdjDirection = "bottom";
+      wLatchPoint = tl;
+    }
+  }
+
+  if (hLatchPoint && wLatchPoint) {
+    latchPoint = {
+      x: wLatchPoint.x,
+      y: hLatchPoint.y
+    };
+  } else if (hLatchPoint) {
+    latchPoint = hLatchPoint;
+  } else if (wLatchPoint) {
+    latchPoint = wLatchPoint;
+  }
+
+  return {
+    x: x,
+    y: y,
+    height,
+    width,
+    isToAdjPresent,
+    toAdjIndex,
+    hToAdjDirection,
+    wToAdjDirection,
+    latchPoint
+  };
+};
+// CONCATENATED MODULE: ./src/libs/interaction/itemInteractionUtils.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+
+
+
+const getResizeAffectedItems = (context, item, index) => {
+  const pd = getPositionData(context);
+  const mpd = getModifiedPositionData(context);
+  const len = pd.length;
+  const affectedArr = new Array(len);
+  let count = 0;
+
+  for (let i = 0; i < len; i++) {
+    if (doRectsOverlapWithMargin(item, pd[i]) && i !== index) {
+      affectedArr[count++] = i;
+      mpd[i].x1 = undefined;
+      mpd[i].y1 = undefined;
+      mpd[i].x2 = undefined;
+      mpd[i].y2 = undefined;
+      mpd[i].mX1 = undefined;
+      mpd[i].mY1 = undefined;
+      mpd[i].mX2 = undefined;
+      mpd[i].mY2 = undefined;
+      mpd[i].x = undefined;
+      mpd[i].y = undefined;
+      mpd[i].mX = undefined;
+      mpd[i].mY = undefined;
+    }
+  }
+
+  affectedArr[count++] = index;
+  affectedArr.length = count;
+  return affectedArr;
+};
+const getMoveAffectedItems = (context, item, index) => {
+  const pd = getPositionData(context);
+  const mpd = getModifiedPositionData(context);
+  const len = pd.length;
+  const affectedArr = new Array(len);
+  let count = 0;
+
+  for (let i = 0; i < len; i++) {
+    if (doRectsOverlapWithMargin(item, pd[i]) && i !== index) {
+      affectedArr[count++] = i;
+      mpd[i].x1 = undefined;
+      mpd[i].y1 = undefined;
+      mpd[i].x2 = undefined;
+      mpd[i].y2 = undefined;
+      mpd[i].mX1 = undefined;
+      mpd[i].mY1 = undefined;
+      mpd[i].mX2 = undefined;
+      mpd[i].mY2 = undefined;
+      mpd[i].x = undefined;
+      mpd[i].y = undefined;
+      mpd[i].mX = undefined;
+      mpd[i].mY = undefined;
+    }
+  }
+
+  affectedArr[count++] = index;
+  affectedArr.length = count;
+  return affectedArr;
+};
+const resizeItemInitialChecks = (context, index, x, y, width, height) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+
+  if (index < 0 || index >= pd.length) {
+    // invalid index
+    throw "Index out of bounds.";
+  }
+
+  if (typeof x !== "number" || typeof y !== "number") {
+    throw "x or y is not a number.";
+  }
+
+  if (x < privateConstants.MARGIN || y < privateConstants.MARGIN) {
+    // falls outside
+    throw "Left edges falls outside the grid area.";
+  }
+
+  if (typeof width !== "number" || typeof height !== "number") {
+    throw "Width or Height is not a number.";
+  }
+
+  if (x + width + privateConstants.MARGIN > privateConstants.WIDTH) {
+    // falls outside
+    throw "Right edges falls outside the grid area.";
+  }
+
+  if (width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH || height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
+    // very small. TO DO: let the developers decide the smallest item size but can't be less than 150
+    throw `Width or height less than min height or width ${privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH}.`;
+  }
+
+  if (height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT) {
+    throw "Height cannot be greater than height of container.";
+  }
+
+  return true;
+};
+const moveItemInitialChecks = (context, index, toX, toY) => {
+  const pd = getPositionData(context);
+  const privateConstants = constants_privateConstants(context);
+
+  if (index < 0 || index >= pd.length) {
+    // invalid index
+    throw "Index out of bounds.";
+  }
+
+  if (typeof toX !== "number" || typeof toY !== "number") {
+    throw "toX or toY is not a number.";
+  }
+
+  if (toX < privateConstants.MARGIN || toY < privateConstants.MARGIN) {
+    // falls outside
+    throw "Left edges falls outside the grid area.";
+  }
+
+  if (toX + pd[index].width + privateConstants.MARGIN > privateConstants.WIDTH) {
+    // falls outside
+    throw "Right edges falls outside the grid area.";
+  }
+
+  return true;
+};
+const getResizeModifiedItem = (toX, toY, width, height, MARGIN) => {
+  return {
+    x: toX,
+    y: toY,
+    width: width,
+    height: height,
+    mX: toX - MARGIN,
+    mY: toY - MARGIN,
+    mWidth: width + MARGIN * 2,
+    mHeight: height + MARGIN * 2,
+    x1: toX,
+    y1: toY,
+    x2: toX + width,
+    y2: toY + height,
+    mX1: toX - MARGIN,
+    mY1: toY - MARGIN,
+    mX2: toX + width + MARGIN,
+    mY2: toY + height + MARGIN
+  };
+};
+const getMoveModifiedItem = (toX, toY, item, MARGIN) => {
+  return {
+    x: toX,
+    y: toY,
+    width: item.width,
+    height: item.height,
+    mX: toX - MARGIN,
+    mY: toY - MARGIN,
+    mWidth: item.width + MARGIN * 2,
+    mHeight: item.height + MARGIN * 2,
+    x1: toX,
+    y1: toY,
+    x2: toX + item.width,
+    y2: toY + item.height,
+    mX1: toX - MARGIN,
+    mY1: toY - MARGIN,
+    mX2: toX + item.width + MARGIN,
+    mY2: toY + item.height + MARGIN
+  };
+};
+const resetDemoUIChanges = context => {
+  const pd = getPositionData(context);
+  const e = variables_elements(context);
+  const len = pd.length;
+
+  for (let i = 0; i < len; i++) {
+    if (e.$limberGridViewItems[i]) {
+      e.$limberGridViewItems[i].style.transform = `translate(${pd[i].x1}px, ${pd[i].y1}px)`;
+      e.$limberGridViewItems[i].style.width = `${pd[i].width}px`;
+      e.$limberGridViewItems[i].style.height = `${pd[i].height}px`;
+    }
+  }
+}; // export const movePointAdjust = (context, toX, toY, index) => {
+// 	const pd = getPositionData(context);
+// 	const privateConstants = getPrivateConstants(context);
+// 	const THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH * 1.5;
+// 	const len = pd.length;
+// 	const pt = { x: toX, y: toY };
+// 	let inside;
+// 	let tl, tr, bl, tld, trd, bld;
+// 	let ldistance = Number.MAX_SAFE_INTEGER;
+// 	let rdistance = Number.MAX_SAFE_INTEGER;
+// 	let bdistance = Number.MAX_SAFE_INTEGER;
+// 	let toXAdj, toYAdj;
+// 	let isToAdjPresent = false;
+// 	let toAdjIndex;
+// 	let toAdjDirection;
+// 	for (let i = 0; i < len; i++) {
+// 		if (isPointInsideOrTouchRectWithMargin(pd[i], pt)) {
+// 			inside = i;
+// 			toX = pd[inside].x;
+// 			toY = pd[inside].y;
+// 			// break;
+// 			console.log(pd[inside]);
+// 		}
+// 		if (i === index) {
+// 			continue;
+// 		}
+// 		tl = { x: pd[i].mX1, y: pd[i].mY1 };
+// 		tr = { x: pd[i].mX2, y: pd[i].mY1 };
+// 		bl = { x: pd[i].mX1, y: pd[i].mY2 };
+// 		tld = getDistanceBetnPts(tl, pt);
+// 		trd = getDistanceBetnPts(tr, pt);
+// 		bld = getDistanceBetnPts(bl, pt);
+// 		if (
+// 			tld < ldistance &&
+// 			tld < rdistance &&
+// 			tld < bdistance &&
+// 			pt.x < tl.x &&
+// 			tld <= THRESHOLD
+// 		) {
+// 			if (
+// 				tl.x - privateConstants.MARGIN - pd[index].width >=
+// 				privateConstants.MARGIN
+// 			) {
+// 				toXAdj = tl.x - privateConstants.MARGIN - pd[index].width;
+// 				toYAdj = tl.y + privateConstants.MARGIN;
+// 				ldistance = tld;
+// 				isToAdjPresent = true;
+// 				toAdjIndex = i;
+// 				toAdjDirection = "left";
+// 			}
+// 		}
+// 		if (
+// 			trd < rdistance &&
+// 			trd < ldistance &&
+// 			trd < bdistance &&
+// 			pt.x > tr.x &&
+// 			trd <= THRESHOLD
+// 		) {
+// 			if (
+// 				tr.x + privateConstants.MARGIN + pd[index].width <
+// 				privateConstants.WIDTH
+// 			) {
+// 				toXAdj = tr.x + privateConstants.MARGIN;
+// 				toYAdj = tr.y + privateConstants.MARGIN;
+// 				rdistance = trd;
+// 				isToAdjPresent = true;
+// 				toAdjIndex = i;
+// 				toAdjDirection = "right";
+// 			}
+// 		}
+// 		if (
+// 			bld < bdistance &&
+// 			bld < ldistance &&
+// 			bld < rdistance &&
+// 			pt.y >= bl.y &&
+// 			pt.x >= bl.x &&
+// 			bld <= THRESHOLD
+// 		) {
+// 			if (
+// 				tl.x + privateConstants.MARGIN + pd[index].width <
+// 				privateConstants.WIDTH
+// 			) {
+// 				toXAdj = tl.x + privateConstants.MARGIN;
+// 				toYAdj = bl.y + privateConstants.MARGIN;
+// 				bdistance = bld;
+// 				isToAdjPresent = true;
+// 				toAdjIndex = i;
+// 				toAdjDirection = "bottom";
+// 			}
+// 		}
+// 	}
+// 	return {
+// 		to: { toX, toY },
+// 		toAdj: { toX: toXAdj, toY: toYAdj },
+// 		overlappedItemIndex: inside,
+// 		isToAdjPresent,
+// 		toAdjIndex,
+// 		toAdjDirection,
+// 	};
+// };
+
+const movePointAdjust = (context, toX, toY, index) => {
+  const privateConstants = constants_privateConstants(context);
+  const INITIAL_CORNER_LATCH_THRESHOLD = privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH / 4.5 + privateConstants.MARGIN;
+  let cornerLatch;
+  let edgeLatch;
+  let topLeftLatch = latchTopLeft(context, toX, toY, index, undefined, INITIAL_CORNER_LATCH_THRESHOLD);
+  let topRightLatch = latchTopRight(context, toX, toY, index, undefined, INITIAL_CORNER_LATCH_THRESHOLD);
+  let bottomLeftLatch = latchBottomLeft(context, toX, toY, index, undefined, undefined, undefined, INITIAL_CORNER_LATCH_THRESHOLD);
+  let bottomRightLatch = latchBottomRight(context, toX, toY, index, undefined, undefined, undefined, INITIAL_CORNER_LATCH_THRESHOLD);
+  let latch = [topLeftLatch, topRightLatch, bottomLeftLatch, bottomRightLatch];
+
+  for (const item of latch) {
+    if (!cornerLatch || item.cornerLatch.distance < cornerLatch.distance) {
+      cornerLatch = item.cornerLatch;
+    }
+  }
+
+  if (!isNaN(cornerLatch.toAdj.toX) && cornerLatch.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
+    cornerLatch.overlappedItemIndex = topLeftLatch.overlappedItemIndex;
+    return cornerLatch;
+  }
+
+  topLeftLatch = latchTopLeft(context, toX, toY, index);
+  topRightLatch = latchTopRight(context, toX, toY, index);
+  bottomLeftLatch = latchBottomLeft(context, toX, toY, index);
+  bottomRightLatch = latchBottomRight(context, toX, toY, index);
+  latch = [topLeftLatch, topRightLatch, bottomLeftLatch, bottomRightLatch];
+
+  for (const item of latch) {
+    if (!cornerLatch || item.cornerLatch.distance < cornerLatch.distance) {
+      cornerLatch = item.cornerLatch;
+    }
+
+    if (!edgeLatch || item.edgeLatch.distance < edgeLatch.distance) {
+      edgeLatch = item.edgeLatch;
+    }
+  }
+
+  let optimalLatch;
+
+  if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
+    // edgelatch
+    optimalLatch = edgeLatch;
+  } else {
+    // cornerLatch
+    optimalLatch = cornerLatch;
+  }
+
+  optimalLatch.overlappedItemIndex = topLeftLatch.overlappedItemIndex;
+  return optimalLatch;
+};
+const resizeSizeAdjust = (context, x, y, width, height, index, forBottomRight) => {
+  const adjustToCorners = resizeSizeAdjustToCorners(context, x, y, width, height, index, forBottomRight);
+
+  if (!adjustToCorners.isToAdjPresent) {
+    const bottomLeftLatch = latchBottomLeft(context, x, y, index, width, height);
+    const bottomRightLatch = latchBottomRight(context, x, y, index, width, height);
+    let edgeLatch;
+
+    if (forBottomRight) {
+      edgeLatch = bottomRightLatch.edgeLatch;
+
+      if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
+        adjustToCorners.isToAdjPresent = true;
+        adjustToCorners.width = edgeLatch.ch.x - x;
+        adjustToCorners.height = edgeLatch.ch.y - y;
+        adjustToCorners.latchPoint = edgeLatch.ch;
+      }
+    } else {
+      edgeLatch = bottomLeftLatch.edgeLatch;
+
+      if (edgeLatch.distance !== Number.MAX_SAFE_INTEGER) {
+        adjustToCorners.isToAdjPresent = true;
+        adjustToCorners.x = edgeLatch.ch.x;
+        adjustToCorners.width = x + width - edgeLatch.ch.x;
+        adjustToCorners.height = edgeLatch.ch.y - y;
+        adjustToCorners.latchPoint = edgeLatch.ch;
+      }
+    }
+  }
+
+  return adjustToCorners;
+};
+const positionArranged = (context, arranged) => {
+  const e = variables_elements(context);
+
+  for (const key in arranged) {
+    if (e.$limberGridViewItems[key]) {
+      const item = arranged[key];
+      e.$limberGridViewItems[key].style.transform = `translate(${item.x}px, ${item.y}px)`;
+      e.$limberGridViewItems[key].style.width = `${item.width}px`;
+      e.$limberGridViewItems[key].style.height = `${item.height}px`;
+    }
   }
 };
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeUtils.js
@@ -4572,21 +5225,12 @@ const moveItem = async function (index, toX, toY) {
   const publicConstants = constants_publicConstants(this);
   const privateConstants = constants_privateConstants(this);
   index = parseInt(index);
+  const moveDemo = getStatus(this, "moveDemo");
 
-  if (publicConstants.LATCH_MOVED_ITEM) {
-    // change toX & toY to top left of the overlapping item
-    const moveDemo = getStatus(this, "moveDemo");
-
-    if (moveDemo !== null && moveDemo !== void 0 && moveDemo.latchingAdjacent) {
-      toX = moveDemo.adjustedPt.toAdj.toX;
-      toY = moveDemo.adjustedPt.toAdj.toY;
-    } else if (moveDemo) {
-      toX = moveDemo.adjustedPt.to.toX;
-      toY = moveDemo.adjustedPt.to.toY;
-    } else {
-      const adjustedPt = movePointAdjust(this, toX, toY, index);
-      toX = adjustedPt.to.toX;
-      toY = adjustedPt.to.toY;
+  if (publicConstants.LATCH_MOVED_ITEM && moveDemo) {
+    if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
+      toX = moveDemo.toAdj.toX;
+      toY = moveDemo.toAdj.toY;
     }
   }
 
@@ -4634,79 +5278,62 @@ const moveItemDemo = async function (index, toX, toY) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
   const privateConstants = constants_privateConstants(this);
-  index = parseInt(index); //
+  index = parseInt(index);
+  moveItemInitialChecks(this, index, toX, toY);
 
   if (publicConstants.LATCH_MOVED_ITEM) {
-    var _moveDemo, _moveDemo$adjustedPt, _moveDemo2, _moveDemo2$adjustedPt;
-
     const adjustedPt = movePointAdjust(this, toX, toY, index);
-    let moveDemo = getStatus(this, "moveDemo"); // let adjustedPt;
+    let moveDemo = getStatus(this, "moveDemo");
+    moveDemo = { ...moveDemo,
+      ...adjustedPt
+    };
+    setStatus(this, "moveDemo", moveDemo);
 
-    if (!isNaN((_moveDemo = moveDemo) === null || _moveDemo === void 0 ? void 0 : (_moveDemo$adjustedPt = _moveDemo.adjustedPt) === null || _moveDemo$adjustedPt === void 0 ? void 0 : _moveDemo$adjustedPt.overlappedItemIndex) && isPointInsideRect(pd[moveDemo.adjustedPt.overlappedItemIndex], {
-      x: toX,
-      y: toY
-    })) {
-      moveDemo = { ...moveDemo,
-        adjustedPt
-      };
-      let latchingAdjacent = false;
+    if (!isNaN(moveDemo.overlappedItemIndex)) {
+      if (moveDemo.overlappedItemIndex === adjustedPt.overlappedItemIndex) {
+        if (!moveDemo.sameIndexOverlap) {
+          moveDemo.sameIndexOverlap = 0;
+        }
 
-      if (!moveDemo.latchingAdjacent && moveDemo.adjustedPt.isToAdjPresent) {
-        toX = moveDemo.adjustedPt.toAdj.toX;
-        toY = moveDemo.adjustedPt.toAdj.toY;
-        latchingAdjacent = true;
+        moveDemo.sameIndexOverlap++;
       } else {
-        toX = moveDemo.adjustedPt.to.toX;
-        toY = moveDemo.adjustedPt.to.toY;
+        moveDemo.sameIndexOverlap = 1;
       }
-
-      setStatus(this, "moveDemo", { ...moveDemo,
-        latchingAdjacent
-      });
     } else {
-      let latchingAdjacent = false;
-
-      if (!isNaN(adjustedPt.overlappedItemIndex) || !adjustedPt.isToAdjPresent) {
-        toX = adjustedPt.to.toX;
-        toY = adjustedPt.to.toY;
-      } else {
-        toX = adjustedPt.toAdj.toX;
-        toY = adjustedPt.toAdj.toY;
-        latchingAdjacent = true;
-      }
-
-      setStatus(this, "moveDemo", {
-        adjustedPt: adjustedPt,
-        latchingAdjacent
-      });
+      moveDemo.sameIndexOverlap = 0;
     }
 
-    moveDemo = getStatus(this, "moveDemo");
+    if (!isNaN(moveDemo.overlappedItemIndex) && moveDemo.sameIndexOverlap === 1) {
+      moveDemo.toAdj = {
+        toX: pd[moveDemo.overlappedItemIndex].x1,
+        toY: pd[moveDemo.overlappedItemIndex].y1
+      };
+    }
 
-    if (!isNaN((_moveDemo2 = moveDemo) === null || _moveDemo2 === void 0 ? void 0 : (_moveDemo2$adjustedPt = _moveDemo2.adjustedPt) === null || _moveDemo2$adjustedPt === void 0 ? void 0 : _moveDemo2$adjustedPt.overlappedItemIndex)) {
-      e.$limberGridViewMoveGuide.style.transform = "translate(" + pd[moveDemo.adjustedPt.overlappedItemIndex].x + "px, " + pd[moveDemo.adjustedPt.overlappedItemIndex].y + "px)";
-      e.$limberGridViewMoveGuide.style.width = pd[moveDemo.adjustedPt.overlappedItemIndex].width + "px";
-      e.$limberGridViewMoveGuide.style.height = pd[moveDemo.adjustedPt.overlappedItemIndex].height + "px";
+    let chX, chY;
+
+    if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER) {
+      toX = moveDemo.toAdj.toX;
+      toY = moveDemo.toAdj.toY;
+      chX = moveDemo.ch.x;
+      chY = moveDemo.ch.y;
+    }
+
+    if (moveDemo.sameIndexOverlap === 1) {
+      e.$limberGridViewMoveGuide.style.transform = "translate(" + pd[moveDemo.overlappedItemIndex].x + "px, " + pd[moveDemo.overlappedItemIndex].y + "px)";
+      e.$limberGridViewMoveGuide.style.width = pd[moveDemo.overlappedItemIndex].width + "px";
+      e.$limberGridViewMoveGuide.style.height = pd[moveDemo.overlappedItemIndex].height + "px";
       e.$limberGridViewMoveGuide.classList.add("limber-grid-view-move-guide-active");
-
-      if (moveDemo.latchingAdjacent) {
-        // show text
-        e.$limberGridViewMoveGuide.innerHTML = messages(this, "latchedMoveDemo2");
-      } else {
-        // show text
-        e.$limberGridViewMoveGuide.innerHTML = messages(this, "latchedMoveDemo1");
-      }
     }
 
-    if (moveDemo.latchingAdjacent) {
+    if (moveDemo.toAdj.toX !== Number.MAX_SAFE_INTEGER && moveDemo.sameIndexOverlap !== 1) {
       // show cross hair
-      e.$limberGridViewCrossHairGuide.style.transform = `translate(${toX - publicConstants.CROSS_HAIR_WIDTH / 2}px, ${toY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
+      e.$limberGridViewCrossHairGuide.style.transform = `translate(${chX - publicConstants.CROSS_HAIR_WIDTH / 2}px, ${chY - publicConstants.CROSS_HAIR_HEIGHT / 2}px)`;
     } else {
       // hide cross hair
       e.$limberGridViewCrossHairGuide.style.transform = `translate(-${publicConstants.CROSS_HAIR_WIDTH * 2}px, -${publicConstants.CROSS_HAIR_HEIGHT * 2}px)`;
     }
-  } //
-
+  }
 
   moveItemInitialChecks(this, index, toX, toY);
   resetDemoUIChanges(this);
@@ -4908,6 +5535,8 @@ const onItemMouseMove = function (event) {
   const e = variables_elements(this);
   const privateConstants = constants_privateConstants(this);
   const publicConstants = constants_publicConstants(this);
+  const callbacks = getCallbacks(this);
+  const pd = getPositionData(this);
   const iiv = getItemInteractionVars(this);
 
   if (iiv.mouseDownTimerComplete === true) {
@@ -4915,10 +5544,16 @@ const onItemMouseMove = function (event) {
       loadOnMoveState(this, iiv.userActionData, event, "move");
       clearTimeout(iiv.showMoveDemoTimeOutVariable);
       const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+      let yMousePosition;
+
+      if (callbacks.offsetMovePseudoElement && mousePositionOnLimberGrid) {
+        const off = callbacks.offsetMovePseudoElement(mousePositionOnLimberGrid.x, mousePositionOnLimberGrid.y, getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex]));
+        yMousePosition = mousePositionOnLimberGrid.y;
+        mousePositionOnLimberGrid.x = off.x;
+        mousePositionOnLimberGrid.y = off.y;
+      }
 
       if (mousePositionOnLimberGrid) {
-        const yMousePosition = mousePositionOnLimberGrid.y;
-
         if (!iiv.isScrolling) {
           iiv.isScrolling = true;
           setTimeout(() => {
@@ -4987,6 +5622,8 @@ const onItemTouchMove = function (event) {
   const e = variables_elements(this); // const privateConstants = getPrivateConstants(this);
 
   const publicConstants = constants_publicConstants(this);
+  const callbacks = getCallbacks(this);
+  const pd = getPositionData(this);
   const iiv = getItemInteractionVars(this);
 
   if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
@@ -4994,9 +5631,16 @@ const onItemTouchMove = function (event) {
       loadOnMoveState(this, iiv.userActionData, event, "move");
       clearTimeout(iiv.showMoveDemoTimeOutVariable);
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+      let yTouchPosition;
+
+      if (callbacks.offsetMovePseudoElement && touchPositionOnLimberGrid) {
+        const off = callbacks.offsetMovePseudoElement(touchPositionOnLimberGrid.x, touchPositionOnLimberGrid.y, getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex]));
+        yTouchPosition = touchPositionOnLimberGrid.y;
+        touchPositionOnLimberGrid.x = off.x;
+        touchPositionOnLimberGrid.y = off.y;
+      }
 
       if (touchPositionOnLimberGrid) {
-        const yTouchPosition = touchPositionOnLimberGrid.y;
         let programScrolled;
 
         if (!iiv.isScrolling) {
@@ -5076,12 +5720,21 @@ const onItemMouseUp = async function (event) {
   }
 
   const iiv = getItemInteractionVars(this);
+  const callbacks = getCallbacks(this);
+  const pd = getPositionData(this);
   clearTimeout(iiv.showMoveDemoTimeOutVariable);
   clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
   if (iiv.mouseDownTimerComplete === true) {
     if (iiv.userActionData.type === "move") {
       const mousePositionOnLimberGrid = calculateMousePosOnDesk(this, event);
+
+      if (callbacks.offsetMovePseudoElement && mousePositionOnLimberGrid) {
+        const off = callbacks.offsetMovePseudoElement(mousePositionOnLimberGrid.x, mousePositionOnLimberGrid.y, getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex]));
+        mousePositionOnLimberGrid.x = off.x;
+        mousePositionOnLimberGrid.y = off.y;
+      }
+
       var updatedCoordinates = {};
 
       try {
@@ -5125,12 +5778,21 @@ const onItemMouseUp = async function (event) {
 };
 const onItemTouchEnd = async function (event) {
   const iiv = getItemInteractionVars(this);
+  const callbacks = getCallbacks(this);
+  const pd = getPositionData(this);
   clearTimeout(iiv.showMoveDemoTimeOutVariable);
   clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
   if (iiv.touchHoldTimerComplete === true && event.touches.length === 0) {
     if (iiv.userActionData.type === "move") {
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+
+      if (callbacks.offsetMovePseudoElement && touchPositionOnLimberGrid) {
+        const off = callbacks.offsetMovePseudoElement(touchPositionOnLimberGrid.x, touchPositionOnLimberGrid.y, getOffsetCallbackArgs(pd[iiv.userActionData.itemIndex]));
+        touchPositionOnLimberGrid.x = off.x;
+        touchPositionOnLimberGrid.y = off.y;
+      }
+
       var updatedCoordinates = {};
 
       try {
@@ -6470,8 +7132,6 @@ Written by Subendra Kumar Sharma.
     pseudoElementContainer: string or element
     itemMouseDownMoveCheck: function                                           // x clicked/touched, y clicked/touched, item, index, event.target, which
     itemMouseDownResizeCheck: function                                         // x clicked/touched, y clicked/touched, item, index, event.target, which
-  
-    getArrangeTime: function                                                   // returns the total arrange time
 
     gridData : {
       WIDTH : 1920,                                                            // width of limberGridView
@@ -6504,6 +7164,8 @@ Written by Subendra Kumar Sharma.
 
       onItemClickCallback : function(event){},                                // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
+      getArrangeTime: function() {}
+      offsetMovePseudoElement: function() {}
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -6614,6 +7276,9 @@ Written by Subendra Kumar Sharma.
  * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
  * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
  * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~getLogMessage} getLogMessage The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
+ * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
+ * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
  */
 
 /**
@@ -6683,6 +7348,31 @@ Written by Subendra Kumar Sharma.
  */
 
 /**
+ * The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
+ * @callback callbacks~getLogMessage
+ * @param {object} log Returns an object with keys type and message.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
+ * @callback callbacks~getArrangeTime
+ * @param {number} time The time taken for all arrangement jobs to complete.
+ * @param {number} resizeCount The number of items resized.
+ * @param {number} count The number of rectangles processed internally.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
+ * @callback callbacks~offsetMovePseudoElement
+ * @param {number} x The distance along the x-axis where the user placed the cursor or touched the surface.
+ * @param {number} y The distance along the y-axis where the user placed the cursor or touched the surface.
+ * @param {object} item An item object in the two-point form.
+ * @returns {object} An object with keys x and y. It represents the translated top-left point of the move pseudo-element.
+ */
+
+/**
  * @typedef {options~publicConstants} publicConstants Constants that you can change or set at any point in time to get the desired behavior.
  * @property {number} mobileAspectRatio The floating-point number representing the aspect ratio of items for mobile view (e.g. 5:4). The default value is 5/4.
  * @property {number} moveGuideRadius The radius of the default move guide. Move guide is a pseudo-element at the top-left corner of every item. You can remove the move guide for a customized look and feel. The default value is 10.
@@ -6693,7 +7383,7 @@ Written by Subendra Kumar Sharma.
  * @property {number} autoScrollPoint The distance above the bottom or below the top at which scroll happens when auto-scroll is enabled. The default value is 50.
  * @property {number} moveOrResizeHeightIncrements A number by which the height of the grid view is increased while moving, resizing, adding, or cutting space when you reach the bottom when auto-scroll is enabled. The default value is 50.
  * @property {boolean} autoScrollForMouse Setting this to true will enable auto-scroll for the move, resize, add, and cut-space events for mouse-based operations.
- * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 500ms.
+ * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 0ms.
  * @property {number} touchHoldTime The time to wait before initiating the move, resize, add, or cut-space routines after the tap-hold event. The default value is 300ms.
  * @property {number} demoWaitTime The time to wait before a demo for the resize or move event is initiated. Warning, a very low demo wait time will cause unwanted behavior as the algorithm needs some time for calculations. The default is 500ms.
  * @property {number} windowResizeWaitTime The time to wait before initiating window resize routines. The default value is 1000ms.
@@ -6885,7 +7575,7 @@ LimberGridView.prototype.initializeStore = function () {
         AUTO_SCROLL_POINT: 50,
         MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
         AUTO_SCROLL_FOR_MOUSE: false,
-        MOUSE_DOWN_TIME: 300,
+        MOUSE_DOWN_TIME: 0,
         TOUCH_HOLD_TIME: 300,
         DEMO_WAIT_TIME: 500,
         WINDOW_RESIZE_WAIT_TIME: 1000,

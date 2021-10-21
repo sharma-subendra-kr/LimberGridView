@@ -117,8 +117,6 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
     pseudoElementContainer: string or element
     itemMouseDownMoveCheck: function                                           // x clicked/touched, y clicked/touched, item, index, event.target, which
     itemMouseDownResizeCheck: function                                         // x clicked/touched, y clicked/touched, item, index, event.target, which
-  
-    getArrangeTime: function                                                   // returns the total arrange time
 
     gridData : {
       WIDTH : 1920,                                                            // width of limberGridView
@@ -151,6 +149,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
       onItemClickCallback : function(event){},                                // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
+      getArrangeTime: function() {}
+      offsetMovePseudoElement: function() {}
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -264,6 +264,9 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
  * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
  * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~getLogMessage} getLogMessage The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
+ * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
+ * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
  */
 
 /**
@@ -333,6 +336,31 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
+ * The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
+ * @callback callbacks~getLogMessage
+ * @param {object} log Returns an object with keys type and message.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
+ * @callback callbacks~getArrangeTime
+ * @param {number} time The time taken for all arrangement jobs to complete.
+ * @param {number} resizeCount The number of items resized.
+ * @param {number} count The number of rectangles processed internally.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
+ * @callback callbacks~offsetMovePseudoElement
+ * @param {number} x The distance along the x-axis where the user placed the cursor or touched the surface.
+ * @param {number} y The distance along the y-axis where the user placed the cursor or touched the surface.
+ * @param {object} item An item object in the two-point form.
+ * @returns {object} An object with keys x and y. It represents the translated top-left point of the move pseudo-element.
+ */
+
+/**
  * @typedef {options~publicConstants} publicConstants Constants that you can change or set at any point in time to get the desired behavior.
  * @property {number} mobileAspectRatio The floating-point number representing the aspect ratio of items for mobile view (e.g. 5:4). The default value is 5/4.
  * @property {number} moveGuideRadius The radius of the default move guide. Move guide is a pseudo-element at the top-left corner of every item. You can remove the move guide for a customized look and feel. The default value is 10.
@@ -343,7 +371,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {number} autoScrollPoint The distance above the bottom or below the top at which scroll happens when auto-scroll is enabled. The default value is 50.
  * @property {number} moveOrResizeHeightIncrements A number by which the height of the grid view is increased while moving, resizing, adding, or cutting space when you reach the bottom when auto-scroll is enabled. The default value is 50.
  * @property {boolean} autoScrollForMouse Setting this to true will enable auto-scroll for the move, resize, add, and cut-space events for mouse-based operations.
- * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 500ms.
+ * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 0ms.
  * @property {number} touchHoldTime The time to wait before initiating the move, resize, add, or cut-space routines after the tap-hold event. The default value is 300ms.
  * @property {number} demoWaitTime The time to wait before a demo for the resize or move event is initiated. Warning, a very low demo wait time will cause unwanted behavior as the algorithm needs some time for calculations. The default is 500ms.
  * @property {number} windowResizeWaitTime The time to wait before initiating window resize routines. The default value is 1000ms.
@@ -543,7 +571,7 @@ LimberGridView.prototype.initializeStore = function () {
 				MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
 				AUTO_SCROLL_FOR_MOUSE: false,
 
-				MOUSE_DOWN_TIME: 300,
+				MOUSE_DOWN_TIME: 0,
 				TOUCH_HOLD_TIME: 300,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
