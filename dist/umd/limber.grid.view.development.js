@@ -23,14 +23,14 @@
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("Stack"), require("rtreejs"), require("undo-redo"), require("resize-observer-polyfill"));
+		module.exports = factory(require("resize-observer-polyfill"));
 	else if(typeof define === 'function' && define.amd)
-		define(["Stack", "rtreejs", "undo-redo", "resize-observer-polyfill"], factory);
+		define(["resize-observer-polyfill"], factory);
 	else if(typeof exports === 'object')
-		exports["LimberGridView"] = factory(require("Stack"), require("rtreejs"), require("undo-redo"), require("resize-observer-polyfill"));
+		exports["LimberGridView"] = factory(require("resize-observer-polyfill"));
 	else
-		root["LimberGridView"] = factory(root["Stack"], root["rtreejs"], root["undo-redo"], root["resize-observer-polyfill"]);
-})(window, function(__WEBPACK_EXTERNAL_MODULE__0__, __WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__, __WEBPACK_EXTERNAL_MODULE__3__) {
+		root["LimberGridView"] = factory(root["resize-observer-polyfill"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE__3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -114,26 +114,119 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE__0__;
+"use strict";
+/** @license Stack
+
+Stack, a JavaScript LIFO stack Data Structure.
+
+Copyright © 2019-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of Stack.
+
+Stack is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stack is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stack.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+if (true) {
+	module.exports = __webpack_require__(5);
+} else {}
+
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
+"use strict";
+/** @license RTreeJS
+
+RTreeJS, a JavaScript Tree library that helps to query, insert and delete Rectangles.
+
+Copyright © 2020-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of RTreeJS.
+
+RTreeJS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RTreeJS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RTreeJS.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+if (true) {
+	module.exports = __webpack_require__(4);
+} else {}
+
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
+"use strict";
+/** @license undo-redo
+
+undo-redo, a undo redo stack data structure.
+
+Copyright © 2020-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of undo-redo.
+
+undo-redo is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+undo-redo is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with undo-redo.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+if (true) {
+	module.exports = __webpack_require__(6);
+} else {}
+
 
 /***/ }),
 /* 3 */
@@ -145,37 +238,249 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__3__;
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// extracted by mini-css-extract-plugin
+/** @license RTreeJS
+
+RTreeJS, a JavaScript Tree library that helps to query, insert and delete Rectangles.
+
+Copyright © 2020-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of RTreeJS.
+
+RTreeJS is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RTreeJS is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RTreeJS.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+!function(t,e){ true?module.exports=e():undefined}(window,(function(){return function(t){var e={};function i(s){if(e[s])return e[s].exports;var r=e[s]={i:s,l:!1,exports:{}};return t[s].call(r.exports,r,r.exports,i),r.l=!0,r.exports}return i.m=t,i.c=e,i.d=function(t,e,s){i.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:s})},i.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},i.t=function(t,e){if(1&e&&(t=i(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var s=Object.create(null);if(i.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)i.d(s,r,function(e){return t[e]}.bind(null,r));return s},i.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return i.d(e,"a",e),e},i.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},i.p="assets",i(i.s=3)}([function(t,e,i){"use strict";
+/** @license Stack
+
+Stack, a JavaScript LIFO stack Data Structure.
+
+Copyright © 2019-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of Stack.
+
+Stack is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stack is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stack.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/t.exports=i(1)},function(t,e,i){
+/** @license Stack
+
+Stack, a JavaScript LIFO stack Data Structure.
+
+Copyright © 2019-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of Stack.
+
+Stack is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stack is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stack.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+window,t.exports=function(t){var e={};function i(s){if(e[s])return e[s].exports;var r=e[s]={i:s,l:!1,exports:{}};return t[s].call(r.exports,r,r.exports,i),r.l=!0,r.exports}return i.m=t,i.c=e,i.d=function(t,e,s){i.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:s})},i.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},i.t=function(t,e){if(1&e&&(t=i(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var s=Object.create(null);if(i.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)i.d(s,r,function(e){return t[e]}.bind(null,r));return s},i.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return i.d(e,"a",e),e},i.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},i.p="assets",i(i.s=0)}([function(t,e,i){"use strict";i.r(e),i.d(e,"ArrayStack",(function(){return r})),i.d(e,"ListStack",(function(){return n}));var s=function(t){var e;this.options=t,this.initialSize=(null==t?void 0:t.initialSize)||100,this.length=this.initialSize,this.stack=new Array(this.length),this.ptr=-1,Array.isArray(null==t?void 0:t.data)&&this.constructStack(t.data,t.constructReverse),null===(e=this.options)||void 0===e||delete e.data};s.prototype.constructStack=function(t,e){var i=t.length;if(e)for(var s=i-1;s>=0;s--)this.push(t[s]);else for(var r=0;r<i;r++)this.push(t[r])},s.prototype.push=function(t){return null!=t&&(this.ptr===this.length-1&&this.resize(),this.stack[++this.ptr]=t,this.ptr+1)},s.prototype.pop=function(){if(this.ptr>=0){var t=this.stack[this.ptr];return this.ptr--,t}},s.prototype.resize=function(){var t=this.length,e=this.stack;this.length=2*this.length,this.stack=new Array(this.length);for(var i=0;i<t;i++)this.stack[i]=e[i]},s.prototype.isEmpty=function(){return this.ptr<0},s.prototype.peek=function(){if(this.ptr>=0)return this.stack[this.ptr]},s.prototype.getData=function(){for(var t=new Array(this.ptr+1),e=0;e<=this.ptr;e++)t[e]=this.stack[e];return t},s.prototype.setData=function(t){var e;this.empty(),this.constructStack(t,null===(e=this.options)||void 0===e?void 0:e.constructReverse)},s.prototype.getSize=function(){return this.ptr+1},s.prototype.empty=function(){this.ptr=-1},s.prototype.wipe=function(){this.length=this.initialSize,this.stack=new Array(this.length),this.ptr=-1};var r=s;function o(t){this.length=0,this.HEAD=null,Array.isArray(null==t?void 0:t.data)&&this.constructStack(t.data,t.constructReverse)}o.prototype.constructNode=function(t){return{next:null,d:t}},o.prototype.constructStack=function(t,e){var i,s=t.length;if(e)for(i=s-1;i>=0;i--)this.push(t[i]);else for(i=0;i<s;i++)this.push(t[i])},o.prototype.push=function(t){var e=this.constructNode(t);return this.HEAD?(e.next=this.HEAD,this.HEAD=e):this.HEAD=e,++this.length},o.prototype.pop=function(){if(this.HEAD){var t=this.HEAD;return this.HEAD=this.HEAD.next,t.next=null,this.length--,t.d}},o.prototype.isEmpty=function(){return!this.HEAD},o.prototype.peek=function(){var t;return null===(t=this.HEAD)||void 0===t?void 0:t.d},o.prototype.getData=function(){for(var t=this.HEAD,e=new Array(this.length),i=0;null!=t;)e[i++]=t.d,t=t.next;return e},o.prototype.getSize=function(){return this.length},o.prototype.empty=function(){this.HEAD=null,this.length=0};var n=o;
+/** @license Stack
+
+Stack, a JavaScript LIFO stack Data Structure.
+
+Copyright © 2019-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of Stack.
+
+Stack is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stack is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stack.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/}])},function(t,e,i){},function(t,e,i){"use strict";i.r(e),i.d(e,"RTreeIterative",(function(){return H}));var s=i(0);Math.sqrt(Number.MAX_SAFE_INTEGER);const r=t=>(t.x2-t.x1)*(t.x2-t.x1)+(t.y2-t.y1)*(t.y2-t.y1),o=(t,e)=>{const i=(t.x2-t.x1)*(t.x2-t.x1)+(t.y2-t.y1)*(t.y2-t.y1),s=(e.x2-e.x1)*(e.x2-e.x1)+(e.y2-e.y1)*(e.y2-e.y1);return i>s?i-s:s-i},n=(t,e)=>({x1:t.x1<e.x1?t.x1:e.x1,x2:t.x2>e.x2?t.x2:e.x2,y1:t.y1<e.y1?t.y1:e.y1,y2:t.y2>e.y2?t.y2:e.y2}),p=(t,e,i=0)=>{let s=Number.MAX_SAFE_INTEGER,r=0,o=Number.MAX_SAFE_INTEGER,n=0;for(let p=i;p<e;p++){const e=t[p];s=e.x1<s?e.x1:s,r=e.x2>r?e.x2:r,o=e.y1<o?e.y1:o,n=e.y2>n?e.y2:n}return{x1:s,x2:r,y1:o,y2:n}},l=(t,e)=>t.x1===e.x1&&t.x2===e.x2&&t.y1===e.y1&&t.y2===e.y2,h=(t,e)=>t.x1<=e.x1&&t.x2>=e.x2&&t.y1<=e.y1&&t.y2>=e.y2,a=(t,e)=>!(t.x1>=e.x2||e.x1>=t.x2||t.y1>=e.y2||e.y1>=t.y2),u=(t,e)=>!(t.x1>e.x2||e.x1>t.x2||t.y1>e.y2||e.y1>t.y2),c=(t,e,i)=>{let s=Number.MAX_SAFE_INTEGER,r=0;for(let p=0;p<i;p++){const i=t[p],l=o(n(i,e),i);l<s&&(s=l,r=p)}return r},y=(t,e,i)=>{for(let s=0;s<e;s++)if(l(t[s],i))return!0;return!1},d=(t,e,i)=>{for(let s=0;s<e;s++)if(l(t[s],i))return s;return-1},f=(t={size:0,keys:[],pointers:[]},e)=>{for(let i=e;i<t.size-1;i++)t.keys[i]=t.keys[i+1],t.pointers[i]=t.pointers[i+1];t.size--},k=(t={size:0,keys:[],pointers:[]},e,i)=>{let s=Number.MAX_SAFE_INTEGER,o=-1,p=-1;const l=t.keys[e];for(let h=0;h<t.size;h++){if(h===e||t.pointers[h].size===i)continue;const a=t.pointers[h].keys,u=t.pointers[h].size;for(let t=0;t<u;t++){const e=a[t],i=r(n(l,e));i<s&&(s=i,o=h,p=t)}}if(-1!==o)return{ptr:o,ptrPtr:p}},v=(t={size:0,keys:[],pointers:[]},e,i)=>{var s;const r=t.pointers[i.ptr]||{size:0,keys:[],pointers:[]},o=r.keys[i.ptrPtr],n=r.pointers[i.ptrPtr];for(let t=i.ptrPtr;t<r.size-1;t++)r.keys[t]=r.keys[t+1],r.pointers[t]=r.pointers[t+1];r.size--,t.keys[i.ptr]=p(r.keys,r.size);const l=(null===(s=t.pointers[e])||void 0===s?void 0:s.size)||0,h=t.pointers[e]||{size:0,keys:[],pointers:[]};h.keys[l]=o,h.pointers[l]=n,h.size++,t.keys[e]=p(h.keys,h.size)},S=(t={size:0,keys:[],pointers:[]},e,i)=>{let s=-1,o=Number.MAX_SAFE_INTEGER,p={x1:-1,x2:-1,y1:-1,y2:-1};for(let i=0;i<t.size;i++){if(i===e)continue;const l=n(t.keys[i],t.keys[e]),h=r(l);h<o&&(o=h,p=l,s=i)}if(-1===s)return void(t.size=0);t.keys[s]=p;const l=t.pointers[e]||{size:0,keys:[],pointers:[]},h=t.pointers[s]||{size:0,keys:[],pointers:[]};let a=0;for(;a<l.size;)h.keys[h.size]=l.keys[a],h.pointers[h.size]=l.pointers[a],a++,h.size++;for(let i=e;i<t.size-1;i++)t.keys[i]=t.keys[i+1],t.pointers[i]=t.pointers[i+1];t.size--},g=(t,e,i,s)=>{const r=t[i],o=e[i];t[i]=t[s],e[i]=e[s],t[s]=r,e[s]=o},x=(t={size:0,keys:[],pointers:[]},e,i,s)=>{const{keys:r=[],pointers:o=[]}=t||{};let n=0,p=0,l=Number.MAX_SAFE_INTEGER,h=0;r[s]=e,o[s]=i;for(const[t,e]of r.entries())e.x2<l&&(l=e.x2,n=t),e.x1>h&&(h=e.x1,p=t);g(r,o,0,n),g(r,o,s,p)},z=(t,e,i,s)=>{const r=new Array(s+1),o=new Array(s+1);let n=i,p=0;for(;n<s+1;)r[p]=t[n],o[p]=e[n],p++,n++;return{rightRect:r,rptrs:o,rightSize:p}},E=(t={size:0,keys:[],pointers:[]},e,i,s,o)=>{const{keys:l=[],pointers:h=[]}=t||{},a=[...l],u=[...h];x(t,e,i,s);const{rectArrY:c,nodeArrY:y}=((t,e,i,s,r)=>{let o=0,n=0,p=Number.MAX_SAFE_INTEGER,l=0;t[r]=i,e[r]=s;for(const[e,i]of t.entries())i.y2<p&&(p=i.y2,o=e),i.y1>l&&(l=i.y1,n=e);return g(t,e,0,o),g(t,e,r,n),{rectArrY:t,nodeArrY:e}})(a,u,e,i,s),d=l[0];let f,k=Number.MAX_SAFE_INTEGER;const v=c[0];let S,E,m,A=Number.MAX_SAFE_INTEGER,b=1;for(;b<s+1;){k=Number.MAX_SAFE_INTEGER,A=Number.MAX_SAFE_INTEGER,f=b,S=b;for(let t=b;t<=s;t++)E=n(d,l[t]),m=r(E),m<k&&(f=t,k=m),E=n(v,c[t]),m=r(E),m<A&&(S=t,A=m);g(l,h,b,f),g(c,y,b,S),b++}let H=o,T=o;if(s%2==0){let t=l[0],e=r(t),i=l[o+1],p=r(i),h=l[0],a=r(t),u=l[o+1],y=r(i);for(let i=1;i<o;i++)t=n(t,l[i]),e=r(t),h=n(h,c[i]),a=r(h);for(let t=o+2;t<=s;t++)i=n(i,l[t]),p=r(i),u=n(u,c[t]),y=r(u);r(n(t,l[o]))-e<r(n(i,l[o]))-p&&H++,r(n(h,c[o]))-a<r(n(u,c[o]))-y&&T++}return r(p(l,H-1))+r(p(l,s+1,H))<r(p(c,T-1))+r(p(c,s+1,T))?(t.size=H,z(l,h,H,s)):(t.size=T,t.keys=c,t.pointers=y,z(c,y,T,s))},m=(t={size:0,keys:[],pointers:[]},e,i,s,o)=>{const{keys:p=[],pointers:l=[]}=t||{};x(t,e,i,s);let h,a,u,c,y,d,f,k,v,S,E,m,A=p[0],b=p[s],H=1,T=s-1,_=r(A),M=r(b);for(;H<=T;)u=p[H],c=p[T],y=n(u,A),v=r(y),d=n(u,b),S=r(d),h=v-_>S-M,f=n(c,A),E=r(f),k=n(c,b),m=r(k),a=m-M>E-_,h&&a?(g(p,l,H,T),A=f,_=E,b=d,M=S,H++,T--):h||a?h?a?(H++,T--):(m>S?(g(p,l,H,T),b=d,M=S):(b=k,M=m),T--):(v>E?(g(p,l,H,T),A=f,_=E):(A=y,_=v),H++):(A=y,_=v,b=k,M=m,H++,T--);return((t={size:0,keys:[],pointers:[]},e,i,s,o)=>{let p=o;if(s%2==0){let t=e[0],i=r(t),l=e[o+1],h=r(l);for(let s=1;s<o;s++)t=n(t,e[s]),i=r(t);for(let t=o+2;t<=s;t++)l=n(l,e[t]),h=r(l);r(n(t,e[o]))-i<r(n(l,e[o]))-h&&p++}return t.size=p,z(e,i,p,s)})(t,p,l,s,o)},A=["green","purple","blue","orange","aqua","blueviolet","brown","cadetblue","yellow","violet","thistle","teal","steelblue","silver","sienna","sandybrown","salmon","saddlebrown","olive"],b=(t,e,i)=>{const r=((t,e,i)=>{if(!t)return[];const r=new s.ArrayStack,o=new s.ArrayStack;let n=0;for(o.push({node:p(t.keys,t.size),HEIGHT:n}),r.push({node:t,ptr:-1,HEIGHT:n++});!r.isEmpty();){const t=r.peek(),{node:e}=t;if(e.pointers[0])t.ptr+1<e.size?(o.push({node:e.keys[t.ptr+1],HEIGHT:n}),r.push({node:e.pointers[++t.ptr],ptr:-1,HEIGHT:n++})):(r.pop(),n--);else{for(let t=0;t<e.size;t++)o.push({node:e.keys[t],HEIGHT:n});r.pop(),n--}}return o.getData()})(t);console.log("data",r);const o=A.length,n={},l=r.length;for(let t=0;t<l-1;t++)r[t].HEIGHT<o?n[r[t].HEIGHT]=A[r[t].HEIGHT]:n[r[t].HEIGHT]="black";n[i]="red";let h=0;r.forEach(t=>{h=t.node.x2>h?t.node.x2:h});let a=0;r.forEach(t=>{a=t.node.y2>a?t.node.y2:a});const u=r.map(t=>{const e=1e3*t.node.x1/h+4*t.HEIGHT;let i=1e3*t.node.x2/h;i=i>4*t.HEIGHT?i-4*t.HEIGHT:i;const s=1e3*t.node.y1/a+4*t.HEIGHT;let r=1e3*t.node.y2/a;r=r>4*t.HEIGHT?r-4*t.HEIGHT:r;return`<g transform="translate(${e}, ${s})">\n\t\t\t<rect width="${i-e>0?i-e:1}" height="${r-s>0?r-s:1}" stroke="${n[t.HEIGHT]}" stroke-width="2" fill-opacity="0"/>\n\t\t</g>`}).reduce((t,e)=>t+e,""),c=Object.keys(n).map((t,e)=>`<g transform="translate(${70*e+10}, 10)"><circle r="5" fill="${n[t]}"/><text dx="10" dy="5">height: ${e}</text></g>`);r.sort((t,e)=>t.HEIGHT-e.HEIGHT);return`<svg width="1020" height="1070"><g width="1000" height="1000" transform="translate(0, 0)">${c}</g>\n\t<rect transform="translate(2, 48)" width="1000" height="1000" stroke="black" stroke-width="2" fill-opacity="0"/>\n\t<g transform="translate(0, 50)">${u}</g></svg>\n\t<div style="margin: 16px;">\n\t<p>height 0 is not an actual node, its just a rect surrounding all the rects in root node.</p>\n\t<p>Non-leaf node have colours other then red.</p>\n\t<p>Leaf node is always Red.</p>\n\t</div>\n\t<div style="display: flex; flex-direction: column; margin: 16px;">${r.reduce((t,e)=>t+`<div style="display:flex;"><span style="flex: 1;">height: ${e.HEIGHT},</span><span style="flex: 1;">rect: x1: ${e.node.x1},</span><span style="flex: 1;">x2: ${e.node.x2},</span><span style="flex: 1;">y1: ${e.node.y1},</span><span style="flex: 1;">y2: ${e.node.y2}</span></div>`,"")}</div>\n\t`};var H=class{constructor(t){var e,i,r;if(this.options=t,this.M=t.M||4,this.M%2==0?this.m=this.M/2:this.m=Math.ceil(this.M/2),this.M<2)throw"Value of M cannot be less than 2";if((null==t?void 0:t.m)&&Number.isInteger(t.m)&&t.m<=Math.ceil(this.M/2)&&t.m>=1)this.m=t.m;else if(null==t?void 0:t.m)throw"Can't hard set value of m for M, invalid value of m provided";this.splitNode=E,"linear"===(null==t?void 0:t.splitNode)&&(this.splitNode=m),this.root=void 0,this.length=0,this.height=0,this.initialStackSize=2*(null===(e=null==t?void 0:t.data)||void 0===e?void 0:e.length)||(null==t?void 0:t.initialStackSize)||100,this.initialQueueSize=2*(null===(i=null==t?void 0:t.data)||void 0===i?void 0:i.length)||(null==t?void 0:t.initialQueueSize)||100,this.insertStack=new s.ArrayStack({initialSize:this.initialStackSize}),this.ptrStack=new s.ArrayStack({initialSize:this.initialStackSize}),this.resultStack=new s.ArrayStack({initialSize:this.initialStackSize}),Array.isArray(null==t?void 0:t.data)&&this.constructTree(t.data),null===(r=this.options)||void 0===r||delete r.data}getRoot(){return this.root}constructNode(t,e,i,s){const r={size:0,pointers:new Array(this.M+1),keys:new Array(this.M+1)};return t?(r.keys[0]=t,r.pointers[0]=void 0,r.size=1):e&&i&&(r.keys=e,r.pointers=i,r.size=s||0),r}constructTree(t){const e=t.length;for(let i=0;i<e;i++)this.insert(t[i])}insert(t){return this._insert(t)}_insert(t){var e,i,s,r,o,n,l,h;let a,u=!1;if(this.insertStack.empty(),void 0===this.root)return this.root=this.constructNode(t),this.length++,this.height++,this.root;for(this.insertStack.push({node:this.root,pos:-1});!this.insertStack.isEmpty();){const o=this.insertStack.peek(),n=o.node;if(u)if(a){const t=p((null===(e=null==a?void 0:a.left)||void 0===e?void 0:e.keys)||[],(null===(i=null==a?void 0:a.left)||void 0===i?void 0:i.size)||0);n.keys[o.pos]=t,n.pointers[o.pos]=null==a?void 0:a.left;const l=p((null===(s=null==a?void 0:a.right)||void 0===s?void 0:s.keys)||[],(null===(r=null==a?void 0:a.right)||void 0===r?void 0:r.size)||0);if(n.size<this.M)n.keys[n.size]=l,n.pointers[n.size]=null==a?void 0:a.right,n.size++,a=void 0;else{const t=this.splitNode(n,l,a.right,this.M,this.m);a={left:n,right:this.constructNode(void 0,t.rightRect,t.rptrs,t.rightSize)}}this.insertStack.pop()}else n.keys[o.pos]=p(n.pointers[o.pos].keys,n.pointers[o.pos].size),this.insertStack.pop();else{if(null==n?void 0:n.pointers[0]){const e=c(n.keys,t,n.size);o.pos=e,this.insertStack.push({node:n.pointers[e],pos:e});continue}if(y(n.keys,n.size,t))return;if(this.length++,n.size<this.M){n.keys[n.size]=t,n.size++,u=!0,this.insertStack.pop();continue}const e=this.splitNode(n,t,void 0,this.M,this.m);a={left:n,right:this.constructNode(void 0,e.rightRect,e.rptrs,e.rightSize)},u=!0,this.insertStack.pop()}}if(a){const t=p((null===(o=null==a?void 0:a.left)||void 0===o?void 0:o.keys)||[],(null===(n=null==a?void 0:a.left)||void 0===n?void 0:n.size)||0),e=p((null===(l=null==a?void 0:a.right)||void 0===l?void 0:l.keys)||[],(null===(h=null==a?void 0:a.right)||void 0===h?void 0:h.size)||0),i=this.constructNode();i&&(i.size=2,i.keys=[t,e],i.pointers=[null==a?void 0:a.left,null==a?void 0:a.right],this.root=i),this.height++}}remove(t){return this._remove(t)}_remove(t){let e=!1;if(this.ptrStack.empty(),this.root)for(this.ptrStack.push({node:this.root,ptr:-1});!this.ptrStack.isEmpty();){const i=this.ptrStack.peek(),{node:s}=i;if(e)if(s.pointers[i.ptr].size<this.m){s.keys[i.ptr]=p(s.pointers[i.ptr].keys,s.pointers[i.ptr].size);const t=k(s,i.ptr,this.m);if(t)v(s,i.ptr,t);else if(S(s,i.ptr,this.m),s===this.root&&s.size<2){const t=this.root;this.root=t.pointers[0],t.keys=[];for(let e=0;e<this.M+1;e++)t.pointers[e]=void 0;this.height--,0===this.root.size&&(this.root=void 0,this.height=0,this.length=0)}this.ptrStack.pop()}else{const t=p(s.pointers[i.ptr].keys,s.pointers[i.ptr].size);s.keys[i.ptr]=t,this.ptrStack.pop()}else if(s.pointers[0]){const e=i.ptr+1;for(let r=e;r<s.size;r++)if(h(s.keys[r],t)){i.ptr=r,this.ptrStack.push({node:s.pointers[r],ptr:-1});break}i.ptr===e-1&&this.ptrStack.pop()}else{const i=d(s.keys,s.size,t);i>=0&&(f(s,i),e=!0,this.length--,s===this.root&&0===s.size&&(this.root=void 0,this.height=0,this.length=0)),this.ptrStack.pop()}}}find(t,e=!1,i=!1,s,r=!0){let o=a;return r&&(o=u),this._find(t,e,i,s,o)}_find(t,e=!1,i=!1,s,r){if(this.ptrStack.empty(),this.resultStack.empty(),!this.root&&i)return[];if(this.root){for(this.ptrStack.push({node:this.root,ptr:-1});!this.ptrStack.isEmpty();){const o=this.ptrStack.peek(),{node:n}=o;if(n.pointers[0]){const s=o.ptr+1;for(let p=s;p<n.size;p++)if(e&&!i?h(n.keys[p],t):r(n.keys[p],t)){o.ptr=p,this.ptrStack.push({node:n.pointers[p],ptr:-1});break}o.ptr===s-1&&this.ptrStack.pop()}else{for(let o=0;o<n.size;o++)if(e&&!i){if(l(n.keys[o],t))return n.keys[o]}else if(i)!r(n.keys[o],t)||s&&!s(n.keys[o],t)||this.resultStack.push(n.keys[o]);else if(r(n.keys[o],t)&&(!s||s(n.keys[o],t)))return n.keys[o];this.ptrStack.pop()}}return i?this.resultStack.getData():void 0}}getData(t=!1){if(!this.root)return[];for(this.ptrStack.empty(),this.resultStack.empty(),this.ptrStack.push({node:this.root,ptr:-1});!this.ptrStack.isEmpty();){const e=this.ptrStack.peek(),{node:i}=e;if(i.pointers[0])e.ptr+1<i.size?(this.ptrStack.push({node:i.pointers[++e.ptr],ptr:-1}),t&&this.resultStack.push(i.keys[e.ptr])):this.ptrStack.pop();else{for(let t=0;t<i.size;t++)this.resultStack.push(i.keys[t]);this.ptrStack.pop()}}return this.resultStack.getData()}reset(){this.root=void 0,this.length=0,this.height=0}emptyTree(){this.root=void 0,this.length=0,this.height=0;const t=Math.max(this.insertStack.stack.length,this.ptrStack.length,this.resultStack.length);for(let e=0;e<t;e++)this.insertStack.stack[e]&&(this.insertStack.stack[e].node=void 0),this.ptrStack.stack[e]&&(this.ptrStack.stack[e].node=void 0),this.resultStack.stack[e]&&(this.resultStack.stack[e]=void 0)}printTree(){return b(this.root,this.length,this.height)}};i(2),e.default=H}])}));
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// extracted by mini-css-extract-plugin
+/** @license Stack
+
+Stack, a JavaScript LIFO stack Data Structure.
+
+Copyright © 2019-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of Stack.
+
+Stack is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stack is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stack.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+!function(t,e){ true?module.exports=e():undefined}(window,(function(){return function(t){var e={};function r(n){if(e[n])return e[n].exports;var i=e[n]={i:n,l:!1,exports:{}};return t[n].call(i.exports,i,i.exports,r),i.l=!0,i.exports}return r.m=t,r.c=e,r.d=function(t,e,n){r.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},r.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},r.t=function(t,e){if(1&e&&(t=r(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(r.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)r.d(n,i,function(e){return t[e]}.bind(null,i));return n},r.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return r.d(e,"a",e),e},r.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},r.p="assets",r(r.s=0)}([function(t,e,r){"use strict";r.r(e),r.d(e,"ArrayStack",(function(){return i})),r.d(e,"ListStack",(function(){return s}));var n=function(t){var e;this.options=t,this.initialSize=(null==t?void 0:t.initialSize)||100,this.length=this.initialSize,this.stack=new Array(this.length),this.ptr=-1,Array.isArray(null==t?void 0:t.data)&&this.constructStack(t.data,t.constructReverse),null===(e=this.options)||void 0===e||delete e.data};n.prototype.constructStack=function(t,e){var r=t.length;if(e)for(var n=r-1;n>=0;n--)this.push(t[n]);else for(var i=0;i<r;i++)this.push(t[i])},n.prototype.push=function(t){return null!=t&&(this.ptr===this.length-1&&this.resize(),this.stack[++this.ptr]=t,this.ptr+1)},n.prototype.pop=function(){if(this.ptr>=0){var t=this.stack[this.ptr];return this.ptr--,t}},n.prototype.resize=function(){var t=this.length,e=this.stack;this.length=2*this.length,this.stack=new Array(this.length);for(var r=0;r<t;r++)this.stack[r]=e[r]},n.prototype.isEmpty=function(){return this.ptr<0},n.prototype.peek=function(){if(this.ptr>=0)return this.stack[this.ptr]},n.prototype.getData=function(){for(var t=new Array(this.ptr+1),e=0;e<=this.ptr;e++)t[e]=this.stack[e];return t},n.prototype.setData=function(t){var e;this.empty(),this.constructStack(t,null===(e=this.options)||void 0===e?void 0:e.constructReverse)},n.prototype.getSize=function(){return this.ptr+1},n.prototype.empty=function(){this.ptr=-1},n.prototype.wipe=function(){this.length=this.initialSize,this.stack=new Array(this.length),this.ptr=-1};var i=n;function o(t){this.length=0,this.HEAD=null,Array.isArray(null==t?void 0:t.data)&&this.constructStack(t.data,t.constructReverse)}o.prototype.constructNode=function(t){return{next:null,d:t}},o.prototype.constructStack=function(t,e){var r,n=t.length;if(e)for(r=n-1;r>=0;r--)this.push(t[r]);else for(r=0;r<n;r++)this.push(t[r])},o.prototype.push=function(t){var e=this.constructNode(t);return this.HEAD?(e.next=this.HEAD,this.HEAD=e):this.HEAD=e,++this.length},o.prototype.pop=function(){if(this.HEAD){var t=this.HEAD;return this.HEAD=this.HEAD.next,t.next=null,this.length--,t.d}},o.prototype.isEmpty=function(){return!this.HEAD},o.prototype.peek=function(){var t;return null===(t=this.HEAD)||void 0===t?void 0:t.d},o.prototype.getData=function(){for(var t=this.HEAD,e=new Array(this.length),r=0;null!=t;)e[r++]=t.d,t=t.next;return e},o.prototype.getSize=function(){return this.length},o.prototype.empty=function(){this.HEAD=null,this.length=0};var s=o;
+/** @license Stack
+
+Stack, a JavaScript LIFO stack Data Structure.
+
+Copyright © 2019-2020 Subendra Kumar Sharma. All Rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of Stack.
+
+Stack is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Stack is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Stack.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/}])}));
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/** @license undo-redo
+
+undo-redo, a undo redo stack data structure.
+
+Copyright © 2020-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of undo-redo.
+
+undo-redo is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+undo-redo is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with undo-redo.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+!function(t,e){ true?module.exports=e():undefined}(window,(function(){return function(t){var e={};function i(n){if(e[n])return e[n].exports;var s=e[n]={i:n,l:!1,exports:{}};return t[n].call(s.exports,s,s.exports,i),s.l=!0,s.exports}return i.m=t,i.c=e,i.d=function(t,e,n){i.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:n})},i.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},i.t=function(t,e){if(1&e&&(t=i(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(i.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var s in t)i.d(n,s,function(e){return t[e]}.bind(null,s));return n},i.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return i.d(e,"a",e),e},i.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},i.p="assets",i(i.s=0)}([function(t,e,i){"use strict";i.r(e);e.default=
+/** @license undo-redo
+
+undo-redo, a undo redo stack data structure.
+
+Copyright © 2020-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of undo-redo.
+
+undo-redo is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+undo-redo is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with undo-redo.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+class{constructor(t){this.HEAD=void 0,this.TAIL=void 0,this.CURR=void 0,this.size=(null==t?void 0:t.size)||50,this.length=0}constructNode(t){return{next:void 0,prev:void 0,data:t}}undo(){if(this.CURR!==this.TAIL)return this.CURR=this.CURR.prev,this.CURR.data}isUndoAvailable(){return!(this.CURR===this.TAIL)}redo(){if(this.CURR!==this.HEAD)return this.CURR=this.CURR.next,this.CURR.data}isRedoAvailable(){return!(this.CURR===this.HEAD)}push(t){const e=this.constructNode(t);if(void 0===this.CURR)this.CURR=e,this.HEAD=e,this.TAIL=e,this.length++,this.checkLength();else if(this.CURR===this.HEAD)this.HEAD=e,this.HEAD.prev=this.CURR,this.CURR.next=this.HEAD,this.CURR=this.HEAD,this.length++,this.checkLength();else{let t=this.CURR.next;e.prev=this.CURR,this.CURR.next=e,this.CURR=this.CURR.next,this.HEAD=this.CURR;let i=0;for(;void 0!==t;){const e=t;t=t.next,e.next=void 0,e.prev=void 0,i++}this.length-=i,this.length++}return t}checkLength(){this.length>this.size&&(this.TAIL=this.TAIL.next,this.length--)}getCurrent(){var t;return null===(t=this.CURR)||void 0===t?void 0:t.data}setCurrent(t){if(this.CURR)return this.CURR.data=t,this.CURR.data}getData(){let t=this.TAIL;const e=new Array(this.length);let i=0;for(;void 0!==t;)e[i++]=t.data,t=t.next;return e}reset(){this.HEAD=void 0,this.TAIL=void 0,this.CURR=void 0,this.length=0}}}])}));
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 // ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: external {"commonjs":"rtreejs","commonjs2":"rtreejs","amd":"rtreejs","root":"rtreejs"}
-var external_commonjs_rtreejs_commonjs2_rtreejs_amd_rtreejs_root_rtreejs_ = __webpack_require__(1);
+// EXTERNAL MODULE: ./node_modules/@sharma-subendra-kr/rtreejs/dist/index.js
+var dist = __webpack_require__(1);
 
-// EXTERNAL MODULE: external {"commonjs":"Stack","commonjs2":"Stack","amd":"Stack","root":"Stack"}
-var external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_ = __webpack_require__(0);
+// EXTERNAL MODULE: ./node_modules/@sharma-subendra-kr/stack/dist/index.js
+var stack_dist = __webpack_require__(0);
 
-// EXTERNAL MODULE: external {"commonjs":"undo-redo","commonjs2":"undo-redo","amd":"undo-redo","root":"undo-redo"}
-var external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_ = __webpack_require__(2);
-var external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_default = /*#__PURE__*/__webpack_require__.n(external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_);
+// EXTERNAL MODULE: ./node_modules/@sharma-subendra-kr/undo-redo/dist/index.js
+var undo_redo_dist = __webpack_require__(2);
+var undo_redo_dist_default = /*#__PURE__*/__webpack_require__.n(undo_redo_dist);
 
 // EXTERNAL MODULE: ./src/index.css
-var src = __webpack_require__(4);
+var src = __webpack_require__(7);
 
 // EXTERNAL MODULE: ./src/index.scss
-var src_0 = __webpack_require__(5);
+var src_0 = __webpack_require__(8);
 
 // CONCATENATED MODULE: ./src/store/constants/privateConstants.js
 /*
@@ -7531,20 +7836,20 @@ LimberGridView.prototype.initializeStore = function () {
       },
       status: {},
       trees: {
-        rt: new external_commonjs_rtreejs_commonjs2_rtreejs_amd_rtreejs_root_rtreejs_["RTreeIterative"]({
+        rt: new dist["RTreeIterative"]({
           M: 4 // splitNode: "linear",
 
         })
       },
       stacks: {
-        stack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]({
+        stack: new stack_dist["ArrayStack"]({
           constructReverse: true
         }),
-        garbageStack: new external_commonjs_Stack_commonjs2_Stack_amd_Stack_root_Stack_["ArrayStack"]({
+        garbageStack: new stack_dist["ArrayStack"]({
           constructReverse: true
         })
       },
-      undoRedo: new external_commonjs_undo_redo_commonjs2_undo_redo_amd_undo_redo_root_undo_redo_default.a()
+      undoRedo: new undo_redo_dist_default.a()
     },
     constants: {
       privateConstants: {
