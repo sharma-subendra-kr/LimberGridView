@@ -68,10 +68,10 @@
     "webpack-notifier": "^1.13.0"
   },
   "dependencies": {
-    "Stack": "git+https://github.com/sharma-subendra-kr/Stack.git#release-1.0.1",
-    "resize-observer-polyfill": "^1.5.1",
-    "rtreejs": "github:sharma-subendra-kr/RTreeJS#release-1.0.0-beta.1",
-    "undo-redo": "git+https://github.com/sharma-subendra-kr/undo-redo.git#release-1.0.2"
+    "@sharma-subendra-kr/rtreejs": "^1.0.0-beta.1",
+    "@sharma-subendra-kr/stack": "^1.0.1",
+    "@sharma-subendra-kr/undo-redo": "^1.0.2",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "keywords": [
     "LimberGridView",

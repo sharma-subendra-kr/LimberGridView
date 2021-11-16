@@ -23,9 +23,9 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { RTreeIterative } from "rtreejs";
-import { ArrayStack as Stack } from "Stack";
-import UndoRedo from "undo-redo";
+import { RTreeIterative } from "@sharma-subendra-kr/rtreejs";
+import { ArrayStack as Stack } from "@sharma-subendra-kr/stack";
+import UndoRedo from "@sharma-subendra-kr/undo-redo";
 
 import "./index.css";
 import "./index.scss";
