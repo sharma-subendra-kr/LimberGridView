@@ -49,18 +49,18 @@ import {
 	sanitizeDimension,
 	swapDimensActualAndWithMargin,
 } from "../utils/items";
-// import {
-// 	sleep,
-// 	printUnmergedFreeRects,
-// 	printMergedFreeRects,
-// 	printResultStackRects,
-// 	printStackRects,
-// 	printMergedTempRects,
-// 	printStackTopRect,
-// 	printStackTopAdjRect,
-// 	printMergedRect,
-// 	printAdjRect,
-// } from "../debug/debug";
+import { sleep } from "../utils/utils";
+import {
+	printUnmergedFreeRects,
+	printMergedFreeRects,
+	printResultStackRects,
+	printStackRects,
+	printMergedTempRects,
+	printStackTopRect,
+	printStackTopAdjRect,
+	printMergedRect,
+	printAdjRect,
+} from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
 export const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
@@ -167,7 +167,7 @@ export const sweepLineBottom = (context, area, items, rt) => {
 	return resultPoint;
 };
 
-export const sweepLineForFreeSpace = (context, area, items, idCount) => {
+export const sweepLineForFreeSpace = async (context, area, items, idCount) => {
 	// area: area to sweep
 	// area: area to sweep Coordinate Form
 	// items: items in area
@@ -187,6 +187,12 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 	const len = items.length;
 	for (let i = 0; i < len; i++) {
 		item = items[i];
+
+		await sleep(1000);
+		printUnmergedFreeRects(context, rt.getData());
+
+		await sleep(1000);
+		printStackTopRect(context, item);
 
 		resRects = rt.find(item, false, true, undefined, false);
 
@@ -209,15 +215,19 @@ export const sweepLineForFreeSpace = (context, area, items, idCount) => {
 		}
 	}
 
-	// printUnmergedFreeRects(context, rt.getData());
-	// debugger;
+	await sleep(1000);
+	printUnmergedFreeRects(context, rt.getData());
+	await sleep(3000);
 
 	return { rt };
 };
 
-export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
+export const mergeFreeRectsCore = async (context, stack, rt, idCount) => {
 	let topFullMerged = false;
 	while (!stack.isEmpty()) {
+		await sleep(1000);
+		printMergedFreeRects(context, rt.getData());
+
 		const top = stack.pop();
 		topFullMerged = false;
 
@@ -260,6 +270,9 @@ export const mergeFreeRectsCore = (context, stack, rt, idCount) => {
 			rt.insert(top);
 		}
 	}
+
+	await sleep(1000);
+	printMergedFreeRects(context, rt.getData());
 };
 
 export const filterMergedFreeRects = (rt) => {
@@ -285,25 +298,33 @@ export const mergeFreeRects = async (
 	const stack = getStack(context, "stack");
 
 	if (Array.isArray(freeRects)) {
-		stack.setData(freeRects.sort(rectSortX));
+		stack.setData(freeRects.sort(rectSortX), true);
 		rt = getTree(context, "rt");
 		rt.reset();
 	} else {
-		stack.setData(garbageRects.sort(rectSortX));
+		stack.setData(garbageRects.sort(rectSortX), true);
 		rt = freeRects;
 	}
 
-	mergeFreeRectsCore(context, stack, rt, idCount);
+	await sleep(1000);
+	printUnmergedFreeRects(context, stack.getData());
+	printMergedFreeRects(context, []);
+	await mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
+	await sleep(1000);
+	printUnmergedFreeRects(context, rt.getData());
+	printMergedFreeRects(context, []);
 	const mergedArr = rt.getData();
-	stack.setData(mergedArr.sort(rectSortY));
+	stack.setData(mergedArr.sort(rectSortY), true);
 	rt.reset();
-	mergeFreeRectsCore(context, stack, rt, idCount);
+	await mergeFreeRectsCore(context, stack, rt, idCount);
 	filterMergedFreeRects(rt);
 
-	// printMergedFreeRects(context, rt.getData());
-	// debugger;
+	await sleep(1000);
+	printUnmergedFreeRects(context, []);
+	printMergedFreeRects(context, rt.getData());
+	await sleep(3000);
 
 	return { mergedRectsRt: rt };
 };
@@ -425,12 +446,15 @@ export const arrange = async (
 
 			const gLen = garbageRects?.length || 0;
 			for (let i = 0; i < gLen; i++) {
-				garbageRects[i].idCount = idCount.idCount++;
+				garbageRects[i].id = idCount.idCount++;
 				garbageStack.push(garbageRects[i]);
 			}
 			mergedRectsRt.remove(res);
 		}
 
+		await sleep(1000);
+		printUnmergedFreeRects(context, []);
+		printMergedFreeRects(context, []);
 		const { mergedRectsRt: _mergedRectsRt } = await mergeFreeRects(
 			context,
 			mergedRectsRt,

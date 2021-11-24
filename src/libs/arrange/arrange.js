@@ -41,17 +41,18 @@ import {
 } from "./arrangeUtils";
 import { sanitizeDimension } from "../utils/items";
 
-// import {
-// 	printUnmergedFreeRects,
-// 	printMergedFreeRects,
-// 	printResultStackRects,
-// 	printStackRects,
-// 	printMergedTempRects,
-// 	printStackTopRect,
-// 	printStackTopAdjRect,
-// 	printMergedRect,
-// 	printAdjRect,
-// } from "../debug/debug";
+import { sleep } from "../utils/utils";
+import {
+	printUnmergedFreeRects,
+	printMergedFreeRects,
+	printResultStackRects,
+	printStackRects,
+	printMergedTempRects,
+	printStackTopRect,
+	printStackTopAdjRect,
+	printMergedRect,
+	printAdjRect,
+} from "../debug/debug";
 // import { printNodeData } from "../debug/debugUtils";
 
 export const arrangeMove = async (
@@ -91,8 +92,8 @@ export const arrangeMove = async (
 		y2: maxY,
 	};
 
-	// printStackTopRect(context, workSpaceRect);
-	// debugger;
+	await sleep(1000);
+	printStackTopRect(context, workSpaceRect);
 
 	const combinedWorkSpaceRect = { ...workSpaceRect };
 	const { topWorkSpace, bottomWorkSpace } = getTopBottomWS(
@@ -102,24 +103,23 @@ export const arrangeMove = async (
 		privateConstants.WIDTH
 	);
 
-	// printStackTopRect(context, topWorkSpace);
-	// debugger;
-	// printStackTopRect(context, bottomWorkSpace);
-	// debugger;
+	await sleep(1000);
+	printStackTopRect(context, topWorkSpace);
+	await sleep(1000);
+	printStackTopRect(context, bottomWorkSpace);
 
-	// const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
 	shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
 
-	// printStackTopRect(context, topWorkSpace);
-	// debugger;
-	// printStackTopRect(context, bottomWorkSpace);
-	// debugger;
+	await sleep(1000);
+	printStackTopRect(context, topWorkSpace);
+	await sleep(1000);
+	printStackTopRect(context, bottomWorkSpace);
 
 	combinedWorkSpaceRect.y1 = topWorkSpace.y1;
 	combinedWorkSpaceRect.y2 = bottomWorkSpace.y2;
 
-	// printStackTopRect(context, combinedWorkSpaceRect);
-	// debugger;
+	await sleep(1000);
+	printStackTopRect(context, combinedWorkSpaceRect);
 
 	let itemsInCombinedWorkSpace = getItemsInWorkSpace(
 		context,
@@ -147,10 +147,6 @@ export const arrangeMove = async (
 		itemsInCombinedWorkSpaceMap
 	);
 
-	// const shiftHeight =
-	// 	privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
-	// 	privateConstants.MARGIN * 2 -
-	// 	10;
 	const shiftHeight =
 		(privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
 			privateConstants.MARGIN * 2) /
@@ -163,17 +159,28 @@ export const arrangeMove = async (
 	let workSpaceResizeCount = 0;
 
 	while (arrangedCount !== iToALen) {
-		const { rt: freeRects } = sweepLineForFreeSpace(
+		printMergedFreeRects(context, []);
+		const { rt: freeRects } = await sweepLineForFreeSpace(
 			context,
 			combinedWorkSpaceRect,
 			itemsInCombinedWorkSpace,
 			idCount
 		);
+		await sleep(1000);
+		printStackTopRect(context);
 
 		let freeRectsArr = freeRects.getData();
 		freeRectsArr = freeRectsArr.filter(
 			(r) => r.x2 - r.x1 > 0.5 && r.y2 - r.y1 > 0.5
 		);
+
+		await sleep(1000);
+		printUnmergedFreeRects(context, freeRectsArr);
+		printMergedFreeRects(context, []);
+
+		await sleep(3000);
+		printUnmergedFreeRects(context, []);
+		printMergedFreeRects(context, []);
 
 		const { mergedRectsRt } = await mergeFreeRects(
 			context,
@@ -250,6 +257,10 @@ export const arrangeMove = async (
 				mpd[itemsBelowBottomWorkSpace[i]];
 		}
 	}
+
+	await sleep(1000);
+	printUnmergedFreeRects(context, []);
+	printMergedFreeRects(context, []);
 
 	const p2 = performance.now();
 	console.log("p1: ", p1);

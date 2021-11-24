@@ -3826,6 +3826,279 @@ const getStack = function (context, key) {
 
 
 /* harmony default export */ var stacks = (getStack);
+// CONCATENATED MODULE: ./src/libs/debug/debug.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+const printUnmergedFreeRects = (context, arr) => {
+  const e = variables_elements(context);
+  let len = e.$limberGridViewDebugUnmergedRects.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugUnmergedRects[i]);
+  }
+
+  set$limberGridViewDebugUnmergedRects(context, []); // USE it to hide items
+  // e.$limberGridView.innerHTML = "";
+
+  len = arr.length;
+  let html;
+  let node;
+
+  for (let i = 0; i < len; i++) {
+    node = document.createElement("div");
+    node.setAttribute("class", "limber-grid-view-debug-rect limber-grid-view-debug-unmerged-rect");
+    node.setAttribute("id", `limber-grid-view-debug-unmerged-rect-${arr[i].id}`);
+    node.setAttribute("tabindex", "-1");
+    node.setAttribute("title", `${arr[i].id}`);
+    node.innerHTML = arr[i].id;
+    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+    node.style.width = arr[i].x2 - arr[i].x1 + "px";
+    node.style.height = arr[i].y2 - arr[i].y1 + "px";
+    e.$limberGridView.appendChild(node);
+  }
+
+  set$limberGridViewDebugUnmergedRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-unmerged-rect"));
+};
+const printMergedFreeRects = (context, arr) => {
+  const e = variables_elements(context);
+  let len = e.$limberGridViewDebugMergedFreeRects.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugMergedFreeRects[i]);
+  }
+
+  set$limberGridViewDebugMergedFreeRects(context, []); // USE it to hide items
+  // e.$limberGridView.innerHTML = "";
+
+  len = arr.length;
+  let html;
+  let node;
+
+  for (let i = 0; i < len; i++) {
+    node = document.createElement("div");
+    node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-merged-free-rect`);
+    node.setAttribute("id", `limber-grid-view-debug-merged-free-rect-${arr[i].id}`);
+    node.setAttribute("tabindex", -1);
+    node.setAttribute("title", `${arr[i].id}`);
+    node.innerHTML = arr[i].id;
+    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+    node.style.width = arr[i].x2 - arr[i].x1 + "px";
+    node.style.height = arr[i].y2 - arr[i].y1 + "px";
+    e.$limberGridView.appendChild(node);
+  }
+
+  set$limberGridViewDebugMergedFreeRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-merged-free-rect"));
+};
+const printResultStackRects = (context, arr) => {
+  const e = variables_elements(context);
+  let len = e.$limberGridViewDebugResultStackRects.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugResultStackRects[i]);
+  }
+
+  set$limberGridViewDebugResultStackRects(context, []); // USE it to hide items
+  // e.$limberGridView.innerHTML = "";
+
+  len = arr.length;
+  let html;
+  let node;
+
+  for (let i = 0; i < len; i++) {
+    node = document.createElement("div");
+    node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-result-stack-rects`);
+    node.setAttribute("id", `limber-grid-view-debug-result-stack-rects-${arr[i].id}`);
+    node.setAttribute("tabindex", -1);
+    node.setAttribute("title", `${arr[i].id}`);
+    node.innerHTML = arr[i].id;
+    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+    node.style.width = arr[i].x2 - arr[i].x1 + "px";
+    node.style.height = arr[i].y2 - arr[i].y1 + "px";
+    e.$limberGridView.appendChild(node);
+  }
+
+  set$limberGridViewDebugResultStackRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-result-stack-rects"));
+};
+const printStackRects = (context, arr) => {
+  const e = variables_elements(context);
+  let len = e.$limberGridViewDebugStackRects.length;
+
+  for (let i = 0; i < len; i++) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugStackRects[i]);
+  }
+
+  set$limberGridViewDebugStackRects(context, []); // USE it to hide items
+  // e.$limberGridView.innerHTML = "";
+
+  len = arr.length;
+  let html;
+  let node;
+
+  for (let i = 0; i < len; i++) {
+    node = document.createElement("div");
+    node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-stack-rects`);
+    node.setAttribute("id", `limber-grid-view-debug-stack-rects-${arr[i].id}`);
+    node.setAttribute("tabindex", -1);
+    node.setAttribute("title", `${arr[i].id}`);
+    node.innerHTML = arr[i].id;
+    node.style.transform = `translate(${arr[i].x1}px, ${arr[i].y1}px)`;
+    node.style.width = arr[i].x2 - arr[i].x1 + "px";
+    node.style.height = arr[i].y2 - arr[i].y1 + "px";
+    e.$limberGridView.appendChild(node);
+  }
+
+  set$limberGridViewDebugStackRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-rects"));
+};
+const printMergedTempRects = (context, obj) => {
+  const e = variables_elements(context);
+  const node = document.createElement("div");
+  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-merged-temp-rects`);
+  node.setAttribute("id", `limber-grid-view-debug-merged-temp-rects-${obj.id}`);
+  node.setAttribute("tabindex", -1);
+  node.setAttribute("title", `${obj.id}`);
+  node.innerHTML = obj.id;
+  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+  node.style.width = obj.x2 - obj.x1 + "px";
+  node.style.height = obj.y2 - obj.y1 + "px";
+  e.$limberGridView.appendChild(node);
+  set$limberGridViewDebugMergedTempRects(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-merged-temp-rects"));
+};
+const printStackTopRect = (context, obj) => {
+  const e = variables_elements(context);
+
+  if (!obj) {
+    if (e.$limberGridViewDebugStackTopRect) {
+      e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopRect);
+      set$limberGridViewDebugStackTopRect(context, undefined);
+    }
+
+    return;
+  }
+
+  if (e.$limberGridViewDebugStackTopRect) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopRect);
+  }
+
+  const node = document.createElement("div");
+  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-stack-top-rect`);
+  node.setAttribute("id", `limber-grid-view-debug-stack-top-rect`);
+  node.setAttribute("tabindex", -1);
+  node.setAttribute("title", `${obj.id}`);
+  node.innerHTML = obj.id || "";
+  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+  node.style.width = obj.x2 - obj.x1 + "px";
+  node.style.height = obj.y2 - obj.y1 + "px";
+  e.$limberGridView.appendChild(node);
+  set$limberGridViewDebugStackTopRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-top-rect")[0]); // console.log(e.$limberGridViewDebugStackTopRect);
+};
+const printStackTopAdjRect = (context, obj) => {
+  const e = variables_elements(context);
+
+  if (!obj) {
+    if (e.$limberGridViewDebugStackTopAdjRect) {
+      e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopAdjRect);
+      set$limberGridViewDebugStackTopAdjRect(context, undefined);
+    }
+
+    return;
+  }
+
+  if (e.$limberGridViewDebugStackTopAdjRect) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugStackTopAdjRect);
+  }
+
+  const node = document.createElement("div");
+  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-stack-top-adj-rect`);
+  node.setAttribute("id", `limber-grid-view-debug-stack-top-adj-rect`);
+  node.setAttribute("tabindex", -1);
+  node.setAttribute("title", `${obj.id}`);
+  node.innerHTML = obj.id || "";
+  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+  node.style.width = obj.x2 - obj.x1 + "px";
+  node.style.height = obj.y2 - obj.y1 + "px";
+  e.$limberGridView.appendChild(node);
+  set$limberGridViewDebugStackTopAdjRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-stack-top-adj-rect")[0]); // console.log(e.$limberGridViewDebugStackTopAdjRect);
+};
+const printMergedRect = (context, obj) => {
+  const e = variables_elements(context);
+
+  if (!obj) {
+    if (e.$limberGridViewDebugMergedRect) {
+      e.$limberGridView.removeChild(e.$limberGridViewDebugMergedRect);
+      set$limberGridViewDebugMergedRect(context, undefined);
+    }
+
+    return;
+  }
+
+  if (e.$limberGridViewDebugMergedRect) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugMergedRect);
+  }
+
+  const node = document.createElement("div");
+  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-merged-rect limber-grid-view-debug-merged-rect-thick`);
+  node.setAttribute("id", `limber-grid-view-debug-merged-rect`);
+  node.setAttribute("tabindex", -1);
+  node.setAttribute("title", `${obj.id}`);
+  node.innerHTML = obj.id || "";
+  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+  node.style.width = obj.x2 - obj.x1 + "px";
+  node.style.height = obj.y2 - obj.y1 + "px";
+  e.$limberGridView.appendChild(node);
+  set$limberGridViewDebugMergedRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-merged-rect")[0]); // console.log(e.$limberGridViewDebugMergedRect);
+};
+const printAdjRect = (context, obj) => {
+  const e = variables_elements(context);
+
+  if (!obj) {
+    if (e.$limberGridViewDebugAdjRect) {
+      e.$limberGridView.removeChild(e.$limberGridViewDebugAdjRect);
+      set$limberGridViewDebugAdjRect(context, undefined);
+    }
+
+    return;
+  }
+
+  if (e.$limberGridViewDebugAdjRect) {
+    e.$limberGridView.removeChild(e.$limberGridViewDebugAdjRect);
+  }
+
+  const node = document.createElement("div");
+  node.setAttribute("class", `limber-grid-view-debug-rect limber-grid-view-debug-adj-rect`);
+  node.setAttribute("id", `limber-grid-view-debug-adj-rect`);
+  node.setAttribute("tabindex", -1);
+  node.setAttribute("title", `${obj.id}`);
+  node.innerHTML = obj.id || "";
+  node.style.transform = `translate(${obj.x1}px, ${obj.y1}px)`;
+  node.style.width = obj.x2 - obj.x1 + "px";
+  node.style.height = obj.y2 - obj.y1 + "px";
+  e.$limberGridView.appendChild(node);
+  set$limberGridViewDebugAdjRect(context, e.$limberGridView.querySelectorAll(".limber-grid-view-debug-adj-rect")[0]); // console.log(e.$limberGridViewDebugAdjRect);
+};
 // CONCATENATED MODULE: ./src/libs/arrange/arrangeCore.js
 /*
 
@@ -3859,19 +4132,9 @@ Written by Subendra Kumar Sharma.
 
 
 
- // import {
-// 	sleep,
-// 	printUnmergedFreeRects,
-// 	printMergedFreeRects,
-// 	printResultStackRects,
-// 	printStackRects,
-// 	printMergedTempRects,
-// 	printStackTopRect,
-// 	printStackTopAdjRect,
-// 	printMergedRect,
-// 	printAdjRect,
-// } from "../debug/debug";
-// import { printNodeData } from "../debug/debugUtils";
+
+
+ // import { printNodeData } from "../debug/debugUtils";
 
 const shrinkTopBottomWS = (context, topWorkSpace, bottomWorkSpace) => {
   let topWSItems, bottomWSItems;
@@ -3973,7 +4236,7 @@ const sweepLineBottom = (context, area, items, rt) => {
 
   return resultPoint;
 };
-const sweepLineForFreeSpace = (context, area, items, idCount) => {
+const sweepLineForFreeSpace = async (context, area, items, idCount) => {
   // area: area to sweep
   // area: area to sweep Coordinate Form
   // items: items in area
@@ -3990,6 +4253,10 @@ const sweepLineForFreeSpace = (context, area, items, idCount) => {
 
   for (let i = 0; i < len; i++) {
     item = items[i];
+    await sleep(1000);
+    printUnmergedFreeRects(context, rt.getData());
+    await sleep(1000);
+    printStackTopRect(context, item);
     resRects = rt.find(item, false, true, undefined, false);
     rLen = resRects.length;
 
@@ -4009,18 +4276,21 @@ const sweepLineForFreeSpace = (context, area, items, idCount) => {
         rt.insert(diff[k]);
       }
     }
-  } // printUnmergedFreeRects(context, rt.getData());
-  // debugger;
+  }
 
-
+  await sleep(1000);
+  printUnmergedFreeRects(context, rt.getData());
+  await sleep(3000);
   return {
     rt
   };
 };
-const mergeFreeRectsCore = (context, stack, rt, idCount) => {
+const mergeFreeRectsCore = async (context, stack, rt, idCount) => {
   let topFullMerged = false;
 
   while (!stack.isEmpty()) {
+    await sleep(1000);
+    printMergedFreeRects(context, rt.getData());
     const top = stack.pop();
     topFullMerged = false;
     const _top = {
@@ -4063,6 +4333,9 @@ const mergeFreeRectsCore = (context, stack, rt, idCount) => {
       rt.insert(top);
     }
   }
+
+  await sleep(1000);
+  printMergedFreeRects(context, rt.getData());
 };
 const filterMergedFreeRects = rt => {
   const arr = rt.getData();
@@ -4082,23 +4355,31 @@ const mergeFreeRects = async (context, freeRects, idCount, garbageRects) => {
   const stack = stacks(context, "stack");
 
   if (Array.isArray(freeRects)) {
-    stack.setData(freeRects.sort(rectSortX));
+    stack.setData(freeRects.sort(rectSortX), true);
     rt = trees(context, "rt");
     rt.reset();
   } else {
-    stack.setData(garbageRects.sort(rectSortX));
+    stack.setData(garbageRects.sort(rectSortX), true);
     rt = freeRects;
   }
 
-  mergeFreeRectsCore(context, stack, rt, idCount);
+  await sleep(1000);
+  printUnmergedFreeRects(context, stack.getData());
+  printMergedFreeRects(context, []);
+  await mergeFreeRectsCore(context, stack, rt, idCount);
   filterMergedFreeRects(rt);
+  await sleep(1000);
+  printUnmergedFreeRects(context, rt.getData());
+  printMergedFreeRects(context, []);
   const mergedArr = rt.getData();
-  stack.setData(mergedArr.sort(rectSortY));
+  stack.setData(mergedArr.sort(rectSortY), true);
   rt.reset();
-  mergeFreeRectsCore(context, stack, rt, idCount);
-  filterMergedFreeRects(rt); // printMergedFreeRects(context, rt.getData());
-  // debugger;
-
+  await mergeFreeRectsCore(context, stack, rt, idCount);
+  filterMergedFreeRects(rt);
+  await sleep(1000);
+  printUnmergedFreeRects(context, []);
+  printMergedFreeRects(context, rt.getData());
+  await sleep(3000);
   return {
     mergedRectsRt: rt
   };
@@ -4209,13 +4490,16 @@ const arrange = async (context, itemsToArrange, mergedRectsRt, topWorkSpace, bot
       const gLen = (garbageRects === null || garbageRects === void 0 ? void 0 : garbageRects.length) || 0;
 
       for (let i = 0; i < gLen; i++) {
-        garbageRects[i].idCount = idCount.idCount++;
+        garbageRects[i].id = idCount.idCount++;
         garbageStack.push(garbageRects[i]);
       }
 
       mergedRectsRt.remove(res);
     }
 
+    await sleep(1000);
+    printUnmergedFreeRects(context, []);
+    printMergedFreeRects(context, []);
     const {
       mergedRectsRt: _mergedRectsRt
     } = await mergeFreeRects(context, mergedRectsRt, idCount, garbageStack.getData());
@@ -4258,18 +4542,9 @@ Written by Subendra Kumar Sharma.
 
 
 
- // import {
-// 	printUnmergedFreeRects,
-// 	printMergedFreeRects,
-// 	printResultStackRects,
-// 	printStackRects,
-// 	printMergedTempRects,
-// 	printStackTopRect,
-// 	printStackTopAdjRect,
-// 	printMergedRect,
-// 	printAdjRect,
-// } from "../debug/debug";
-// import { printNodeData } from "../debug/debugUtils";
+
+
+ // import { printNodeData } from "../debug/debugUtils";
 
 const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
   var _context$options$call;
@@ -4297,38 +4572,33 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
     x2: privateConstants.WIDTH,
     y1: minY,
     y2: maxY
-  }; // printStackTopRect(context, workSpaceRect);
-  // debugger;
-
+  };
+  await sleep(1000);
+  printStackTopRect(context, workSpaceRect);
   const combinedWorkSpaceRect = { ...workSpaceRect
   };
   const {
     topWorkSpace,
     bottomWorkSpace
-  } = getTopBottomWS(context, workSpaceRect, 0, privateConstants.WIDTH); // printStackTopRect(context, topWorkSpace);
-  // debugger;
-  // printStackTopRect(context, bottomWorkSpace);
-  // debugger;
-  // const shrinkRes = shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
-
-  shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace); // printStackTopRect(context, topWorkSpace);
-  // debugger;
-  // printStackTopRect(context, bottomWorkSpace);
-  // debugger;
-
+  } = getTopBottomWS(context, workSpaceRect, 0, privateConstants.WIDTH);
+  await sleep(1000);
+  printStackTopRect(context, topWorkSpace);
+  await sleep(1000);
+  printStackTopRect(context, bottomWorkSpace);
+  shrinkTopBottomWS(context, topWorkSpace, bottomWorkSpace);
+  await sleep(1000);
+  printStackTopRect(context, topWorkSpace);
+  await sleep(1000);
+  printStackTopRect(context, bottomWorkSpace);
   combinedWorkSpaceRect.y1 = topWorkSpace.y1;
-  combinedWorkSpaceRect.y2 = bottomWorkSpace.y2; // printStackTopRect(context, combinedWorkSpaceRect);
-  // debugger;
-
+  combinedWorkSpaceRect.y2 = bottomWorkSpace.y2;
+  await sleep(1000);
+  printStackTopRect(context, combinedWorkSpaceRect);
   let itemsInCombinedWorkSpace = arrangeUtils_getItemsInWorkSpace(context, combinedWorkSpaceRect);
   let itemsInCombinedWorkSpaceMap = arrangeUtils_getItemsInWorkSpace(context, combinedWorkSpaceRect, true);
   itemsInCombinedWorkSpaceMap = getItemsInWorkSpaceMap(itemsInCombinedWorkSpaceMap);
   let itemsInBottomWorkSpace = arrangeUtils_getItemsInWorkSpace(context, bottomWorkSpace, true, itemsInCombinedWorkSpaceMap);
-  const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(context, bottomWorkSpace, true, itemsInCombinedWorkSpaceMap); // const shiftHeight =
-  // 	privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH -
-  // 	privateConstants.MARGIN * 2 -
-  // 	10;
-
+  const itemsBelowBottomWorkSpace = getItemsBelowBottomWorkSpace(context, bottomWorkSpace, true, itemsInCombinedWorkSpaceMap);
   const shiftHeight = (privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH - privateConstants.MARGIN * 2) / 2;
   let passCount = 0;
   let arranged = {};
@@ -4337,11 +4607,20 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
   let workSpaceResizeCount = 0;
 
   while (arrangedCount !== iToALen) {
+    printMergedFreeRects(context, []);
     const {
       rt: freeRects
-    } = sweepLineForFreeSpace(context, combinedWorkSpaceRect, itemsInCombinedWorkSpace, idCount);
+    } = await sweepLineForFreeSpace(context, combinedWorkSpaceRect, itemsInCombinedWorkSpace, idCount);
+    await sleep(1000);
+    printStackTopRect(context);
     let freeRectsArr = freeRects.getData();
     freeRectsArr = freeRectsArr.filter(r => r.x2 - r.x1 > 0.5 && r.y2 - r.y1 > 0.5);
+    await sleep(1000);
+    printUnmergedFreeRects(context, freeRectsArr);
+    printMergedFreeRects(context, []);
+    await sleep(3000);
+    printUnmergedFreeRects(context, []);
+    printMergedFreeRects(context, []);
     const {
       mergedRectsRt
     } = await mergeFreeRects(context, freeRectsArr, idCount); // debugger;
@@ -4403,6 +4682,9 @@ const arrangeMove = async (context, affectedItems, toY, movedBottomY) => {
     }
   }
 
+  await sleep(1000);
+  printUnmergedFreeRects(context, []);
+  printMergedFreeRects(context, []);
   const p2 = performance.now();
   console.log("p1: ", p1);
   console.log("p2: ", p2);
@@ -5865,9 +6147,15 @@ const onItemMouseMove = function (event) {
             adjustHeightAndScroll(this, yMousePosition, mousePositionOnLimberGrid.offsetY, publicConstants.AUTO_SCROLL_FOR_MOUSE);
             iiv.isScrolling = false;
           }, publicConstants.AUTO_SCROLL_DELAY);
-        }
+        } // iiv.showMoveDemoTimeOutVariable = setTimeout(
+        // 	showMoveDemo.bind(
+        // 		this,
+        // 		iiv.userActionData.itemIndex,
+        // 		mousePositionOnLimberGrid
+        // 	),
+        // 	publicConstants.DEMO_WAIT_TIME
+        // );
 
-        iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, mousePositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
       }
     } else {
       loadOnMoveState(this, iiv.userActionData, event, "resize");
@@ -5911,9 +6199,19 @@ const onItemMouseMove = function (event) {
         e.$limberGridViewPseudoItem.style.width = newWidth + "px";
         e.$limberGridViewPseudoItem.style.height = newHeight + "px";
         e.$limberGridViewPseudoItem.setAttribute("data-after", `w: ${parseInt(newWidth)}px, h: ${parseInt(newHeight)}px`);
-      }
+      } // iiv.showResizeDemoTimeOutVariable = setTimeout(
+      // 	showResizeDemo.bind(
+      // 		this,
+      // 		iiv.userActionData.itemIndex,
+      // 		newX1,
+      // 		newY1,
+      // 		newWidth,
+      // 		newHeight,
+      // 		iiv.userActionData.type === "resize"
+      // 	),
+      // 	publicConstants.DEMO_WAIT_TIME
+      // );
 
-      iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newX1, newY1, newWidth, newHeight, iiv.userActionData.type === "resize"), publicConstants.DEMO_WAIT_TIME);
     }
   } else {
     iiv.mouseDownCancel = true;
@@ -5956,8 +6254,14 @@ const onItemTouchMove = function (event) {
           }, publicConstants.AUTO_SCROLL_DELAY);
         }
 
-        if (programScrolled !== true) {
-          iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
+        if (programScrolled !== true) {// iiv.showMoveDemoTimeOutVariable = setTimeout(
+          // 	showMoveDemo.bind(
+          // 		this,
+          // 		iiv.userActionData.itemIndex,
+          // 		touchPositionOnLimberGrid
+          // 	),
+          // 	publicConstants.DEMO_WAIT_TIME
+          // );
         }
       }
     } else {
@@ -6007,8 +6311,18 @@ const onItemTouchMove = function (event) {
           }, publicConstants.AUTO_SCROLL_DELAY);
         }
 
-        if (programScrolled !== true) {
-          iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newX1, newY1, newWidth, newHeight, iiv.userActionData.type === "resize"), publicConstants.DEMO_WAIT_TIME);
+        if (programScrolled !== true) {// iiv.showResizeDemoTimeOutVariable = setTimeout(
+          // 	showResizeDemo.bind(
+          // 		this,
+          // 		iiv.userActionData.itemIndex,
+          // 		newX1,
+          // 		newY1,
+          // 		newWidth,
+          // 		newHeight,
+          // 		iiv.userActionData.type === "resize"
+          // 	),
+          // 	publicConstants.DEMO_WAIT_TIME
+          // );
         }
       }
     }

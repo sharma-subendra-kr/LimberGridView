@@ -239,14 +239,14 @@ export const onItemMouseMove = function (event) {
 					}, publicConstants.AUTO_SCROLL_DELAY);
 				}
 
-				iiv.showMoveDemoTimeOutVariable = setTimeout(
-					showMoveDemo.bind(
-						this,
-						iiv.userActionData.itemIndex,
-						mousePositionOnLimberGrid
-					),
-					publicConstants.DEMO_WAIT_TIME
-				);
+				// iiv.showMoveDemoTimeOutVariable = setTimeout(
+				// 	showMoveDemo.bind(
+				// 		this,
+				// 		iiv.userActionData.itemIndex,
+				// 		mousePositionOnLimberGrid
+				// 	),
+				// 	publicConstants.DEMO_WAIT_TIME
+				// );
 			}
 		} else {
 			loadOnMoveState(this, iiv.userActionData, event, "resize");
@@ -306,18 +306,18 @@ export const onItemMouseMove = function (event) {
 				);
 			}
 
-			iiv.showResizeDemoTimeOutVariable = setTimeout(
-				showResizeDemo.bind(
-					this,
-					iiv.userActionData.itemIndex,
-					newX1,
-					newY1,
-					newWidth,
-					newHeight,
-					iiv.userActionData.type === "resize"
-				),
-				publicConstants.DEMO_WAIT_TIME
-			);
+			// iiv.showResizeDemoTimeOutVariable = setTimeout(
+			// 	showResizeDemo.bind(
+			// 		this,
+			// 		iiv.userActionData.itemIndex,
+			// 		newX1,
+			// 		newY1,
+			// 		newWidth,
+			// 		newHeight,
+			// 		iiv.userActionData.type === "resize"
+			// 	),
+			// 	publicConstants.DEMO_WAIT_TIME
+			// );
 		}
 	} else {
 		iiv.mouseDownCancel = true;
@@ -373,14 +373,14 @@ export const onItemTouchMove = function (event) {
 				}
 
 				if (programScrolled !== true) {
-					iiv.showMoveDemoTimeOutVariable = setTimeout(
-						showMoveDemo.bind(
-							this,
-							iiv.userActionData.itemIndex,
-							touchPositionOnLimberGrid
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+					// iiv.showMoveDemoTimeOutVariable = setTimeout(
+					// 	showMoveDemo.bind(
+					// 		this,
+					// 		iiv.userActionData.itemIndex,
+					// 		touchPositionOnLimberGrid
+					// 	),
+					// 	publicConstants.DEMO_WAIT_TIME
+					// );
 				}
 			}
 		} else {
@@ -441,18 +441,18 @@ export const onItemTouchMove = function (event) {
 				}
 
 				if (programScrolled !== true) {
-					iiv.showResizeDemoTimeOutVariable = setTimeout(
-						showResizeDemo.bind(
-							this,
-							iiv.userActionData.itemIndex,
-							newX1,
-							newY1,
-							newWidth,
-							newHeight,
-							iiv.userActionData.type === "resize"
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+					// iiv.showResizeDemoTimeOutVariable = setTimeout(
+					// 	showResizeDemo.bind(
+					// 		this,
+					// 		iiv.userActionData.itemIndex,
+					// 		newX1,
+					// 		newY1,
+					// 		newWidth,
+					// 		newHeight,
+					// 		iiv.userActionData.type === "resize"
+					// 	),
+					// 	publicConstants.DEMO_WAIT_TIME
+					// );
 				}
 			}
 		}
