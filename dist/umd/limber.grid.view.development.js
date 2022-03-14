@@ -5753,6 +5753,7 @@ const onItemMouseDown = function (event) {
 
     if (publicConstants.MOUSE_DOWN_TIME === 0) {
       iiv.mouseDownTimerComplete = true;
+      loadMoveState(this, iiv.userActionData, event);
     } else {
       iiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
     }
@@ -5811,6 +5812,7 @@ const onItemTouchStart = function (event) {
 
     if (publicConstants.TOUCH_HOLD_TIME === 0) {
       iiv.touchHoldTimerComplete = true;
+      loadMoveState(this, iiv.userActionData, event);
     } else {
       iiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
     }
