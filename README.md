@@ -92,7 +92,7 @@ If you encounter any problems, you can contact me by emailing me to the email ad
 Due to problems that may arise while licensing the commercial license, contributions are not welcome.
 
 ## License
-Copyright © 2018-2021, Subendra Kumar Sharma. All rights reserved.
+Copyright © 2018-2022, Subendra Kumar Sharma. All rights reserved.
 
 This file is part of LimberGridView.
 
