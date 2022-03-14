@@ -5750,7 +5750,13 @@ const onItemMouseDown = function (event) {
     document.addEventListener("mouseup", bf.onItemMouseUp);
     document.addEventListener("contextmenu", bf.onItemContextMenu);
     clearTimeout(iiv.longPressCheck);
-    iiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
+
+    if (publicConstants.MOUSE_DOWN_TIME === 0) {
+      iiv.mouseDownTimerComplete = true;
+    } else {
+      iiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
+    }
+
     event.preventDefault();
   } else if (iiv.userActionData.type === "resize" || iiv.userActionData.type === "resizeBottomLeft") {
     iiv.mouseDownCancel = false;
@@ -5801,7 +5807,14 @@ const onItemTouchStart = function (event) {
     document.addEventListener("touchend", bf.onItemTouchEnd);
     document.addEventListener("touchcancel", bf.onItemTouchCancel);
     document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
-    iiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
+    clearTimeout(iiv.longTouchCheck);
+
+    if (publicConstants.TOUCH_HOLD_TIME === 0) {
+      iiv.touchHoldTimerComplete = true;
+    } else {
+      iiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
+    }
+
     event.preventDefault();
   } else if (iiv.userActionData.type === "resize" || iiv.userActionData.type === "resizeBottomLeft") {
     iiv.touchHoldCancel = false;
