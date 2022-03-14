@@ -83,10 +83,14 @@ export const onItemMouseDown = function (event) {
 		document.addEventListener("contextmenu", bf.onItemContextMenu);
 
 		clearTimeout(iiv.longPressCheck);
-		iiv.longPressCheck = setTimeout(
-			mouseDownCheck.bind(this, event),
-			publicConstants.MOUSE_DOWN_TIME
-		);
+		if (publicConstants.MOUSE_DOWN_TIME === 0) {
+			iiv.mouseDownTimerComplete = true;
+		} else {
+			iiv.longPressCheck = setTimeout(
+				mouseDownCheck.bind(this, event),
+				publicConstants.MOUSE_DOWN_TIME
+			);
+		}
 
 		event.preventDefault();
 	} else if (
@@ -147,10 +151,15 @@ export const onItemTouchStart = function (event) {
 		document.addEventListener("touchcancel", bf.onItemTouchCancel);
 		document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
 
-		iiv.longTouchCheck = setTimeout(
-			tapHoldCheck.bind(this, event),
-			publicConstants.TOUCH_HOLD_TIME
-		);
+		clearTimeout(iiv.longTouchCheck);
+		if (publicConstants.TOUCH_HOLD_TIME === 0) {
+			iiv.touchHoldTimerComplete = true;
+		} else {
+			iiv.longTouchCheck = setTimeout(
+				tapHoldCheck.bind(this, event),
+				publicConstants.TOUCH_HOLD_TIME
+			);
+		}
 
 		event.preventDefault();
 	} else if (
