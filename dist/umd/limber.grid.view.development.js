@@ -1563,7 +1563,7 @@ const getMidPoint = (x1, y1, x2, y2) => {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5690,6 +5690,42 @@ const getDeskInteractionVars = function (context) {
 const setDeskInteractionVarsByName = function (context, name, value) {
   context.store.variables.eventSpecific.deskInteraction[name] = value;
 };
+// CONCATENATED MODULE: ./src/libs/utils/debug.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+const logger = (...args) => {
+  const context = args[0];
+  const publicConstants = constants_publicConstants(context);
+
+  if (publicConstants.EMIT_DEBUG_LOGS) {
+    args.shift();
+    getCallbacks(context).getDebugLog(args);
+  }
+};
 // CONCATENATED MODULE: ./src/libs/eventHandlerLib/itemInteraction.js
 /*
 
@@ -5715,6 +5751,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+
 
 
 
@@ -6847,7 +6884,7 @@ const init = async function (context, isResize, autoArrange) {
   }
 };
 const initConstantsAndFlags = function (options) {
-  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18, _options$publicConsta19, _options$publicConsta20, _options$publicConsta21, _options$publicConsta22;
+  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18, _options$publicConsta19, _options$publicConsta20, _options$publicConsta21, _options$publicConsta22, _options$publicConsta23;
 
   // Private Constants BEGIN
   if (typeof (options === null || options === void 0 ? void 0 : (_options$gridData = options.gridData) === null || _options$gridData === void 0 ? void 0 : _options$gridData.WIDTH) === "number") {
@@ -6950,6 +6987,10 @@ const initConstantsAndFlags = function (options) {
 
   if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta21 = options.publicConstants) === null || _options$publicConsta21 === void 0 ? void 0 : _options$publicConsta21.shrinkToFit) === "number" && (options === null || options === void 0 ? void 0 : (_options$publicConsta22 = options.publicConstants) === null || _options$publicConsta22 === void 0 ? void 0 : _options$publicConsta22.shrinkToFit) <= 10) {
     setPublicConstantByName(this, "SHRINK_TO_FIT", options.publicConstants.shrinkToFit);
+  }
+
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta23 = options.publicConstants) === null || _options$publicConsta23 === void 0 ? void 0 : _options$publicConsta23.emitDebugLogs) === "boolean") {
+    setPublicConstantByName(this, "EMIT_DEBUG_LOGS", options.publicConstants.emitDebugLogs);
   } // Public Constants ENDED
   // Miscellaneous BEGIN
   // Miscellaneous ENDED
@@ -7393,7 +7434,7 @@ const onScrollCallback = function (event) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -7444,8 +7485,8 @@ Written by Subendra Kumar Sharma.
   const options = {
     el : "#",                                                                  // id of the parent element with #
     editable : true,                                                           // true/false (optional default true)
-    enableInteractiveAddAndCut : true,                                        // true/false (optional default true)
-    enableTouchInteraction : true,                                            // true/false (optional default true)
+    enableInteractiveAddAndCut : true,                                         // true/false (optional default true)
+    enableTouchInteraction : true,                                             // true/false (optional default true)
     autoArrange : true,                                                        // true/false (compulsory if x and y not present else optional)
     reRenderOnResize : true,                                                   // true/false (optional default true)
     isMobileCheck: function
@@ -7482,10 +7523,11 @@ Written by Subendra Kumar Sharma.
       renderPlugin: function (renderData, element) {}
       removePlugin: function(element){}
 
-      onItemClickCallback : function(event){},                                // click callback for item
+      onItemClickCallback : function(event){},                                 // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
+      getDebugLog: function(log){},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -7512,6 +7554,8 @@ Written by Subendra Kumar Sharma.
       animateTime: number
 
       shrinkToFit: number
+
+      emitDebugLogs: false                                                         // true/false (optional default false)
     }
   }
   */
@@ -7896,7 +7940,7 @@ LimberGridView.prototype.initializeStore = function () {
         MOVE_OR_RESIZE_HEIGHT_INCREMENTS: 50,
         AUTO_SCROLL_FOR_MOUSE: false,
         MOUSE_DOWN_TIME: 0,
-        TOUCH_HOLD_TIME: 300,
+        TOUCH_HOLD_TIME: 0,
         DEMO_WAIT_TIME: 500,
         WINDOW_RESIZE_WAIT_TIME: 1000,
         AUTO_SCROLL_DELAY: 100,
@@ -7908,7 +7952,9 @@ LimberGridView.prototype.initializeStore = function () {
         CROSS_HAIR_WIDTH: 500,
         CROSS_HAIR_HEIGHT: 500,
         // Algorithm
-        SHRINK_TO_FIT: 10
+        SHRINK_TO_FIT: 10,
+        // Debug
+        EMIT_DEBUG_LOGS: false
       },
       messages: {
         latchedMoveDemo1: "Move curser close to an adjacent item over this box to latch next to that item.",
