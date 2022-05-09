@@ -453,6 +453,14 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
+	if (typeof options?.publicConstants?.emitDebugLogs === "boolean") {
+		setPublicConstantByName(
+			this,
+			"EMIT_DEBUG_LOGS",
+			options.publicConstants.emitDebugLogs
+		);
+	}
+
 	// Public Constants ENDED
 
 	// Miscellaneous BEGIN

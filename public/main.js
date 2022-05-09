@@ -257,6 +257,10 @@ const main = function () {
 		};
 	};
 
+	const getDebugLog = function (logs) {
+		console.log(logs);
+	};
+
 	const obj = {
 		el: "limber-grid-view-implement",
 		// editable: true,
@@ -282,6 +286,7 @@ const main = function () {
 			getArrangeTime: getArrangeTime,
 			getLogMessage: getLogMessage,
 			offsetMovePseudoElement: offsetMovePseudoElement,
+			getDebugLog: getDebugLog,
 		},
 		// "{"gridHeight":561,"gridWidth":960,"margin":5}"
 		// "{"gridHeight":482,"gridWidth":999,"margin":3.830521472392638}"
@@ -295,6 +300,7 @@ const main = function () {
 			useVerticalArrOnResize: false,
 			showBottomLeftResizeGuide: true,
 			autoScrollForMouse: true,
+			emitDebugLogs: true,
 		},
 		// eslint-disable-next-line no-undef
 		positionData: positionData,

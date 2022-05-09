@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -109,8 +109,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
   const options = {
     el : "#",                                                                  // id of the parent element with #
     editable : true,                                                           // true/false (optional default true)
-    enableInteractiveAddAndCut : true,                                        // true/false (optional default true)
-    enableTouchInteraction : true,                                            // true/false (optional default true)
+    enableInteractiveAddAndCut : true,                                         // true/false (optional default true)
+    enableTouchInteraction : true,                                             // true/false (optional default true)
     autoArrange : true,                                                        // true/false (compulsory if x and y not present else optional)
     reRenderOnResize : true,                                                   // true/false (optional default true)
     isMobileCheck: function
@@ -147,10 +147,11 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       renderPlugin: function (renderData, element) {}
       removePlugin: function(element){}
 
-      onItemClickCallback : function(event){},                                // click callback for item
+      onItemClickCallback : function(event){},                                 // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
+      getDebugLog: function(log){},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -177,6 +178,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       animateTime: number
 
       shrinkToFit: number
+
+      emitDebugLogs: false                                                         // true/false (optional default false)
     }
   }
   */
@@ -590,6 +593,9 @@ LimberGridView.prototype.initializeStore = function () {
 
 				// Algorithm
 				SHRINK_TO_FIT: 10,
+
+				// Debug
+				EMIT_DEBUG_LOGS: false,
 			},
 			messages: {
 				latchedMoveDemo1:

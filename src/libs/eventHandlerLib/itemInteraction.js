@@ -57,6 +57,7 @@ import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
 import { setStatus } from "../../store/variables/status";
 import getTree from "../../store/variables/trees";
+import { logger } from "../utils/debug";
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
