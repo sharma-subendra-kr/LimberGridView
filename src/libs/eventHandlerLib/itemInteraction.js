@@ -120,24 +120,27 @@ export const onItemMouseDown = function (event) {
 };
 
 export const onItemTouchStart = function (event) {
+	logger(this, "onItemTouchStart");
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
 	const pd = getPositionData(this);
 
 	const iiv = getItemInteractionVars(this);
 	const bf = getBindedFunctions(this);
-
+	logger(this, "iiv", iiv);
 	if (event.touches.length !== 1) {
 		onItemTouchContextMenu.call(this, event);
 		return;
 	}
 
 	const touchPosOnLimberGridItem = calculateTouchPosOnItem(this, event);
+	logger(this, "touchPosOnLimberGridItem", touchPosOnLimberGridItem);
 	if (!touchPosOnLimberGridItem) {
 		return;
 	}
 
 	const _userActionData = getUserActionData(this, event);
+	logger(this, "_userActionData", _userActionData);
 	if (!_userActionData) {
 		return;
 	}
@@ -155,7 +158,9 @@ export const onItemTouchStart = function (event) {
 
 		clearTimeout(iiv.longTouchCheck);
 		if (publicConstants.TOUCH_HOLD_TIME === 0) {
+			logger(this, "TOUCH_HOLD_TIME: ", 0);
 			iiv.touchHoldTimerComplete = true;
+			logger(this, "loadingMoveState");
 			loadMoveState(this, iiv.userActionData, event);
 		} else {
 			iiv.longTouchCheck = setTimeout(
@@ -195,17 +200,17 @@ export const mouseDownCheck = function (event) {
 
 	if (iiv.mouseDownCancel === false) {
 		iiv.mouseDownTimerComplete = true;
-
 		loadMoveState(this, iiv.userActionData, event);
 	}
 };
 
 export const tapHoldCheck = function (event) {
+	logger(this, "tapHoldCheck");
 	const iiv = getItemInteractionVars(this);
 
 	if (iiv.touchHoldCancel === false) {
 		iiv.touchHoldTimerComplete = true;
-
+		logger(this, "tapHoldCheck loadMoveState");
 		loadMoveState(this, iiv.userActionData, event);
 	}
 };
@@ -343,6 +348,7 @@ export const onItemMouseMove = function (event) {
 };
 
 export const onItemTouchMove = function (event) {
+	logger(this, "onItemTouchMove");
 	const e = getElements(this);
 	// const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
@@ -353,11 +359,13 @@ export const onItemTouchMove = function (event) {
 
 	if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
 		if (iiv.userActionData.type === "move") {
+			logger(this, "loadOnMoveState");
 			loadOnMoveState(this, iiv.userActionData, event, "move");
 
 			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+			logger(this, "touchPositionOnLimberGrid", touchPositionOnLimberGrid);
 			let yTouchPosition;
 			if (callbacks.offsetMovePseudoElement && touchPositionOnLimberGrid) {
 				const off = callbacks.offsetMovePseudoElement(
