@@ -358,7 +358,7 @@ export const onItemTouchMove = function (event) {
 		if (iiv.userActionData.type === "move") {
 			loadOnMoveState(this, iiv.userActionData, event, "move");
 
-			clearTimeout(iiv.showMoveDemoTimeOutVariable);
+			// clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 			let yTouchPosition;
@@ -388,14 +388,27 @@ export const onItemTouchMove = function (event) {
 				}
 
 				if (programScrolled !== true) {
-					iiv.showMoveDemoTimeOutVariable = setTimeout(
-						showMoveDemo.bind(
+					if (
+						!iiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							iiv.userActionData.itemIndex,
+							event,
+							iiv.userActionData,
 							touchPositionOnLimberGrid
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+						)
+					) {
+						clearTimeout(iiv.showMoveDemoTimeOutVariable);
+						iiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						iiv.showMoveDemoTimeOutVariable = setTimeout(
+							showMoveDemo.bind(
+								this,
+								iiv.userActionData.itemIndex,
+								touchPositionOnLimberGrid
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			}
 		} else {
