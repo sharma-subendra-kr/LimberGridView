@@ -29,6 +29,7 @@ import getPrivateConstants from "../../store/constants/privateConstants";
 import getElements from "../../store/variables/elements";
 import {
 	calculateTouchPosOnDesk,
+	isDeskTouchHoldValid,
 	isTouchHoldValid,
 } from "./eventHandlerUtils.js";
 import { loadInitState, unloadInitState } from "./deskInteractionUtils.js";
@@ -92,6 +93,9 @@ export const onDeskTouchStart = function (event) {
 		return;
 	}
 
+	const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+	dkiv.userActionData = { touchPositionOnLimberGrid };
+
 	dkiv.tapHoldCancel = false;
 	dkiv.tapHoldTimerComplete = false;
 
@@ -153,6 +157,7 @@ export const tapHoldCheck = function (event) {
 		const y = touchPositionOnLimberGrid.y;
 
 		dkiv.userActionData = {
+			...dkiv.userActionData,
 			type: "add",
 			addPositionX: x,
 			addPositionY: y,
@@ -370,7 +375,9 @@ export const onDeskTouchMove = function (event) {
 		}
 		event.preventDefault();
 	} else {
-		onDeskContextMenu.call(this);
+		if (!isDeskTouchHoldValid(this, event, dkiv.userActionData)) {
+			onDeskContextMenu.call(this);
+		}
 	}
 
 	event.stopPropagation();

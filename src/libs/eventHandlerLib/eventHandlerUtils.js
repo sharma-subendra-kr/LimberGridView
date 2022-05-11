@@ -160,6 +160,21 @@ export const calculateTouchPosOnItemForHold = function (
 	return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
 };
 
+export const isDeskTouchHoldValid = (context, event, userActionData) => {
+	const touchPositionOnLimberGrid = calculateTouchPosOnDesk(context, event);
+
+	if (
+		getDistanceSquared(
+			touchPositionOnLimberGrid,
+			userActionData.touchPositionOnLimberGrid
+		) >
+		15 * 15
+	) {
+		return false;
+	}
+	return true;
+};
+
 export const isMoveItemTouchHoldValid = (context, event, userActionData) => {
 	const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(
 		context,
