@@ -26,6 +26,7 @@ Written by Subendra Kumar Sharma.
 import getElements from "../../store/variables/elements";
 import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
+import { getDistanceSquared } from "../geometry/geometry";
 
 export const calculateMousePosOnDesk = function (context, event) {
 	const e = getElements(context);
@@ -119,9 +120,10 @@ export const calculateTouchPosOnDesk = function (context, event) {
 export const calculateTouchPosOnItem = function (context, event) {
 	const e = getElements(context);
 
-	const limberGridViewItemPosition = e.$limberGridViewItems[
-		event.currentTarget.attributes["data-index"].value
-	].getBoundingClientRect();
+	const limberGridViewItemPosition =
+		e.$limberGridViewItems[
+			event.currentTarget.attributes["data-index"].value
+		].getBoundingClientRect();
 
 	if (
 		event.touches[0].clientX >= limberGridViewItemPosition.left &&
@@ -138,4 +140,20 @@ export const calculateTouchPosOnItem = function (context, event) {
 
 		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
 	}
+};
+
+export const isTouchHoldValid = (context, event, userActionData) => {
+	const touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
+	console.log("touchPosOnLimberGridItem", touchPosOnLimberGridItem);
+
+	if (
+		getDistanceSquared(
+			touchPosOnLimberGridItem,
+			userActionData.touchPosOnLimberGridItem
+		) >
+		15 * 15
+	) {
+		return false;
+	}
+	return true;
 };

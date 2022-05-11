@@ -35,6 +35,7 @@ import {
 	calculateMousePosOnDesk,
 	calculateTouchPosOnDesk,
 	calculateTouchPosOnItem,
+	isTouchHoldValid,
 } from "./eventHandlerUtils.js";
 import {
 	getUserActionData,
@@ -57,7 +58,7 @@ import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
 import { setStatus } from "../../store/variables/status";
 import getTree from "../../store/variables/trees";
-import { logger } from "../utils/debug";
+// import { logger } from "../utils/debug";
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
@@ -143,6 +144,7 @@ export const onItemTouchStart = function (event) {
 	}
 
 	Object.assign(iiv.userActionData, _userActionData);
+	iiv.userActionData.touchPosOnLimberGridItem = touchPosOnLimberGridItem;
 
 	if (iiv.userActionData.type === "move") {
 		iiv.touchHoldCancel = false;
@@ -469,11 +471,17 @@ export const onItemTouchMove = function (event) {
 			}
 		}
 	} else {
-		iiv.touchHoldCancel = true;
-
-		onItemTouchContextMenu.call(this, event);
-
+		// iiv.touchHoldCancel = true;
+		// onItemTouchContextMenu.call(this, event);
 		// canceling taphold
+
+		if (iiv.userActionData.type === "move") {
+			if (!isTouchHoldValid(this, event, iiv.userActionData)) {
+				// canceling taphold
+				iiv.touchHoldCancel = true;
+				onItemTouchContextMenu.call(this, event);
+			}
+		}
 	}
 
 	event.stopPropagation();
