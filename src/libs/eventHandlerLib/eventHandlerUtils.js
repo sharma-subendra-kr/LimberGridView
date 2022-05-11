@@ -142,9 +142,49 @@ export const calculateTouchPosOnItem = function (context, event) {
 	}
 };
 
+export const calculateTouchPosOnItemForHold = function (
+	context,
+	event,
+	userActionData
+) {
+	const e = getElements(context);
+
+	const limberGridViewItemPosition =
+		e.$limberGridViewItems[userActionData.itemIndex].getBoundingClientRect();
+
+	const touchXOnLimberGridView =
+		event.touches[0].clientX - limberGridViewItemPosition.left;
+	const touchYOnLimberGridView =
+		event.touches[0].clientY - limberGridViewItemPosition.top;
+
+	return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
+};
+
+export const isMoveItemTouchHoldValid = (context, event, userActionData) => {
+	const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(
+		context,
+		event,
+		userActionData
+	);
+
+	if (
+		getDistanceSquared(
+			touchPosOnLimberGridItem,
+			userActionData.touchPosOnLimberGridItem
+		) >
+		15 * 15
+	) {
+		return false;
+	}
+	return true;
+};
+
 export const isTouchHoldValid = (context, event, userActionData) => {
-	const touchPosOnLimberGridItem = calculateTouchPosOnItem(context, event);
-	console.log("touchPosOnLimberGridItem", touchPosOnLimberGridItem);
+	const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(
+		context,
+		event,
+		userActionData
+	);
 
 	if (
 		getDistanceSquared(

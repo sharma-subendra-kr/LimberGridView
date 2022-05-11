@@ -35,6 +35,7 @@ import {
 	calculateMousePosOnDesk,
 	calculateTouchPosOnDesk,
 	calculateTouchPosOnItem,
+	isMoveItemTouchHoldValid,
 	isTouchHoldValid,
 } from "./eventHandlerUtils.js";
 import {
@@ -476,7 +477,7 @@ export const onItemTouchMove = function (event) {
 		// canceling taphold
 
 		if (iiv.userActionData.type === "move") {
-			if (!isTouchHoldValid(this, event, iiv.userActionData)) {
+			if (!isMoveItemTouchHoldValid(this, event, iiv.userActionData)) {
 				// canceling taphold
 				iiv.touchHoldCancel = true;
 				onItemTouchContextMenu.call(this, event);
