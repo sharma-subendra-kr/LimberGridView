@@ -27,7 +27,10 @@ import { adjustHeightAndScroll } from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getElements from "../../store/variables/elements";
-import { calculateTouchPosOnDesk } from "./eventHandlerUtils.js";
+import {
+	calculateTouchPosOnDesk,
+	isTouchHoldValid,
+} from "./eventHandlerUtils.js";
 import { loadInitState, unloadInitState } from "./deskInteractionUtils.js";
 import {
 	shiftItemsUp,
@@ -312,32 +315,56 @@ export const onDeskTouchMove = function (event) {
 			}
 
 			if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
-				clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
 				if (programScrolled !== true) {
-					dkiv.addItemAllowCheckTimeOutVariable = setTimeout(
-						addItemAllowCheckTimeOut.bind(
+					if (
+						!dkiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							dkiv.userActionData.addPositionX,
-							dkiv.userActionData.addPositionY,
-							newWidth,
-							newHeight
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+							event,
+							dkiv.userActionData,
+							touchPositionOnLimberGrid
+						)
+					) {
+						clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+						dkiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						dkiv.addItemAllowCheckTimeOutVariable = setTimeout(
+							addItemAllowCheckTimeOut.bind(
+								this,
+								dkiv.userActionData.addPositionX,
+								dkiv.userActionData.addPositionY,
+								newWidth,
+								newHeight
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			} else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
-				clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
 				if (programScrolled !== true) {
-					dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(
-						cutSpaceAllowCheckTimeOut.bind(
+					if (
+						!dkiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							dkiv.userActionData.addPositionX,
-							dkiv.userActionData.addPositionY,
-							newWidth,
-							newHeight
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+							event,
+							dkiv.userActionData,
+							touchPositionOnLimberGrid
+						)
+					) {
+						clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
+						dkiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(
+							cutSpaceAllowCheckTimeOut.bind(
+								this,
+								dkiv.userActionData.addPositionX,
+								dkiv.userActionData.addPositionY,
+								newWidth,
+								newHeight
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			}
 		}
