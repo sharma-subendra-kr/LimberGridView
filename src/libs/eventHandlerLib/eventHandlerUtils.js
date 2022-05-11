@@ -179,17 +179,16 @@ export const isMoveItemTouchHoldValid = (context, event, userActionData) => {
 	return true;
 };
 
-export const isTouchHoldValid = (context, event, userActionData) => {
-	const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(
-		context,
-		event,
-		userActionData
-	);
-
+export const isTouchHoldValid = (
+	context,
+	event,
+	userActionData,
+	touchPositionOnLimberGrid
+) => {
 	if (
 		getDistanceSquared(
-			touchPosOnLimberGridItem,
-			userActionData.touchPosOnLimberGridItem
+			touchPositionOnLimberGrid,
+			userActionData.touchPositionOnLimberGrid
 		) >
 		15 * 15
 	) {

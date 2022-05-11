@@ -401,7 +401,7 @@ export const onItemTouchMove = function (event) {
 		} else {
 			loadOnMoveState(this, iiv.userActionData, event, "resize");
 
-			clearTimeout(iiv.showResizeDemoTimeOutVariable);
+			// clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
 			const x = iiv.userActionData.itemX;
 			const y = iiv.userActionData.itemY;
@@ -456,18 +456,31 @@ export const onItemTouchMove = function (event) {
 				}
 
 				if (programScrolled !== true) {
-					iiv.showResizeDemoTimeOutVariable = setTimeout(
-						showResizeDemo.bind(
+					if (
+						!iiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							iiv.userActionData.itemIndex,
-							newX1,
-							newY1,
-							newWidth,
-							newHeight,
-							iiv.userActionData.type === "resize"
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+							event,
+							iiv.userActionData,
+							touchPositionOnLimberGrid
+						)
+					) {
+						clearTimeout(iiv.showResizeDemoTimeOutVariable);
+						iiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						iiv.showResizeDemoTimeOutVariable = setTimeout(
+							showResizeDemo.bind(
+								this,
+								iiv.userActionData.itemIndex,
+								newX1,
+								newY1,
+								newWidth,
+								newHeight,
+								iiv.userActionData.type === "resize"
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			}
 		}
