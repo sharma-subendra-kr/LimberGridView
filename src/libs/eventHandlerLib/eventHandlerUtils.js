@@ -26,6 +26,7 @@ Written by Subendra Kumar Sharma.
 import getElements from "../../store/variables/elements";
 import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
 import { getDistanceSquared } from "../geometry/geometry";
 
 export const calculateMousePosOnDesk = function (context, event) {
@@ -161,6 +162,8 @@ export const calculateTouchPosOnItemForHold = function (
 };
 
 export const isDeskTouchHoldValid = (context, event, userActionData) => {
+	const publicConstants = getPublicConstants(context);
+
 	const touchPositionOnLimberGrid = calculateTouchPosOnDesk(context, event);
 
 	if (
@@ -168,7 +171,7 @@ export const isDeskTouchHoldValid = (context, event, userActionData) => {
 			touchPositionOnLimberGrid,
 			userActionData.touchPositionOnLimberGrid
 		) >
-		15 * 15
+		publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE
 	) {
 		return false;
 	}
@@ -176,6 +179,8 @@ export const isDeskTouchHoldValid = (context, event, userActionData) => {
 };
 
 export const isMoveItemTouchHoldValid = (context, event, userActionData) => {
+	const publicConstants = getPublicConstants(context);
+
 	const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(
 		context,
 		event,
@@ -187,7 +192,7 @@ export const isMoveItemTouchHoldValid = (context, event, userActionData) => {
 			touchPosOnLimberGridItem,
 			userActionData.touchPosOnLimberGridItem
 		) >
-		15 * 15
+		publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE
 	) {
 		return false;
 	}
@@ -200,12 +205,14 @@ export const isTouchHoldValid = (
 	userActionData,
 	touchPositionOnLimberGrid
 ) => {
+	const publicConstants = getPublicConstants(context);
+
 	if (
 		getDistanceSquared(
 			touchPositionOnLimberGrid,
 			userActionData.touchPositionOnLimberGrid
 		) >
-		15 * 15
+		publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE
 	) {
 		return false;
 	}
