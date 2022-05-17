@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -26,6 +26,8 @@ Written by Subendra Kumar Sharma.
 import getElements from "../../store/variables/elements";
 import { getLimberGridViewBoundingClientRect } from "../../store/variables/essentials";
 import getPrivateConstants from "../../store/constants/privateConstants";
+import getPublicConstants from "../../store/constants/publicConstants";
+import { getDistanceSquared } from "../geometry/geometry";
 
 export const calculateMousePosOnDesk = function (context, event) {
 	const e = getElements(context);
@@ -119,9 +121,10 @@ export const calculateTouchPosOnDesk = function (context, event) {
 export const calculateTouchPosOnItem = function (context, event) {
 	const e = getElements(context);
 
-	const limberGridViewItemPosition = e.$limberGridViewItems[
-		event.currentTarget.attributes["data-index"].value
-	].getBoundingClientRect();
+	const limberGridViewItemPosition =
+		e.$limberGridViewItems[
+			event.currentTarget.attributes["data-index"].value
+		].getBoundingClientRect();
 
 	if (
 		event.touches[0].clientX >= limberGridViewItemPosition.left &&
@@ -138,4 +141,80 @@ export const calculateTouchPosOnItem = function (context, event) {
 
 		return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
 	}
+};
+
+export const calculateTouchPosOnItemForHold = function (
+	context,
+	event,
+	userActionData
+) {
+	const e = getElements(context);
+
+	const limberGridViewItemPosition =
+		e.$limberGridViewItems[userActionData.itemIndex].getBoundingClientRect();
+
+	const touchXOnLimberGridView =
+		event.touches[0].clientX - limberGridViewItemPosition.left;
+	const touchYOnLimberGridView =
+		event.touches[0].clientY - limberGridViewItemPosition.top;
+
+	return { x: touchXOnLimberGridView, y: touchYOnLimberGridView };
+};
+
+export const isDeskTouchHoldValid = (context, event, userActionData) => {
+	const publicConstants = getPublicConstants(context);
+
+	const touchPositionOnLimberGrid = calculateTouchPosOnDesk(context, event);
+
+	if (
+		getDistanceSquared(
+			touchPositionOnLimberGrid,
+			userActionData.touchPositionOnLimberGrid
+		) >
+		publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const isMoveItemTouchHoldValid = (context, event, userActionData) => {
+	const publicConstants = getPublicConstants(context);
+
+	const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(
+		context,
+		event,
+		userActionData
+	);
+
+	if (
+		getDistanceSquared(
+			touchPosOnLimberGridItem,
+			userActionData.touchPosOnLimberGridItem
+		) >
+		publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE
+	) {
+		return false;
+	}
+	return true;
+};
+
+export const isTouchHoldValid = (
+	context,
+	event,
+	userActionData,
+	touchPositionOnLimberGrid
+) => {
+	const publicConstants = getPublicConstants(context);
+
+	if (
+		getDistanceSquared(
+			touchPositionOnLimberGrid,
+			userActionData.touchPositionOnLimberGrid
+		) >
+		publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE
+	) {
+		return false;
+	}
+	return true;
 };

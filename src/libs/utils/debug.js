@@ -23,18 +23,14 @@ Written by Subendra Kumar Sharma.
 
 */
 
-export const getDistanceBetnPts = (pt1, pt2) => {
-	return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
-};
+import getPublicConstants from "../../store/constants/publicConstants";
+import { getCallbacks } from "../../store/variables/essentials";
 
-export const getDistanceSquared = (pt1, pt2) => {
-	return (pt2.x - pt1.x) * (pt2.x - pt1.x) + (pt2.y - pt1.y) * (pt2.y - pt1.y);
-};
-
-export const getHypotenuseSquared = (x1, y1, x2, y2) => {
-	return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-};
-
-export const getMidPoint = (x1, y1, x2, y2) => {
-	return { x: (x1 + x2) / 2, y: (y1 + y2) / 2 };
+export const logger = (...args) => {
+	const context = args[0];
+	const publicConstants = getPublicConstants(context);
+	if (publicConstants.EMIT_DEBUG_LOGS) {
+		args.shift();
+		getCallbacks(context).getDebugLog(args);
+	}
 };

@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -109,8 +109,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
   const options = {
     el : "#",                                                                  // id of the parent element with #
     editable : true,                                                           // true/false (optional default true)
-    enableInteractiveAddAndCut : true,                                        // true/false (optional default true)
-    enableTouchInteraction : true,                                            // true/false (optional default true)
+    enableInteractiveAddAndCut : true,                                         // true/false (optional default true)
+    enableTouchInteraction : true,                                             // true/false (optional default true)
     autoArrange : true,                                                        // true/false (compulsory if x and y not present else optional)
     reRenderOnResize : true,                                                   // true/false (optional default true)
     isMobileCheck: function
@@ -147,10 +147,11 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       renderPlugin: function (renderData, element) {}
       removePlugin: function(element){}
 
-      onItemClickCallback : function(event){},                                // click callback for item
+      onItemClickCallback : function(event){},                                 // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
+      getDebugLog: function(log){},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -166,6 +167,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
       mouseDownTime: number
       touchHoldTime: number
+      touchHoldTolerance: number
       demoWaitTime: number
       windowResizeWaitTime: number
       autoScrollDelay: number
@@ -177,6 +179,8 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       animateTime: number
 
       shrinkToFit: number
+
+      emitDebugLogs: false                                                         // true/false (optional default false)
     }
   }
   */
@@ -373,6 +377,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {boolean} autoScrollForMouse Setting this to true will enable auto-scroll for the move, resize, add, and cut-space events for mouse-based operations.
  * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 0ms.
  * @property {number} touchHoldTime The time to wait before initiating the move, resize, add, or cut-space routines after the tap-hold event. The default value is 300ms.
+ * @property {number} touchHoldTolerance The radius from the center or original point of contact on the screen. It's usage is vital in ignoring minute changes when user tries to touch hold at a point on the screen. When this is set to a very low number close to zero, a touch hold event will be interpreted as a touch move event on some devices. The default value is 15.
  * @property {number} demoWaitTime The time to wait before a demo for the resize or move event is initiated. Warning, a very low demo wait time will cause unwanted behavior as the algorithm needs some time for calculations. The default is 500ms.
  * @property {number} windowResizeWaitTime The time to wait before initiating window resize routines. The default value is 1000ms.
  * @property {number} autoScrollDelay The time to wait before the next scroll during a move, resize, add, or cut-space operation.
@@ -573,6 +578,7 @@ LimberGridView.prototype.initializeStore = function () {
 
 				MOUSE_DOWN_TIME: 0,
 				TOUCH_HOLD_TIME: 300,
+				TOUCH_HOLD_TOLERANCE: 15,
 				DEMO_WAIT_TIME: 500,
 				WINDOW_RESIZE_WAIT_TIME: 1000,
 				AUTO_SCROLL_DELAY: 100,
@@ -590,6 +596,9 @@ LimberGridView.prototype.initializeStore = function () {
 
 				// Algorithm
 				SHRINK_TO_FIT: 10,
+
+				// Debug
+				EMIT_DEBUG_LOGS: false,
 			},
 			messages: {
 				latchedMoveDemo1:

@@ -1,0 +1,8 @@
+### Before merge to master branch:
+
+1. Are copyright dates updated in files that are changed?
+2. Are copyright dates updated in files LICENSE, README.md and license_header?
+3. Is version updated in package.json file?
+4. Is version updated in README.md file?
+5. Does the README.md file requires update?
+6. Is dist update done and committed?

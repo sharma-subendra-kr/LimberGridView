@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -35,6 +35,8 @@ import {
 	calculateMousePosOnDesk,
 	calculateTouchPosOnDesk,
 	calculateTouchPosOnItem,
+	isMoveItemTouchHoldValid,
+	isTouchHoldValid,
 } from "./eventHandlerUtils.js";
 import {
 	getUserActionData,
@@ -57,6 +59,7 @@ import { getBindedFunctions } from "../../store/variables/bindedFunctions";
 import { getItemInteractionVars } from "../../store/variables/eventSpecific";
 import { setStatus } from "../../store/variables/status";
 import getTree from "../../store/variables/trees";
+// import { logger } from "../utils/debug";
 
 export const onItemMouseDown = function (event) {
 	const e = getElements(this);
@@ -83,10 +86,15 @@ export const onItemMouseDown = function (event) {
 		document.addEventListener("contextmenu", bf.onItemContextMenu);
 
 		clearTimeout(iiv.longPressCheck);
-		iiv.longPressCheck = setTimeout(
-			mouseDownCheck.bind(this, event),
-			publicConstants.MOUSE_DOWN_TIME
-		);
+		if (publicConstants.MOUSE_DOWN_TIME === 0) {
+			iiv.mouseDownTimerComplete = true;
+			loadMoveState(this, iiv.userActionData, event);
+		} else {
+			iiv.longPressCheck = setTimeout(
+				mouseDownCheck.bind(this, event),
+				publicConstants.MOUSE_DOWN_TIME
+			);
+		}
 
 		event.preventDefault();
 	} else if (
@@ -137,6 +145,7 @@ export const onItemTouchStart = function (event) {
 	}
 
 	Object.assign(iiv.userActionData, _userActionData);
+	iiv.userActionData.touchPosOnLimberGridItem = touchPosOnLimberGridItem;
 
 	if (iiv.userActionData.type === "move") {
 		iiv.touchHoldCancel = false;
@@ -147,10 +156,16 @@ export const onItemTouchStart = function (event) {
 		document.addEventListener("touchcancel", bf.onItemTouchCancel);
 		document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
 
-		iiv.longTouchCheck = setTimeout(
-			tapHoldCheck.bind(this, event),
-			publicConstants.TOUCH_HOLD_TIME
-		);
+		clearTimeout(iiv.longTouchCheck);
+		if (publicConstants.TOUCH_HOLD_TIME === 0) {
+			iiv.touchHoldTimerComplete = true;
+			loadMoveState(this, iiv.userActionData, event);
+		} else {
+			iiv.longTouchCheck = setTimeout(
+				tapHoldCheck.bind(this, event),
+				publicConstants.TOUCH_HOLD_TIME
+			);
+		}
 
 		event.preventDefault();
 	} else if (
@@ -332,7 +347,6 @@ export const onItemMouseMove = function (event) {
 
 export const onItemTouchMove = function (event) {
 	const e = getElements(this);
-	// const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
@@ -342,8 +356,6 @@ export const onItemTouchMove = function (event) {
 	if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
 		if (iiv.userActionData.type === "move") {
 			loadOnMoveState(this, iiv.userActionData, event, "move");
-
-			clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 			let yTouchPosition;
@@ -373,20 +385,31 @@ export const onItemTouchMove = function (event) {
 				}
 
 				if (programScrolled !== true) {
-					iiv.showMoveDemoTimeOutVariable = setTimeout(
-						showMoveDemo.bind(
+					if (
+						!iiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							iiv.userActionData.itemIndex,
+							event,
+							iiv.userActionData,
 							touchPositionOnLimberGrid
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+						)
+					) {
+						clearTimeout(iiv.showMoveDemoTimeOutVariable);
+						iiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						iiv.showMoveDemoTimeOutVariable = setTimeout(
+							showMoveDemo.bind(
+								this,
+								iiv.userActionData.itemIndex,
+								touchPositionOnLimberGrid
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			}
 		} else {
 			loadOnMoveState(this, iiv.userActionData, event, "resize");
-
-			clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
 			const x = iiv.userActionData.itemX;
 			const y = iiv.userActionData.itemY;
@@ -441,27 +464,42 @@ export const onItemTouchMove = function (event) {
 				}
 
 				if (programScrolled !== true) {
-					iiv.showResizeDemoTimeOutVariable = setTimeout(
-						showResizeDemo.bind(
+					if (
+						!iiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							iiv.userActionData.itemIndex,
-							newX1,
-							newY1,
-							newWidth,
-							newHeight,
-							iiv.userActionData.type === "resize"
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+							event,
+							iiv.userActionData,
+							touchPositionOnLimberGrid
+						)
+					) {
+						clearTimeout(iiv.showResizeDemoTimeOutVariable);
+						iiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						iiv.showResizeDemoTimeOutVariable = setTimeout(
+							showResizeDemo.bind(
+								this,
+								iiv.userActionData.itemIndex,
+								newX1,
+								newY1,
+								newWidth,
+								newHeight,
+								iiv.userActionData.type === "resize"
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			}
 		}
 	} else {
-		iiv.touchHoldCancel = true;
-
-		onItemTouchContextMenu.call(this, event);
-
-		// canceling taphold
+		if (iiv.userActionData.type === "move") {
+			if (!isMoveItemTouchHoldValid(this, event, iiv.userActionData)) {
+				// canceling taphold
+				iiv.touchHoldCancel = true;
+				onItemTouchContextMenu.call(this, event);
+			}
+		}
 	}
 
 	event.stopPropagation();

@@ -2,7 +2,7 @@
  *
  * LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
  *
- * Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+ * Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
  *
  * This file is part of LimberGridView.
  *
@@ -1130,12 +1130,12 @@ const getOnScrolTimeout = function (context) {
 
 /* harmony default export */ var essentials = (getEssentialVariables);
 
-// CONCATENATED MODULE: ./src/libs/eventHandlerLib/eventHandlerUtils.js
+// CONCATENATED MODULE: ./src/libs/geometry/geometry.js
 /*
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1155,6 +1155,48 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+const getDistanceBetnPts = (pt1, pt2) => {
+  return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
+};
+const getDistanceSquared = (pt1, pt2) => {
+  return (pt2.x - pt1.x) * (pt2.x - pt1.x) + (pt2.y - pt1.y) * (pt2.y - pt1.y);
+};
+const getHypotenuseSquared = (x1, y1, x2, y2) => {
+  return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+};
+const getMidPoint = (x1, y1, x2, y2) => {
+  return {
+    x: (x1 + x2) / 2,
+    y: (y1 + y2) / 2
+  };
+};
+// CONCATENATED MODULE: ./src/libs/eventHandlerLib/eventHandlerUtils.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
 
 
 
@@ -1229,6 +1271,45 @@ const calculateTouchPosOnItem = function (context, event) {
       y: touchYOnLimberGridView
     };
   }
+};
+const calculateTouchPosOnItemForHold = function (context, event, userActionData) {
+  const e = variables_elements(context);
+  const limberGridViewItemPosition = e.$limberGridViewItems[userActionData.itemIndex].getBoundingClientRect();
+  const touchXOnLimberGridView = event.touches[0].clientX - limberGridViewItemPosition.left;
+  const touchYOnLimberGridView = event.touches[0].clientY - limberGridViewItemPosition.top;
+  return {
+    x: touchXOnLimberGridView,
+    y: touchYOnLimberGridView
+  };
+};
+const isDeskTouchHoldValid = (context, event, userActionData) => {
+  const publicConstants = constants_publicConstants(context);
+  const touchPositionOnLimberGrid = calculateTouchPosOnDesk(context, event);
+
+  if (getDistanceSquared(touchPositionOnLimberGrid, userActionData.touchPositionOnLimberGrid) > publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE) {
+    return false;
+  }
+
+  return true;
+};
+const isMoveItemTouchHoldValid = (context, event, userActionData) => {
+  const publicConstants = constants_publicConstants(context);
+  const touchPosOnLimberGridItem = calculateTouchPosOnItemForHold(context, event, userActionData);
+
+  if (getDistanceSquared(touchPosOnLimberGridItem, userActionData.touchPosOnLimberGridItem) > publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE) {
+    return false;
+  }
+
+  return true;
+};
+const isTouchHoldValid = (context, event, userActionData, touchPositionOnLimberGrid) => {
+  const publicConstants = constants_publicConstants(context);
+
+  if (getDistanceSquared(touchPositionOnLimberGrid, userActionData.touchPositionOnLimberGrid) > publicConstants.TOUCH_HOLD_TOLERANCE * publicConstants.TOUCH_HOLD_TOLERANCE) {
+    return false;
+  }
+
+  return true;
 };
 // CONCATENATED MODULE: ./src/store/variables/options.js
 /*
@@ -1521,49 +1602,12 @@ const getOffsetCallbackArgs = item => {
     y2: item.y2
   };
 };
-// CONCATENATED MODULE: ./src/libs/geometry/geometry.js
-/*
-
-LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
-
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
-
-This file is part of LimberGridView.
-
-LimberGridView is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-LimberGridView is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
-
-Written by Subendra Kumar Sharma.
-
-*/
-const getDistanceBetnPts = (pt1, pt2) => {
-  return Math.sqrt(Math.pow(pt2.x - pt1.x, 2) + Math.pow(pt2.y - pt1.y, 2));
-};
-const getHypotenuseSquared = (x1, y1, x2, y2) => {
-  return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-};
-const getMidPoint = (x1, y1, x2, y2) => {
-  return {
-    x: (x1 + x2) / 2,
-    y: (y1 + y2) / 2
-  };
-};
 // CONCATENATED MODULE: ./src/libs/utils/utils.js
 /*
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5695,7 +5739,7 @@ const setDeskInteractionVarsByName = function (context, name, value) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5727,6 +5771,7 @@ Written by Subendra Kumar Sharma.
 
 
 
+ // import { logger } from "../utils/debug";
 
 const onItemMouseDown = function (event) {
   const e = variables_elements(this);
@@ -5750,7 +5795,14 @@ const onItemMouseDown = function (event) {
     document.addEventListener("mouseup", bf.onItemMouseUp);
     document.addEventListener("contextmenu", bf.onItemContextMenu);
     clearTimeout(iiv.longPressCheck);
-    iiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
+
+    if (publicConstants.MOUSE_DOWN_TIME === 0) {
+      iiv.mouseDownTimerComplete = true;
+      loadMoveState(this, iiv.userActionData, event);
+    } else {
+      iiv.longPressCheck = setTimeout(mouseDownCheck.bind(this, event), publicConstants.MOUSE_DOWN_TIME);
+    }
+
     event.preventDefault();
   } else if (iiv.userActionData.type === "resize" || iiv.userActionData.type === "resizeBottomLeft") {
     iiv.mouseDownCancel = false;
@@ -5793,6 +5845,7 @@ const onItemTouchStart = function (event) {
   }
 
   Object.assign(iiv.userActionData, _userActionData);
+  iiv.userActionData.touchPosOnLimberGridItem = touchPosOnLimberGridItem;
 
   if (iiv.userActionData.type === "move") {
     iiv.touchHoldCancel = false;
@@ -5801,7 +5854,15 @@ const onItemTouchStart = function (event) {
     document.addEventListener("touchend", bf.onItemTouchEnd);
     document.addEventListener("touchcancel", bf.onItemTouchCancel);
     document.addEventListener("contextmenu", bf.onItemTouchContextMenu);
-    iiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
+    clearTimeout(iiv.longTouchCheck);
+
+    if (publicConstants.TOUCH_HOLD_TIME === 0) {
+      iiv.touchHoldTimerComplete = true;
+      loadMoveState(this, iiv.userActionData, event);
+    } else {
+      iiv.longTouchCheck = setTimeout(tapHoldCheck.bind(this, event), publicConstants.TOUCH_HOLD_TIME);
+    }
+
     event.preventDefault();
   } else if (iiv.userActionData.type === "resize" || iiv.userActionData.type === "resizeBottomLeft") {
     iiv.touchHoldCancel = false;
@@ -5924,8 +5985,7 @@ const onItemMouseMove = function (event) {
   event.stopPropagation();
 };
 const onItemTouchMove = function (event) {
-  const e = variables_elements(this); // const privateConstants = getPrivateConstants(this);
-
+  const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
   const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
@@ -5934,7 +5994,6 @@ const onItemTouchMove = function (event) {
   if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
     if (iiv.userActionData.type === "move") {
       loadOnMoveState(this, iiv.userActionData, event, "move");
-      clearTimeout(iiv.showMoveDemoTimeOutVariable);
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
       let yTouchPosition;
 
@@ -5957,12 +6016,15 @@ const onItemTouchMove = function (event) {
         }
 
         if (programScrolled !== true) {
-          iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
+          if (!iiv.userActionData.touchPositionOnLimberGrid || !isTouchHoldValid(this, event, iiv.userActionData, touchPositionOnLimberGrid)) {
+            clearTimeout(iiv.showMoveDemoTimeOutVariable);
+            iiv.userActionData.touchPositionOnLimberGrid = touchPositionOnLimberGrid;
+            iiv.showMoveDemoTimeOutVariable = setTimeout(showMoveDemo.bind(this, iiv.userActionData.itemIndex, touchPositionOnLimberGrid), publicConstants.DEMO_WAIT_TIME);
+          }
         }
       }
     } else {
       loadOnMoveState(this, iiv.userActionData, event, "resize");
-      clearTimeout(iiv.showResizeDemoTimeOutVariable);
       const x = iiv.userActionData.itemX;
       const y = iiv.userActionData.itemY;
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
@@ -6008,13 +6070,22 @@ const onItemTouchMove = function (event) {
         }
 
         if (programScrolled !== true) {
-          iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newX1, newY1, newWidth, newHeight, iiv.userActionData.type === "resize"), publicConstants.DEMO_WAIT_TIME);
+          if (!iiv.userActionData.touchPositionOnLimberGrid || !isTouchHoldValid(this, event, iiv.userActionData, touchPositionOnLimberGrid)) {
+            clearTimeout(iiv.showResizeDemoTimeOutVariable);
+            iiv.userActionData.touchPositionOnLimberGrid = touchPositionOnLimberGrid;
+            iiv.showResizeDemoTimeOutVariable = setTimeout(showResizeDemo.bind(this, iiv.userActionData.itemIndex, newX1, newY1, newWidth, newHeight, iiv.userActionData.type === "resize"), publicConstants.DEMO_WAIT_TIME);
+          }
         }
       }
     }
   } else {
-    iiv.touchHoldCancel = true;
-    onItemTouchContextMenu.call(this, event); // canceling taphold
+    if (iiv.userActionData.type === "move") {
+      if (!isMoveItemTouchHoldValid(this, event, iiv.userActionData)) {
+        // canceling taphold
+        iiv.touchHoldCancel = true;
+        onItemTouchContextMenu.call(this, event);
+      }
+    }
   }
 
   event.stopPropagation();
@@ -6286,7 +6357,7 @@ const unloadInitState = context => {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6353,6 +6424,10 @@ const onDeskTouchStart = function (event) {
     return;
   }
 
+  const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+  dkiv.userActionData = {
+    touchPositionOnLimberGrid
+  };
   dkiv.tapHoldCancel = false;
   dkiv.tapHoldTimerComplete = false;
   e.$limberGridView.addEventListener("touchmove", bf.onDeskTouchMove);
@@ -6396,7 +6471,7 @@ const deskInteraction_tapHoldCheck = function (event) {
     const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
     const x = touchPositionOnLimberGrid.x;
     const y = touchPositionOnLimberGrid.y;
-    dkiv.userActionData = {
+    dkiv.userActionData = { ...dkiv.userActionData,
       type: "add",
       addPositionX: x,
       addPositionY: y
@@ -6502,23 +6577,29 @@ const onDeskTouchMove = function (event) {
       }
 
       if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
-        clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
-
         if (programScrolled !== true) {
-          dkiv.addItemAllowCheckTimeOutVariable = setTimeout(addItemAllowCheckTimeOut.bind(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
+          if (!dkiv.userActionData.touchPositionOnLimberGrid || !isTouchHoldValid(this, event, dkiv.userActionData, touchPositionOnLimberGrid)) {
+            clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+            dkiv.userActionData.touchPositionOnLimberGrid = touchPositionOnLimberGrid;
+            dkiv.addItemAllowCheckTimeOutVariable = setTimeout(addItemAllowCheckTimeOut.bind(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
+          }
         }
       } else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
-        clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
-
         if (programScrolled !== true) {
-          dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(cutSpaceAllowCheckTimeOut.bind(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
+          if (!dkiv.userActionData.touchPositionOnLimberGrid || !isTouchHoldValid(this, event, dkiv.userActionData, touchPositionOnLimberGrid)) {
+            clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
+            dkiv.userActionData.touchPositionOnLimberGrid = touchPositionOnLimberGrid;
+            dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(cutSpaceAllowCheckTimeOut.bind(this, dkiv.userActionData.addPositionX, dkiv.userActionData.addPositionY, newWidth, newHeight), publicConstants.DEMO_WAIT_TIME);
+          }
         }
       }
     }
 
     event.preventDefault();
   } else {
-    onDeskContextMenu.call(this);
+    if (!isDeskTouchHoldValid(this, event, dkiv.userActionData)) {
+      onDeskContextMenu.call(this);
+    }
   }
 
   event.stopPropagation();
@@ -6699,7 +6780,7 @@ const DESK_INTERACTION_MODE = {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -6832,7 +6913,7 @@ const init = async function (context, isResize, autoArrange) {
   }
 };
 const initConstantsAndFlags = function (options) {
-  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18, _options$publicConsta19, _options$publicConsta20, _options$publicConsta21, _options$publicConsta22;
+  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18, _options$publicConsta19, _options$publicConsta20, _options$publicConsta21, _options$publicConsta22, _options$publicConsta23, _options$publicConsta24;
 
   // Private Constants BEGIN
   if (typeof (options === null || options === void 0 ? void 0 : (_options$gridData = options.gridData) === null || _options$gridData === void 0 ? void 0 : _options$gridData.WIDTH) === "number") {
@@ -6897,44 +6978,52 @@ const initConstantsAndFlags = function (options) {
     setPublicConstantByName(this, "TOUCH_HOLD_TIME", options.publicConstants.touchHoldTime);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta12 = options.publicConstants) === null || _options$publicConsta12 === void 0 ? void 0 : _options$publicConsta12.demoWaitTime) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta12 = options.publicConstants) === null || _options$publicConsta12 === void 0 ? void 0 : _options$publicConsta12.touchHoldTolerance) === "number") {
+    setPublicConstantByName(this, "TOUCH_HOLD_TOLERANCE", options.publicConstants.touchHoldTolerance);
+  }
+
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta13 = options.publicConstants) === null || _options$publicConsta13 === void 0 ? void 0 : _options$publicConsta13.demoWaitTime) === "number") {
     setPublicConstantByName(this, "DEMO_WAIT_TIME", options.publicConstants.demoWaitTime);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta13 = options.publicConstants) === null || _options$publicConsta13 === void 0 ? void 0 : _options$publicConsta13.windowResizeWaitTime) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta14 = options.publicConstants) === null || _options$publicConsta14 === void 0 ? void 0 : _options$publicConsta14.windowResizeWaitTime) === "number") {
     setPublicConstantByName(this, "WINDOW_RESIZE_WAIT_TIME", options.publicConstants.windowResizeWaitTime);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta14 = options.publicConstants) === null || _options$publicConsta14 === void 0 ? void 0 : _options$publicConsta14.autoScrollDelay) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta15 = options.publicConstants) === null || _options$publicConsta15 === void 0 ? void 0 : _options$publicConsta15.autoScrollDelay) === "number") {
     setPublicConstantByName(this, "AUTO_SCROLL_DELAY", options.publicConstants.autoScrollDelay);
   }
 
-  if (options !== null && options !== void 0 && (_options$publicConsta15 = options.publicConstants) !== null && _options$publicConsta15 !== void 0 && _options$publicConsta15.deskInteractionMode && DESK_INTERACTION_MODE[options.publicConstants.deskInteractionMode]) {
+  if (options !== null && options !== void 0 && (_options$publicConsta16 = options.publicConstants) !== null && _options$publicConsta16 !== void 0 && _options$publicConsta16.deskInteractionMode && DESK_INTERACTION_MODE[options.publicConstants.deskInteractionMode]) {
     setPublicConstantByName(this, "DESK_INTERACTION_MODE", options.publicConstants.deskInteractionMode);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta16 = options.publicConstants) === null || _options$publicConsta16 === void 0 ? void 0 : _options$publicConsta16.latchMovedItem) === "boolean") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta17 = options.publicConstants) === null || _options$publicConsta17 === void 0 ? void 0 : _options$publicConsta17.latchMovedItem) === "boolean") {
     setPublicConstantByName(this, "LATCH_MOVED_ITEM", options.publicConstants.latchMovedItem);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta17 = options.publicConstants) === null || _options$publicConsta17 === void 0 ? void 0 : _options$publicConsta17.animateMovedItem) === "boolean") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta18 = options.publicConstants) === null || _options$publicConsta18 === void 0 ? void 0 : _options$publicConsta18.animateMovedItem) === "boolean") {
     setPublicConstantByName(this, "ANIMATE_MOVED_ITEM", options.publicConstants.animateMovedItem);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta18 = options.publicConstants) === null || _options$publicConsta18 === void 0 ? void 0 : _options$publicConsta18.animateTime) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta19 = options.publicConstants) === null || _options$publicConsta19 === void 0 ? void 0 : _options$publicConsta19.animateTime) === "number") {
     setPublicConstantByName(this, "ANIMATE_TIME", options.publicConstants.animateTime);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta19 = options.publicConstants) === null || _options$publicConsta19 === void 0 ? void 0 : _options$publicConsta19.crossHairWidth) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta20 = options.publicConstants) === null || _options$publicConsta20 === void 0 ? void 0 : _options$publicConsta20.crossHairWidth) === "number") {
     setPublicConstantByName(this, "CROSS_HAIR_WIDTH", options.publicConstants.crossHairWidth);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta20 = options.publicConstants) === null || _options$publicConsta20 === void 0 ? void 0 : _options$publicConsta20.crossHairHeight) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta21 = options.publicConstants) === null || _options$publicConsta21 === void 0 ? void 0 : _options$publicConsta21.crossHairHeight) === "number") {
     setPublicConstantByName(this, "CROSS_HAIR_HEIGHT", options.publicConstants.crossHairHeight);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta21 = options.publicConstants) === null || _options$publicConsta21 === void 0 ? void 0 : _options$publicConsta21.shrinkToFit) === "number" && (options === null || options === void 0 ? void 0 : (_options$publicConsta22 = options.publicConstants) === null || _options$publicConsta22 === void 0 ? void 0 : _options$publicConsta22.shrinkToFit) <= 10) {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta22 = options.publicConstants) === null || _options$publicConsta22 === void 0 ? void 0 : _options$publicConsta22.shrinkToFit) === "number" && (options === null || options === void 0 ? void 0 : (_options$publicConsta23 = options.publicConstants) === null || _options$publicConsta23 === void 0 ? void 0 : _options$publicConsta23.shrinkToFit) <= 10) {
     setPublicConstantByName(this, "SHRINK_TO_FIT", options.publicConstants.shrinkToFit);
+  }
+
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta24 = options.publicConstants) === null || _options$publicConsta24 === void 0 ? void 0 : _options$publicConsta24.emitDebugLogs) === "boolean") {
+    setPublicConstantByName(this, "EMIT_DEBUG_LOGS", options.publicConstants.emitDebugLogs);
   } // Public Constants ENDED
   // Miscellaneous BEGIN
   // Miscellaneous ENDED
@@ -6971,7 +7060,7 @@ const initRender = function () {
     e.$body.appendChild(pseudoContainer);
   }
 
-  e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2021 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
+  e.$el.innerHTML = `<div class = "limber-grid-view-container"><div class = "limber-grid-view"></div><div class = "limber-grid-view-license"><div class = "limber-grid-view-license-icon">©</div><div class = "limber-grid-view-license-details">LimberGridView Copyright © 2018-2022 Subendra Kumar Sharma. License GPLv3+: GNU GPL version 3 or later &lthttps://www.gnu.org/licenses/&gt.</div></div></div>`;
   set$limberGridViewContainer(this, e.$el.getElementsByClassName("limber-grid-view-container")[0]);
   set$limberGridView(this, e.$el.getElementsByClassName("limber-grid-view")[0]);
   const pseudoContainerItem = document.createElement("div");
@@ -7378,7 +7467,7 @@ const onScrollCallback = function (event) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -7429,8 +7518,8 @@ Written by Subendra Kumar Sharma.
   const options = {
     el : "#",                                                                  // id of the parent element with #
     editable : true,                                                           // true/false (optional default true)
-    enableInteractiveAddAndCut : true,                                        // true/false (optional default true)
-    enableTouchInteraction : true,                                            // true/false (optional default true)
+    enableInteractiveAddAndCut : true,                                         // true/false (optional default true)
+    enableTouchInteraction : true,                                             // true/false (optional default true)
     autoArrange : true,                                                        // true/false (compulsory if x and y not present else optional)
     reRenderOnResize : true,                                                   // true/false (optional default true)
     isMobileCheck: function
@@ -7467,10 +7556,11 @@ Written by Subendra Kumar Sharma.
       renderPlugin: function (renderData, element) {}
       removePlugin: function(element){}
 
-      onItemClickCallback : function(event){},                                // click callback for item
+      onItemClickCallback : function(event){},                                 // click callback for item
       getLogMessage: function(log){},                                          // get log message for error, info, and warnings
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
+      getDebugLog: function(log){},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -7486,6 +7576,7 @@ Written by Subendra Kumar Sharma.
 
       mouseDownTime: number
       touchHoldTime: number
+      touchHoldTolerance: number
       demoWaitTime: number
       windowResizeWaitTime: number
       autoScrollDelay: number
@@ -7497,6 +7588,8 @@ Written by Subendra Kumar Sharma.
       animateTime: number
 
       shrinkToFit: number
+
+      emitDebugLogs: false                                                         // true/false (optional default false)
     }
   }
   */
@@ -7690,6 +7783,7 @@ Written by Subendra Kumar Sharma.
  * @property {boolean} autoScrollForMouse Setting this to true will enable auto-scroll for the move, resize, add, and cut-space events for mouse-based operations.
  * @property {number} mouseDownTime The time to wait before initiating the move, resize, add, or cut-space routines after the mouse down event. The default value is 0ms.
  * @property {number} touchHoldTime The time to wait before initiating the move, resize, add, or cut-space routines after the tap-hold event. The default value is 300ms.
+ * @property {number} touchHoldTolerance The radius from the center or original point of contact on the screen. It's usage is vital in ignoring minute changes when user tries to touch hold at a point on the screen. When this is set to a very low number close to zero, a touch hold event will be interpreted as a touch move event on some devices. The default value is 15.
  * @property {number} demoWaitTime The time to wait before a demo for the resize or move event is initiated. Warning, a very low demo wait time will cause unwanted behavior as the algorithm needs some time for calculations. The default is 500ms.
  * @property {number} windowResizeWaitTime The time to wait before initiating window resize routines. The default value is 1000ms.
  * @property {number} autoScrollDelay The time to wait before the next scroll during a move, resize, add, or cut-space operation.
@@ -7882,6 +7976,7 @@ LimberGridView.prototype.initializeStore = function () {
         AUTO_SCROLL_FOR_MOUSE: false,
         MOUSE_DOWN_TIME: 0,
         TOUCH_HOLD_TIME: 300,
+        TOUCH_HOLD_TOLERANCE: 15,
         DEMO_WAIT_TIME: 500,
         WINDOW_RESIZE_WAIT_TIME: 1000,
         AUTO_SCROLL_DELAY: 100,
@@ -7893,7 +7988,9 @@ LimberGridView.prototype.initializeStore = function () {
         CROSS_HAIR_WIDTH: 500,
         CROSS_HAIR_HEIGHT: 500,
         // Algorithm
-        SHRINK_TO_FIT: 10
+        SHRINK_TO_FIT: 10,
+        // Debug
+        EMIT_DEBUG_LOGS: false
       },
       messages: {
         latchedMoveDemo1: "Move curser close to an adjacent item over this box to latch next to that item.",

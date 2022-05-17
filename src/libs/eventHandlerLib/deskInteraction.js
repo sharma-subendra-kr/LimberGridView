@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -27,7 +27,11 @@ import { adjustHeightAndScroll } from "../utils/essentials";
 import getPublicConstants from "../../store/constants/publicConstants";
 import getPrivateConstants from "../../store/constants/privateConstants";
 import getElements from "../../store/variables/elements";
-import { calculateTouchPosOnDesk } from "./eventHandlerUtils.js";
+import {
+	calculateTouchPosOnDesk,
+	isDeskTouchHoldValid,
+	isTouchHoldValid,
+} from "./eventHandlerUtils.js";
 import { loadInitState, unloadInitState } from "./deskInteractionUtils.js";
 import {
 	shiftItemsUp,
@@ -88,6 +92,9 @@ export const onDeskTouchStart = function (event) {
 	if (event.touches.length !== 1) {
 		return;
 	}
+
+	const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
+	dkiv.userActionData = { touchPositionOnLimberGrid };
 
 	dkiv.tapHoldCancel = false;
 	dkiv.tapHoldTimerComplete = false;
@@ -150,6 +157,7 @@ export const tapHoldCheck = function (event) {
 		const y = touchPositionOnLimberGrid.y;
 
 		dkiv.userActionData = {
+			...dkiv.userActionData,
 			type: "add",
 			addPositionX: x,
 			addPositionY: y,
@@ -312,38 +320,64 @@ export const onDeskTouchMove = function (event) {
 			}
 
 			if (publicConstants.DESK_INTERACTION_MODE === "ADD") {
-				clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
 				if (programScrolled !== true) {
-					dkiv.addItemAllowCheckTimeOutVariable = setTimeout(
-						addItemAllowCheckTimeOut.bind(
+					if (
+						!dkiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							dkiv.userActionData.addPositionX,
-							dkiv.userActionData.addPositionY,
-							newWidth,
-							newHeight
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+							event,
+							dkiv.userActionData,
+							touchPositionOnLimberGrid
+						)
+					) {
+						clearTimeout(dkiv.addItemAllowCheckTimeOutVariable);
+						dkiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						dkiv.addItemAllowCheckTimeOutVariable = setTimeout(
+							addItemAllowCheckTimeOut.bind(
+								this,
+								dkiv.userActionData.addPositionX,
+								dkiv.userActionData.addPositionY,
+								newWidth,
+								newHeight
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			} else if (publicConstants.DESK_INTERACTION_MODE === "CUTSPACE") {
-				clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
 				if (programScrolled !== true) {
-					dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(
-						cutSpaceAllowCheckTimeOut.bind(
+					if (
+						!dkiv.userActionData.touchPositionOnLimberGrid ||
+						!isTouchHoldValid(
 							this,
-							dkiv.userActionData.addPositionX,
-							dkiv.userActionData.addPositionY,
-							newWidth,
-							newHeight
-						),
-						publicConstants.DEMO_WAIT_TIME
-					);
+							event,
+							dkiv.userActionData,
+							touchPositionOnLimberGrid
+						)
+					) {
+						clearTimeout(dkiv.cutSpaceAllowCheckTimeOutVariable);
+						dkiv.userActionData.touchPositionOnLimberGrid =
+							touchPositionOnLimberGrid;
+						dkiv.cutSpaceAllowCheckTimeOutVariable = setTimeout(
+							cutSpaceAllowCheckTimeOut.bind(
+								this,
+								dkiv.userActionData.addPositionX,
+								dkiv.userActionData.addPositionY,
+								newWidth,
+								newHeight
+							),
+							publicConstants.DEMO_WAIT_TIME
+						);
+					}
 				}
 			}
 		}
 		event.preventDefault();
 	} else {
-		onDeskContextMenu.call(this);
+		if (!isDeskTouchHoldValid(this, event, dkiv.userActionData)) {
+			onDeskContextMenu.call(this);
+		}
 	}
 
 	event.stopPropagation();
