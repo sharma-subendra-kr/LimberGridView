@@ -347,7 +347,6 @@ export const onItemMouseMove = function (event) {
 
 export const onItemTouchMove = function (event) {
 	const e = getElements(this);
-	// const privateConstants = getPrivateConstants(this);
 	const publicConstants = getPublicConstants(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
@@ -357,8 +356,6 @@ export const onItemTouchMove = function (event) {
 	if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
 		if (iiv.userActionData.type === "move") {
 			loadOnMoveState(this, iiv.userActionData, event, "move");
-
-			// clearTimeout(iiv.showMoveDemoTimeOutVariable);
 
 			const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
 			let yTouchPosition;
@@ -413,8 +410,6 @@ export const onItemTouchMove = function (event) {
 			}
 		} else {
 			loadOnMoveState(this, iiv.userActionData, event, "resize");
-
-			// clearTimeout(iiv.showResizeDemoTimeOutVariable);
 
 			const x = iiv.userActionData.itemX;
 			const y = iiv.userActionData.itemY;
@@ -498,10 +493,6 @@ export const onItemTouchMove = function (event) {
 			}
 		}
 	} else {
-		// iiv.touchHoldCancel = true;
-		// onItemTouchContextMenu.call(this, event);
-		// canceling taphold
-
 		if (iiv.userActionData.type === "move") {
 			if (!isMoveItemTouchHoldValid(this, event, iiv.userActionData)) {
 				// canceling taphold
