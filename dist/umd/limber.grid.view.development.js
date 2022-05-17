@@ -1175,7 +1175,7 @@ const getMidPoint = (x1, y1, x2, y2) => {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5985,8 +5985,7 @@ const onItemMouseMove = function (event) {
   event.stopPropagation();
 };
 const onItemTouchMove = function (event) {
-  const e = variables_elements(this); // const privateConstants = getPrivateConstants(this);
-
+  const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
   const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
@@ -5994,8 +5993,7 @@ const onItemTouchMove = function (event) {
 
   if (iiv.touchHoldTimerComplete === true && event.touches.length === 1) {
     if (iiv.userActionData.type === "move") {
-      loadOnMoveState(this, iiv.userActionData, event, "move"); // clearTimeout(iiv.showMoveDemoTimeOutVariable);
-
+      loadOnMoveState(this, iiv.userActionData, event, "move");
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
       let yTouchPosition;
 
@@ -6026,8 +6024,7 @@ const onItemTouchMove = function (event) {
         }
       }
     } else {
-      loadOnMoveState(this, iiv.userActionData, event, "resize"); // clearTimeout(iiv.showResizeDemoTimeOutVariable);
-
+      loadOnMoveState(this, iiv.userActionData, event, "resize");
       const x = iiv.userActionData.itemX;
       const y = iiv.userActionData.itemY;
       const touchPositionOnLimberGrid = calculateTouchPosOnDesk(this, event);
@@ -6082,9 +6079,6 @@ const onItemTouchMove = function (event) {
       }
     }
   } else {
-    // iiv.touchHoldCancel = true;
-    // onItemTouchContextMenu.call(this, event);
-    // canceling taphold
     if (iiv.userActionData.type === "move") {
       if (!isMoveItemTouchHoldValid(this, event, iiv.userActionData)) {
         // canceling taphold
@@ -6363,7 +6357,7 @@ const unloadInitState = context => {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
