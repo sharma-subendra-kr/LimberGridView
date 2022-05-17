@@ -367,6 +367,14 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
+	if (typeof options?.publicConstants?.touchHoldTolerance === "number") {
+		setPublicConstantByName(
+			this,
+			"TOUCH_HOLD_TOLERANCE",
+			options.publicConstants.touchHoldTolerance
+		);
+	}
+
 	if (typeof options?.publicConstants?.demoWaitTime === "number") {
 		setPublicConstantByName(
 			this,
