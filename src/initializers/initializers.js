@@ -434,6 +434,14 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
+	if (typeof options?.publicConstants?.marginChangeValue === "number") {
+		setPublicConstantByName(
+			this,
+			"MARGIN_CHANGE_VALUE",
+			options.publicConstants.marginChangeValue
+		);
+	}
+
 	if (typeof options?.publicConstants?.crossHairWidth === "number") {
 		setPublicConstantByName(
 			this,

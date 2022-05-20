@@ -152,6 +152,9 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
       getDebugLog: function(log){},
+
+      decreaseMarginCallback() {},
+      increaseMarginCallback() {},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -266,11 +269,16 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
  * @property {callbacks~moveComplete} moveComplete Callback function called when moving of item is complete.
  * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
+ * @property {callbacks~cutSpaceComplete} cutSpaceComplete Callback function called when removing empty space is complete.
  * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
  * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~onItemClickCallback} onItemClickCallback Callback function called when user clicks on an item.
  * @property {callbacks~getLogMessage} getLogMessage The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
  * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
  * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
+ * @property {callbacks~getDebugLog} getDebugLog The callback function to get currently logged item. For developer of LimberGridView only.
+ * @property {callbacks~decreaseMarginCallback} decreaseMarginCallback Callback function called when decreasing margin is successful.
+ * @property {callbacks~increaseMarginCallback} increaseMarginCallback Callback function called when increasing margin is successful.
  */
 
 /**
@@ -385,7 +393,11 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {boolean} latchMovedItem To enable or disable latch mode. The default value is true.
  * @property {boolean} animateMovedItem The flag tells whether to animate or not to animate the moved item. The default value is false.
  * @property {number} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
+ * @property {number} marginChangeValue Value by which margin is increased or decreased. Default value is 1.
+ * @property {number} crossHairWidth Width of move/resise helper cross hair. Default value is 500.
+ * @property {number} crossHairWidth Height of move/resise helper cross hair. Default value is 500.
  * @property {number} shrinkToFit LimberGridView will shrink items by the percentage value specified while trying to arrange affected items.
+ * @property {number} emitDebugLogs Flag to specify whether or not logger will emit logs. For developer of LimberGridView only. Default value is false.
  */
 
 /**
@@ -589,6 +601,8 @@ LimberGridView.prototype.initializeStore = function () {
 
 				ANIMATE_MOVED_ITEM: false,
 				ANIMATE_TIME: 250,
+
+				MARGIN_CHANGE_VALUE: 1,
 
 				// cross hair
 				CROSS_HAIR_WIDTH: 500,
@@ -828,6 +842,34 @@ LimberGridView.prototype.setAutoScrollDelay = function (value) {
 LimberGridView.prototype.setAutoScrollForMouse = function (value) {
 	if (typeof value === "boolean") {
 		setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
+	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#decreaseMargin
+ * @description Decreases the margin by the specified value asynchrousnoly.
+ * @returns {boolean}
+ */
+LimberGridView.prototype.decreaseMargin = function () {};
+
+/**
+ * @method
+ * @name LimberGridView#increaseMargin
+ * @description Increases the margin by the specified value asynchrousnoly.
+ * @returns {boolean}
+ */
+LimberGridView.prototype.increaseMargin = function () {};
+
+/**
+ * @method
+ * @name LimberGridView#setMarginChangeValue
+ * @description Sets the value by which margin is to increased or decreased.
+ * @returns {boolean}
+ */
+LimberGridView.prototype.setMarginChangeValue = function (value) {
+	if (typeof value === "number") {
+		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
 	}
 };
 
