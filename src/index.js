@@ -65,11 +65,9 @@ import {
 	onScrollCallback,
 } from "./libs/eventHandlerLib/intersectionObserver";
 
-import { fixTo } from "./libs/utils/utils";
 import { setPublicConstantByName } from "./store/constants/publicConstants";
 import { getPrivateConstants } from "./store/constants/privateConstants";
 import { setOptions } from "./store/variables/options";
-
 import {
 	setPositionData,
 	getPositionData,
@@ -80,23 +78,28 @@ import getElements, {
 	get$pseudoContainer,
 	get$limberGridViewContainer,
 } from "./store/variables/elements";
+import getUndoRedo from "./store/variables/undoRedo";
+import { getBindedFunctions } from "./store/variables/bindedFunctions";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
 
+import {
+	init,
+	initConstantsAndFlags,
+	initRender,
+} from "./initializers/initializers";
 import {
 	render,
 	renderItem as _renderItem,
 	addItem as _addItem,
 	removeItem as _removeItem,
 } from "./libs/renderers/renderers";
-import {
-	init,
-	initConstantsAndFlags,
-	initRender,
-} from "./initializers/initializers";
-import getUndoRedo from "./store/variables/undoRedo";
 import { resetDemoUIChanges } from "./libs/interaction/itemInteractionUtils";
+import {
+	decreaseMargin as _decreaseMargin,
+	increaseMargin as _increaseMargin,
+} from "./libs/actions/marginChange/marginChange";
 import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
-import { getBindedFunctions } from "./store/variables/bindedFunctions";
+import { fixTo } from "./libs/utils/utils";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -870,7 +873,9 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
  * @description Decreases the margin by the specified value asynchrousnoly.
  * @returns {boolean}
  */
-LimberGridView.prototype.decreaseMargin = function () {};
+LimberGridView.prototype.decreaseMargin = function () {
+	_decreaseMargin(this);
+};
 
 /**
  * @method
@@ -878,7 +883,9 @@ LimberGridView.prototype.decreaseMargin = function () {};
  * @description Increases the margin by the specified value asynchrousnoly.
  * @returns {boolean}
  */
-LimberGridView.prototype.increaseMargin = function () {};
+LimberGridView.prototype.increaseMargin = function () {
+	_increaseMargin(this);
+};
 
 /**
  * @method
