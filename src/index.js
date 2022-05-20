@@ -333,6 +333,12 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
+ * The callback function, called when removing free space is complete.
+ * @callback callbacks~cutSpaceComplete
+ * @returns {undefined}
+ */
+
+/**
  * The callback function, called after renderContent and before renderComplete and addComplete. It is also called, after removeComplete for items whose indices are affected due to the removal of any item. In the function body of renderPlugin, you can render your React JSX using 'ReactDOM.render'.
  * @callback callbacks~renderPlugin
  * @param {object} renderData Data received from renderContent callback.
@@ -344,6 +350,13 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * The callback function, called just before the item is removed from the DOM and before removeComplete. In the function body of removePlugin, necessary clean-up can be performed by frameworks like react (e.g. calling 'ReactDOM.unmountComponentAtNode').
  * @callback callbacks~removePlugin
  * @param {Element} element The instance of an element which is going to be removed from the DOM.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function, called when user clicks on an item.
+ * @callback callbacks~onItemClickCallback
+ * @param {event} event The event object.
  * @returns {undefined}
  */
 
@@ -370,6 +383,12 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @param {number} y The distance along the y-axis where the user placed the cursor or touched the surface.
  * @param {object} item An item object in the two-point form.
  * @returns {object} An object with keys x and y. It represents the translated top-left point of the move pseudo-element.
+ */
+
+/**
+ * The callback function to get log messages. For use only for developer of LimberGridView.
+ * @callback callbacks~getDebugLog
+ * @param {number}
  */
 
 /**
