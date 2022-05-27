@@ -415,7 +415,7 @@ import { fixTo } from "./libs/utils/utils";
  * @property {boolean} latchMovedItem To enable or disable latch mode. The default value is true.
  * @property {boolean} animateMovedItem The flag tells whether to animate or not to animate the moved item. The default value is false.
  * @property {number} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
- * @property {number} marginChangeValue Value by which margin is increased or decreased. Default value is 1.
+ * @property {number} marginChangeValue Value by which margin is increased or decreased. Default value is 0.5.
  * @property {number} crossHairWidth Width of move/resise helper cross hair. Default value is 500.
  * @property {number} crossHairWidth Height of move/resise helper cross hair. Default value is 500.
  * @property {number} shrinkToFit LimberGridView will shrink items by the percentage value specified while trying to arrange affected items.
@@ -624,7 +624,7 @@ LimberGridView.prototype.initializeStore = function () {
 				ANIMATE_MOVED_ITEM: false,
 				ANIMATE_TIME: 250,
 
-				MARGIN_CHANGE_VALUE: 1,
+				MARGIN_CHANGE_VALUE: 0.5,
 
 				// cross hair
 				CROSS_HAIR_WIDTH: 500,

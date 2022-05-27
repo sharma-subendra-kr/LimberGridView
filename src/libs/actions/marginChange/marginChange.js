@@ -26,13 +26,13 @@ Written by Subendra Kumar Sharma.
 import { checkDecreaseMargin, checkIncreaseMargin } from "./marginChangeUtils";
 
 export const decreaseMargin = (context) => {
-	if (!checkDecreaseMargin()) {
+	if (!checkDecreaseMargin(context)) {
 		// return;
 	}
 };
 
 export const increaseMargin = (context) => {
-	if (!checkIncreaseMargin()) {
+	if (!checkIncreaseMargin(context)) {
 		// return;
 	}
 };
