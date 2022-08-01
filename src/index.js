@@ -417,7 +417,7 @@ import { fixTo } from "./libs/utils/utils";
  * @property {number} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
  * @property {number} marginChangeValue Value by which margin is increased or decreased. Default value is 0.5.
  * @property {number} crossHairWidth Width of move/resise helper cross hair. Default value is 500.
- * @property {number} crossHairWidth Height of move/resise helper cross hair. Default value is 500.
+ * @property {number} crossHairHeight Height of move/resise helper cross hair. Default value is 500.
  * @property {number} shrinkToFit LimberGridView will shrink items by the percentage value specified while trying to arrange affected items.
  * @property {number} emitDebugLogs Flag to specify whether or not logger will emit logs. For developer of LimberGridView only. Default value is false.
  */
