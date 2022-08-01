@@ -40,12 +40,12 @@ export const checkDecreaseMargin = (context) => {
 	const privateConstants = getPrivateConstants(context);
 	let CURRENT_MARGIN_CHANGE_VALUE = publicConstants.MARGIN_CHANGE_VALUE;
 	if (privateConstants.MARGIN <= 0) {
-		return;
+		// less than condition for floating point errors
+		throw "Margin is already 0!";
 	} else if (
 		privateConstants.MARGIN > 0 &&
 		privateConstants.MARGIN < publicConstants.MARGIN_CHANGE_VALUE
 	) {
-		// setPrivateConstantByName(context, "MARGIN", 0);
 		CURRENT_MARGIN_CHANGE_VALUE = privateConstants.MARGIN;
 	}
 	const pd = getPositionData(context);
@@ -64,7 +64,11 @@ export const checkDecreaseMargin = (context) => {
 	}
 
 	if (isValid) {
+		setPrivateConstantByName(context, "MARGIN", CURRENT_MARGIN_CHANGE_VALUE);
+		return true;
 	}
+
+	return false;
 };
 
 export const checkIncreaseMargin = (context) => {
@@ -91,7 +95,7 @@ export const checkIncreaseMargin = (context) => {
 		CURRENT_MARGIN_CHANGE_VALUE =
 			(minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
 	} else if (minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
-		return;
+		throw "One or more items have reached their smallest possible height or width!";
 	}
 
 	let isValid = true;
@@ -105,7 +109,11 @@ export const checkIncreaseMargin = (context) => {
 	}
 
 	if (isValid) {
+		setPrivateConstantByName(context, "MARGIN", CURRENT_MARGIN_CHANGE_VALUE);
+		return true;
 	}
+
+	return false;
 };
 
 export const reduceMargin = (item, value) => {
