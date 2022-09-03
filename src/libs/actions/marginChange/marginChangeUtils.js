@@ -26,7 +26,6 @@ Written by Subendra Kumar Sharma.
 import { getPublicConstants } from "../../../store/constants/publicConstants";
 import {
 	getPrivateConstants,
-	setPrivateConstants,
 	setPrivateConstantByName,
 } from "../../../store/constants/privateConstants";
 import {
@@ -35,7 +34,7 @@ import {
 	getModifiedPositionData,
 } from "../../../store/variables/essentials";
 
-export const checkDecreaseMargin = (context) => {
+export const decreaseMargin = (context) => {
 	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 	let CURRENT_MARGIN_CHANGE_VALUE = publicConstants.MARGIN_CHANGE_VALUE;
@@ -57,21 +56,25 @@ export const checkDecreaseMargin = (context) => {
 	for (let i = 0; i < len; i++) {
 		const item = mpd[i];
 		reduceMargin(item, CURRENT_MARGIN_CHANGE_VALUE);
-		if (!isMarginDecreaseValid(item)) {
+		if (!isMarginDecreaseValid(context, item)) {
 			isValid = false;
 			break;
 		}
 	}
 
 	if (isValid) {
-		setPrivateConstantByName(context, "MARGIN", CURRENT_MARGIN_CHANGE_VALUE);
+		setPrivateConstantByName(
+			context,
+			"MARGIN",
+			privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE
+		);
 		return true;
 	}
 
 	return false;
 };
 
-export const checkIncreaseMargin = (context) => {
+export const increaseMargin = (context) => {
 	const publicConstants = getPublicConstants(context);
 	const privateConstants = getPrivateConstants(context);
 	const pd = getPositionData(context);
@@ -102,14 +105,18 @@ export const checkIncreaseMargin = (context) => {
 	for (let i = 0; i < len; i++) {
 		const item = mpd[i];
 		growMargin(item, CURRENT_MARGIN_CHANGE_VALUE);
-		if (!isMarginIncreaseValid(item)) {
+		if (!isMarginIncreaseValid(context, item)) {
 			isValid = false;
 			break;
 		}
 	}
 
 	if (isValid) {
-		setPrivateConstantByName(context, "MARGIN", CURRENT_MARGIN_CHANGE_VALUE);
+		setPrivateConstantByName(
+			context,
+			"MARGIN",
+			privateConstants.MARGIN + CURRENT_MARGIN_CHANGE_VALUE
+		);
 		return true;
 	}
 
@@ -123,8 +130,8 @@ export const reduceMargin = (item, value) => {
 	item.y2 += value;
 	item.x -= value;
 	item.y -= value;
-	item.width += value;
-	item.height += value;
+	item.width += value * 2;
+	item.height += value * 2;
 
 	item.mX1 -= value;
 	item.mY1 -= value;
@@ -132,8 +139,8 @@ export const reduceMargin = (item, value) => {
 	item.mY2 += value;
 	item.mX -= value;
 	item.mY -= value;
-	item.mWidth += value;
-	item.mHeight += value;
+	item.mWidth += value * 2;
+	item.mHeight += value * 2;
 };
 
 export const growMargin = (item, value) => {
@@ -143,8 +150,8 @@ export const growMargin = (item, value) => {
 	item.y2 -= value;
 	item.x += value;
 	item.y += value;
-	item.width -= value;
-	item.height -= value;
+	item.width -= value * 2;
+	item.height -= value * 2;
 
 	item.mX1 += value;
 	item.mY1 += value;
@@ -152,10 +159,33 @@ export const growMargin = (item, value) => {
 	item.mY2 -= value;
 	item.mX += value;
 	item.mY += value;
-	item.mWidth -= value;
-	item.mHeight -= value;
+	item.mWidth -= value * 2;
+	item.mHeight -= value * 2;
 };
 
-export const isMarginDecreaseValid = (item) => {};
+export const isMarginDecreaseValid = (context, item) => {
+	// check max height and width
+	// check out of bounds
+	const privateConstants = getPrivateConstants(context);
+	if (
+		item.x + item.width + privateConstants.MARGIN > privateConstants.WIDTH ||
+		item.height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT ||
+		item.x < 0 ||
+		item.y < 0
+	) {
+		return false;
+	}
+	return true;
+};
 
-export const isMarginIncreaseValid = (item) => {};
+export const isMarginIncreaseValid = (context, item) => {
+	// check min height and width
+	const privateConstants = getPrivateConstants(context);
+	if (
+		item.height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH ||
+		item.width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH
+	) {
+		return false;
+	}
+	return true;
+};

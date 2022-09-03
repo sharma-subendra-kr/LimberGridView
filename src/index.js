@@ -872,6 +872,7 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
  * @name LimberGridView#decreaseMargin
  * @description Decreases the margin by the specified value asynchrousnoly.
  * @returns {boolean}
+ * @throws {string} Margin decrease limit reached!
  */
 LimberGridView.prototype.decreaseMargin = function () {
 	_decreaseMargin(this);
@@ -882,6 +883,7 @@ LimberGridView.prototype.decreaseMargin = function () {
  * @name LimberGridView#increaseMargin
  * @description Increases the margin by the specified value asynchrousnoly.
  * @returns {boolean}
+ * @throws {string} Margin increase limit reached!
  */
 LimberGridView.prototype.increaseMargin = function () {
 	_increaseMargin(this);

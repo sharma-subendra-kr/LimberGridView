@@ -23,16 +23,30 @@ Written by Subendra Kumar Sharma.
 
 */
 
-import { checkDecreaseMargin, checkIncreaseMargin } from "./marginChangeUtils";
+import {
+	decreaseMargin as _decreaseMargin,
+	increaseMargin as _increaseMargin,
+} from "./marginChangeUtils";
+import {
+	setPositionData,
+	getModifiedPositionData,
+} from "../../../store/variables/essentials";
+import { render } from "../../renderers/renderers";
 
 export const decreaseMargin = (context) => {
-	if (!checkDecreaseMargin(context)) {
-		// return;
+	if (!_decreaseMargin(context)) {
+		throw "Margin decrease limit reached!";
 	}
+	const mpd = getModifiedPositionData(context);
+	setPositionData(context, mpd);
+	render(context, false);
 };
 
 export const increaseMargin = (context) => {
-	if (!checkIncreaseMargin(context)) {
-		// return;
+	if (!_increaseMargin(context)) {
+		throw "Margin increase limit reached!";
 	}
+	const mpd = getModifiedPositionData(context);
+	setPositionData(context, mpd);
+	render(context, false);
 };
