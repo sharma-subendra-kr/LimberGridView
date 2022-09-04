@@ -101,7 +101,7 @@ export const resizeObserverCallback = function () {
 				// }
 			}
 
-			await init(this, true, false);
+			await init(this, false, false, true);
 			render(this);
 			setIsResizeObserving(this, false);
 		}, publicConstants.WINDOW_RESIZE_WAIT_TIME);

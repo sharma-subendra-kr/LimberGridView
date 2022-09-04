@@ -187,6 +187,9 @@ import { fixTo } from "./libs/utils/utils";
       shrinkToFit: number
 
       emitDebugLogs: false                                                         // true/false (optional default false)
+    },
+    privateConstants: {
+			margin: number
     }
   }
   */
@@ -461,7 +464,7 @@ function LimberGridView(options) {
 
 	setTimeout(
 		async function () {
-			await init(this, false, options.autoArrange);
+			await init(this, true, options.autoArrange, false);
 			render(this, true);
 		}.bind(this)
 	);
@@ -685,7 +688,6 @@ LimberGridView.prototype.getGridData = function () {
 			height: fixTo(pd[i].height / privateConstants.WIDTH_SCALE_FACTOR),
 		};
 	}
-
 	return {
 		gridData: {
 			height: privateConstants.GRID_HEIGHT,
@@ -694,6 +696,9 @@ LimberGridView.prototype.getGridData = function () {
 			MIN_HEIGHT_AND_WIDTH: privateConstants.MIN_HEIGHT_AND_WIDTH,
 		},
 		positionData: arr,
+		margin: fixTo(
+			privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR
+		),
 	};
 };
 

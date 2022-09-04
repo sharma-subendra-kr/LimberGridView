@@ -77,7 +77,12 @@ import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 import { getItemsInWorkSpace } from "../libs/utils/items";
 
-export const init = async function (context, isResize, autoArrange) {
+export const init = async function (
+	context,
+	isFirstTime,
+	autoArrange,
+	isResize
+) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
 	const pd = getPositionData(context);
@@ -269,6 +274,10 @@ export const initConstantsAndFlags = function (options) {
 
 	if (typeof options?.gridData?.MIN_HEIGHT_AND_WIDTH === "number") {
 		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
+	}
+
+	if (typeof options?.privateConstants?.margin === "number") {
+		setMargin(this, options.privateConstants.margin);
 	}
 	// Private Constants ENDED
 
