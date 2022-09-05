@@ -139,6 +139,7 @@ import { fixTo } from "./libs/utils/utils";
       ...,
       ...
     ],
+    margin: number,
     callbacks : {
       renderComplete : function(){},                                           // callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
       renderContent : function(index, width, height, type){},                  // callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
@@ -156,8 +157,8 @@ import { fixTo } from "./libs/utils/utils";
       offsetMovePseudoElement: function() {}
       getDebugLog: function(log){},
 
-      decreaseMarginCallback() {},
-      increaseMarginCallback() {},
+      *removed decreaseMarginCallback() {},
+      *removed increaseMarginCallback() {},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -184,13 +185,14 @@ import { fixTo } from "./libs/utils/utils";
       animateMovedItem: boolean
       animateTime: number
 
+      marginChangeValue: number
+      crossHairWidth: number
+      crossHairHeight: number
+
       shrinkToFit: number
 
       emitDebugLogs: false                                                         // true/false (optional default false)
     },
-    privateConstants: {
-			margin: number
-    }
   }
   */
 
@@ -283,9 +285,9 @@ import { fixTo } from "./libs/utils/utils";
  * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
  * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
  * @property {callbacks~getDebugLog} getDebugLog The callback function to get currently logged item. For developer of LimberGridView only.
- * @property {callbacks~decreaseMarginCallback} decreaseMarginCallback Callback function called when decreasing margin is successful.
- * @property {callbacks~increaseMarginCallback} increaseMarginCallback Callback function called when increasing margin is successful.
  */
+// * @property {callbacks~decreaseMarginCallback} decreaseMarginCallback Callback function called when decreasing margin is successful.
+// * @property {callbacks~increaseMarginCallback} increaseMarginCallback Callback function called when increasing margin is successful.
 
 /**
  * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.

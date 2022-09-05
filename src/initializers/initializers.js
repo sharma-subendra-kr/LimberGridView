@@ -276,8 +276,8 @@ export const initConstantsAndFlags = function (options) {
 		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
 	}
 
-	if (typeof options?.privateConstants?.margin === "number") {
-		setMargin(this, options.privateConstants.margin);
+	if (typeof options?.margin === "number") {
+		setMargin(this, options.margin);
 	}
 	// Private Constants ENDED
 
