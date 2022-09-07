@@ -443,7 +443,10 @@ export const initConstantsAndFlags = function (options) {
 		);
 	}
 
-	if (typeof options?.publicConstants?.marginChangeValue === "number") {
+	if (
+		typeof options?.publicConstants?.marginChangeValue === "number" &&
+		options?.publicConstants?.marginChangeValue >= 0
+	) {
 		setPublicConstantByName(
 			this,
 			"MARGIN_CHANGE_VALUE",

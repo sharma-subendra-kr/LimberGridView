@@ -65,7 +65,10 @@ import {
 	onScrollCallback,
 } from "./libs/eventHandlerLib/intersectionObserver";
 
-import { setPublicConstantByName } from "./store/constants/publicConstants";
+import {
+	setPublicConstantByName,
+	getPublicConstantByName,
+} from "./store/constants/publicConstants";
 import { getPrivateConstants } from "./store/constants/privateConstants";
 import { setOptions } from "./store/variables/options";
 import {
@@ -903,9 +906,30 @@ LimberGridView.prototype.increaseMargin = function () {
  * @returns {boolean}
  */
 LimberGridView.prototype.setMarginChangeValue = function (value) {
-	if (typeof value === "number") {
+	if (typeof value === "number" && value >= 0) {
 		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
 	}
+};
+
+/**
+ * @method
+ * @name LimberGridView#getMarginChangeValue
+ * @description Get the value by which margin is to increased or decreased.
+ * @returns {boolean}
+ */
+LimberGridView.prototype.getMarginChangeValue = function (value) {
+	return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
+};
+
+/**
+ * @method
+ * @name LimberGridView#getCurrentMargin
+ * @description Get current margin.
+ * @return {number}
+ */
+LimberGridView.prototype.getCurrentMargin = function () {
+	const privateConstants = getPrivateConstants(this);
+	return privateConstants.MARGIN;
 };
 
 /**
