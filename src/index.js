@@ -274,7 +274,8 @@ import { fixTo } from "./libs/utils/utils";
 
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
- * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * @property {callbacks~mountComplete} mountComplete Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
+ * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize, margin change, etc invocation of this callback is batched and doesn't receive any argument.
  * @property {callbacks~renderContent} renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
@@ -293,7 +294,13 @@ import { fixTo } from "./libs/utils/utils";
 // * @property {callbacks~increaseMarginCallback} increaseMarginCallback Callback function called when increasing margin is successful.
 
 /**
- * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
+ * @callback callbacks~mountComplete
+ * @returns {undefined}
+ */
+
+/**
+ * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize, margin change, etc invocation of this callback is batched and doesn't receive any argument.
  * @callback callbacks~renderComplete
  * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
  * @returns {undefined}
@@ -471,6 +478,9 @@ function LimberGridView(options) {
 		async function () {
 			await init(this, true, options.autoArrange, false);
 			render(this, true);
+			if (options?.callbacks?.mountComplete) {
+				options.callbacks.mountComplete();
+			}
 		}.bind(this)
 	);
 }
