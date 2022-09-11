@@ -934,12 +934,15 @@ LimberGridView.prototype.getMarginChangeValue = function (value) {
 /**
  * @method
  * @name LimberGridView#getCurrentMargin
- * @description Get current margin.
+ * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
  * @return {number}
  */
-LimberGridView.prototype.getCurrentMargin = function () {
+LimberGridView.prototype.getCurrentMargin = function (flag) {
 	const privateConstants = getPrivateConstants(this);
-	return privateConstants.MARGIN;
+	if (flag) {
+		return privateConstants.MARGIN;
+	}
+	return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
 };
 
 /**
