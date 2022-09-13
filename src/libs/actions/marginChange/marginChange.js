@@ -27,26 +27,36 @@ import {
 	decreaseMargin as _decreaseMargin,
 	increaseMargin as _increaseMargin,
 } from "./marginChangeUtils";
+import { setPrivateConstantByName } from "../../../store/constants/privateConstants";
 import {
 	setPositionData,
 	getModifiedPositionData,
+	getCallbacks,
 } from "../../../store/variables/essentials";
 import { render } from "../../renderers/renderers";
 
 export const decreaseMargin = (context) => {
-	if (!_decreaseMargin(context)) {
-		throw "Margin decrease limit reached!";
+	try {
+		const NEW_MARGIN = _decreaseMargin(context);
+		setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
+		const mpd = getModifiedPositionData(context);
+		setPositionData(context, mpd);
+		render(context, false);
+	} catch (error) {
+		getCallbacks(context).getLogMessage({ type: "error", message: error });
+		throw error;
 	}
-	const mpd = getModifiedPositionData(context);
-	setPositionData(context, mpd);
-	render(context, false);
 };
 
 export const increaseMargin = (context) => {
-	if (!_increaseMargin(context)) {
-		throw "Margin increase limit reached!";
+	try {
+		const NEW_MARGIN = _increaseMargin(context);
+		setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
+		const mpd = getModifiedPositionData(context);
+		setPositionData(context, mpd);
+		render(context, false);
+	} catch (error) {
+		getCallbacks(context).getLogMessage({ type: "error", message: error });
+		throw error;
 	}
-	const mpd = getModifiedPositionData(context);
-	setPositionData(context, mpd);
-	render(context, false);
 };

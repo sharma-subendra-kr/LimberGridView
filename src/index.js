@@ -290,8 +290,6 @@ import { fixTo } from "./libs/utils/utils";
  * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
  * @property {callbacks~getDebugLog} getDebugLog The callback function to get currently logged item. For developer of LimberGridView only.
  */
-// * @property {callbacks~decreaseMarginCallback} decreaseMarginCallback Callback function called when decreasing margin is successful.
-// * @property {callbacks~increaseMarginCallback} increaseMarginCallback Callback function called when increasing margin is successful.
 
 /**
  * Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
@@ -892,7 +890,7 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
  * @name LimberGridView#decreaseMargin
  * @description Decreases the margin by the specified value asynchrousnoly.
  * @returns {boolean}
- * @throws {string} Margin decrease limit reached!
+ * @throws {string}
  */
 LimberGridView.prototype.decreaseMargin = function () {
 	_decreaseMargin(this);
@@ -903,7 +901,7 @@ LimberGridView.prototype.decreaseMargin = function () {
  * @name LimberGridView#increaseMargin
  * @description Increases the margin by the specified value asynchrousnoly.
  * @returns {boolean}
- * @throws {string} Margin increase limit reached!
+ * @throws {string}
  */
 LimberGridView.prototype.increaseMargin = function () {
 	_increaseMargin(this);

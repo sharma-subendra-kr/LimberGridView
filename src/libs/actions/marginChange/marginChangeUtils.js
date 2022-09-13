@@ -24,10 +24,7 @@ Written by Subendra Kumar Sharma.
 */
 
 import { getPublicConstants } from "../../../store/constants/publicConstants";
-import {
-	getPrivateConstants,
-	setPrivateConstantByName,
-} from "../../../store/constants/privateConstants";
+import { getPrivateConstants } from "../../../store/constants/privateConstants";
 import {
 	getPositionData,
 	setModifiedPositionData,
@@ -56,22 +53,23 @@ export const decreaseMargin = (context) => {
 	for (let i = 0; i < len; i++) {
 		const item = mpd[i];
 		reduceMargin(item, CURRENT_MARGIN_CHANGE_VALUE);
-		if (!isMarginDecreaseValid(context, item)) {
+		if (
+			!isMarginDecreaseValid(
+				context,
+				item,
+				privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE
+			)
+		) {
 			isValid = false;
 			break;
 		}
 	}
 
 	if (isValid) {
-		setPrivateConstantByName(
-			context,
-			"MARGIN",
-			privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE
-		);
-		return true;
+		return privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE;
 	}
 
-	return false;
+	throw "Margin decrease limit reached!";
 };
 
 export const increaseMargin = (context) => {
@@ -91,14 +89,15 @@ export const increaseMargin = (context) => {
 			minDimension = mpd[i].height;
 		}
 	}
-	if (
-		minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <
+
+	if (minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
+		throw "One or more items have reached their smallest possible height or width!";
+	} else if (
+		minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <
 		privateConstants.MARGIN * 2
 	) {
 		CURRENT_MARGIN_CHANGE_VALUE =
-			(minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
-	} else if (minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
-		throw "One or more items have reached their smallest possible height or width!";
+			(minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
 	}
 
 	let isValid = true;
@@ -112,15 +111,10 @@ export const increaseMargin = (context) => {
 	}
 
 	if (isValid) {
-		setPrivateConstantByName(
-			context,
-			"MARGIN",
-			privateConstants.MARGIN + CURRENT_MARGIN_CHANGE_VALUE
-		);
-		return true;
+		return privateConstants.MARGIN + CURRENT_MARGIN_CHANGE_VALUE;
 	}
 
-	return false;
+	throw "Margin increase limit reached!";
 };
 
 export const reduceMargin = (item, value) => {
@@ -163,13 +157,13 @@ export const growMargin = (item, value) => {
 	item.mHeight -= value * 2;
 };
 
-export const isMarginDecreaseValid = (context, item) => {
+export const isMarginDecreaseValid = (context, item, NEW_MARGIN) => {
 	// check max height and width
 	// check out of bounds
 	const privateConstants = getPrivateConstants(context);
 	if (
-		item.x + item.width + privateConstants.MARGIN > privateConstants.WIDTH ||
-		item.height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT ||
+		item.x + item.width + NEW_MARGIN > privateConstants.WIDTH ||
+		item.height + NEW_MARGIN * 2 > privateConstants.HEIGHT ||
 		item.x < 0 ||
 		item.y < 0
 	) {
