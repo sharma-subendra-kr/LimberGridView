@@ -33,6 +33,7 @@ import {
 	getModifiedPositionData,
 	getCallbacks,
 } from "../../../store/variables/essentials";
+import { getUndoRedo } from "../../../store/variables/undoRedo";
 import { render } from "../../renderers/renderers";
 
 export const decreaseMargin = (context) => {
@@ -41,6 +42,7 @@ export const decreaseMargin = (context) => {
 		setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
 		const mpd = getModifiedPositionData(context);
 		setPositionData(context, mpd);
+		getUndoRedo(context).push(mpd);
 		render(context, false);
 	} catch (error) {
 		getCallbacks(context).getLogMessage({ type: "error", message: error });
@@ -54,6 +56,7 @@ export const increaseMargin = (context) => {
 		setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
 		const mpd = getModifiedPositionData(context);
 		setPositionData(context, mpd);
+		getUndoRedo(context).push(mpd);
 		render(context, false);
 	} catch (error) {
 		getCallbacks(context).getLogMessage({ type: "error", message: error });
