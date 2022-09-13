@@ -42,7 +42,8 @@ export const decreaseMargin = (context) => {
 		privateConstants.MARGIN > 0 &&
 		privateConstants.MARGIN < publicConstants.MARGIN_CHANGE_VALUE
 	) {
-		CURRENT_MARGIN_CHANGE_VALUE = privateConstants.MARGIN;
+		throw "Margin decrease limit reached!";
+		// CURRENT_MARGIN_CHANGE_VALUE = privateConstants.MARGIN;
 	}
 	const pd = getPositionData(context);
 	setModifiedPositionData(context, pd);
@@ -93,11 +94,12 @@ export const increaseMargin = (context) => {
 	if (minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
 		throw "One or more items have reached their smallest possible height or width!";
 	} else if (
-		minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <
-		privateConstants.MARGIN * 2
+		minDimension - CURRENT_MARGIN_CHANGE_VALUE * 2 <
+		privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH
 	) {
-		CURRENT_MARGIN_CHANGE_VALUE =
-			(minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
+		throw "Margin increase limit reached!";
+		// CURRENT_MARGIN_CHANGE_VALUE =
+		// 	(minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
 	}
 
 	let isValid = true;

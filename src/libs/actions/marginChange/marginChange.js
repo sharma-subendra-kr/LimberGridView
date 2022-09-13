@@ -31,6 +31,7 @@ import { setPrivateConstantByName } from "../../../store/constants/privateConsta
 import {
 	setPositionData,
 	getModifiedPositionData,
+	setModifiedPositionData,
 	getCallbacks,
 } from "../../../store/variables/essentials";
 import getUndoRedo from "../../../store/variables/undoRedo";
@@ -42,10 +43,11 @@ export const decreaseMargin = (context) => {
 		setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
 		const mpd = getModifiedPositionData(context);
 		setPositionData(context, mpd);
-		getUndoRedo(context).push(mpd);
+		getUndoRedo(context).push({ pd: mpd, margin: NEW_MARGIN });
 		render(context, false);
 	} catch (error) {
 		getCallbacks(context).getLogMessage({ type: "error", message: error });
+		setModifiedPositionData(context, []);
 		throw error;
 	}
 };
@@ -56,10 +58,11 @@ export const increaseMargin = (context) => {
 		setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
 		const mpd = getModifiedPositionData(context);
 		setPositionData(context, mpd);
-		getUndoRedo(context).push(mpd);
+		getUndoRedo(context).push({ pd: mpd, margin: NEW_MARGIN });
 		render(context, false);
 	} catch (error) {
 		getCallbacks(context).getLogMessage({ type: "error", message: error });
+		setModifiedPositionData(context, []);
 		throw error;
 	}
 };

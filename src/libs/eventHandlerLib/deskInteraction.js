@@ -389,6 +389,7 @@ export const onDeskMouseUp = function (event) {
 	}
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
 
@@ -431,7 +432,7 @@ export const onDeskMouseUp = function (event) {
 			);
 			if (cutDetails) {
 				shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
-				getUndoRedo(this).push(pd);
+				getUndoRedo(this).push({ pd, margin: privateConstants.MARGIN });
 				if (callbacks.cutSpaceComplete) {
 					callbacks.cutSpaceComplete();
 				}
@@ -447,6 +448,7 @@ export const onDeskMouseUp = function (event) {
 export const onDeskTouchEnd = function (event) {
 	const e = getElements(this);
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 	const callbacks = getCallbacks(this);
 	const pd = getPositionData(this);
 
@@ -489,7 +491,7 @@ export const onDeskTouchEnd = function (event) {
 			);
 			if (cutDetails) {
 				shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
-				getUndoRedo(this).push(pd);
+				getUndoRedo(this).push({ pd, margin: privateConstants.MARGIN });
 				if (callbacks.cutSpaceComplete) {
 					callbacks.cutSpaceComplete();
 				}

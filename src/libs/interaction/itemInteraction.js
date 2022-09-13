@@ -94,7 +94,7 @@ export const resizeItem = async function (index, x, y, width, height) {
 	));
 
 	setPositionData(this, mpd);
-	getUndoRedo(this).push(mpd);
+	getUndoRedo(this).push({ pd: mpd, margin: privateConstants.MARGIN });
 
 	if (e.$limberGridViewItems[index]) {
 		e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
@@ -225,7 +225,7 @@ export const moveItem = async function (index, toX, toY) {
 	);
 
 	setPositionData(this, mpd);
-	getUndoRedo(this).push(mpd);
+	getUndoRedo(this).push({ pd: mpd, margin: privateConstants.MARGIN });
 
 	if (e.$limberGridViewItems[index]) {
 		e.$limberGridViewItems[

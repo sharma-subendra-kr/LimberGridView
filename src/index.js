@@ -69,7 +69,10 @@ import {
 	setPublicConstantByName,
 	getPublicConstantByName,
 } from "./store/constants/publicConstants";
-import { getPrivateConstants } from "./store/constants/privateConstants";
+import {
+	getPrivateConstants,
+	setMargin,
+} from "./store/constants/privateConstants";
 import { setOptions } from "./store/variables/options";
 import {
 	setPositionData,
@@ -101,7 +104,10 @@ import {
 	decreaseMargin as _decreaseMargin,
 	increaseMargin as _increaseMargin,
 } from "./libs/actions/marginChange/marginChange";
-import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
+import {
+	getItemsToRerenderOnUndoRedo,
+	getRenderedItemsMap,
+} from "./libs/utils/items";
 import { fixTo } from "./libs/utils/utils";
 
 // ----------------------------------------------------------------------------------------- //
@@ -275,7 +281,7 @@ import { fixTo } from "./libs/utils/utils";
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
  * @property {callbacks~mountComplete} mountComplete Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
- * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize, margin change, etc invocation of this callback is batched and doesn't receive any argument.
+ * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @property {callbacks~renderContent} renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
@@ -298,7 +304,7 @@ import { fixTo } from "./libs/utils/utils";
  */
 
 /**
- * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize, margin change, etc invocation of this callback is batched and doesn't receive any argument.
+ * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @callback callbacks~renderComplete
  * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
  * @returns {undefined}
@@ -447,7 +453,7 @@ function LimberGridView(options) {
 	setPositionData(this, options.positionData);
 	setCallbacks(this, options.callbacks);
 
-	getUndoRedo(this).push(getPositionData(this));
+	getUndoRedo(this).push({ pd: getPositionData(this), margin: options.margin });
 
 	if (typeof options.el === "string") {
 		const el = document.getElementById(options.el);
@@ -804,15 +810,24 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
  * @returns {undefined}
  */
 LimberGridView.prototype.undo = function () {
-	const pd = getUndoRedo(this).undo();
+	const { pd, margin } = getUndoRedo(this).undo() || {};
 	if (pd) {
 		const rerenderItems = getItemsToRerenderOnUndoRedo(
 			getPositionData(this),
 			pd
 		);
 		setPositionData(this, pd);
+		setMargin(this, margin);
 		resetDemoUIChanges(this);
+
+		const renderedItemsMap = getRenderedItemsMap(this);
+		const _rerenderItems = { ...rerenderItems };
 		for (const item in rerenderItems) {
+			if (!renderedItemsMap[item]) {
+				delete _rerenderItems[item];
+			}
+		}
+		for (const item in _rerenderItems) {
 			this.renderItem(item);
 		}
 	}
@@ -825,15 +840,24 @@ LimberGridView.prototype.undo = function () {
  * @returns {undefined}
  */
 LimberGridView.prototype.redo = function () {
-	const pd = getUndoRedo(this).redo();
+	const { pd, margin } = getUndoRedo(this).redo() || {};
 	if (pd) {
 		const rerenderItems = getItemsToRerenderOnUndoRedo(
 			getPositionData(this),
 			pd
 		);
 		setPositionData(this, pd);
+		setMargin(this, margin);
 		resetDemoUIChanges(this);
+
+		const renderedItemsMap = getRenderedItemsMap(this);
+		const _rerenderItems = { ...rerenderItems };
 		for (const item in rerenderItems) {
+			if (!renderedItemsMap[item]) {
+				delete _rerenderItems[item];
+			}
+		}
+		for (const item in _rerenderItems) {
 			this.renderItem(item);
 		}
 	}

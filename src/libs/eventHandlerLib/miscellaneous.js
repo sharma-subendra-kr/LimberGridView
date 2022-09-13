@@ -34,6 +34,7 @@ import {
 	setRenderedItems,
 } from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
+import getRedoUndo from "../../store/variables/undoRedo";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
 import getElements, {
@@ -101,6 +102,7 @@ export const resizeObserverCallback = function () {
 				// }
 			}
 
+			getRedoUndo(this).reset();
 			await init(this, false, false, true);
 			render(this);
 			setIsResizeObserving(this, false);
