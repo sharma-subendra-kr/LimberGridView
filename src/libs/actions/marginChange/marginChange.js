@@ -33,7 +33,7 @@ import {
 	getModifiedPositionData,
 	getCallbacks,
 } from "../../../store/variables/essentials";
-import { getUndoRedo } from "../../../store/variables/undoRedo";
+import getUndoRedo from "../../../store/variables/undoRedo";
 import { render } from "../../renderers/renderers";
 
 export const decreaseMargin = (context) => {
