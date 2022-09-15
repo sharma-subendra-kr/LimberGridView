@@ -1,7 +1,7 @@
 # LimberGridView
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
-# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/release-1.0.0-beta.6/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
+# [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/master/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
 # [For API reference and documentation, please refer to this page.](https://sharma-subendra-kr.github.io/LimberGridView/docs)
 
 ## Installation
@@ -46,8 +46,8 @@ const limberGridView = new LimberGridView({
 	publicConstants: {
 		showBottomLeftResizeGuide: true,
 		autoScrollForMouse: true,
-		deskInteractionMode: deskInteractionMode,
-		latchMovedItem: latch,
+		deskInteractionMode: "CUTSPACE",
+		latchMovedItem: true,
 	},
 	positionData: positionData,
 });
@@ -65,6 +65,7 @@ Although many issues were identified and resolved in this current release, you m
 * Items not affected by a move or resize getting rearranged: Most instances were identified and resolved.  Because of how the entire thing works, we can still find some instances where items that are not affected are getting rearranged. It will be constantly worked on and improved.
 * **Scrolling: There is a bug that breaks the scrolling behavior in ios devices while in mobile view. The fix is planned for the upcoming release.**
 * **Scrolling: While on interactive view. If there are large, completely unused spaces in-between items, then the scroll freezes.**
+* **Zombie item: While moving an item to a position substantially far away vertically, sometimes a zombie item i.e. an item that can't be interacted with is observed.**
 
 
 ### Due to substantial changes to the way LimberGridView works in version 1.0.0-beta.3, all previous versions are abandoned, removed from tags, their dependencies made private so that no one can use them.
