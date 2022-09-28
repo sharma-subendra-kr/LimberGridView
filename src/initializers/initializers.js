@@ -85,7 +85,7 @@ export const init = async function (
 ) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
-	const pd = getPositionData(context);
+	let pd = getPositionData(context);
 
 	if (autoArrange === true || !checkPositionData(pd)) {
 		// * 	autoArrange will be true only during the first render
@@ -137,6 +137,7 @@ export const init = async function (
 
 		await autoArrangeGrid(context);
 		setPositionData(context, mpd);
+		pd = getPositionData(context);
 	}
 
 	setPaddingLeft(
@@ -242,6 +243,7 @@ export const init = async function (
 				getIOBottomHelperPos(context) * privateConstants.HEIGHT +
 				privateConstants.HEIGHT / 2,
 		};
+		setModifiedPositionData(context, pd);
 		setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
 	} else {
 		get$limberGridViewIOTopHelper(

@@ -165,9 +165,6 @@ import { fixTo } from "./libs/utils/utils";
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
       getDebugLog: function(log){},
-
-      *removed decreaseMarginCallback() {},
-      *removed increaseMarginCallback() {},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -806,7 +803,7 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
 /**
  * @method
  * @name LimberGridView#undo
- * @description Undo the previous move or resize.
+ * @description Undo the previous move or resize. Undo data is lost after add or remove operation.
  * @returns {undefined}
  */
 LimberGridView.prototype.undo = function () {
@@ -836,7 +833,7 @@ LimberGridView.prototype.undo = function () {
 /**
  * @method
  * @name LimberGridView#redo
- * @description Redo the next move or resize.
+ * @description Redo the next move or resize. Redo data is lost after add or remove operation.
  * @returns {undefined}
  */
 LimberGridView.prototype.redo = function () {
@@ -909,63 +906,63 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
 	}
 };
 
-/**
- * @method
- * @name LimberGridView#decreaseMargin
- * @description Decreases the margin by the specified value asynchrousnoly.
- * @returns {boolean}
- * @throws {string}
- */
-LimberGridView.prototype.decreaseMargin = function () {
-	_decreaseMargin(this);
-};
+// /**
+//  * @method
+//  * @name LimberGridView#decreaseMargin
+//  * @description Decreases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.decreaseMargin = function () {
+// 	_decreaseMargin(this);
+// };
 
-/**
- * @method
- * @name LimberGridView#increaseMargin
- * @description Increases the margin by the specified value asynchrousnoly.
- * @returns {boolean}
- * @throws {string}
- */
-LimberGridView.prototype.increaseMargin = function () {
-	_increaseMargin(this);
-};
+// /**
+//  * @method
+//  * @name LimberGridView#increaseMargin
+//  * @description Increases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.increaseMargin = function () {
+// 	_increaseMargin(this);
+// };
 
-/**
- * @method
- * @name LimberGridView#setMarginChangeValue
- * @description Sets the value by which margin is to increased or decreased.
- * @returns {boolean}
- */
-LimberGridView.prototype.setMarginChangeValue = function (value) {
-	if (typeof value === "number" && value >= 0) {
-		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
-	}
-};
+// /**
+//  * @method
+//  * @name LimberGridView#setMarginChangeValue
+//  * @description Sets the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.setMarginChangeValue = function (value) {
+// 	if (typeof value === "number" && value >= 0) {
+// 		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
+// 	}
+// };
 
-/**
- * @method
- * @name LimberGridView#getMarginChangeValue
- * @description Get the value by which margin is to increased or decreased.
- * @returns {boolean}
- */
-LimberGridView.prototype.getMarginChangeValue = function (value) {
-	return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
-};
+// /**
+//  * @method
+//  * @name LimberGridView#getMarginChangeValue
+//  * @description Get the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.getMarginChangeValue = function (value) {
+// 	return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
+// };
 
-/**
- * @method
- * @name LimberGridView#getCurrentMargin
- * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
- * @return {number}
- */
-LimberGridView.prototype.getCurrentMargin = function (flag) {
-	const privateConstants = getPrivateConstants(this);
-	if (flag) {
-		return privateConstants.MARGIN;
-	}
-	return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
-};
+// /**
+//  * @method
+//  * @name LimberGridView#getCurrentMargin
+//  * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
+//  * @return {number}
+//  */
+// LimberGridView.prototype.getCurrentMargin = function (flag) {
+// 	const privateConstants = getPrivateConstants(this);
+// 	if (flag) {
+// 		return privateConstants.MARGIN;
+// 	}
+// 	return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
+// };
 
 /**
  * @method

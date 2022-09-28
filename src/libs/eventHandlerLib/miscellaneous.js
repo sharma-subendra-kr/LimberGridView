@@ -25,6 +25,7 @@ Written by Subendra Kumar Sharma.
 
 import ResizeObserverPolyfill from "resize-observer-polyfill";
 import getPublicConstants from "../../store/constants/publicConstants";
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getCallbacks,
 	setLimberGridViewBoundingClientRect,
@@ -32,9 +33,10 @@ import {
 	setIOTopHelperPos,
 	setIOBottomHelperPos,
 	setRenderedItems,
+	getPositionData,
 } from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
-import getRedoUndo from "../../store/variables/undoRedo";
+import getUndoRedo from "../../store/variables/undoRedo";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
 import getElements, {
@@ -74,6 +76,7 @@ export const instantiateResizeObserver = function () {
 
 export const resizeObserverCallback = function () {
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 	if (!getIsResizeObserving(this)) {
 		setIsResizeObserving(this, true);
 
@@ -102,8 +105,12 @@ export const resizeObserverCallback = function () {
 				// }
 			}
 
-			getRedoUndo(this).reset();
 			await init(this, false, false, true);
+			getUndoRedo(this).reset();
+			getUndoRedo(this).push({
+				pd: getPositionData(this),
+				margin: privateConstants.MARGIN,
+			});
 			render(this);
 			setIsResizeObserving(this, false);
 		}, publicConstants.WINDOW_RESIZE_WAIT_TIME);

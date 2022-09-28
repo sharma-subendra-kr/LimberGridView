@@ -67,7 +67,6 @@ Although many issues were identified and resolved in this current release, you m
 * **Scrolling: While on interactive view. If there are large, completely unused spaces in-between items, then the scroll freezes.**
 * **Zombie item: While moving an item to a position substantially far away vertically, sometimes a zombie item i.e. an item that can't be interacted with is observed.**
 
-### Due to substantial changes to the way LimberGridView works in version 1.0.0-beta.3, all previous versions are abandoned, removed from tags, their dependencies made private so that no one can use them.
 
 ### Improvements in the arrange algorithm are made in patches. I try to make sure it doesn't affect any APIs.
 
