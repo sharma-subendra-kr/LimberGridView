@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -25,6 +25,7 @@ Written by Subendra Kumar Sharma.
 
 import ResizeObserverPolyfill from "resize-observer-polyfill";
 import getPublicConstants from "../../store/constants/publicConstants";
+import getPrivateConstants from "../../store/constants/privateConstants";
 import {
 	getCallbacks,
 	setLimberGridViewBoundingClientRect,
@@ -32,8 +33,10 @@ import {
 	setIOTopHelperPos,
 	setIOBottomHelperPos,
 	setRenderedItems,
+	getPositionData,
 } from "../../store/variables/essentials";
 import { getBindedFunctions } from "../../store/variables/bindedFunctions";
+import getUndoRedo from "../../store/variables/undoRedo";
 import { init } from "../../initializers/initializers";
 import { render } from "../renderers/renderers";
 import getElements, {
@@ -73,6 +76,7 @@ export const instantiateResizeObserver = function () {
 
 export const resizeObserverCallback = function () {
 	const publicConstants = getPublicConstants(this);
+	const privateConstants = getPrivateConstants(this);
 	if (!getIsResizeObserving(this)) {
 		setIsResizeObserving(this, true);
 
@@ -101,7 +105,12 @@ export const resizeObserverCallback = function () {
 				// }
 			}
 
-			await init(this, true, false);
+			await init(this, false, false, true);
+			getUndoRedo(this).reset();
+			getUndoRedo(this).push({
+				pd: getPositionData(this),
+				margin: privateConstants.MARGIN,
+			});
 			render(this);
 			setIsResizeObserving(this, false);
 		}, publicConstants.WINDOW_RESIZE_WAIT_TIME);

@@ -31,6 +31,8 @@ export const logger = (...args) => {
 	const publicConstants = getPublicConstants(context);
 	if (publicConstants.EMIT_DEBUG_LOGS) {
 		args.shift();
-		getCallbacks(context).getDebugLog(args);
+		if (getCallbacks(context).getDebugLog) {
+			getCallbacks(context).getDebugLog(args);
+		}
 	}
 };

@@ -971,7 +971,7 @@ const adjustHeightAndScroll = function (context, yMouseOrTouchPosition, yMouseOr
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1093,15 +1093,6 @@ const setRenderedItems = function (context, renderedItems) {
 
 const getRenderedItems = function (context) {
   return context.store.variables.essentials.renderedItems;
-};
-
-const setRenderedItemsMap = function (context, renderedItemsMap) {
-  context.store.variables.essentials.renderedItemsMap = { ...renderedItemsMap
-  };
-};
-
-const getRenderedItemsMap = function (context) {
-  return context.store.variables.essentials.renderedItemsMap;
 };
 
 const setIOTopHelperPos = function (context, position) {
@@ -1855,7 +1846,7 @@ const getItemsInWorkSpace = (context, workSpaceRect, getIndices = false, exclude
   itemsInWorkSpace.length = count;
   return itemsInWorkSpace;
 };
-const items_getRenderedItemsMap = context => {
+const getRenderedItemsMap = context => {
   const renderedItems = getRenderedItems(context);
   const renderedItemsMap = {};
 
@@ -4901,7 +4892,7 @@ const getUndoRedo = function (context) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4968,7 +4959,10 @@ const render = function (context, scale = true) {
     pd[i].mHeight = pd[i].height + privateConstants.MARGIN * 2;
   }
 
-  undoRedo(context).setCurrent(pd);
+  undoRedo(context).setCurrent({
+    pd,
+    margin: privateConstants.MARGIN
+  });
   const renderedItems = getRenderedItems(context);
   const renderedItemsLen = renderedItems.length;
   const nodes = new Array(renderedItemsLen);
@@ -5197,7 +5191,10 @@ const addItem = async function (context, item) {
         setPositionData(context, mpd);
         setSerializedPositionData(context, mpd);
         undoRedo(context).reset();
-        undoRedo(context).push(mpd);
+        undoRedo(context).push({
+          pd: mpd,
+          margin: privateConstants.MARGIN
+        });
       } else {
         return false;
       }
@@ -5233,7 +5230,10 @@ const addItem = async function (context, item) {
       setPositionData(context, mpd);
       setSerializedPositionData(context, mpd);
       undoRedo(context).reset();
-      undoRedo(context).push(mpd);
+      undoRedo(context).push({
+        pd: mpd,
+        margin: privateConstants.MARGIN
+      });
     } else {
       return false;
     }
@@ -5369,7 +5369,10 @@ const removeItem = function (context, index) {
   if (isMobile(context)) spd.splice(idx, 1);
   pd.splice(index, 1);
   undoRedo(context).reset();
-  undoRedo(context).push(pd); // * splice end
+  undoRedo(context).push({
+    pd,
+    margin: privateConstants.MARGIN
+  }); // * splice end
   // * call callbacks begin
 
   if (callbacks.removePlugin) {
@@ -5446,7 +5449,7 @@ const renderItemContent = (context, renderData, itemEl) => {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5506,7 +5509,10 @@ const resizeItem = async function (index, x, y, width, height) {
     resized
   } = await arrangeMove(this, affectedItems, y, y + height));
   setPositionData(this, mpd);
-  undoRedo(this).push(mpd);
+  undoRedo(this).push({
+    pd: mpd,
+    margin: privateConstants.MARGIN
+  });
 
   if (e.$limberGridViewItems[index]) {
     e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
@@ -5595,7 +5601,10 @@ const moveItem = async function (index, toX, toY) {
     resized
   } = await arrangeMove(this, affectedItems, toY, toY + pd[index].height);
   setPositionData(this, mpd);
-  undoRedo(this).push(mpd);
+  undoRedo(this).push({
+    pd: mpd,
+    margin: privateConstants.MARGIN
+  });
 
   if (e.$limberGridViewItems[index]) {
     e.$limberGridViewItems[index].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
@@ -6611,6 +6620,7 @@ const onDeskMouseUp = function (event) {
 
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
+  const privateConstants = constants_privateConstants(this);
   const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
   const dkiv = getDeskInteractionVars(this);
@@ -6635,7 +6645,10 @@ const onDeskMouseUp = function (event) {
 
       if (cutDetails) {
         shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
-        undoRedo(this).push(pd);
+        undoRedo(this).push({
+          pd,
+          margin: privateConstants.MARGIN
+        });
 
         if (callbacks.cutSpaceComplete) {
           callbacks.cutSpaceComplete();
@@ -6652,6 +6665,7 @@ const onDeskMouseUp = function (event) {
 const onDeskTouchEnd = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
+  const privateConstants = constants_privateConstants(this);
   const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
   const dkiv = getDeskInteractionVars(this);
@@ -6676,7 +6690,10 @@ const onDeskTouchEnd = function (event) {
 
       if (cutDetails) {
         shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
-        undoRedo(this).push(pd);
+        undoRedo(this).push({
+          pd,
+          margin: privateConstants.MARGIN
+        });
 
         if (callbacks.cutSpaceComplete) {
           callbacks.cutSpaceComplete();
@@ -6810,10 +6827,10 @@ Written by Subendra Kumar Sharma.
 
 
 
-const init = async function (context, isResize, autoArrange) {
+const init = async function (context, isFirstTime, autoArrange, isResize) {
   const e = variables_elements(context);
   const privateConstants = constants_privateConstants(context);
-  const pd = getPositionData(context);
+  let pd = getPositionData(context);
 
   if (autoArrange === true || !checkPositionData(pd)) {
     // * 	autoArrange will be true only during the first render
@@ -6855,6 +6872,7 @@ const init = async function (context, isResize, autoArrange) {
     setDefinedMinHeightAndWidth(context, privateConstants.MIN_HEIGHT_AND_WIDTH);
     await autoArrangeGrid(context);
     setPositionData(context, mpd);
+    pd = getPositionData(context);
   }
 
   setPaddingLeft(context, parseInt(window.getComputedStyle(e.$limberGridView, null).getPropertyValue("padding-left")));
@@ -6898,6 +6916,7 @@ const init = async function (context, isResize, autoArrange) {
       y1: getIOTopHelperPos(context) * privateConstants.HEIGHT - privateConstants.HEIGHT / 2,
       y2: getIOBottomHelperPos(context) * privateConstants.HEIGHT + privateConstants.HEIGHT / 2
     };
+    setModifiedPositionData(context, pd);
     setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
   } else {
     get$limberGridViewIOTopHelper(context).style.transform = `translate(1px, 1px)`;
@@ -6913,7 +6932,7 @@ const init = async function (context, isResize, autoArrange) {
   }
 };
 const initConstantsAndFlags = function (options) {
-  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18, _options$publicConsta19, _options$publicConsta20, _options$publicConsta21, _options$publicConsta22, _options$publicConsta23, _options$publicConsta24;
+  var _options$gridData, _options$gridData2, _options$gridData3, _options$gridData4, _options$publicConsta, _options$publicConsta2, _options$publicConsta3, _options$publicConsta4, _options$publicConsta5, _options$publicConsta6, _options$publicConsta7, _options$publicConsta8, _options$publicConsta9, _options$publicConsta10, _options$publicConsta11, _options$publicConsta12, _options$publicConsta13, _options$publicConsta14, _options$publicConsta15, _options$publicConsta16, _options$publicConsta17, _options$publicConsta18, _options$publicConsta19, _options$publicConsta20, _options$publicConsta21, _options$publicConsta22, _options$publicConsta23, _options$publicConsta24, _options$publicConsta25, _options$publicConsta26;
 
   // Private Constants BEGIN
   if (typeof (options === null || options === void 0 ? void 0 : (_options$gridData = options.gridData) === null || _options$gridData === void 0 ? void 0 : _options$gridData.WIDTH) === "number") {
@@ -6930,6 +6949,10 @@ const initConstantsAndFlags = function (options) {
 
   if (typeof (options === null || options === void 0 ? void 0 : (_options$gridData4 = options.gridData) === null || _options$gridData4 === void 0 ? void 0 : _options$gridData4.MIN_HEIGHT_AND_WIDTH) === "number") {
     setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
+  }
+
+  if (typeof (options === null || options === void 0 ? void 0 : options.margin) === "number") {
+    setMargin(this, options.margin);
   } // Private Constants ENDED
   // Public Constants BEGIN
 
@@ -7010,19 +7033,23 @@ const initConstantsAndFlags = function (options) {
     setPublicConstantByName(this, "ANIMATE_TIME", options.publicConstants.animateTime);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta20 = options.publicConstants) === null || _options$publicConsta20 === void 0 ? void 0 : _options$publicConsta20.crossHairWidth) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta20 = options.publicConstants) === null || _options$publicConsta20 === void 0 ? void 0 : _options$publicConsta20.marginChangeValue) === "number" && (options === null || options === void 0 ? void 0 : (_options$publicConsta21 = options.publicConstants) === null || _options$publicConsta21 === void 0 ? void 0 : _options$publicConsta21.marginChangeValue) >= 0) {
+    setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", options.publicConstants.marginChangeValue);
+  }
+
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta22 = options.publicConstants) === null || _options$publicConsta22 === void 0 ? void 0 : _options$publicConsta22.crossHairWidth) === "number") {
     setPublicConstantByName(this, "CROSS_HAIR_WIDTH", options.publicConstants.crossHairWidth);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta21 = options.publicConstants) === null || _options$publicConsta21 === void 0 ? void 0 : _options$publicConsta21.crossHairHeight) === "number") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta23 = options.publicConstants) === null || _options$publicConsta23 === void 0 ? void 0 : _options$publicConsta23.crossHairHeight) === "number") {
     setPublicConstantByName(this, "CROSS_HAIR_HEIGHT", options.publicConstants.crossHairHeight);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta22 = options.publicConstants) === null || _options$publicConsta22 === void 0 ? void 0 : _options$publicConsta22.shrinkToFit) === "number" && (options === null || options === void 0 ? void 0 : (_options$publicConsta23 = options.publicConstants) === null || _options$publicConsta23 === void 0 ? void 0 : _options$publicConsta23.shrinkToFit) <= 10) {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta24 = options.publicConstants) === null || _options$publicConsta24 === void 0 ? void 0 : _options$publicConsta24.shrinkToFit) === "number" && (options === null || options === void 0 ? void 0 : (_options$publicConsta25 = options.publicConstants) === null || _options$publicConsta25 === void 0 ? void 0 : _options$publicConsta25.shrinkToFit) <= 10) {
     setPublicConstantByName(this, "SHRINK_TO_FIT", options.publicConstants.shrinkToFit);
   }
 
-  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta24 = options.publicConstants) === null || _options$publicConsta24 === void 0 ? void 0 : _options$publicConsta24.emitDebugLogs) === "boolean") {
+  if (typeof (options === null || options === void 0 ? void 0 : (_options$publicConsta26 = options.publicConstants) === null || _options$publicConsta26 === void 0 ? void 0 : _options$publicConsta26.emitDebugLogs) === "boolean") {
     setPublicConstantByName(this, "EMIT_DEBUG_LOGS", options.publicConstants.emitDebugLogs);
   } // Public Constants ENDED
   // Miscellaneous BEGIN
@@ -7142,7 +7169,7 @@ const getIsResizeObserving = function (context) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -7171,6 +7198,8 @@ Written by Subendra Kumar Sharma.
 
 
 
+
+
 const onItemClick = function (event) {
   const callbacks = getCallbacks(this);
   callbacks.onItemClickCallback(event);
@@ -7183,6 +7212,7 @@ const instantiateResizeObserver = function () {
 };
 const resizeObserverCallback = function () {
   const publicConstants = constants_publicConstants(this);
+  const privateConstants = constants_privateConstants(this);
 
   if (!getIsResizeObserving(this)) {
     setIsResizeObserving(this, true);
@@ -7204,7 +7234,12 @@ const resizeObserverCallback = function () {
         // }
       }
 
-      await init(this, true, false);
+      await init(this, false, false, true);
+      undoRedo(this).reset();
+      undoRedo(this).push({
+        pd: getPositionData(this),
+        margin: privateConstants.MARGIN
+      });
       render(this);
       setIsResizeObserving(this, false);
     }, publicConstants.WINDOW_RESIZE_WAIT_TIME);
@@ -7462,6 +7497,239 @@ const onScrollCallback = function (event) {
     }
   }
 };
+// CONCATENATED MODULE: ./src/libs/actions/marginChange/marginChangeUtils.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+const decreaseMargin = context => {
+  const publicConstants = getPublicConstants(context);
+  const privateConstants = getPrivateConstants(context);
+  let CURRENT_MARGIN_CHANGE_VALUE = publicConstants.MARGIN_CHANGE_VALUE;
+
+  if (privateConstants.MARGIN <= 0) {
+    // less than condition for floating point errors
+    throw "Margin is already 0!";
+  } else if (privateConstants.MARGIN > 0 && privateConstants.MARGIN < publicConstants.MARGIN_CHANGE_VALUE) {
+    CURRENT_MARGIN_CHANGE_VALUE = privateConstants.MARGIN;
+  }
+
+  const pd = getPositionData(context);
+  setModifiedPositionData(context, pd);
+  const mpd = getModifiedPositionData(context);
+  let isValid = true;
+  const len = mpd.length;
+
+  for (let i = 0; i < len; i++) {
+    const item = mpd[i];
+    reduceMargin(item, CURRENT_MARGIN_CHANGE_VALUE);
+
+    if (!isMarginDecreaseValid(context, item, privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE)) {
+      isValid = false;
+      break;
+    }
+  }
+
+  if (isValid) {
+    return privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE;
+  }
+
+  throw "Margin decrease limit reached!";
+};
+const increaseMargin = context => {
+  const publicConstants = getPublicConstants(context);
+  const privateConstants = getPrivateConstants(context);
+  const pd = getPositionData(context);
+  setModifiedPositionData(context, pd);
+  const mpd = getModifiedPositionData(context);
+  const len = mpd.length;
+  let CURRENT_MARGIN_CHANGE_VALUE = publicConstants.MARGIN_CHANGE_VALUE;
+  let minDimension = Number.MAX_SAFE_INTEGER;
+
+  for (let i = 0; i < len; i++) {
+    if (mpd[i].width < minDimension) {
+      minDimension = mpd[i].width;
+    } else if (mpd[i].height < minDimension) {
+      minDimension = mpd[i].height;
+    }
+  }
+
+  if (minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
+    throw "One or more items have reached their smallest possible height or width!";
+  } else if (minDimension - CURRENT_MARGIN_CHANGE_VALUE * 2 < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
+    CURRENT_MARGIN_CHANGE_VALUE = (minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
+  }
+
+  let isValid = true;
+
+  for (let i = 0; i < len; i++) {
+    const item = mpd[i];
+    growMargin(item, CURRENT_MARGIN_CHANGE_VALUE);
+
+    if (!isMarginIncreaseValid(context, item)) {
+      isValid = false;
+      break;
+    }
+  }
+
+  if (isValid) {
+    return privateConstants.MARGIN + CURRENT_MARGIN_CHANGE_VALUE;
+  }
+
+  throw "Margin increase limit reached!";
+};
+const reduceMargin = (item, value) => {
+  item.x1 -= value;
+  item.y1 -= value;
+  item.x2 += value;
+  item.y2 += value;
+  item.x -= value;
+  item.y -= value;
+  item.width += value * 2;
+  item.height += value * 2;
+  item.mX1 -= value;
+  item.mY1 -= value;
+  item.mX2 += value;
+  item.mY2 += value;
+  item.mX -= value;
+  item.mY -= value;
+  item.mWidth += value * 2;
+  item.mHeight += value * 2;
+};
+const growMargin = (item, value) => {
+  item.x1 += value;
+  item.y1 += value;
+  item.x2 -= value;
+  item.y2 -= value;
+  item.x += value;
+  item.y += value;
+  item.width -= value * 2;
+  item.height -= value * 2;
+  item.mX1 += value;
+  item.mY1 += value;
+  item.mX2 -= value;
+  item.mY2 -= value;
+  item.mX += value;
+  item.mY += value;
+  item.mWidth -= value * 2;
+  item.mHeight -= value * 2;
+};
+const isMarginDecreaseValid = (context, item, NEW_MARGIN) => {
+  // check max height and width
+  // check out of bounds
+  const privateConstants = getPrivateConstants(context);
+
+  if (item.x + item.width + NEW_MARGIN > privateConstants.WIDTH || item.height + NEW_MARGIN * 2 > privateConstants.HEIGHT || item.x < 0 || item.y < 0) {
+    return false;
+  }
+
+  return true;
+};
+const isMarginIncreaseValid = (context, item) => {
+  // check min height and width
+  const privateConstants = getPrivateConstants(context);
+
+  if (item.height < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH || item.width < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
+    return false;
+  }
+
+  return true;
+};
+// CONCATENATED MODULE: ./src/libs/actions/marginChange/marginChange.js
+/*
+
+LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
+
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+
+This file is part of LimberGridView.
+
+LimberGridView is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LimberGridView is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
+
+Written by Subendra Kumar Sharma.
+
+*/
+
+
+
+
+
+const marginChange_decreaseMargin = context => {
+  try {
+    const NEW_MARGIN = decreaseMargin(context);
+
+    setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
+    const mpd = getModifiedPositionData(context);
+    setPositionData(context, mpd);
+    undoRedo(context).push({
+      pd: mpd,
+      margin: NEW_MARGIN
+    });
+    render(context, false);
+  } catch (error) {
+    getCallbacks(context).getLogMessage({
+      type: "error",
+      message: error
+    });
+    setModifiedPositionData(context, []);
+    throw error;
+  }
+};
+const marginChange_increaseMargin = context => {
+  try {
+    const NEW_MARGIN = increaseMargin(context);
+
+    setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
+    const mpd = getModifiedPositionData(context);
+    setPositionData(context, mpd);
+    undoRedo(context).push({
+      pd: mpd,
+      margin: NEW_MARGIN
+    });
+    render(context, false);
+  } catch (error) {
+    getCallbacks(context).getLogMessage({
+      type: "error",
+      message: error
+    });
+    setModifiedPositionData(context, []);
+    throw error;
+  }
+};
 // CONCATENATED MODULE: ./src/index.js
 /** @license LimberGridView
 
@@ -7487,6 +7755,7 @@ along with LimberGridView.  If not, see <https://www.gnu.org/licenses/>.
 Written by Subendra Kumar Sharma.
 
 */
+
 
 
 
@@ -7545,6 +7814,7 @@ Written by Subendra Kumar Sharma.
       ...,
       ...
     ],
+    margin: number,
     callbacks : {
       renderComplete : function(){},                                           // callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
       renderContent : function(index, width, height, type){},                  // callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
@@ -7587,10 +7857,14 @@ Written by Subendra Kumar Sharma.
       animateMovedItem: boolean
       animateTime: number
 
+      marginChangeValue: number
+      crossHairWidth: number
+      crossHairHeight: number
+
       shrinkToFit: number
 
       emitDebugLogs: false                                                         // true/false (optional default false)
-    }
+    },
   }
   */
 // ----------------------------------------------------------------------------------------- //
@@ -7666,21 +7940,31 @@ Written by Subendra Kumar Sharma.
 
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
- * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * @property {callbacks~mountComplete} mountComplete Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
+ * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @property {callbacks~renderContent} renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
  * @property {callbacks~moveComplete} moveComplete Callback function called when moving of item is complete.
  * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
+ * @property {callbacks~cutSpaceComplete} cutSpaceComplete Callback function called when removing empty space is complete.
  * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
  * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~onItemClickCallback} onItemClickCallback Callback function called when user clicks on an item.
  * @property {callbacks~getLogMessage} getLogMessage The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
  * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
  * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
+ * @property {callbacks~getDebugLog} getDebugLog The callback function to get currently logged item. For developer of LimberGridView only.
  */
 
 /**
- * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
+ * @callback callbacks~mountComplete
+ * @returns {undefined}
+ */
+
+/**
+ * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @callback callbacks~renderComplete
  * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
  * @returns {undefined}
@@ -7731,6 +8015,12 @@ Written by Subendra Kumar Sharma.
  */
 
 /**
+ * The callback function, called when removing free space is complete.
+ * @callback callbacks~cutSpaceComplete
+ * @returns {undefined}
+ */
+
+/**
  * The callback function, called after renderContent and before renderComplete and addComplete. It is also called, after removeComplete for items whose indices are affected due to the removal of any item. In the function body of renderPlugin, you can render your React JSX using 'ReactDOM.render'.
  * @callback callbacks~renderPlugin
  * @param {object} renderData Data received from renderContent callback.
@@ -7742,6 +8032,13 @@ Written by Subendra Kumar Sharma.
  * The callback function, called just before the item is removed from the DOM and before removeComplete. In the function body of removePlugin, necessary clean-up can be performed by frameworks like react (e.g. calling 'ReactDOM.unmountComponentAtNode').
  * @callback callbacks~removePlugin
  * @param {Element} element The instance of an element which is going to be removed from the DOM.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function, called when user clicks on an item.
+ * @callback callbacks~onItemClickCallback
+ * @param {event} event The event object.
  * @returns {undefined}
  */
 
@@ -7771,6 +8068,12 @@ Written by Subendra Kumar Sharma.
  */
 
 /**
+ * The callback function to get log messages. For use only for developer of LimberGridView.
+ * @callback callbacks~getDebugLog
+ * @param {number}
+ */
+
+/**
  * @typedef {options~publicConstants} publicConstants Constants that you can change or set at any point in time to get the desired behavior.
  * @property {number} mobileAspectRatio The floating-point number representing the aspect ratio of items for mobile view (e.g. 5:4). The default value is 5/4.
  * @property {number} moveGuideRadius The radius of the default move guide. Move guide is a pseudo-element at the top-left corner of every item. You can remove the move guide for a customized look and feel. The default value is 10.
@@ -7791,7 +8094,11 @@ Written by Subendra Kumar Sharma.
  * @property {boolean} latchMovedItem To enable or disable latch mode. The default value is true.
  * @property {boolean} animateMovedItem The flag tells whether to animate or not to animate the moved item. The default value is false.
  * @property {number} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
+ * @property {number} marginChangeValue Value by which margin is increased or decreased. Default value is 0.5.
+ * @property {number} crossHairWidth Width of move/resise helper cross hair. Default value is 500.
+ * @property {number} crossHairHeight Height of move/resise helper cross hair. Default value is 500.
  * @property {number} shrinkToFit LimberGridView will shrink items by the percentage value specified while trying to arrange affected items.
+ * @property {number} emitDebugLogs Flag to specify whether or not logger will emit logs. For developer of LimberGridView only. Default value is false.
  */
 
 /**
@@ -7806,7 +8113,10 @@ function LimberGridView(options) {
   setOptions(this, options);
   setPositionData(this, options.positionData);
   setCallbacks(this, options.callbacks);
-  undoRedo(this).push(getPositionData(this));
+  undoRedo(this).push({
+    pd: getPositionData(this),
+    margin: options.margin
+  });
 
   if (typeof options.el === "string") {
     const el = document.getElementById(options.el);
@@ -7829,8 +8139,14 @@ function LimberGridView(options) {
   const e = variables_elements(this);
   e.$limberGridView.addEventListener("scroll", getBindedFunctions(this).onScroll);
   setTimeout(async function () {
-    await init(this, false, options.autoArrange);
+    var _options$callbacks;
+
+    await init(this, true, options.autoArrange, false);
     render(this, true);
+
+    if (options !== null && options !== void 0 && (_options$callbacks = options.callbacks) !== null && _options$callbacks !== void 0 && _options$callbacks.mountComplete) {
+      options.callbacks.mountComplete();
+    }
   }.bind(this));
 }
 
@@ -7984,6 +8300,7 @@ LimberGridView.prototype.initializeStore = function () {
         LATCH_MOVED_ITEM: true,
         ANIMATE_MOVED_ITEM: false,
         ANIMATE_TIME: 250,
+        MARGIN_CHANGE_VALUE: 0.5,
         // cross hair
         CROSS_HAIR_WIDTH: 500,
         CROSS_HAIR_HEIGHT: 500,
@@ -8050,7 +8367,8 @@ LimberGridView.prototype.getGridData = function () {
       margin: privateConstants.GRID_MARGIN,
       MIN_HEIGHT_AND_WIDTH: privateConstants.MIN_HEIGHT_AND_WIDTH
     },
-    positionData: arr
+    positionData: arr,
+    margin: fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR)
   };
 };
 /**
@@ -8144,20 +8462,33 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
 /**
  * @method
  * @name LimberGridView#undo
- * @description Undo the previous move or resize.
+ * @description Undo the previous move or resize. Undo data is lost after add or remove operation.
  * @returns {undefined}
  */
 
 
 LimberGridView.prototype.undo = function () {
-  const pd = undoRedo(this).undo();
+  const {
+    pd,
+    margin
+  } = undoRedo(this).undo() || {};
 
   if (pd) {
     const rerenderItems = getItemsToRerenderOnUndoRedo(getPositionData(this), pd);
     setPositionData(this, pd);
+    setMargin(this, margin);
     resetDemoUIChanges(this);
+    const renderedItemsMap = getRenderedItemsMap(this);
+    const _rerenderItems = { ...rerenderItems
+    };
 
     for (const item in rerenderItems) {
+      if (!renderedItemsMap[item]) {
+        delete _rerenderItems[item];
+      }
+    }
+
+    for (const item in _rerenderItems) {
       this.renderItem(item);
     }
   }
@@ -8165,20 +8496,33 @@ LimberGridView.prototype.undo = function () {
 /**
  * @method
  * @name LimberGridView#redo
- * @description Redo the next move or resize.
+ * @description Redo the next move or resize. Redo data is lost after add or remove operation.
  * @returns {undefined}
  */
 
 
 LimberGridView.prototype.redo = function () {
-  const pd = undoRedo(this).redo();
+  const {
+    pd,
+    margin
+  } = undoRedo(this).redo() || {};
 
   if (pd) {
     const rerenderItems = getItemsToRerenderOnUndoRedo(getPositionData(this), pd);
     setPositionData(this, pd);
+    setMargin(this, margin);
     resetDemoUIChanges(this);
+    const renderedItemsMap = getRenderedItemsMap(this);
+    const _rerenderItems = { ...rerenderItems
+    };
 
     for (const item in rerenderItems) {
+      if (!renderedItemsMap[item]) {
+        delete _rerenderItems[item];
+      }
+    }
+
+    for (const item in _rerenderItems) {
       this.renderItem(item);
     }
   }
@@ -8232,7 +8576,60 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
   if (typeof value === "boolean") {
     setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
   }
-};
+}; // /**
+//  * @method
+//  * @name LimberGridView#decreaseMargin
+//  * @description Decreases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.decreaseMargin = function () {
+// 	_decreaseMargin(this);
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#increaseMargin
+//  * @description Increases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.increaseMargin = function () {
+// 	_increaseMargin(this);
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#setMarginChangeValue
+//  * @description Sets the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.setMarginChangeValue = function (value) {
+// 	if (typeof value === "number" && value >= 0) {
+// 		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
+// 	}
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#getMarginChangeValue
+//  * @description Get the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.getMarginChangeValue = function (value) {
+// 	return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#getCurrentMargin
+//  * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
+//  * @return {number}
+//  */
+// LimberGridView.prototype.getCurrentMargin = function (flag) {
+// 	const privateConstants = getPrivateConstants(this);
+// 	if (flag) {
+// 		return privateConstants.MARGIN;
+// 	}
+// 	return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
+// };
+
 /**
  * @method
  * @name LimberGridView#destroy

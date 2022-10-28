@@ -77,10 +77,15 @@ import { autoArrangeGrid } from "../libs/arrange/arrange";
 import { DESK_INTERACTION_MODE } from "../store/flags/flagDetails";
 import { getItemsInWorkSpace } from "../libs/utils/items";
 
-export const init = async function (context, isResize, autoArrange) {
+export const init = async function (
+	context,
+	isFirstTime,
+	autoArrange,
+	isResize
+) {
 	const e = getElements(context);
 	const privateConstants = getPrivateConstants(context);
-	const pd = getPositionData(context);
+	let pd = getPositionData(context);
 
 	if (autoArrange === true || !checkPositionData(pd)) {
 		// * 	autoArrange will be true only during the first render
@@ -132,6 +137,7 @@ export const init = async function (context, isResize, autoArrange) {
 
 		await autoArrangeGrid(context);
 		setPositionData(context, mpd);
+		pd = getPositionData(context);
 	}
 
 	setPaddingLeft(
@@ -237,6 +243,7 @@ export const init = async function (context, isResize, autoArrange) {
 				getIOBottomHelperPos(context) * privateConstants.HEIGHT +
 				privateConstants.HEIGHT / 2,
 		};
+		setModifiedPositionData(context, pd);
 		setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
 	} else {
 		get$limberGridViewIOTopHelper(
@@ -269,6 +276,10 @@ export const initConstantsAndFlags = function (options) {
 
 	if (typeof options?.gridData?.MIN_HEIGHT_AND_WIDTH === "number") {
 		setMinHeightAndWidth(this.options.gridData.MIN_HEIGHT_AND_WIDTH);
+	}
+
+	if (typeof options?.margin === "number") {
+		setMargin(this, options.margin);
 	}
 	// Private Constants ENDED
 
@@ -431,6 +442,17 @@ export const initConstantsAndFlags = function (options) {
 			this,
 			"ANIMATE_TIME",
 			options.publicConstants.animateTime
+		);
+	}
+
+	if (
+		typeof options?.publicConstants?.marginChangeValue === "number" &&
+		options?.publicConstants?.marginChangeValue >= 0
+	) {
+		setPublicConstantByName(
+			this,
+			"MARGIN_CHANGE_VALUE",
+			options.publicConstants.marginChangeValue
 		);
 	}
 

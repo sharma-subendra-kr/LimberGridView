@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -121,14 +121,6 @@ const getRenderedItems = function (context) {
 	return context.store.variables.essentials.renderedItems;
 };
 
-const setRenderedItemsMap = function (context, renderedItemsMap) {
-	context.store.variables.essentials.renderedItemsMap = { ...renderedItemsMap };
-};
-
-const getRenderedItemsMap = function (context) {
-	return context.store.variables.essentials.renderedItemsMap;
-};
-
 const setIOTopHelperPos = function (context, position) {
 	context.store.variables.essentials.ioTopHelperPos = position;
 };
@@ -174,8 +166,6 @@ export {
 	getLimberGridViewBoundingClientRect,
 	setRenderedItems,
 	getRenderedItems,
-	setRenderedItemsMap,
-	getRenderedItemsMap,
 	setIOTopHelperPos,
 	getIOTopHelperPos,
 	setIOBottomHelperPos,

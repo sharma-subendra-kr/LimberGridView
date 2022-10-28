@@ -53,7 +53,7 @@ const limberGridView = new LimberGridView({
 });
 ```
 
-## Current version LimberGridView 1.0.0-beta.13.
+## Current version LimberGridView 1.0.0-beta.14.
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids. Written in vanilla JavaScript, it can be plugged into most frameworks, plus it has a plugin for React applications. It gives users the most optimal arrangements using its highly efficient and fine-tuned algorithm.
 
@@ -67,8 +67,6 @@ Although many issues were identified and resolved in this current release, you m
 * **Scrolling: While on interactive view. If there are large, completely unused spaces in-between items, then the scroll freezes.**
 * **Zombie item: While moving an item to a position substantially far away vertically, sometimes a zombie item i.e. an item that can't be interacted with is observed.**
 
-
-### Due to substantial changes to the way LimberGridView works in version 1.0.0-beta.3, all previous versions are abandoned, removed from tags, their dependencies made private so that no one can use them.
 
 ### Improvements in the arrange algorithm are made in patches. I try to make sure it doesn't affect any APIs.
 

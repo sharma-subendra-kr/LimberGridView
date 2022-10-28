@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -92,7 +92,7 @@ export const render = function (context, scale = true) {
 		pd[i].mWidth = pd[i].width + privateConstants.MARGIN * 2;
 		pd[i].mHeight = pd[i].height + privateConstants.MARGIN * 2;
 	}
-	getUndoRedo(context).setCurrent(pd);
+	getUndoRedo(context).setCurrent({ pd, margin: privateConstants.MARGIN });
 
 	const renderedItems = getRenderedItems(context);
 	const renderedItemsLen = renderedItems.length;
@@ -378,7 +378,7 @@ export const addItem = async function (context, item) {
 				setPositionData(context, mpd);
 				setSerializedPositionData(context, mpd);
 				getUndoRedo(context).reset();
-				getUndoRedo(context).push(mpd);
+				getUndoRedo(context).push({ pd: mpd, margin: privateConstants.MARGIN });
 			} else {
 				return false;
 			}
@@ -415,7 +415,7 @@ export const addItem = async function (context, item) {
 			setPositionData(context, mpd);
 			setSerializedPositionData(context, mpd);
 			getUndoRedo(context).reset();
-			getUndoRedo(context).push(mpd);
+			getUndoRedo(context).push({ pd: mpd, margin: privateConstants.MARGIN });
 		} else {
 			return false;
 		}
@@ -563,7 +563,7 @@ export const removeItem = function (context, index) {
 	if (isMobile(context)) spd.splice(idx, 1);
 	pd.splice(index, 1);
 	getUndoRedo(context).reset();
-	getUndoRedo(context).push(pd);
+	getUndoRedo(context).push({ pd, margin: privateConstants.MARGIN });
 	// * splice end
 
 	// * call callbacks begin

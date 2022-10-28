@@ -65,11 +65,15 @@ import {
 	onScrollCallback,
 } from "./libs/eventHandlerLib/intersectionObserver";
 
-import { fixTo } from "./libs/utils/utils";
-import { setPublicConstantByName } from "./store/constants/publicConstants";
-import { getPrivateConstants } from "./store/constants/privateConstants";
+import {
+	setPublicConstantByName,
+	getPublicConstantByName,
+} from "./store/constants/publicConstants";
+import {
+	getPrivateConstants,
+	setMargin,
+} from "./store/constants/privateConstants";
 import { setOptions } from "./store/variables/options";
-
 import {
 	setPositionData,
 	getPositionData,
@@ -80,23 +84,31 @@ import getElements, {
 	get$pseudoContainer,
 	get$limberGridViewContainer,
 } from "./store/variables/elements";
+import getUndoRedo from "./store/variables/undoRedo";
+import { getBindedFunctions } from "./store/variables/bindedFunctions";
 import { DESK_INTERACTION_MODE } from "./store/flags/flagDetails";
 
+import {
+	init,
+	initConstantsAndFlags,
+	initRender,
+} from "./initializers/initializers";
 import {
 	render,
 	renderItem as _renderItem,
 	addItem as _addItem,
 	removeItem as _removeItem,
 } from "./libs/renderers/renderers";
-import {
-	init,
-	initConstantsAndFlags,
-	initRender,
-} from "./initializers/initializers";
-import getUndoRedo from "./store/variables/undoRedo";
 import { resetDemoUIChanges } from "./libs/interaction/itemInteractionUtils";
-import { getItemsToRerenderOnUndoRedo } from "./libs/utils/items";
-import { getBindedFunctions } from "./store/variables/bindedFunctions";
+import {
+	decreaseMargin as _decreaseMargin,
+	increaseMargin as _increaseMargin,
+} from "./libs/actions/marginChange/marginChange";
+import {
+	getItemsToRerenderOnUndoRedo,
+	getRenderedItemsMap,
+} from "./libs/utils/items";
+import { fixTo } from "./libs/utils/utils";
 
 // ----------------------------------------------------------------------------------------- //
 
@@ -136,6 +148,7 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       ...,
       ...
     ],
+    margin: number,
     callbacks : {
       renderComplete : function(){},                                           // callback for completion of render function or renderItem, passes index of rendered Item if only was rendered by external program or passes index undefined if it was first render
       renderContent : function(index, width, height, type){},                  // callback to get data inside an item, type is "isAdd" on addItem and type is "isResize" on resizeItem. Update slipping "isResize" as it is not likely to be needed
@@ -178,10 +191,14 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
       animateMovedItem: boolean
       animateTime: number
 
+      marginChangeValue: number
+      crossHairWidth: number
+      crossHairHeight: number
+
       shrinkToFit: number
 
       emitDebugLogs: false                                                         // true/false (optional default false)
-    }
+    },
   }
   */
 
@@ -260,21 +277,31 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
 
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
- * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * @property {callbacks~mountComplete} mountComplete Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
+ * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @property {callbacks~renderContent} renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
  * @property {callbacks~moveComplete} moveComplete Callback function called when moving of item is complete.
  * @property {callbacks~resizeComplete} resizeComplete Callback function called when resizing of item is complete.
+ * @property {callbacks~cutSpaceComplete} cutSpaceComplete Callback function called when removing empty space is complete.
  * @property {callbacks~renderPlugin} renderPlugin Callback function called after renderContent and before renderComplete and addComplete but after removeComplete  for items to be rerender after a removeal of an item.
  * @property {callbacks~removePlugin} removePlugin Callback function called before the item is removed from the DOM. Also before removeComplete.
+ * @property {callbacks~onItemClickCallback} onItemClickCallback Callback function called when user clicks on an item.
  * @property {callbacks~getLogMessage} getLogMessage The callback function to get logs for errors like when the user drags outside of grid view. Returns an object with keys type and message.
  * @property {callbacks~getArrangeTime} getArrangeTime The callback function to get logs for the move or resize operation. Returns time taken, resize count, and count of rectangles processed internally.
  * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
+ * @property {callbacks~getDebugLog} getDebugLog The callback function to get currently logged item. For developer of LimberGridView only.
  */
 
 /**
- * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, invocation of this callback is batched and doesn't receive any argument.
+ * Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
+ * @callback callbacks~mountComplete
+ * @returns {undefined}
+ */
+
+/**
+ * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @callback callbacks~renderComplete
  * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
  * @returns {undefined}
@@ -325,6 +352,12 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
+ * The callback function, called when removing free space is complete.
+ * @callback callbacks~cutSpaceComplete
+ * @returns {undefined}
+ */
+
+/**
  * The callback function, called after renderContent and before renderComplete and addComplete. It is also called, after removeComplete for items whose indices are affected due to the removal of any item. In the function body of renderPlugin, you can render your React JSX using 'ReactDOM.render'.
  * @callback callbacks~renderPlugin
  * @param {object} renderData Data received from renderContent callback.
@@ -336,6 +369,13 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * The callback function, called just before the item is removed from the DOM and before removeComplete. In the function body of removePlugin, necessary clean-up can be performed by frameworks like react (e.g. calling 'ReactDOM.unmountComponentAtNode').
  * @callback callbacks~removePlugin
  * @param {Element} element The instance of an element which is going to be removed from the DOM.
+ * @returns {undefined}
+ */
+
+/**
+ * The callback function, called when user clicks on an item.
+ * @callback callbacks~onItemClickCallback
+ * @param {event} event The event object.
  * @returns {undefined}
  */
 
@@ -365,6 +405,12 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  */
 
 /**
+ * The callback function to get log messages. For use only for developer of LimberGridView.
+ * @callback callbacks~getDebugLog
+ * @param {number}
+ */
+
+/**
  * @typedef {options~publicConstants} publicConstants Constants that you can change or set at any point in time to get the desired behavior.
  * @property {number} mobileAspectRatio The floating-point number representing the aspect ratio of items for mobile view (e.g. 5:4). The default value is 5/4.
  * @property {number} moveGuideRadius The radius of the default move guide. Move guide is a pseudo-element at the top-left corner of every item. You can remove the move guide for a customized look and feel. The default value is 10.
@@ -385,7 +431,11 @@ import { getBindedFunctions } from "./store/variables/bindedFunctions";
  * @property {boolean} latchMovedItem To enable or disable latch mode. The default value is true.
  * @property {boolean} animateMovedItem The flag tells whether to animate or not to animate the moved item. The default value is false.
  * @property {number} animateTime Time to wait before re-activating animate to the moved item. It can be the actual animate time set through CSS. LimberGridView temporarily disables animation for the moved item when the animateMovedItem flag is set to false through inline CSS. The default value is 250ms.
+ * @property {number} marginChangeValue Value by which margin is increased or decreased. Default value is 0.5.
+ * @property {number} crossHairWidth Width of move/resise helper cross hair. Default value is 500.
+ * @property {number} crossHairHeight Height of move/resise helper cross hair. Default value is 500.
  * @property {number} shrinkToFit LimberGridView will shrink items by the percentage value specified while trying to arrange affected items.
+ * @property {number} emitDebugLogs Flag to specify whether or not logger will emit logs. For developer of LimberGridView only. Default value is false.
  */
 
 /**
@@ -400,7 +450,7 @@ function LimberGridView(options) {
 	setPositionData(this, options.positionData);
 	setCallbacks(this, options.callbacks);
 
-	getUndoRedo(this).push(getPositionData(this));
+	getUndoRedo(this).push({ pd: getPositionData(this), margin: options.margin });
 
 	if (typeof options.el === "string") {
 		const el = document.getElementById(options.el);
@@ -427,8 +477,11 @@ function LimberGridView(options) {
 
 	setTimeout(
 		async function () {
-			await init(this, false, options.autoArrange);
+			await init(this, true, options.autoArrange, false);
 			render(this, true);
+			if (options?.callbacks?.mountComplete) {
+				options.callbacks.mountComplete();
+			}
 		}.bind(this)
 	);
 }
@@ -590,6 +643,8 @@ LimberGridView.prototype.initializeStore = function () {
 				ANIMATE_MOVED_ITEM: false,
 				ANIMATE_TIME: 250,
 
+				MARGIN_CHANGE_VALUE: 0.5,
+
 				// cross hair
 				CROSS_HAIR_WIDTH: 500,
 				CROSS_HAIR_HEIGHT: 500,
@@ -649,7 +704,6 @@ LimberGridView.prototype.getGridData = function () {
 			height: fixTo(pd[i].height / privateConstants.WIDTH_SCALE_FACTOR),
 		};
 	}
-
 	return {
 		gridData: {
 			height: privateConstants.GRID_HEIGHT,
@@ -658,6 +712,9 @@ LimberGridView.prototype.getGridData = function () {
 			MIN_HEIGHT_AND_WIDTH: privateConstants.MIN_HEIGHT_AND_WIDTH,
 		},
 		positionData: arr,
+		margin: fixTo(
+			privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR
+		),
 	};
 };
 
@@ -746,19 +803,28 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
 /**
  * @method
  * @name LimberGridView#undo
- * @description Undo the previous move or resize.
+ * @description Undo the previous move or resize. Undo data is lost after add or remove operation.
  * @returns {undefined}
  */
 LimberGridView.prototype.undo = function () {
-	const pd = getUndoRedo(this).undo();
+	const { pd, margin } = getUndoRedo(this).undo() || {};
 	if (pd) {
 		const rerenderItems = getItemsToRerenderOnUndoRedo(
 			getPositionData(this),
 			pd
 		);
 		setPositionData(this, pd);
+		setMargin(this, margin);
 		resetDemoUIChanges(this);
+
+		const renderedItemsMap = getRenderedItemsMap(this);
+		const _rerenderItems = { ...rerenderItems };
 		for (const item in rerenderItems) {
+			if (!renderedItemsMap[item]) {
+				delete _rerenderItems[item];
+			}
+		}
+		for (const item in _rerenderItems) {
 			this.renderItem(item);
 		}
 	}
@@ -767,19 +833,28 @@ LimberGridView.prototype.undo = function () {
 /**
  * @method
  * @name LimberGridView#redo
- * @description Redo the next move or resize.
+ * @description Redo the next move or resize. Redo data is lost after add or remove operation.
  * @returns {undefined}
  */
 LimberGridView.prototype.redo = function () {
-	const pd = getUndoRedo(this).redo();
+	const { pd, margin } = getUndoRedo(this).redo() || {};
 	if (pd) {
 		const rerenderItems = getItemsToRerenderOnUndoRedo(
 			getPositionData(this),
 			pd
 		);
 		setPositionData(this, pd);
+		setMargin(this, margin);
 		resetDemoUIChanges(this);
+
+		const renderedItemsMap = getRenderedItemsMap(this);
+		const _rerenderItems = { ...rerenderItems };
 		for (const item in rerenderItems) {
+			if (!renderedItemsMap[item]) {
+				delete _rerenderItems[item];
+			}
+		}
+		for (const item in _rerenderItems) {
 			this.renderItem(item);
 		}
 	}
@@ -830,6 +905,64 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
 		setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
 	}
 };
+
+// /**
+//  * @method
+//  * @name LimberGridView#decreaseMargin
+//  * @description Decreases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.decreaseMargin = function () {
+// 	_decreaseMargin(this);
+// };
+
+// /**
+//  * @method
+//  * @name LimberGridView#increaseMargin
+//  * @description Increases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.increaseMargin = function () {
+// 	_increaseMargin(this);
+// };
+
+// /**
+//  * @method
+//  * @name LimberGridView#setMarginChangeValue
+//  * @description Sets the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.setMarginChangeValue = function (value) {
+// 	if (typeof value === "number" && value >= 0) {
+// 		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
+// 	}
+// };
+
+// /**
+//  * @method
+//  * @name LimberGridView#getMarginChangeValue
+//  * @description Get the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.getMarginChangeValue = function (value) {
+// 	return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
+// };
+
+// /**
+//  * @method
+//  * @name LimberGridView#getCurrentMargin
+//  * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
+//  * @return {number}
+//  */
+// LimberGridView.prototype.getCurrentMargin = function (flag) {
+// 	const privateConstants = getPrivateConstants(this);
+// 	if (flag) {
+// 		return privateConstants.MARGIN;
+// 	}
+// 	return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
+// };
 
 /**
  * @method
