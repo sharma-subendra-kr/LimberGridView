@@ -971,7 +971,7 @@ const adjustHeightAndScroll = function (context, yMouseOrTouchPosition, yMouseOr
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -1093,15 +1093,6 @@ const setRenderedItems = function (context, renderedItems) {
 
 const getRenderedItems = function (context) {
   return context.store.variables.essentials.renderedItems;
-};
-
-const setRenderedItemsMap = function (context, renderedItemsMap) {
-  context.store.variables.essentials.renderedItemsMap = { ...renderedItemsMap
-  };
-};
-
-const getRenderedItemsMap = function (context) {
-  return context.store.variables.essentials.renderedItemsMap;
 };
 
 const setIOTopHelperPos = function (context, position) {
@@ -1855,7 +1846,7 @@ const getItemsInWorkSpace = (context, workSpaceRect, getIndices = false, exclude
   itemsInWorkSpace.length = count;
   return itemsInWorkSpace;
 };
-const items_getRenderedItemsMap = context => {
+const getRenderedItemsMap = context => {
   const renderedItems = getRenderedItems(context);
   const renderedItemsMap = {};
 
@@ -4901,7 +4892,7 @@ const getUndoRedo = function (context) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -4968,7 +4959,10 @@ const render = function (context, scale = true) {
     pd[i].mHeight = pd[i].height + privateConstants.MARGIN * 2;
   }
 
-  undoRedo(context).setCurrent(pd);
+  undoRedo(context).setCurrent({
+    pd,
+    margin: privateConstants.MARGIN
+  });
   const renderedItems = getRenderedItems(context);
   const renderedItemsLen = renderedItems.length;
   const nodes = new Array(renderedItemsLen);
@@ -5197,7 +5191,10 @@ const addItem = async function (context, item) {
         setPositionData(context, mpd);
         setSerializedPositionData(context, mpd);
         undoRedo(context).reset();
-        undoRedo(context).push(mpd);
+        undoRedo(context).push({
+          pd: mpd,
+          margin: privateConstants.MARGIN
+        });
       } else {
         return false;
       }
@@ -5233,7 +5230,10 @@ const addItem = async function (context, item) {
       setPositionData(context, mpd);
       setSerializedPositionData(context, mpd);
       undoRedo(context).reset();
-      undoRedo(context).push(mpd);
+      undoRedo(context).push({
+        pd: mpd,
+        margin: privateConstants.MARGIN
+      });
     } else {
       return false;
     }
@@ -5369,7 +5369,10 @@ const removeItem = function (context, index) {
   if (isMobile(context)) spd.splice(idx, 1);
   pd.splice(index, 1);
   undoRedo(context).reset();
-  undoRedo(context).push(pd); // * splice end
+  undoRedo(context).push({
+    pd,
+    margin: privateConstants.MARGIN
+  }); // * splice end
   // * call callbacks begin
 
   if (callbacks.removePlugin) {
@@ -5446,7 +5449,7 @@ const renderItemContent = (context, renderData, itemEl) => {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -5506,7 +5509,10 @@ const resizeItem = async function (index, x, y, width, height) {
     resized
   } = await arrangeMove(this, affectedItems, y, y + height));
   setPositionData(this, mpd);
-  undoRedo(this).push(mpd);
+  undoRedo(this).push({
+    pd: mpd,
+    margin: privateConstants.MARGIN
+  });
 
   if (e.$limberGridViewItems[index]) {
     e.$limberGridViewItems[index].style.transform = `translate(${x}px, ${x}px)`;
@@ -5595,7 +5601,10 @@ const moveItem = async function (index, toX, toY) {
     resized
   } = await arrangeMove(this, affectedItems, toY, toY + pd[index].height);
   setPositionData(this, mpd);
-  undoRedo(this).push(mpd);
+  undoRedo(this).push({
+    pd: mpd,
+    margin: privateConstants.MARGIN
+  });
 
   if (e.$limberGridViewItems[index]) {
     e.$limberGridViewItems[index].style.transform = `translate(${mpd[index].x}px, ${mpd[index].y}px)`;
@@ -6611,6 +6620,7 @@ const onDeskMouseUp = function (event) {
 
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
+  const privateConstants = constants_privateConstants(this);
   const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
   const dkiv = getDeskInteractionVars(this);
@@ -6635,7 +6645,10 @@ const onDeskMouseUp = function (event) {
 
       if (cutDetails) {
         shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
-        undoRedo(this).push(pd);
+        undoRedo(this).push({
+          pd,
+          margin: privateConstants.MARGIN
+        });
 
         if (callbacks.cutSpaceComplete) {
           callbacks.cutSpaceComplete();
@@ -6652,6 +6665,7 @@ const onDeskMouseUp = function (event) {
 const onDeskTouchEnd = function (event) {
   const e = variables_elements(this);
   const publicConstants = constants_publicConstants(this);
+  const privateConstants = constants_privateConstants(this);
   const callbacks = getCallbacks(this);
   const pd = getPositionData(this);
   const dkiv = getDeskInteractionVars(this);
@@ -6676,7 +6690,10 @@ const onDeskTouchEnd = function (event) {
 
       if (cutDetails) {
         shiftItemsUp(this, cutDetails.y, cutDetails.shiftHeight);
-        undoRedo(this).push(pd);
+        undoRedo(this).push({
+          pd,
+          margin: privateConstants.MARGIN
+        });
 
         if (callbacks.cutSpaceComplete) {
           callbacks.cutSpaceComplete();
@@ -6813,7 +6830,7 @@ Written by Subendra Kumar Sharma.
 const init = async function (context, isFirstTime, autoArrange, isResize) {
   const e = variables_elements(context);
   const privateConstants = constants_privateConstants(context);
-  const pd = getPositionData(context);
+  let pd = getPositionData(context);
 
   if (autoArrange === true || !checkPositionData(pd)) {
     // * 	autoArrange will be true only during the first render
@@ -6855,6 +6872,7 @@ const init = async function (context, isFirstTime, autoArrange, isResize) {
     setDefinedMinHeightAndWidth(context, privateConstants.MIN_HEIGHT_AND_WIDTH);
     await autoArrangeGrid(context);
     setPositionData(context, mpd);
+    pd = getPositionData(context);
   }
 
   setPaddingLeft(context, parseInt(window.getComputedStyle(e.$limberGridView, null).getPropertyValue("padding-left")));
@@ -6898,6 +6916,7 @@ const init = async function (context, isFirstTime, autoArrange, isResize) {
       y1: getIOTopHelperPos(context) * privateConstants.HEIGHT - privateConstants.HEIGHT / 2,
       y2: getIOBottomHelperPos(context) * privateConstants.HEIGHT + privateConstants.HEIGHT / 2
     };
+    setModifiedPositionData(context, pd);
     setRenderedItems(context, getItemsInWorkSpace(context, renderSpace, true));
   } else {
     get$limberGridViewIOTopHelper(context).style.transform = `translate(1px, 1px)`;
@@ -7150,7 +7169,7 @@ const getIsResizeObserving = function (context) {
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -7179,6 +7198,8 @@ Written by Subendra Kumar Sharma.
 
 
 
+
+
 const onItemClick = function (event) {
   const callbacks = getCallbacks(this);
   callbacks.onItemClickCallback(event);
@@ -7191,6 +7212,7 @@ const instantiateResizeObserver = function () {
 };
 const resizeObserverCallback = function () {
   const publicConstants = constants_publicConstants(this);
+  const privateConstants = constants_privateConstants(this);
 
   if (!getIsResizeObserving(this)) {
     setIsResizeObserving(this, true);
@@ -7213,6 +7235,11 @@ const resizeObserverCallback = function () {
       }
 
       await init(this, false, false, true);
+      undoRedo(this).reset();
+      undoRedo(this).push({
+        pd: getPositionData(this),
+        margin: privateConstants.MARGIN
+      });
       render(this);
       setIsResizeObserving(this, false);
     }, publicConstants.WINDOW_RESIZE_WAIT_TIME);
@@ -7520,18 +7547,17 @@ const decreaseMargin = context => {
     const item = mpd[i];
     reduceMargin(item, CURRENT_MARGIN_CHANGE_VALUE);
 
-    if (!isMarginDecreaseValid(context, item)) {
+    if (!isMarginDecreaseValid(context, item, privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE)) {
       isValid = false;
       break;
     }
   }
 
   if (isValid) {
-    setPrivateConstantByName(context, "MARGIN", privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE);
-    return true;
+    return privateConstants.MARGIN - CURRENT_MARGIN_CHANGE_VALUE;
   }
 
-  return false;
+  throw "Margin decrease limit reached!";
 };
 const increaseMargin = context => {
   const publicConstants = getPublicConstants(context);
@@ -7551,10 +7577,10 @@ const increaseMargin = context => {
     }
   }
 
-  if (minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH < privateConstants.MARGIN * 2) {
-    CURRENT_MARGIN_CHANGE_VALUE = (minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
-  } else if (minDimension - publicConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
+  if (minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH <= 0) {
     throw "One or more items have reached their smallest possible height or width!";
+  } else if (minDimension - CURRENT_MARGIN_CHANGE_VALUE * 2 < privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) {
+    CURRENT_MARGIN_CHANGE_VALUE = (minDimension - privateConstants.DEFINED_MIN_HEIGHT_AND_WIDTH) / 2;
   }
 
   let isValid = true;
@@ -7570,11 +7596,10 @@ const increaseMargin = context => {
   }
 
   if (isValid) {
-    setPrivateConstantByName(context, "MARGIN", privateConstants.MARGIN + CURRENT_MARGIN_CHANGE_VALUE);
-    return true;
+    return privateConstants.MARGIN + CURRENT_MARGIN_CHANGE_VALUE;
   }
 
-  return false;
+  throw "Margin increase limit reached!";
 };
 const reduceMargin = (item, value) => {
   item.x1 -= value;
@@ -7612,12 +7637,12 @@ const growMargin = (item, value) => {
   item.mWidth -= value * 2;
   item.mHeight -= value * 2;
 };
-const isMarginDecreaseValid = (context, item) => {
+const isMarginDecreaseValid = (context, item, NEW_MARGIN) => {
   // check max height and width
   // check out of bounds
   const privateConstants = getPrivateConstants(context);
 
-  if (item.x + item.width + privateConstants.MARGIN > privateConstants.WIDTH || item.height + privateConstants.MARGIN * 2 > privateConstants.HEIGHT || item.x < 0 || item.y < 0) {
+  if (item.x + item.width + NEW_MARGIN > privateConstants.WIDTH || item.height + NEW_MARGIN * 2 > privateConstants.HEIGHT || item.x < 0 || item.y < 0) {
     return false;
   }
 
@@ -7661,23 +7686,49 @@ Written by Subendra Kumar Sharma.
 
 
 
-const marginChange_decreaseMargin = context => {
-  if (!decreaseMargin(context)) {
-    throw "Margin decrease limit reached!";
-  }
 
-  const mpd = getModifiedPositionData(context);
-  setPositionData(context, mpd);
-  render(context, false);
+
+const marginChange_decreaseMargin = context => {
+  try {
+    const NEW_MARGIN = decreaseMargin(context);
+
+    setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
+    const mpd = getModifiedPositionData(context);
+    setPositionData(context, mpd);
+    undoRedo(context).push({
+      pd: mpd,
+      margin: NEW_MARGIN
+    });
+    render(context, false);
+  } catch (error) {
+    getCallbacks(context).getLogMessage({
+      type: "error",
+      message: error
+    });
+    setModifiedPositionData(context, []);
+    throw error;
+  }
 };
 const marginChange_increaseMargin = context => {
-  if (!increaseMargin(context)) {
-    throw "Margin increase limit reached!";
-  }
+  try {
+    const NEW_MARGIN = increaseMargin(context);
 
-  const mpd = getModifiedPositionData(context);
-  setPositionData(context, mpd);
-  render(context, false);
+    setPrivateConstantByName(context, "MARGIN", NEW_MARGIN);
+    const mpd = getModifiedPositionData(context);
+    setPositionData(context, mpd);
+    undoRedo(context).push({
+      pd: mpd,
+      margin: NEW_MARGIN
+    });
+    render(context, false);
+  } catch (error) {
+    getCallbacks(context).getLogMessage({
+      type: "error",
+      message: error
+    });
+    setModifiedPositionData(context, []);
+    throw error;
+  }
 };
 // CONCATENATED MODULE: ./src/index.js
 /** @license LimberGridView
@@ -7780,9 +7831,6 @@ Written by Subendra Kumar Sharma.
       getArrangeTime: function() {}
       offsetMovePseudoElement: function() {}
       getDebugLog: function(log){},
-
-      *removed decreaseMarginCallback() {},
-      *removed increaseMarginCallback() {},
     },
     publicConstants: {
       mobileAspectRatio : <value>,                                             // aspect ratio of for mobile devices
@@ -7893,7 +7941,7 @@ Written by Subendra Kumar Sharma.
 /**
  * @typedef {options~callbacks} callbacks An object containing various callbacks.
  * @property {callbacks~mountComplete} mountComplete Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
- * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize, margin change, etc invocation of this callback is batched and doesn't receive any argument.
+ * @property {callbacks~renderComplete} renderComplete Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @property {callbacks~renderContent} renderContent Callback function called to receive the contents of the item. Also called for all the items whose indices have changed due to the removal of any item. In such cases, it is invoked after removeComplete.
  * @property {callbacks~addComplete} addComplete Callback function called when addition of an item is complete.
  * @property {callbacks~removeComplete} removeComplete Callback function called when removing of item is complete.
@@ -7908,8 +7956,6 @@ Written by Subendra Kumar Sharma.
  * @property {callbacks~offsetMovePseudoElement} offsetMovePseudoElement The callback function to offset the move helper element from the top-left. Receives current cursor or touch coordinates and item dimensions in the two-point form as arguments. Use these details to offset the move helper top-left from the curser point.
  * @property {callbacks~getDebugLog} getDebugLog The callback function to get currently logged item. For developer of LimberGridView only.
  */
-// * @property {callbacks~decreaseMarginCallback} decreaseMarginCallback Callback function called when decreasing margin is successful.
-// * @property {callbacks~increaseMarginCallback} increaseMarginCallback Callback function called when increasing margin is successful.
 
 /**
  * Callback function invoked after completion of all jobs i.e. when everything is initialized, rendered, etc. It is invoked after first time renderComplete.
@@ -7918,7 +7964,7 @@ Written by Subendra Kumar Sharma.
  */
 
 /**
- * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize, margin change, etc invocation of this callback is batched and doesn't receive any argument.
+ * Callback function invoked after rendering contents of an item. It does not get invoked after re-rendering items whose indices are affected due to the removal of any item. It receives the index of the item as an argument. For the first time render, window resize and margin change, invocation of this callback is batched and doesn't receive any argument.
  * @callback callbacks~renderComplete
  * @param {(undefined|number)} index Index of the item rendered or undefined if batched by the constructor or during resize.
  * @returns {undefined}
@@ -8067,7 +8113,10 @@ function LimberGridView(options) {
   setOptions(this, options);
   setPositionData(this, options.positionData);
   setCallbacks(this, options.callbacks);
-  undoRedo(this).push(getPositionData(this));
+  undoRedo(this).push({
+    pd: getPositionData(this),
+    margin: options.margin
+  });
 
   if (typeof options.el === "string") {
     const el = document.getElementById(options.el);
@@ -8413,20 +8462,33 @@ LimberGridView.prototype.setIsMobileCheck = function (f) {
 /**
  * @method
  * @name LimberGridView#undo
- * @description Undo the previous move or resize.
+ * @description Undo the previous move or resize. Undo data is lost after add or remove operation.
  * @returns {undefined}
  */
 
 
 LimberGridView.prototype.undo = function () {
-  const pd = undoRedo(this).undo();
+  const {
+    pd,
+    margin
+  } = undoRedo(this).undo() || {};
 
   if (pd) {
     const rerenderItems = getItemsToRerenderOnUndoRedo(getPositionData(this), pd);
     setPositionData(this, pd);
+    setMargin(this, margin);
     resetDemoUIChanges(this);
+    const renderedItemsMap = getRenderedItemsMap(this);
+    const _rerenderItems = { ...rerenderItems
+    };
 
     for (const item in rerenderItems) {
+      if (!renderedItemsMap[item]) {
+        delete _rerenderItems[item];
+      }
+    }
+
+    for (const item in _rerenderItems) {
       this.renderItem(item);
     }
   }
@@ -8434,20 +8496,33 @@ LimberGridView.prototype.undo = function () {
 /**
  * @method
  * @name LimberGridView#redo
- * @description Redo the next move or resize.
+ * @description Redo the next move or resize. Redo data is lost after add or remove operation.
  * @returns {undefined}
  */
 
 
 LimberGridView.prototype.redo = function () {
-  const pd = undoRedo(this).redo();
+  const {
+    pd,
+    margin
+  } = undoRedo(this).redo() || {};
 
   if (pd) {
     const rerenderItems = getItemsToRerenderOnUndoRedo(getPositionData(this), pd);
     setPositionData(this, pd);
+    setMargin(this, margin);
     resetDemoUIChanges(this);
+    const renderedItemsMap = getRenderedItemsMap(this);
+    const _rerenderItems = { ...rerenderItems
+    };
 
     for (const item in rerenderItems) {
+      if (!renderedItemsMap[item]) {
+        delete _rerenderItems[item];
+      }
+    }
+
+    for (const item in _rerenderItems) {
       this.renderItem(item);
     }
   }
@@ -8501,72 +8576,60 @@ LimberGridView.prototype.setAutoScrollForMouse = function (value) {
   if (typeof value === "boolean") {
     setPublicConstantByName(this, "AUTO_SCROLL_FOR_MOUSE", value);
   }
-};
-/**
- * @method
- * @name LimberGridView#decreaseMargin
- * @description Decreases the margin by the specified value asynchrousnoly.
- * @returns {boolean}
- * @throws {string} Margin decrease limit reached!
- */
+}; // /**
+//  * @method
+//  * @name LimberGridView#decreaseMargin
+//  * @description Decreases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.decreaseMargin = function () {
+// 	_decreaseMargin(this);
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#increaseMargin
+//  * @description Increases the margin by the specified value asynchrousnoly.
+//  * @returns {boolean}
+//  * @throws {string}
+//  */
+// LimberGridView.prototype.increaseMargin = function () {
+// 	_increaseMargin(this);
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#setMarginChangeValue
+//  * @description Sets the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.setMarginChangeValue = function (value) {
+// 	if (typeof value === "number" && value >= 0) {
+// 		setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
+// 	}
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#getMarginChangeValue
+//  * @description Get the value by which margin is to increased or decreased.
+//  * @returns {boolean}
+//  */
+// LimberGridView.prototype.getMarginChangeValue = function (value) {
+// 	return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
+// };
+// /**
+//  * @method
+//  * @name LimberGridView#getCurrentMargin
+//  * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
+//  * @return {number}
+//  */
+// LimberGridView.prototype.getCurrentMargin = function (flag) {
+// 	const privateConstants = getPrivateConstants(this);
+// 	if (flag) {
+// 		return privateConstants.MARGIN;
+// 	}
+// 	return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
+// };
 
-
-LimberGridView.prototype.decreaseMargin = function () {
-  marginChange_decreaseMargin(this);
-};
-/**
- * @method
- * @name LimberGridView#increaseMargin
- * @description Increases the margin by the specified value asynchrousnoly.
- * @returns {boolean}
- * @throws {string} Margin increase limit reached!
- */
-
-
-LimberGridView.prototype.increaseMargin = function () {
-  marginChange_increaseMargin(this);
-};
-/**
- * @method
- * @name LimberGridView#setMarginChangeValue
- * @description Sets the value by which margin is to increased or decreased.
- * @returns {boolean}
- */
-
-
-LimberGridView.prototype.setMarginChangeValue = function (value) {
-  if (typeof value === "number" && value >= 0) {
-    setPublicConstantByName(this, "MARGIN_CHANGE_VALUE", value);
-  }
-};
-/**
- * @method
- * @name LimberGridView#getMarginChangeValue
- * @description Get the value by which margin is to increased or decreased.
- * @returns {boolean}
- */
-
-
-LimberGridView.prototype.getMarginChangeValue = function (value) {
-  return getPublicConstantByName(this, "MARGIN_CHANGE_VALUE");
-};
-/**
- * @method
- * @name LimberGridView#getCurrentMargin
- * @description Get current margin scaled according to gridData. Pass true as first argument to get currently scaled margin.
- * @return {number}
- */
-
-
-LimberGridView.prototype.getCurrentMargin = function (flag) {
-  const privateConstants = getPrivateConstants(this);
-
-  if (flag) {
-    return privateConstants.MARGIN;
-  }
-
-  return fixTo(privateConstants.MARGIN / privateConstants.WIDTH_SCALE_FACTOR);
-};
 /**
  * @method
  * @name LimberGridView#destroy
