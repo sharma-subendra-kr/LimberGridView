@@ -6,6 +6,13 @@
     ],
     "settings": {
         "tab_size": 2,
-        "translate_tabs_to_spaces": false
+        "translate_tabs_to_spaces": false,
+        "HyperClick": {
+            "scopes": {
+                "source.js | source.jsx | source.ts | source.tsx": {
+                    "aliases": { "src": "./src", "@src": "./src"}
+                }
+            }
+        }
     }
 }

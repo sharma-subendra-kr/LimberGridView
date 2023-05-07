@@ -1,0 +1,4 @@
+to publish at npm
+npm login
+npm publish --access public
+npm logout
