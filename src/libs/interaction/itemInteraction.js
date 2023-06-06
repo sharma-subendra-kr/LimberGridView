@@ -85,8 +85,8 @@ export const resizeItem = async function (index, x, y, width, height) {
 
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	let arranged, resized;
-	({ arranged, resized } = await arrangeMove(
+	let arranged, totalArranged, resized;
+	({ arranged, totalArranged, resized } = await arrangeMove(
 		this,
 		affectedItems,
 		y,
@@ -102,10 +102,10 @@ export const resizeItem = async function (index, x, y, width, height) {
 		e.$limberGridViewItems[index].style.height = `${mpd[index].height}px`;
 	}
 
-	positionArranged(this, arranged);
+	positionArranged(this, totalArranged);
 
 	if (callbacks.resizeComplete) {
-		callbacks.resizeComplete(index, width, height, Object.keys(arranged));
+		callbacks.resizeComplete(index, width, height, Object.keys(totalArranged));
 	}
 
 	renderItem(this, index);
@@ -179,10 +179,15 @@ export const resizeItemDemo = async function (
 
 	const affectedItems = getResizeAffectedItems(this, modifiedItem, index);
 
-	let arranged;
-	({ arranged } = await arrangeMove(this, affectedItems, y, y + height));
+	let arranged, totalArranged;
+	({ arranged, totalArranged } = await arrangeMove(
+		this,
+		affectedItems,
+		y,
+		y + height
+	));
 
-	positionArranged(this, arranged);
+	positionArranged(this, totalArranged);
 };
 
 export const moveItem = async function (index, toX, toY) {
@@ -217,7 +222,7 @@ export const moveItem = async function (index, toX, toY) {
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const { arranged, resized } = await arrangeMove(
+	const { arranged, totalArranged, resized } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
@@ -243,10 +248,10 @@ export const moveItem = async function (index, toX, toY) {
 		mountItems(this, [index]);
 	}
 
-	positionArranged(this, arranged);
+	positionArranged(this, totalArranged);
 
 	if (callbacks.moveComplete) {
-		callbacks.moveComplete(index, toX, toY, Object.keys(arranged));
+		callbacks.moveComplete(index, toX, toY, Object.keys(totalArranged));
 	}
 
 	for (const key in resized) {
@@ -353,12 +358,12 @@ export const moveItemDemo = async function (index, toX, toY) {
 
 	const affectedItems = getMoveAffectedItems(this, modifiedItem, index);
 
-	const { arranged } = await arrangeMove(
+	const { arranged, totalArranged } = await arrangeMove(
 		this,
 		affectedItems,
 		toY,
 		toY + pd[index].height
 	);
 
-	positionArranged(this, arranged);
+	positionArranged(this, totalArranged);
 };

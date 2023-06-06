@@ -230,6 +230,8 @@ export const arrangeMove = async (
 		}
 	}
 
+	const totalArranged = { ...arranged };
+
 	if (workSpaceResizeCount > 0) {
 		// push items in below bottom workspace below
 		shiftItemsDown(
@@ -241,12 +243,12 @@ export const arrangeMove = async (
 		// put items in bottom workspace and below bottom workspace in arranged map
 		let len = itemsInBottomWorkSpace.length;
 		for (let i = 0; i < len; i++) {
-			arranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
+			totalArranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
 		}
 
 		len = itemsBelowBottomWorkSpace.length;
 		for (let i = 0; i < len; i++) {
-			arranged[itemsBelowBottomWorkSpace[i]] =
+			totalArranged[itemsBelowBottomWorkSpace[i]] =
 				mpd[itemsBelowBottomWorkSpace[i]];
 		}
 	}
@@ -266,7 +268,7 @@ export const arrangeMove = async (
 		);
 	}
 
-	return { arranged, resized };
+	return { arranged, totalArranged, resized };
 };
 
 /*
