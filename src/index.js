@@ -40,7 +40,7 @@ import {
 	onItemContextMenu,
 	onItemTouchContextMenu,
 	onItemTouchCancel,
-} from "./libs/eventHandlerLib/itemInteraction";
+} from "./libs/eventHandlerLib/itemInteractionEventHandler";
 import {
 	onDeskMouseDown,
 	onDeskTouchStart,
@@ -51,7 +51,7 @@ import {
 	onDeskContextMenu,
 	onDeskTouchContextMenu,
 	onDeskTouchCancel,
-} from "./libs/eventHandlerLib/deskInteraction";
+} from "./libs/eventHandlerLib/deskInteractionEventHandler";
 import { unInitializeEvents } from "./libs/eventHandlerLib/initializers";
 import {
 	instantiateResizeObserver,
