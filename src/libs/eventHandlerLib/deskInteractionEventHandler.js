@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2022 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2023 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 
@@ -32,7 +32,10 @@ import {
 	isDeskTouchHoldValid,
 	isTouchHoldValid,
 } from "./eventHandlerUtils.js";
-import { loadInitState, unloadInitState } from "./deskInteractionUtils.js";
+import {
+	loadInitState,
+	unloadInitState,
+} from "./deskInteractionEventHandlerUtils.js";
 import {
 	shiftItemsUp,
 	addItemAllowCheck,

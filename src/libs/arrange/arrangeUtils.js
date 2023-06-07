@@ -545,3 +545,14 @@ export const cutSpaceAllowCheck = function (context, x, y, width, height) {
 	}
 	return false;
 };
+
+export const getSurroundingBox = (item, MARGIN) => {
+	return {
+		x1: item.x1 - MARGIN * 3 < 0 ? 0 : item.x1 - MARGIN * 3,
+		y1: item.y1 - MARGIN * 3 < 0 ? 0 : item.y1 - MARGIN * 3,
+		x2: item.x2 + MARGIN * 3,
+		y2: item.y2 + MARGIN * 3,
+	};
+};
+
+export const getSurroundingBoxes = (item, margin) => {};
