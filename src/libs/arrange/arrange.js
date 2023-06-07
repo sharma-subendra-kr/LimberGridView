@@ -38,6 +38,7 @@ import {
 	getItemsBelowBottomWorkSpace,
 	getItemsInWorkSpaceMap,
 	shiftItemsDown,
+	getSurroundingBoxes,
 } from "./arrangeUtils";
 import { sanitizeDimension } from "../utils/items";
 
@@ -253,6 +254,8 @@ export const arrangeMove = async (
 		}
 	}
 
+	// adjust
+
 	const p2 = performance.now();
 	console.log("p1: ", p1);
 	console.log("p2: ", p2);
@@ -424,5 +427,23 @@ export const autoArrangeGrid = async (context) => {
 			mpd[iter].mY = mpd[iter].mY2;
 			iter++;
 		}
+	}
+};
+
+export const adjust = (context, arranged) => {
+	const privateConstants = getPrivateConstants(context);
+	const mpd = getModifiedPositionData(context);
+	const len = mpd.length;
+
+	const arrangedIndices = Object.keys(arranged);
+	const alen = arrangedIndices.length;
+	for (let i = 0; i < alen; i++) {
+		const idx = arrangedIndices[i];
+		const item = mpd[idx];
+		const boxes = getSurroundingBoxes(item, privateConstants.MARGIN);
+		// for (let j = 0; j < len; j++) {
+		// 	if (idx !== j) {
+		// 	}
+		// }
 	}
 };
