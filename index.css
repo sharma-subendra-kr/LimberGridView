@@ -22,7 +22,7 @@
  * Written by Subendra Kumar Sharma.
  */
 
-.footer{width:100%;text-align:justify;background-color:#172030;color:#fff;overflow:hidden;font-size:10px;padding:3px 10px;position:fixed;top:calc(100% - 20px);left:0}.footer a{color:#fff}.footer b{text-decoration:underline}.footer:hover{padding:15px;top:initial;bottom:0}
+.footer{width:100%;text-align:justify;background-color:#172030;color:#fff;overflow:hidden;font-size:10px;padding:3px 10px;position:fixed;top:calc(100% - 20px);left:0}.footer a{color:#fff}.footer b{text-decoration:underline}.footer-expanded{padding:15px;top:initial;bottom:0}
 .header{display:-ms-flexbox;display:flex;height:50px;background-color:#24292e;color:#f9ffff;padding:7px}.header .header-banner{width:270px}.header .star-on-github{text-align:center;-ms-flex:1;flex:1;color:#fff;font-size:30px}.header .star-on-github span{font-size:30px;margin:0 5px}.header .star-on-github svg{color:#fff}.header .view-example-code{color:#fff;font-size:12px}.header .view-example-code span{margin:0 5px}
 .lgv-tools{display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end}.lgv-tools .lgv-tool{margin:0px 10px;cursor:pointer}.lgv-tools .lgv-tool svg{margin:0px 10px}.lgv-tools .lgv-tool:hover{text-decoration:underline}.lgv-tools .lgv-tool-latch{display:-ms-flexbox;display:flex;cursor:default}.lgv-tools .lgv-tool-latch input{margin:0;cursor:pointer}.lgv-tools .lgv-tool-latch:hover{text-decoration:none}
 
