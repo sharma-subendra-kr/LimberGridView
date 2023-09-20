@@ -1,3 +1,5 @@
 node_modules
 dist
 legacy/0.0.0
+index.js
+index.css

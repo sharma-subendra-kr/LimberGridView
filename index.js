@@ -8,11 +8,9 @@
 
 	.site-map-container {
 		width: 70px;
-		min-height: 100%;
 
 		a {
 			div {
-				height: 100%;
 			}
 		}
 	}
