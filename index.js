@@ -4,6 +4,10 @@
 
 	.license-info {
 		flex-grow: 1;
+		@media only screen and (max-width: 980px) and (min-width: 1px) and (orientation: portrait) {
+			flex-basis: fit-content;
+			padding: 0 3px;
+		}
 	}
 
 	.site-map-container {
