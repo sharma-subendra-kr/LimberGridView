@@ -2,7 +2,9 @@
 
 # [Try it out!](https://sharma-subendra-kr.github.io/LimberGridView/)
 # [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/master/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
-# [For API reference and documentation, please refer to this page.](https://sharma-subendra-kr.github.io/LimberGridView/docs)
+# [For API reference and documentation, please refer to this page.](https://sharma-subendra-kr.github.io/LimberGridView/docs/latest)
+
+### I have stopped updating this public repository in favor of a private repository for the time being. For the latest updates and releases please visit my [website](https://limber.in).
 
 ## Installation
 
