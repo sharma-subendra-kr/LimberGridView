@@ -2,7 +2,7 @@
 
 LimberGridView, a powerful JavaScript Library using Computational Geometry to render movable, dynamically resizable, and auto-arranging grids.
 
-Copyright © 2018-2021 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
+Copyright © 2018-2023 Subendra Kumar Sharma. All rights reserved. (jobs.sharma.subendra.kr@gmail.com)
 
 This file is part of LimberGridView.
 

@@ -38,6 +38,7 @@ import {
 	getItemsBelowBottomWorkSpace,
 	getItemsInWorkSpaceMap,
 	shiftItemsDown,
+	getSurroundingBoxes,
 } from "./arrangeUtils";
 import { sanitizeDimension } from "../utils/items";
 
@@ -230,6 +231,8 @@ export const arrangeMove = async (
 		}
 	}
 
+	const totalArranged = { ...arranged };
+
 	if (workSpaceResizeCount > 0) {
 		// push items in below bottom workspace below
 		shiftItemsDown(
@@ -241,15 +244,17 @@ export const arrangeMove = async (
 		// put items in bottom workspace and below bottom workspace in arranged map
 		let len = itemsInBottomWorkSpace.length;
 		for (let i = 0; i < len; i++) {
-			arranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
+			totalArranged[itemsInBottomWorkSpace[i]] = mpd[itemsInBottomWorkSpace[i]];
 		}
 
 		len = itemsBelowBottomWorkSpace.length;
 		for (let i = 0; i < len; i++) {
-			arranged[itemsBelowBottomWorkSpace[i]] =
+			totalArranged[itemsBelowBottomWorkSpace[i]] =
 				mpd[itemsBelowBottomWorkSpace[i]];
 		}
 	}
+
+	// adjust
 
 	const p2 = performance.now();
 	console.log("p1: ", p1);
@@ -266,7 +271,7 @@ export const arrangeMove = async (
 		);
 	}
 
-	return { arranged, resized };
+	return { arranged, totalArranged, resized };
 };
 
 /*
@@ -422,5 +427,23 @@ export const autoArrangeGrid = async (context) => {
 			mpd[iter].mY = mpd[iter].mY2;
 			iter++;
 		}
+	}
+};
+
+export const adjust = (context, arranged) => {
+	const privateConstants = getPrivateConstants(context);
+	const mpd = getModifiedPositionData(context);
+	const len = mpd.length;
+
+	const arrangedIndices = Object.keys(arranged);
+	const alen = arrangedIndices.length;
+	for (let i = 0; i < alen; i++) {
+		const idx = arrangedIndices[i];
+		const item = mpd[idx];
+		const boxes = getSurroundingBoxes(item, privateConstants.MARGIN);
+		// for (let j = 0; j < len; j++) {
+		// 	if (idx !== j) {
+		// 	}
+		// }
 	}
 };
