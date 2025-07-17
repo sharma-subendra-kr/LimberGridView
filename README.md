@@ -4,7 +4,7 @@
 # [View this example code plugged in using React](https://github.com/sharma-subendra-kr/limber-grid-view-github-page/blob/master/src/pages/home/common/components/lgvCustomizedView/lgvCustomizedView.tsx)
 # [For API reference and documentation, please refer to this page.](https://sharma-subendra-kr.github.io/LimberGridView/docs/latest)
 
-### I have stopped updating this public repository in favor of a private repository for the time being. For the latest updates and releases please visit my [website](https://limber.in).
+
 
 ## Installation
 
@@ -72,17 +72,14 @@ Although many issues were identified and resolved in this current release, you m
 * Mobile view
 * Plugins for React. LimberGridView has "renderPlugin" and "removePlugin", these are callbacks, that pass the element which is the item itself. ReactDOM.render and ReactDOM.unmountComponentAtNode should be called in "renderPlugin" and "removePlugin" respectively.
 
-### LimberGridView is free software (Free as in freedom, not the price). If you like to use this library on non-free software, you can get a proprietary license. To get a proprietary license, [pre-order now](https://limber.in/LimberGridView/buy).
+
 
 ### To get tips on how to use LimberGridView, head over to this [link](https://limber.in/LimberGridView/howToUse).
-
-To see how LimberGridView works, head over to this [link](https://limber.in/LimberGridView/howItWorks).
 
 ### Contact
 If you encounter any problems, you can contact me by emailing me to the email address mentioned on any file on the license header.
 
-### Contributing
-Due to problems that may arise while licensing the commercial license, contributions are not welcome.
+
 
 ## License
 Copyright © 2018-2022, Subendra Kumar Sharma. All rights reserved.
